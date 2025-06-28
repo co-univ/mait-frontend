@@ -1,4 +1,4 @@
-import { defineConfig } from "@rsbuild/core";
+import { defineConfig, type PostCSSPlugin } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import autoprefixer from "autoprefixer";
 import tailwindcss from "tailwindcss";
@@ -8,7 +8,10 @@ export default defineConfig({
 	tools: {
 		postcss: {
 			postcssOptions: {
-				plugins: [tailwindcss() as any, autoprefixer() as any],
+				plugins: [
+					tailwindcss() as PostCSSPlugin,
+					autoprefixer() as PostCSSPlugin,
+				],
 			},
 		},
 	},
