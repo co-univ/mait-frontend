@@ -9,9 +9,21 @@ const config: Config = {
 		colors: {
 			transparent: "transparent",
 			current: "currentColor",
-			common: {
-				white: "#FFFFFF",
-				black: "#000000",
+			alpha: {
+				black: {
+					100: "rgba(0, 0, 0, 1)",
+					75: "rgba(0, 0, 0, 0.75)",
+					50: "rgba(0, 0, 0, 0.5)",
+					25: "rgba(0, 0, 0, 0.25)",
+					10: "rgba(0, 0, 0, 0.1)",
+				},
+				white: {
+					100: "rgba(255, 255, 255, 1)",
+					75: "rgba(255, 255, 255, 0.75)",
+					50: "rgba(255, 255, 255, 0.5)",
+					25: "rgba(255, 255, 255, 0.25)",
+					10: "rgba(255, 255, 255, 0.1)",
+				},
 			},
 			gray: {
 				5: "#F4F5F6",
