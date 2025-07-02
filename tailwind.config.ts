@@ -115,6 +115,11 @@ const config: Config = {
 				},
 			},
 		},
+		fontFamily: {
+			Paperlogy: ["Paperlogy"],
+			Pretendard: ["Pretendard"],
+			Line: ["LINE Seed Sans KR"],
+		},
 		extend: {},
 	},
 	plugins: [],
