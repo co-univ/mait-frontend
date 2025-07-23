@@ -1,10 +1,10 @@
 import {
-	Bell,
-	ChevronLeft,
-	ChevronRight,
-	Menu,
-	Search,
-	UserRound,
+  Bell,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+  Search,
+  UserRound,
 } from "lucide-react";
 import React from "react";
 import logoSymbol from "../assets/logo_symbol.png";
@@ -14,37 +14,37 @@ import logoSymbol from "../assets/logo_symbol.png";
 //
 
 const Header = () => {
-	return (
-		<div className="bg-alpha-white-100 flex place-content-between w-full h-24 items-center p-8 fixed top-0 left-0 ">
-			<div className="flex items-center gap-[4.5rem]">
-				<div className="flex items-center gap-[0.63rem]">
-					<img
-						className="w-8 h-8 cursor-pointer"
-						src={logoSymbol}
-						alt="심볼 로고"
-					/>
-					<Menu className="w-6 h-6 text-alpha-black-100 cursor-pointer" />
-				</div>
-				<div className="flex items-center gap-5">
-					<ChevronLeft className="w-6 h-6 text-alpha-black-100 cursor-pointer" />
-					<ChevronRight className="w-6 h-6 text-alpha-black-100 cursor-pointer" />
-				</div>
-			</div>
-			<div className="flex items-center gap-5">
-				<div className="w-96 h-8 bg-gray-5 rounded-md flex items-center px-3 py-[0.38rem] gap-[0.63rem]">
-					<Search className="w-5 h-5 text-gray-30" />
-					<input
-						className="outline-none bg-transparent text-alpha-black-100 w-full"
-						type="text"
-						placeholder="문제 검색"
-					/>
-				</div>
-				<Bell className="w-6 h-6 text-alpha-black-100 cursor-pointer" />
-				<UserRound className="w-6 h-6 text-alpha-black-100 cursor-pointer" />
-				<span className="text-alpha-black-100 text-base">전민쟁</span>
-			</div>
-		</div>
-	);
+  return (
+    <div className="fixed left-0 top-0 flex h-24 w-full place-content-between items-center bg-alpha-white-100 p-8">
+      <div className="flex items-center gap-[4.5rem]">
+        <div className="flex items-center gap-[0.63rem]">
+          <img
+            className="h-8 w-8 cursor-pointer"
+            src={logoSymbol}
+            alt="심볼 로고"
+          />
+          <Menu className="h-6 w-6 cursor-pointer text-alpha-black-100" />
+        </div>
+        <div className="flex items-center gap-5">
+          <ChevronLeft className="h-6 w-6 cursor-pointer text-alpha-black-100" />
+          <ChevronRight className="h-6 w-6 cursor-pointer text-alpha-black-100" />
+        </div>
+      </div>
+      <div className="flex items-center gap-5">
+        <div className="flex h-8 w-96 items-center gap-[0.63rem] rounded-md bg-gray-5 px-3 py-[0.38rem]">
+          <Search className="h-5 w-5 text-gray-30" />
+          <input
+            className="w-full bg-transparent text-alpha-black-100 outline-none"
+            type="text"
+            placeholder="문제 검색"
+          />
+        </div>
+        <Bell className="h-6 w-6 cursor-pointer text-alpha-black-100" />
+        <UserRound className="h-6 w-6 cursor-pointer text-alpha-black-100" />
+        <span className="text-base text-alpha-black-100">전민쟁</span>
+      </div>
+    </div>
+  );
 };
 
 export default Header;
