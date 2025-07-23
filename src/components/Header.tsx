@@ -40,8 +40,10 @@ const Header = () => {
           />
         </div>
         <Bell className="h-6 w-6 cursor-pointer text-alpha-black-100" />
-        <UserRound className="h-6 w-6 cursor-pointer text-alpha-black-100" />
-        <span className="text-base text-alpha-black-100">전민쟁</span>
+        <div className="flex cursor-pointer items-center gap-5">
+          <UserRound className="h-6 w-6 text-alpha-black-100" />
+          <span className="text-base text-alpha-black-100">전민쟁</span>
+        </div>
       </div>
     </div>
   );
