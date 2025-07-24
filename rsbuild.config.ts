@@ -15,4 +15,8 @@ export default defineConfig({
 			},
 		},
 	},
+	html: {
+		title: "MAIT",
+		favicon: "./src/assets/favicon.svg",
+	},
 });
