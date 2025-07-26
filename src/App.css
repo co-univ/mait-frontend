@@ -5,6 +5,20 @@ body {
 	background-image: linear-gradient(to bottom, #020917, #101725);
 }
 
+.app-container {
+	display: flex;
+	min-height: 100vh;
+	background-color: #fff;
+}
+
+.main-content {
+	flex: 1;
+	margin-left: 17.5rem; /* 사이드바 너비만큼 여백 */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .content {
 	display: flex;
 	min-height: 100vh;
