@@ -11,7 +11,13 @@ import DropdownSelectBox from "./DropdownSelectBox";
 export type ButtonType = "select box" | "collapse";
 export type Size = "large" | "medium" | "small";
 
+export interface Content {
+	id: number;
+	text: string;
+}
+
 export interface IconContent {
+	id: number;
 	icon: (className: string) => React.ReactNode;
 	text: string;
 }
@@ -21,7 +27,7 @@ interface DropdownProps {
 	buttonType: ButtonType;
 	buttonText: string;
 	group: string;
-	contents: string[] | IconContent[];
+	contents: Content[] | IconContent[];
 	width?: string;
 }
 

@@ -10,18 +10,22 @@ import SideBarNavigationMenuList from "./SideBarNavigationMenuList";
 
 const TEAM_SPACES: IconContent[] = [
 	{
+		id: 1,
 		icon: (className) => <NotebookPen className={className} />,
 		text: "코테이토 11기 교육팀",
 	},
 	{
+		id: 2,
 		icon: (className) => <NotebookPen className={className} />,
 		text: "숙명여대 IT공학전공 20학번",
 	},
 	{
+		id: 3,
 		icon: (className) => <NotebookPen className={className} />,
 		text: "코테이토 12기 교육팀",
 	},
 	{
+		id: 4,
 		icon: (className) => <NotebookPen className={className} />,
 		text: "코테이토 13기 교육팀",
 	},

@@ -1,19 +1,15 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import type { Content, IconContent } from "./Dropdown";
 
 //
 //
 //
-
-export interface IconContent {
-	icon: (className: string) => React.ReactNode;
-	text: string;
-}
 
 interface DropdownListProps {
 	isOpen: boolean;
 	group: string;
-	contents: string[] | IconContent[];
+	contents: Content[] | IconContent[];
 }
 
 //
