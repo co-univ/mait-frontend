@@ -9,13 +9,20 @@ interface MenuItemProps {
 	icon: (className: string) => React.ReactNode;
 	label: string;
 	path: string;
+	selected: boolean;
+	setSelected: () => void;
 }
 
 //
 //
 //
 
-const SideBarNavigationMenuItem = ({ icon, label, path }: MenuItemProps) => {
+const SideBarNavigationMenuItem = ({
+	icon,
+	label,
+	path,
+	selected,
+}: MenuItemProps) => {
 	const navigate = useNavigate();
 
 	/**
@@ -27,9 +34,15 @@ const SideBarNavigationMenuItem = ({ icon, label, path }: MenuItemProps) => {
 
 	return (
 		<button type="button" onClick={handleMenuClick}>
-			<div className="group flex items-center gap-[0.625rem] p-3 rounded-[0.375rem] hover:bg-primary-5">
-				{icon("w-5 h-5 text-gray-30 group-hover:text-primary-50")}
-				<span className="text-gray-30 text-base group-hover:text-primary-50 group-hover:font-bold">
+			<div
+				className={`group flex items-center gap-[0.625rem] p-3 rounded-[0.375rem] hover:bg-primary-5 ${selected ? "bg-primary-5" : ""}`}
+			>
+				{icon(
+					`w-5 h-5 ${selected ? "text-primary-50" : "text-gray-30 group-hover:text-primary-50"}`,
+				)}
+				<span
+					className={`text-base ${selected ? "text-primary-50 font-bold" : "text-gray-30 group-hover:text-primary-50 group-hover:font-bold"}`}
+				>
 					{label}
 				</span>
 			</div>
