@@ -67,7 +67,7 @@ const SideBarNavigationMenuList = () => {
 					label={item.label}
 					path={item.path}
 					selected={selected === item.key}
-					setSelected={() => setSelected(item.key)}
+					onSelect={() => setSelected(item.key)}
 				/>
 			))}
 		</div>

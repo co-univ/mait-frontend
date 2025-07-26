@@ -11,7 +11,7 @@ interface MenuItemProps {
 	label: string;
 	path: string;
 	selected: boolean;
-	setSelected: () => void;
+	onSelect: () => void;
 }
 
 //
@@ -23,6 +23,7 @@ const SideBarNavigationMenuItem = ({
 	label,
 	path,
 	selected,
+	onSelect,
 }: MenuItemProps) => {
 	const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ const SideBarNavigationMenuItem = ({
 	 *
 	 */
 	const handleMenuClick = () => {
+		onSelect();
 		navigate(path);
 	};
 
