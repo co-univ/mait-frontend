@@ -24,7 +24,7 @@ const DropdownList = ({ isOpen, group, contents }: DropdownListProps) => {
 	/**
 	 *
 	 */
-	const renderDropdownItem = (item: string | IconContent, i: number) => {
+	const renderDropdownItem = (item: Content | IconContent, i: number) => {
 		const isItemObject = typeof item === "object" && item !== null;
 		const icon = isItemObject && "icon" in item ? item.icon : null;
 		const text = isItemObject && "text" in item ? item.text : item;
