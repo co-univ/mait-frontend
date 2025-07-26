@@ -7,7 +7,7 @@ import {
 	UserRound,
 } from "lucide-react";
 import React from "react";
-import logoSymbol from "../assets/logo_symbol.png";
+import logoSymbol from "../../assets/logo_symbol.png";
 
 //
 //
