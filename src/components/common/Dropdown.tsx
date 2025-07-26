@@ -87,7 +87,7 @@ const Dropdown = ({
 	}, [isOpen]);
 
 	return (
-		<div>
+		<div className="relative w-full">
 			{renderButton()}
 			<DropdownList isOpen={isOpen} group={group} contents={contents} />
 		</div>

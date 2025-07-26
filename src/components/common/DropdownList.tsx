@@ -54,7 +54,7 @@ const DropdownList = ({ isOpen, group, contents }: DropdownListProps) => {
 
 	return (
 		<div
-			className="rounded-[6px] border border-gray-20 bg-alpha-white-100 mt-1"
+			className="rounded-[6px] border border-gray-20 bg-alpha-white-100 mt-1 absolute"
 			ref={dropdownRef}
 			style={{
 				height: isOpen ? dropdownHeight : 0,
