@@ -12,23 +12,23 @@ export type ButtonType = "select box" | "collapse";
 export type Size = "large" | "medium" | "small";
 
 export interface Content {
-	id: number;
-	text: string;
+  id: number;
+  text: string;
 }
 
 export interface IconContent {
-	id: number;
-	icon: (className: string) => React.ReactNode;
-	text: string;
+  id: number;
+  icon: (className: string) => React.ReactNode;
+  text: string;
 }
 
 interface DropdownProps {
-	size: Size;
-	buttonType: ButtonType;
-	buttonText: string;
-	group: string;
-	contents: Content[] | IconContent[];
-	width?: string;
+  size: Size;
+  buttonType: ButtonType;
+  buttonText: string;
+  group: string;
+  contents: Content[] | IconContent[];
+  width?: string;
 }
 
 //
@@ -36,62 +36,62 @@ interface DropdownProps {
 //
 
 const Dropdown = ({
-	size,
-	buttonType,
-	buttonText,
-	group,
-	contents,
-	width,
+  size,
+  buttonType,
+  buttonText,
+  group,
+  contents,
+  width,
 }: DropdownProps) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [dropdownHeight, setDropdownHeight] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [dropdownHeight, setDropdownHeight] = useState(0);
 
-	const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-	/**
-	 *
-	 */
-	const renderButton = () => {
-		if (buttonType === "select box") {
-			return (
-				<DropdownSelectBox
-					size={size}
-					text={buttonText}
-					width={width}
-					isOpen={isOpen}
-					setIsOpen={setIsOpen}
-				/>
-			);
-		}
+  /**
+   *
+   */
+  const renderButton = () => {
+    if (buttonType === "select box") {
+      return (
+        <DropdownSelectBox
+          size={size}
+          text={buttonText}
+          width={width}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
+      );
+    }
 
-		if (buttonType === "collapse") {
-			return (
-				<DropdownCollapse
-					size={size}
-					text={buttonText}
-					width={width}
-					isOpen={isOpen}
-					setIsOpen={setIsOpen}
-				/>
-			);
-		}
-	};
+    if (buttonType === "collapse") {
+      return (
+        <DropdownCollapse
+          size={size}
+          text={buttonText}
+          width={width}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
+      );
+    }
+  };
 
-	//
-	useEffect(() => {
-		if (isOpen && dropdownRef.current) {
-			setDropdownHeight(dropdownRef.current.scrollHeight);
-		} else {
-			setDropdownHeight(0);
-		}
-	}, [isOpen]);
+  //
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      setDropdownHeight(dropdownRef.current.scrollHeight);
+    } else {
+      setDropdownHeight(0);
+    }
+  }, [isOpen]);
 
-	return (
-		<div className="relative w-full">
-			{renderButton()}
-			<DropdownList isOpen={isOpen} group={group} contents={contents} />
-		</div>
-	);
+  return (
+    <div className="relative w-full">
+      {renderButton()}
+      <DropdownList isOpen={isOpen} group={group} contents={contents} />
+    </div>
+  );
 };
 
 export default Dropdown;
