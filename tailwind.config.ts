@@ -132,6 +132,9 @@ const config: Config = {
 			Pretendard: ["Pretendard"],
 			Line: ["LINE Seed Sans KR"],
 		},
+		boxShadow: {
+			xxl: "0px 25px 50px -12px rgba(0, 0, 0, 0.10)",
+		},
 		extend: {},
 	},
 	plugins: [],
