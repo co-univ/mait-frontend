@@ -1,14 +1,12 @@
 import "./App.css";
 import { BrowserRouter } from "react-router-dom";
-import Header from "./components/common/Header";
-import SideBar from "./components/common/SideBar";
+import AppLayout from "./components/common/AppLayout";
 
 const App = () => {
   return (
     <BrowserRouter>
       <div className="app-container">
-        {/* <Header /> */}
-        <SideBar />
+        <AppLayout />
         <main className="main-content">
           <div className="content">
             <h1>MAIT Frontend</h1>
