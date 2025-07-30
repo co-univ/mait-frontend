@@ -100,7 +100,8 @@ const theme = {
   letterSpacing: {},
   spacing: {},
   borderRadius: {},
-  boxShadow: {}
+  boxShadow: {},
+  typography: {}
 };
 
 // Process each token
@@ -209,6 +210,102 @@ Object.entries(flatTokens).forEach(([key, tokenData]) => {
           theme.boxShadow[sanitizedKey] = shadowValue;
         }
         break;
+        
+      case 'typography':
+        // Handle typography tokens
+        if (typeof value === 'object') {
+          const typographyStyle = {};
+          
+          // Helper function to resolve token reference
+          const resolveRef = (ref) => {
+            const refKey = ref.replace(/[{}]/g, '');
+            
+            // Try original key first
+            let token = flatTokens[refKey];
+            
+            // If not found, try converting dots to dashes
+            if (!token) {
+              const dashKey = refKey.replace(/\./g, '-');
+              token = flatTokens[dashKey];
+            }
+            
+            // If still not found, try sanitized version
+            if (!token) {
+              const sanitizedRefKey = sanitizeKey(refKey);
+              token = flatTokens[sanitizedRefKey];
+            }
+            
+            return token || null;
+          };
+          
+          // Process each typography property
+          if (value.fontFamily) {
+            const fontToken = resolveRef(value.fontFamily);
+            if (fontToken) {
+              typographyStyle.fontFamily = Array.isArray(fontToken.value) ? fontToken.value : [fontToken.value];
+            }
+          }
+          
+          if (value.fontWeight) {
+            const weightToken = resolveRef(value.fontWeight);
+            if (weightToken) {
+              let weight = weightToken.value;
+              if (typeof weight === 'string') {
+                const weightMap = {
+                  'thin': '100',
+                  'extralight': '200', 
+                  'light': '300',
+                  'regular': '400',
+                  'medium': '500',
+                  'semibold': '600',
+                  'bold': '700',
+                  'extrabold': '800',
+                  'black': '900'
+                };
+                const normalized = weight.toLowerCase().replace(/\s+/g, '');
+                for (const [name, num] of Object.entries(weightMap)) {
+                  if (normalized.includes(name)) {
+                    weight = num;
+                    break;
+                  }
+                }
+              }
+              typographyStyle.fontWeight = weight.toString();
+            }
+          }
+          
+          if (value.fontSize) {
+            const sizeToken = resolveRef(value.fontSize);
+            if (sizeToken) {
+              const size = typeof sizeToken.value === 'number' ? `${sizeToken.value}px` : 
+                           typeof sizeToken.value === 'string' && sizeToken.value.includes('rem') ? 
+                           `${parseFloat(sizeToken.value) * 16}px` : 
+                           typeof sizeToken.value === 'string' && sizeToken.value.includes('px') ? sizeToken.value :
+                           `${sizeToken.value}px`;
+              typographyStyle.fontSize = size;
+            }
+          }
+          
+          if (value.lineHeight) {
+            const heightToken = resolveRef(value.lineHeight);
+            if (heightToken) {
+              typographyStyle.lineHeight = heightToken.value;
+            }
+          }
+          
+          if (value.letterSpacing) {
+            const spacingToken = resolveRef(value.letterSpacing);
+            if (spacingToken) {
+              typographyStyle.letterSpacing = spacingToken.value;
+            }
+          }
+          
+          
+          if (Object.keys(typographyStyle).length > 0) {
+            theme.typography[sanitizedKey] = typographyStyle;
+          }
+        }
+        break;
     }
   } catch (error) {
     console.warn(`Error processing token ${key}:`, error);
@@ -307,6 +404,7 @@ if (!fs.existsSync(configDir)) {
 // Write the Tailwind config tokens
 const configContent = `module.exports = ${JSON.stringify({ theme }, null, 2)};`;
 fs.writeFileSync(path.join(configDir, 'tailwind.tokens.js'), configContent);
+
 
 console.log('✅ Tailwind tokens generated successfully!');
 console.log('📁 Output file: config/tailwind.tokens.js');

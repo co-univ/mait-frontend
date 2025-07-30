@@ -512,6 +512,197 @@ module.exports = {
       "l": "0px 4px 6px -2px #00000008, 0px 10px 15px -3px #0000000d",
       "xl": "0px 10px 10px -5px #00000005, 0px 20px 25px -5px #0000000d",
       "xxl": "0px 25px 50px -12px #0000001a"
+    },
+    "typography": {
+      "display-large": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "60px",
+        "lineHeight": "150%",
+        "letterSpacing": "1%"
+      },
+      "display-medium": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "44px",
+        "lineHeight": "150%",
+        "letterSpacing": "1%"
+      },
+      "display-small": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "36px",
+        "lineHeight": "150%",
+        "letterSpacing": "1%"
+      },
+      "heading-xlarge": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "44px",
+        "lineHeight": "150%",
+        "letterSpacing": "1%"
+      },
+      "heading-large": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "32px",
+        "lineHeight": "150%",
+        "letterSpacing": "1%"
+      },
+      "heading-medium": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "24px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "heading-small": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "19px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "heading-xsmall": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "17px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "heading-xxsmall": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "15px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "body-large": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "500",
+        "fontSize": "19px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "body-medium": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "500",
+        "fontSize": "17px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "body-small": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "500",
+        "fontSize": "15px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "body-xsmall": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "500",
+        "fontSize": "13px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "body-large-bold": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "19px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "body-medium-bold": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "17px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "body-small-bold": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "15px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "body-xsmall-bold": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "700",
+        "fontSize": "13px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "underline-large": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "400",
+        "fontSize": "19px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "underline-medium": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "400",
+        "fontSize": "17px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "underline-small": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "400",
+        "fontSize": "15px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      },
+      "underline-xsmall": {
+        "fontFamily": [
+          "Paperlogy"
+        ],
+        "fontWeight": "400",
+        "fontSize": "13px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%"
+      }
     }
   }
 };
