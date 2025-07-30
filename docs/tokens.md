@@ -48,7 +48,7 @@ tokens/
 - **간격**: `gap-1` (2px), `padding-4` (8px) 등
 - **테두리**: `radius-medium1` (6px), `max` (9999px) 등
 - **그림자**: `sm`, `base`, `xl` 등
-- **타이포그래피**: `display-large-paperlogy`, `heading-medium-paperlogy`, `body-small-paperlogy` 등
+- **타이포그래피**: `typo-display-large`, `typo-heading-medium`, `typo-body-small` 등
 
 ## 타이포그래피 토큰 사용법
 
