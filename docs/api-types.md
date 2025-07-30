@@ -60,23 +60,23 @@ Trying: https://api.dev.mait.kr/api-docs
 
 🔧 Generating TypeScript types...
 ✨ openapi-typescript 7.8.0
-🚀 https://api.dev.mait.kr/api-docs → ./src/types/api.ts [116ms]
-✅ Types generated successfully in ./src/types/api.ts
+🚀 https://api.dev.mait.kr/api-docs → ./types/api.ts [116ms]
+✅ Types generated successfully in ./types/api.ts
 
 🔍 Extracting schema names...
 Found schemas: CreateQuestionSetApiRequest, ApiResponseCreateQuestionSetApiResponse, CreateQuestionSetApiResponse, CreateMultipleQuestionApiRequest, MultipleChoiceDto
 
 🔍 Extracting path names...
 Found paths: /api/v1/question-sets, /api/v1/question-sets/{questionSetId}/questions
-✅ Created ./src/types/index.ts with 5 schema types and 2 path types
+✅ Created ./types/index.ts with 5 schema types and 2 path types
 
 🎉 API types generation completed!
 ```
 
 ### 생성되는 파일들
 
-- `src/types/api.ts`: OpenAPI 스펙에서 생성된 원본 타입들
-- `src/types/index.ts`: 편리한 사용을 위한 개별 타입 export
+- `types/api.ts`: OpenAPI 스펙에서 생성된 원본 타입들
+- `types/index.ts`: 편리한 사용을 위한 개별 타입 export
 
 ## 생성된 타입 구조
 
@@ -160,12 +160,12 @@ import type {
   CreateQuestionSetApiRequest,
   CreateQuestionSetApiResponse,
   MultipleChoiceDto 
-} from './types';
+} from '../types';
 ```
 
 **기존 방식**:
 ```typescript
-import type { components } from './types';
+import type { components } from '../types';
 type Request = components['schemas']['CreateQuestionSetApiRequest'];
 ```
 
@@ -174,7 +174,7 @@ type Request = components['schemas']['CreateQuestionSetApiRequest'];
 API 엔드포인트의 타입 정보를 추출할 수 있습니다:
 
 ```typescript
-import type { QuestionSetsPath } from './types';
+import type { QuestionSetsPath } from '../types';
 
 // POST 메서드의 요청 타입
 type CreateQuestionSetRequest = QuestionSetsPath['post']['requestBody']['content']['application/json'];

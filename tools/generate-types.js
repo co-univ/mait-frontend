@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 
 const API_BASE_URL = process.env.REACT_APP_BASE_URL;
-const OUTPUT_DIR = './src/types';
+const OUTPUT_DIR = './types';
 
 // Common OpenAPI endpoints to try
 const COMMON_ENDPOINTS = [
