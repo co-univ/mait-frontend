@@ -5,6 +5,11 @@ import tailwindcss from "tailwindcss";
 
 export default defineConfig({
 	plugins: [pluginReact()],
+	source: {
+		define: {
+			"process.env.REACT_APP_BASE_URL": JSON.stringify(process.env.REACT_APP_BASE_URL),
+		},
+	},
 	tools: {
 		postcss: {
 			postcssOptions: {
