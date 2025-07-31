@@ -10,7 +10,6 @@ interface SolvingQuizTitleProps {
 const SolvingQuizTitle = ({ title, type = "molu" }: SolvingQuizTitleProps) => {
 	const lines = title.split("\n|\r");
 
-	console.log(lines);
 	return (
 		<div className="w-full">
 			<span className="typo-heading-small">

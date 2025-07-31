@@ -1,0 +1,118 @@
+import clsx from "clsx";
+import type React from "react";
+import { useEffect, useRef } from "react";
+
+//
+//
+//
+
+export const ANSWER_HEIGHT = 94;
+
+interface SolvingQuizAnswerProps {
+	readonly?: boolean;
+	isActive?: boolean;
+	value?: string;
+	placeholder?: string;
+	className?: string;
+	onChange?: (value: string) => void;
+	style?: React.CSSProperties;
+}
+
+//
+//
+//
+
+const SolvingQuizAnswer = ({
+	readonly = false,
+	isActive = false,
+	value = "",
+	placeholder = "",
+	className = "",
+	onChange,
+	style = {},
+}: SolvingQuizAnswerProps) => {
+	const paragraphRef = useRef<HTMLParagraphElement>(null);
+
+	/**
+	 *
+	 */
+	const handleInput = (e: React.FormEvent<HTMLParagraphElement>) => {
+		const text = e.currentTarget.textContent || "";
+		onChange?.(text);
+	};
+
+	/**
+	 * Handles paste events to insert text at the cursor position.
+	 * This allows for pasting text directly into the contentEditable element.
+	 */
+	const handlePaste = (e: React.ClipboardEvent<HTMLParagraphElement>) => {
+		e.preventDefault();
+
+		const text = e.clipboardData.getData("text/plain");
+		const selection = window.getSelection();
+
+		if (selection && selection.rangeCount > 0) {
+			const range = selection.getRangeAt(0);
+			range.deleteContents();
+
+			const textNode = document.createTextNode(text);
+			range.insertNode(textNode);
+
+			// Move the cursor to the end of the inserted text
+			range.setStartAfter(textNode);
+			range.setEndAfter(textNode);
+			range.collapse(false);
+
+			selection.removeAllRanges();
+			selection.addRange(range);
+
+			// Keep focus
+			e.currentTarget.focus();
+		}
+	};
+
+	// Set the initial value of the paragraph element
+	useEffect(() => {
+		if (paragraphRef.current) {
+			if (value !== "") {
+				paragraphRef.current.textContent = value;
+			} else {
+				paragraphRef.current.textContent = "";
+			}
+		}
+	}, [value]);
+
+	return (
+		<div
+			className={clsx(
+				"flex items-center w-full px-padding-12 py-padding-6 rounded-medium1 border",
+				{
+					"bg-primary-5 border-primary-50": isActive,
+					"bg-gray-5 border-transparent": !isActive,
+				},
+			)}
+			style={{
+				height: ANSWER_HEIGHT,
+			}}
+		>
+			<p
+				ref={paragraphRef}
+				suppressContentEditableWarning
+				contentEditable={!readonly}
+				onInput={readonly ? undefined : handleInput}
+				onPaste={readonly ? undefined : handlePaste}
+				className={`w-full outline-none bg-transparent typo-body-medium break-words whitespace-pre-wrap overflow-y-auto 
+          empty:before:content-[attr(data-placeholder)] empty:before:text-gray-400 empty:before:pointer-events-none ${
+						readonly ? "cursor-default" : "cursor-text"
+					} ${className}`}
+				style={{
+					maxHeight: ANSWER_HEIGHT - 20,
+					...style,
+				}}
+				data-placeholder={readonly ? undefined : placeholder}
+			/>
+		</div>
+	);
+};
+
+export default SolvingQuizAnswer;
