@@ -88,6 +88,32 @@ function resolveTokenReference(value, tokenSets, defaultTokenSetName = 'Token/Mo
   return value;
 }
 
+// Helper function to map font weight names to numbers
+function mapFontWeight(value) {
+  let weight = value;
+  if (typeof value === 'string') {
+    const weightMap = {
+      'thin': '100',
+      'extralight': '200', 
+      'light': '300',
+      'regular': '400',
+      'medium': '500',
+      'semibold': '600',
+      'bold': '700',
+      'extrabold': '800',
+      'black': '900'
+    };
+    const normalized = value.toLowerCase().replace(/\s+/g, '');
+    for (const [name, num] of Object.entries(weightMap)) {
+      if (normalized.includes(name)) {
+        weight = num;
+        break;
+      }
+    }
+  }
+  return weight.toString();
+}
+
 // Process all token files
 const tokenSets = readTokenFiles();
 const flatTokens = {};
@@ -162,28 +188,7 @@ Object.entries(flatTokens).forEach(([key, tokenData]) => {
         break;
         
       case 'fontWeights':
-        let weight = value;
-        if (typeof value === 'string') {
-          const weightMap = {
-            'thin': '100',
-            'extralight': '200', 
-            'light': '300',
-            'regular': '400',
-            'medium': '500',
-            'semibold': '600',
-            'bold': '700',
-            'extrabold': '800',
-            'black': '900'
-          };
-          const normalized = value.toLowerCase().replace(/\s+/g, '');
-          for (const [name, num] of Object.entries(weightMap)) {
-            if (normalized.includes(name)) {
-              weight = num;
-              break;
-            }
-          }
-        }
-        theme.fontWeight[sanitizedKey] = weight.toString();
+        theme.fontWeight[sanitizedKey] = mapFontWeight(value);
         break;
         
       case 'lineHeights':
@@ -273,28 +278,7 @@ Object.entries(flatTokens).forEach(([key, tokenData]) => {
           if (value.fontWeight) {
             const weightToken = resolveRef(value.fontWeight);
             if (weightToken) {
-              let weight = weightToken.value;
-              if (typeof weight === 'string') {
-                const weightMap = {
-                  'thin': '100',
-                  'extralight': '200', 
-                  'light': '300',
-                  'regular': '400',
-                  'medium': '500',
-                  'semibold': '600',
-                  'bold': '700',
-                  'extrabold': '800',
-                  'black': '900'
-                };
-                const normalized = weight.toLowerCase().replace(/\s+/g, '');
-                for (const [name, num] of Object.entries(weightMap)) {
-                  if (normalized.includes(name)) {
-                    weight = num;
-                    break;
-                  }
-                }
-              }
-              typographyStyle.fontWeight = weight.toString();
+              typographyStyle.fontWeight = mapFontWeight(weightToken.value);
             }
           }
           
