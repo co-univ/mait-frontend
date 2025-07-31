@@ -5,6 +5,7 @@ import SolvingQuizTitle from "../components/SolvingQuizTitle";
 import SolvingLayout from "../layouts/SolvingLayout";
 import SolvingControls from "./SolvingControls";
 import SolvingHeader from "./SolvingHeader";
+import SolvingMultipleAnswer from "./SolvingMultipleAnswer";
 
 //
 //
@@ -39,12 +40,7 @@ const Solving = () => {
 
 				<div className="flex-grow h-size-height-5" />
 
-				<SolvingQuizAnswer
-					readonly
-					value={answer}
-					onChange={handleAnswerChange}
-					placeholder="답을 입력하세요."
-				/>
+				<SolvingMultipleAnswer />
 			</div>
 		</SolvingLayout>
 	);
