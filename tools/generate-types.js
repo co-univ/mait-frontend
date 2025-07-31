@@ -1,56 +1,57 @@
 #!/usr/bin/env node
 
-import { execSync } from 'child_process';
+import dotenv from 'dotenv';
+import { execSync, spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-const API_BASE_URL = process.env.REACT_APP_BASE_URL;
+// Load environment variables
+dotenv.config();
+
+const API_BASE_URL = process.env.PUBLIC_BASE_URL;
 if (!API_BASE_URL) {
-  console.error('❌ Error: The environment variable REACT_APP_BASE_URL is not defined.');
+  console.error('❌ Error: The environment variable PUBLIC_BASE_URL is not defined.');
   process.exit(1);
 }
 const OUTPUT_DIR = './types';
 
-// Common OpenAPI endpoints to try
-const COMMON_ENDPOINTS = [
-  '/v3/api-docs',
-  '/v2/api-docs',
-  '/api-docs',
-  '/swagger.json',
-  '/openapi.json',
-  '/docs/swagger.json',
-  '/api/openapi.json'
-];
+// OpenAPI endpoint for this project
+const API_DOCS_ENDPOINT = '/api-docs';
 
-async function findOpenApiSpec() {
-  console.log('🔍 Searching for OpenAPI specification...');
+async function getOpenApiSpec() {
+  const url = `${API_BASE_URL}${API_DOCS_ENDPOINT}`;
+  console.log(`🔍 Fetching OpenAPI specification from: ${url}`);
   
-  for (const endpoint of COMMON_ENDPOINTS) {
-    try {
-      const url = `${API_BASE_URL}${endpoint}`;
-      console.log(`Trying: ${url}`);
-      
-      // Validate URL before using it
-      try {
-        new URL(url); // Ensure url is a valid URL
-      } catch {
-        continue; // Skip invalid URL
-      }
-      
-      const response = execSync('curl', ['-s', url], { encoding: 'utf8' });
-      const parsed = JSON.parse(response);
-      
-      // Check if it's a valid OpenAPI spec
-      if (parsed.openapi || parsed.swagger) {
-        console.log(`✅ Found OpenAPI spec at: ${url}`);
-        return url;
-      }
-    } catch (error) {
-      // Continue to next endpoint
+  try {
+    // Validate URL before using it
+    new URL(url);
+    
+    const result = spawnSync('curl', ['-s', url], { encoding: 'utf8' });
+    const response = result.stdout;
+    
+    // Check if request failed
+    if (result.status !== 0) {
+      throw new Error(`HTTP request failed with status: ${result.status}`);
     }
+    
+    // Skip if response is empty or contains HTML
+    if (!response || response.trim().startsWith('<')) {
+      throw new Error('Invalid response: expected JSON but received HTML or empty response');
+    }
+    
+    const parsed = JSON.parse(response);
+    
+    // Check if it's a valid OpenAPI spec
+    if (parsed.openapi || parsed.swagger) {
+      console.log(`✅ Found OpenAPI spec (${parsed.openapi ? 'OpenAPI' : 'Swagger'} ${parsed.openapi || parsed.swagger})`);
+      return url;
+    } else {
+      throw new Error('Invalid OpenAPI specification: missing openapi or swagger field');
+    }
+  } catch (error) {
+    console.error(`❌ Failed to fetch OpenAPI spec from ${url}:`, error.message);
+    throw new Error(`Could not load OpenAPI specification. Please ensure the API server is running and accessible at ${url}`);
   }
-  
-  throw new Error('Could not find OpenAPI specification. Please check the API endpoints.');
 }
 
 async function generateTypes(specUrl) {
@@ -189,7 +190,7 @@ ${pathExports}
 
 async function main() {
   try {
-    const specUrl = await findOpenApiSpec();
+    const specUrl = await getOpenApiSpec();
     await generateTypes(specUrl);
     
     console.log('\n🎉 API types generation completed!');
