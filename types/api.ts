@@ -4,143 +4,143 @@
  */
 
 export interface paths {
-    "/api/v1/question-sets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 문제 셋 생성 API
-         * @description 새로운 문제 셋을 생성합니다.
-         */
-        post: operations["createQuestionSet"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/question-sets/{questionSetId}/questions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 문제 셋에 객관식 문제 저장 API */
-        post: operations["createShortQuestion"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+	"/api/v1/question-sets": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/**
+		 * 문제 셋 생성 API
+		 * @description 새로운 문제 셋을 생성합니다.
+		 */
+		post: operations["createQuestionSet"];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	"/api/v1/question-sets/{questionSetId}/questions": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/** 문제 셋에 객관식 문제 저장 API */
+		post: operations["createShortQuestion"];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        CreateQuestionSetApiRequest: {
-            subject: string;
-            /** @enum {string} */
-            creationType: "AI_GENERATED" | "MANUAL";
-        };
-        ApiResponseCreateQuestionSetApiResponse: {
-            isSuccess?: boolean;
-            data?: components["schemas"]["CreateQuestionSetApiResponse"];
-        };
-        CreateQuestionSetApiResponse: {
-            /**
-             * Format: int64
-             * @description 생성된 문제 셋의 ID
-             */
-            questionSetId: number;
-            /** @description 문제 셋 주제 */
-            subject: string;
-        };
-        ApiResponseVoid: {
-            isSuccess?: boolean;
-            data?: Record<string, never>;
-        };
-        CreateMultipleQuestionApiRequest: {
-            content?: string;
-            explanation?: string;
-            /** Format: int64 */
-            number?: number;
-            choices: components["schemas"]["MultipleChoiceDto"][];
-        };
-        MultipleChoiceDto: {
-            /** Format: int64 */
-            id?: number;
-            /** Format: int32 */
-            number: number;
-            content: string;
-            correct?: boolean;
-        };
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+	schemas: {
+		CreateQuestionSetApiRequest: {
+			subject: string;
+			/** @enum {string} */
+			creationType: "AI_GENERATED" | "MANUAL";
+		};
+		ApiResponseCreateQuestionSetApiResponse: {
+			isSuccess?: boolean;
+			data?: components["schemas"]["CreateQuestionSetApiResponse"];
+		};
+		CreateQuestionSetApiResponse: {
+			/**
+			 * Format: int64
+			 * @description 생성된 문제 셋의 ID
+			 */
+			questionSetId: number;
+			/** @description 문제 셋 주제 */
+			subject: string;
+		};
+		ApiResponseVoid: {
+			isSuccess?: boolean;
+			data?: Record<string, never>;
+		};
+		CreateMultipleQuestionApiRequest: {
+			content?: string;
+			explanation?: string;
+			/** Format: int64 */
+			number?: number;
+			choices: components["schemas"]["MultipleChoiceDto"][];
+		};
+		MultipleChoiceDto: {
+			/** Format: int64 */
+			id?: number;
+			/** Format: int32 */
+			number: number;
+			content: string;
+			correct?: boolean;
+		};
+	};
+	responses: never;
+	parameters: never;
+	requestBodies: never;
+	headers: never;
+	pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    createQuestionSet: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateQuestionSetApiRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseCreateQuestionSetApiResponse"];
-                };
-            };
-        };
-    };
-    createShortQuestion: {
-        parameters: {
-            query: {
-                type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
-            };
-            header?: never;
-            path: {
-                questionSetId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateMultipleQuestionApiRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseVoid"];
-                };
-            };
-        };
-    };
+	createQuestionSet: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				"application/json": components["schemas"]["CreateQuestionSetApiRequest"];
+			};
+		};
+		responses: {
+			/** @description OK */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"*/*": components["schemas"]["ApiResponseCreateQuestionSetApiResponse"];
+				};
+			};
+		};
+	};
+	createShortQuestion: {
+		parameters: {
+			query: {
+				type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+			};
+			header?: never;
+			path: {
+				questionSetId: number;
+			};
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				"application/json": components["schemas"]["CreateMultipleQuestionApiRequest"];
+			};
+		};
+		responses: {
+			/** @description OK */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"*/*": components["schemas"]["ApiResponseVoid"];
+				};
+			};
+		};
+	};
 }
