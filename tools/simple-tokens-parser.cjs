@@ -65,10 +65,10 @@ function sanitizeKey(key) {
 }
 
 // Function to resolve token references
-function resolveTokenReference(value, tokenSets) {
+function resolveTokenReference(value, tokenSets, defaultTokenSetName = 'Token/Mode 1') {
   if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
     const refKey = value.slice(1, -1);
-    const refToken = tokenSets['Token/Mode 1']?.[refKey];
+    const refToken = tokenSets[defaultTokenSetName]?.[refKey];
     if (refToken && refToken.value) {
       let resolvedValue = refToken.value;
       if (typeof resolvedValue === 'string' && resolvedValue.includes('rem')) {
