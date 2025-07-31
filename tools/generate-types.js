@@ -30,7 +30,14 @@ async function findOpenApiSpec() {
       const url = `${API_BASE_URL}${endpoint}`;
       console.log(`Trying: ${url}`);
       
-      const response = execSync(`curl -s "${url}"`, { encoding: 'utf8' });
+      // Validate URL before using it
+      try {
+        new URL(url); // Ensure url is a valid URL
+      } catch {
+        continue; // Skip invalid URL
+      }
+      
+      const response = execSync('curl', ['-s', url], { encoding: 'utf8' });
       const parsed = JSON.parse(response);
       
       // Check if it's a valid OpenAPI spec
