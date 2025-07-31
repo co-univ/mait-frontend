@@ -87,8 +87,9 @@ const SolvingQuizAnswer = ({
 			className={clsx(
 				"flex items-center w-full px-padding-12 py-padding-6 rounded-medium1 border",
 				{
-					"bg-primary-5 border-primary-50": isActive,
-					"bg-gray-5 border-transparent": !isActive,
+					"bg-primary-5 border-primary-50 text-primary-50 typo-heading-small":
+						isActive,
+					"bg-gray-5 border-transparent typo-body-medium": !isActive,
 				},
 			)}
 			style={{
@@ -101,7 +102,7 @@ const SolvingQuizAnswer = ({
 				contentEditable={!readonly}
 				onInput={readonly ? undefined : handleInput}
 				onPaste={readonly ? undefined : handlePaste}
-				className={`w-full outline-none bg-transparent typo-body-medium break-words whitespace-pre-wrap overflow-y-auto 
+				className={`w-full outline-none bg-transparent break-words whitespace-pre-wrap overflow-y-auto 
           empty:before:content-[attr(data-placeholder)] empty:before:text-gray-400 empty:before:pointer-events-none ${
 						readonly ? "cursor-default" : "cursor-text"
 					} ${className}`}
