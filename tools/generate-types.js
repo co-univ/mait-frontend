@@ -5,6 +5,10 @@ import fs from 'fs';
 import path from 'path';
 
 const API_BASE_URL = process.env.REACT_APP_BASE_URL;
+if (!API_BASE_URL) {
+  console.error('❌ Error: The environment variable REACT_APP_BASE_URL is not defined.');
+  process.exit(1);
+}
 const OUTPUT_DIR = './types';
 
 // Common OpenAPI endpoints to try
