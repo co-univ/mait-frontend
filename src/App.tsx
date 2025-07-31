@@ -1,11 +1,11 @@
 import "./App.css";
+import Solving from "./pages/solving/pages";
 
 const App = () => {
 	return (
-		<div className="content">
-			<h1>Rsbuild with React</h1>
-			<p>Start building amazing things with Rsbuild.</p>
-			<div className="p-padding-10 bg-primary-50 font-paperlogy">ㅎㅇㅎㅇ</div>
+		<div className="flex flex-col items-center justify-center min-h-screen ">
+			<div className="h-[96px] bg-primary-50 w-full"></div>
+			<Solving />
 		</div>
 	);
 };
