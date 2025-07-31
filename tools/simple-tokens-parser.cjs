@@ -64,6 +64,30 @@ function sanitizeKey(key) {
     .toLowerCase();
 }
 
+// Function to resolve token references
+function resolveTokenReference(value, tokenSets) {
+  if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
+    const refKey = value.slice(1, -1);
+    const refToken = tokenSets['Token/Mode 1']?.[refKey];
+    if (refToken && refToken.value) {
+      let resolvedValue = refToken.value;
+      if (typeof resolvedValue === 'string' && resolvedValue.includes('rem')) {
+        resolvedValue = `${parseFloat(resolvedValue) * 16}px`;
+      } else if (typeof resolvedValue === 'number') {
+        resolvedValue = `${resolvedValue}px`;
+      }
+      return resolvedValue;
+    } else {
+      // If reference not found, try to parse as number
+      const numValue = parseFloat(refKey);
+      if (!isNaN(numValue)) {
+        return `${numValue}px`;
+      }
+    }
+  }
+  return value;
+}
+
 // Process all token files
 const tokenSets = readTokenFiles();
 const flatTokens = {};
@@ -338,30 +362,6 @@ if (tokenSpacing) {
       theme.spacing[sanitizedKey] = spacing;
     }
   });
-}
-
-// Function to resolve token references
-function resolveTokenReference(value, tokenSets) {
-  if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
-    const refKey = value.slice(1, -1);
-    const refToken = tokenSets['Token/Mode 1']?.[refKey];
-    if (refToken && refToken.value) {
-      let resolvedValue = refToken.value;
-      if (typeof resolvedValue === 'string' && resolvedValue.includes('rem')) {
-        resolvedValue = `${parseFloat(resolvedValue) * 16}px`;
-      } else if (typeof resolvedValue === 'number') {
-        resolvedValue = `${resolvedValue}px`;
-      }
-      return resolvedValue;
-    } else {
-      // If reference not found, try to parse as number
-      const numValue = parseFloat(refKey);
-      if (!isNaN(numValue)) {
-        return `${numValue}px`;
-      }
-    }
-  }
-  return value;
 }
 
 // Add semantic spacing from semantic/Value-set
