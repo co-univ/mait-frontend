@@ -1,12 +1,12 @@
 import type React from "react";
-import SolvingBadege from "../components/SolvingBadege";
-import SolvingButton from "../components/SolvingButton";
+import SolvingBadege from "../../components/SolvingBadege";
+import SolvingButton from "../../components/SolvingButton";
 
 //
 //
 //
 
-interface SolvingControlsProps {
+interface SolvingTopBarControlProps {
 	badgeLabel: string;
 	badgeIcon: React.ReactNode;
 	buttonLabel: string;
@@ -17,12 +17,12 @@ interface SolvingControlsProps {
 //
 //
 
-const SolvingControls = ({
+const SolvingTopBarControl = ({
 	badgeLabel,
 	badgeIcon,
 	buttonLabel,
 	buttonIcon,
-}: SolvingControlsProps) => {
+}: SolvingTopBarControlProps) => {
 	return (
 		<div className="flex justify-between w-full">
 			<SolvingBadege lable={badgeLabel} icon={badgeIcon} />
@@ -31,4 +31,4 @@ const SolvingControls = ({
 	);
 };
 
-export default SolvingControls;
+export default SolvingTopBarControl;
