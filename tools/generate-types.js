@@ -96,14 +96,39 @@ function extractSchemaNames(apiContent) {
   console.log('🔍 Extracting schema names...');
   
   const schemaNames = [];
-  const schemaRegex = /^\s+([A-Za-z][A-Za-z0-9]*(?:Api)?(?:Request|Response|Dto)):\s*\{/gm;
-  let match;
   
-  while ((match = schemaRegex.exec(apiContent)) !== null) {
-    const schemaName = match[1];
-    if (!schemaNames.includes(schemaName)) {
-      schemaNames.push(schemaName);
+  // Try to parse the generated file to extract actual schema names from components.schemas
+  try {
+    // Look for components.schemas section in the generated file
+    const componentsMatch = apiContent.match(/components:\s*\{[\s\S]*?schemas:\s*\{([\s\S]*?)\}[\s\S]*?\}/m);
+    if (componentsMatch) {
+      // Extract schema names from the schemas section
+      const schemasSection = componentsMatch[1];
+      const schemaRegex = /^\s+([A-Za-z][A-Za-z0-9_-]*):/gm;
+      let match;
+      
+      while ((match = schemaRegex.exec(schemasSection)) !== null) {
+        const schemaName = match[1];
+        if (!schemaNames.includes(schemaName)) {
+          schemaNames.push(schemaName);
+        }
+      }
     }
+    
+    // Fallback: use the original regex as backup
+    if (schemaNames.length === 0) {
+      const fallbackRegex = /^\s+([A-Za-z][A-Za-z0-9]*(?:Api)?(?:Request|Response|Dto)):\s*\{/gm;
+      let match;
+      
+      while ((match = fallbackRegex.exec(apiContent)) !== null) {
+        const schemaName = match[1];
+        if (!schemaNames.includes(schemaName)) {
+          schemaNames.push(schemaName);
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Warning: Could not parse schema names, using fallback method');
   }
   
   console.log(`Found schemas: ${schemaNames.join(', ')}`);
