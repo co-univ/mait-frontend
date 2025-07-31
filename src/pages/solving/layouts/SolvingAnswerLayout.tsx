@@ -1,3 +1,4 @@
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import SolvingQuizAnswer, {
 	ANSWER_HEIGHT,
 } from "../components/SolvingQuizAnswer";
@@ -7,6 +8,7 @@ import SolvingQuizAnswer, {
 //
 
 interface SolvingAnswerLayoutProps {
+	readonly?: boolean;
 	draggable?: boolean;
 	prefix?: "alphabet" | "number";
 	answers: any[];
@@ -17,10 +19,13 @@ interface SolvingAnswerLayoutProps {
 //
 
 const SolvingAnswerLayout = ({
+	readonly = true,
 	draggable = false,
 	prefix,
 	answers,
 }: SolvingAnswerLayoutProps) => {
+	const handleDragEnd = () => {};
+
 	/**
 	 * Renders the prefix (A, B, C, ... or (1), (2), (3), ...) for each answer.
 	 */
@@ -62,9 +67,42 @@ const SolvingAnswerLayout = ({
 	const renderAnswers = () => {
 		return (
 			<div className="flex flex-col gap-gap-11 w-full">
-				{answers.map((answer) => (
-					<SolvingQuizAnswer key={answer.number} value={answer.value} />
-				))}
+				<DragDropContext onDragEnd={handleDragEnd}>
+					<Droppable droppableId="answers" direction="vertical">
+						{(provided) => (
+							<div
+								{...provided.droppableProps}
+								ref={provided.innerRef}
+								className="flex flex-col gap-gap-11"
+							>
+								{answers.map((answer) => (
+									<Draggable
+										isDragDisabled={!draggable}
+										key={answer.number}
+										draggableId={`answer-${answer.number}`}
+										index={answer.number - 1}
+									>
+										{(provided, snapshot) => (
+											<div
+												ref={provided.innerRef}
+												{...provided.draggableProps}
+												{...provided.dragHandleProps}
+											>
+												<SolvingQuizAnswer
+													isActive={snapshot.isDragging}
+													readonly={readonly}
+													draggable={draggable}
+													value={answer.value}
+												/>
+											</div>
+										)}
+									</Draggable>
+								))}
+								{provided.placeholder}
+							</div>
+						)}
+					</Droppable>
+				</DragDropContext>
 			</div>
 		);
 	};

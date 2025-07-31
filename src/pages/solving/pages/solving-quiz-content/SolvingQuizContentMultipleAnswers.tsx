@@ -4,7 +4,7 @@ import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 //
 //
 
-const SolvingQuizContentMultipleAnswer = () => {
+const SolvingQuizContentMultipleAnswers = () => {
 	const answers = Array.from({ length: 4 }).map((_, index) => ({
 		number: index + 1,
 		value: `${index + 1}번 문제의 답변.`,
@@ -13,4 +13,4 @@ const SolvingQuizContentMultipleAnswer = () => {
 	return <SolvingAnswerLayout answers={answers} />;
 };
 
-export default SolvingQuizContentMultipleAnswer;
+export default SolvingQuizContentMultipleAnswers;

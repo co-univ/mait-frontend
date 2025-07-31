@@ -1,3 +1,4 @@
+import { Draggable } from "@hello-pangea/dnd";
 import clsx from "clsx";
 import type React from "react";
 import { useEffect, useRef } from "react";
@@ -11,6 +12,7 @@ export const ANSWER_HEIGHT = 94;
 interface SolvingQuizAnswerProps {
 	readonly?: boolean;
 	isActive?: boolean;
+	draggable?: boolean;
 	value?: string;
 	placeholder?: string;
 	className?: string;
@@ -23,8 +25,9 @@ interface SolvingQuizAnswerProps {
 //
 
 const SolvingQuizAnswer = ({
-	readonly = false,
+	readonly = true,
 	isActive = false,
+	draggable = false,
 	value = "",
 	placeholder = "",
 	className = "",
@@ -32,6 +35,18 @@ const SolvingQuizAnswer = ({
 	style = {},
 }: SolvingQuizAnswerProps) => {
 	const paragraphRef = useRef<HTMLParagraphElement>(null);
+
+	const cursorStyle = () => {
+		if (draggable) {
+			return "cursor-grab";
+		}
+
+		if (readonly) {
+			return "cursor-default";
+		}
+
+		return "cursor-text";
+	};
 
 	/**
 	 *
@@ -102,10 +117,12 @@ const SolvingQuizAnswer = ({
 				contentEditable={!readonly}
 				onInput={readonly ? undefined : handleInput}
 				onPaste={readonly ? undefined : handlePaste}
-				className={`w-full outline-none bg-transparent break-words whitespace-pre-wrap overflow-y-auto 
-          empty:before:content-[attr(data-placeholder)] empty:before:text-gray-400 empty:before:pointer-events-none ${
-						readonly ? "cursor-default" : "cursor-text"
-					} ${className}`}
+				className={clsx(
+					"w-full outline-none bg-transparent break-words whitespace-pre-wrap overflow-y-auto",
+					"empty:before:content-[attr(data-placeholder)] empty:before:text-gray-400 empty:before:pointer-events-none",
+					cursorStyle(),
+					className,
+				)}
 				style={{
 					maxHeight: ANSWER_HEIGHT - 20,
 					...style,
