@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+	body {
+		@apply text-color-alpha-black100
+	}
+}
+
 /* Pretendard */
 @font-face {
 	font-family: "Pretendard";
