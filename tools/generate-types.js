@@ -62,8 +62,15 @@ async function generateTypes(specUrl) {
   }
   
   try {
-    // Generate types using openapi-typescript
-    execSync(`npx openapi-typescript "${specUrl}" --output ${OUTPUT_DIR}/api.ts`, {
+    // Validate specUrl
+    try {
+      new URL(specUrl); // Ensure specUrl is a valid URL
+    } catch {
+      throw new Error(`Invalid specUrl: ${specUrl}`);
+    }
+    
+    // Generate types using openapi-typescript with safer argument passing
+    execSync('npx', ['openapi-typescript', specUrl, '--output', `${OUTPUT_DIR}/api.ts`], {
       stdio: 'inherit'
     });
     
