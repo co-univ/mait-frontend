@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import Header from "./Header";
 import SideBar from "./SideBar";
 
@@ -6,21 +7,28 @@ import SideBar from "./SideBar";
 //
 //
 
-const AppLayout = () => {
-  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
+interface AppLayoutProps {
+	isSideBarOpen: boolean;
+	setIsSideBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  return (
-    <div>
-      <Header
-        isSideBarOpen={isSideBarOpen}
-        setIsSideBarOpen={setIsSideBarOpen}
-      />
-      <SideBar
-        isSideBarOpen={isSideBarOpen}
-        setIsSideBarOpen={setIsSideBarOpen}
-      />
-    </div>
-  );
+//
+//
+//
+
+const AppLayout = ({ isSideBarOpen, setIsSideBarOpen }: AppLayoutProps) => {
+	return (
+		<div>
+			<Header
+				isSideBarOpen={isSideBarOpen}
+				setIsSideBarOpen={setIsSideBarOpen}
+			/>
+			<SideBar
+				isSideBarOpen={isSideBarOpen}
+				setIsSideBarOpen={setIsSideBarOpen}
+			/>
+		</div>
+	);
 };
 
 export default AppLayout;
