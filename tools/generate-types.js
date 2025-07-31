@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import dotenv from 'dotenv';
-import { execSync, spawnSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
@@ -71,7 +71,7 @@ async function generateTypes(specUrl) {
     }
     
     // Generate types using openapi-typescript with safer argument passing
-    execSync('npx', ['openapi-typescript', specUrl, '--output', `${OUTPUT_DIR}/api.ts`], {
+    spawnSync('npx', ['openapi-typescript', specUrl, '--output', `${OUTPUT_DIR}/api.ts`], {
       stdio: 'inherit'
     });
     

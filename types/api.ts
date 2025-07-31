@@ -34,7 +34,7 @@ export interface paths {
         get?: never;
         put?: never;
         /** 문제 셋에 객관식 문제 저장 API */
-        post: operations["createMultipleQuestion"];
+        post: operations["createShortQuestion"];
         delete?: never;
         options?: never;
         head?: never;
@@ -63,6 +63,10 @@ export interface components {
             /** @description 문제 셋 주제 */
             subject: string;
         };
+        ApiResponseVoid: {
+            isSuccess?: boolean;
+            data?: Record<string, never>;
+        };
         CreateMultipleQuestionApiRequest: {
             content?: string;
             explanation?: string;
@@ -77,10 +81,6 @@ export interface components {
             number: number;
             content: string;
             correct?: boolean;
-        };
-        ApiResponseVoid: {
-            isSuccess?: boolean;
-            data?: Record<string, never>;
         };
     };
     responses: never;
@@ -115,9 +115,11 @@ export interface operations {
             };
         };
     };
-    createMultipleQuestion: {
+    createShortQuestion: {
         parameters: {
-            query?: never;
+            query: {
+                type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+            };
             header?: never;
             path: {
                 questionSetId: number;
