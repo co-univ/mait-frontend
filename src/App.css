@@ -16,6 +16,5 @@ body {
 	align-items: center;
 	justify-content: center;
 	/* min-height: 100vh; */
-	padding: 7.87rem 10.75rem 1.87rem 10.75rem;
 	transition: all 300ms ease-in-out;
 }

@@ -38,14 +38,13 @@ const TEAM_SPACES: IconContent[] = [
 
 interface SideBarProps {
 	isSideBarOpen: boolean;
-	setIsSideBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //
 //
 //
 
-const SideBar = ({ isSideBarOpen, setIsSideBarOpen }: SideBarProps) => {
+const SideBar = ({ isSideBarOpen }: SideBarProps) => {
 	return (
 		<div
 			className={clsx(

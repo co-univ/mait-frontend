@@ -23,10 +23,7 @@ const AppLayout = ({ isSideBarOpen, setIsSideBarOpen }: AppLayoutProps) => {
 				isSideBarOpen={isSideBarOpen}
 				setIsSideBarOpen={setIsSideBarOpen}
 			/>
-			<SideBar
-				isSideBarOpen={isSideBarOpen}
-				setIsSideBarOpen={setIsSideBarOpen}
-			/>
+			<SideBar isSideBarOpen={isSideBarOpen} />
 		</div>
 	);
 };

@@ -2,7 +2,7 @@ import React from "react";
 
 const QuizSolving = () => {
 	return (
-		<div className="text-alpha-black-100 text-xl">
+		<div className="text-alpha-black100 typo-heading-xlarge">
 			문제 풀기 페이지입니다. 문제 풀기 페이지입니다.
 		</div>
 	);
