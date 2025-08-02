@@ -7,11 +7,11 @@ import type { Size } from "./Dropdown";
 //
 
 interface DropdownCollapseProps {
-  size: Size;
-  text: string;
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  width?: string;
+	size: Size;
+	text: string;
+	isOpen: boolean;
+	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	width?: string;
 }
 
 //
@@ -19,29 +19,31 @@ interface DropdownCollapseProps {
 //
 
 const DropdownCollapse = ({
-  size,
-  text,
-  isOpen,
-  setIsOpen,
-  width,
+	size,
+	text,
+	isOpen,
+	setIsOpen,
+	width,
 }: DropdownCollapseProps) => {
-  /**
-   *
-   */
-  const handleButtonClick = () => {
-    setIsOpen(!isOpen);
-  };
+	/**
+	 *
+	 */
+	const handleButtonClick = () => {
+		setIsOpen(!isOpen);
+	};
 
-  return (
-    <button
-      className="flex items-center gap-[0.62rem] rounded-md p-3 hover:bg-primary-5 active:bg-alpha-white-100"
-      type="button"
-      onClick={handleButtonClick}
-    >
-      <span className="text-base font-medium text-alpha-black-100">{text}</span>
-      <ChevronsUpDown className="h-5 w-5 text-alpha-black-100" />
-    </button>
-  );
+	return (
+		<button
+			className="w-full flex items-center gap-[10px] rounded-md p-padding-6 hover:bg-primary-5 active:bg-alpha-white100"
+			type="button"
+			onClick={handleButtonClick}
+		>
+			<span className="text-base typo-body-medium text-alpha-black100 text-left">
+				{text}
+			</span>
+			<ChevronsUpDown className="h-3 w-3 text-alpha-black100" />
+		</button>
+	);
 };
 
 export default DropdownCollapse;

@@ -46,17 +46,10 @@ interface SideBarProps {
 //
 
 const SideBar = ({ isSideBarOpen, setIsSideBarOpen }: SideBarProps) => {
-	/**
-	 *
-	 */
-	const handleHideButtonClick = () => {
-		setIsSideBarOpen(false);
-	};
-
 	return (
 		<div
 			className={clsx(
-				"fixed left-0 top-0 h-[64rem] w-[17.5rem] bg-alpha-white-100 p-8 shadow-xxl transition-all duration-300 ease-in-out",
+				"fixed left-0 top-[6rem] h-[calc(100vh-6rem)] w-[17.5rem] bg-alpha-white-100 p-5 shadow-xxl transition-all duration-300 ease-in-out",
 				{
 					"translate-x-0": isSideBarOpen,
 					"-translate-x-full": !isSideBarOpen,
@@ -64,13 +57,6 @@ const SideBar = ({ isSideBarOpen, setIsSideBarOpen }: SideBarProps) => {
 			)}
 		>
 			<div className="flex w-full flex-col items-center">
-				<div className="mb-8 flex h-fit w-full items-center justify-between">
-					<img className="h-9" src={logo} alt="로고" />
-					<ChevronsLeft
-						className="h-6 w-6 cursor-pointer text-alpha-black-100"
-						onClick={handleHideButtonClick}
-					/>
-				</div>
 				<div className="mb-[0.62rem] w-full">
 					<Dropdown
 						size="large"
