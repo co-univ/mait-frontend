@@ -34,64 +34,19 @@ const Header = ({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) => {
 	 *
 	 */
 	const handleMenuButtonClick = () => {
-		setIsSideBarOpen(true);
-	};
-
-	/**
-	 *
-	 */
-	const renderHeaderShort = () => {
-		if (!isSideBarOpen) {
-			return;
-		}
-
-		return (
-			<div className="fixed left-0 top-0 flex h-24 w-full place-content-between items-center bg-alpha-white-100 p-8 transition-all delay-100 duration-300 ease-in-out">
-				<div
-					className={clsx(
-						"flex items-center gap-[4.5rem] transition-transform duration-300 ease-in-out",
-						{
-							"translate-x-[17.5rem]": isSideBarOpen,
-							"translate-x-0": !isSideBarOpen,
-						},
-					)}
-				>
-					<HistoryController />
-				</div>
-				<div className="flex items-center gap-5">
-					<SearchBar />
-					<UserMenu />
-				</div>
-			</div>
-		);
-	};
-
-	/**
-	 *
-	 */
-	const renderHeaderFull = () => {
-		if (isSideBarOpen) {
-			return;
-		}
-
-		return (
-			<div className="fixed left-0 top-0 flex h-24 w-full place-content-between items-center bg-alpha-white-100 p-8">
-				<div className="flex items-center gap-5">
-					<BrandMenu onMenuOpen={handleMenuButtonClick} />
-					<HistoryController />
-				</div>
-				<div className="flex items-center gap-5">
-					<SearchBar />
-					<UserMenu />
-				</div>
-			</div>
-		);
+		setIsSideBarOpen(!isSideBarOpen);
 	};
 
 	return (
-		<div>
-			{renderHeaderShort()}
-			{renderHeaderFull()}
+		<div className="fixed left-0 top-0 flex h-24 w-full place-content-between items-center bg-alpha-white-100 p-8">
+			<div className="flex items-center gap-5">
+				<BrandMenu onMenuOpen={handleMenuButtonClick} />
+				<HistoryController />
+			</div>
+			<div className="flex items-center gap-5">
+				<SearchBar />
+				<UserMenu />
+			</div>
 		</div>
 	);
 };
