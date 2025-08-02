@@ -75,7 +75,7 @@ const DropdownList = ({ isOpen, group, contents }: DropdownListProps) => {
 				</p>
 			</div>
 			<div className="h-px w-full bg-gray-20" />
-			<div className="flex w-full flex-col gap-[0.62rem] p-[4px]">
+			<div className="flex w-full flex-col gap-[0.62rem] p-[4px] mb-padding-3">
 				{contents.map(renderDropdownItem)}
 			</div>
 		</div>
