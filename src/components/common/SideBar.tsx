@@ -3,7 +3,7 @@ import { ChevronsLeft, NotebookPen } from "lucide-react";
 import type React from "react";
 import logo from "../../assets/logo.png";
 import Dropdown, { type IconContent } from "./Dropdown";
-import SideBarNavigationMenuList from "./SideBarNavigationMenuList";
+import SideBarMenuList from "./SideBarMenuList";
 
 //
 //
@@ -81,7 +81,7 @@ const SideBar = ({ isSideBarOpen, setIsSideBarOpen }: SideBarProps) => {
 					/>
 				</div>
 				<div className="w-full">
-					<SideBarNavigationMenuList />
+					<SideBarMenuList />
 				</div>
 			</div>
 		</div>

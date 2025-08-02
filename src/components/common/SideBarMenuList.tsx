@@ -1,7 +1,7 @@
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import SideBarNavigationMenuItem from "./SideBarNavigationMenuItem";
+import SideBarMenuItem from "./SideBarMenuItem";
 
 //
 //
@@ -55,13 +55,13 @@ const MENU_LIST: Readonly<NavigationMenuItem[]> = Object.freeze([
 //
 //
 
-const SideBarNavigationMenuList = () => {
+const SideBarMenuList = () => {
   const [selected, setSelected] = useState<MenuKey | null>("quiz-management"); // maker면 문제 관리, player면 문제 풀기가 default
 
   return (
     <div className="flex w-full flex-col gap-[0.62rem]">
       {MENU_LIST.map((item) => (
-        <SideBarNavigationMenuItem
+        <SideBarMenuItem
           key={item.key}
           icon={item.icon}
           label={item.label}
@@ -74,4 +74,4 @@ const SideBarNavigationMenuList = () => {
   );
 };
 
-export default SideBarNavigationMenuList;
+export default SideBarMenuList;

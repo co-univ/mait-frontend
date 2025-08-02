@@ -18,7 +18,7 @@ interface MenuItemProps {
 //
 //
 
-const SideBarNavigationMenuItem = ({
+const SideBarMenuItem = ({
 	icon,
 	label,
 	path,
@@ -63,4 +63,4 @@ const SideBarNavigationMenuItem = ({
 	);
 };
 
-export default SideBarNavigationMenuItem;
+export default SideBarMenuItem;
