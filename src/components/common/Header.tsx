@@ -80,7 +80,7 @@ const HistoryController = () => {
  */
 const SearchBar = () => {
 	return (
-		<div className="flex h-5 w-[372px] items-center gap-[0.63rem] rounded-md bg-gray-5 px-3 py-[0.38rem]">
+		<div className="flex h-5 w-[372px] items-center gap-[0.63rem] rounded-md bg-gray-5 px-padding-6 py-padding-3">
 			<Search className="h-2 w-2 text-gray-30" />
 			<input
 				className="w-full bg-transparent text-alpha-black100 outline-none typo-body-xsmall"
