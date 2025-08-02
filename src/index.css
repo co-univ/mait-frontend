@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-	body {
-		@apply font-Paperlogy;
-	}
-}
-
 /* Pretendard */
 @font-face {
 	font-family: "Pretendard";

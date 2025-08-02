@@ -8,13 +8,13 @@ import {
 	UserRound,
 } from "lucide-react";
 import type React from "react";
-import logoSymbol from "../../assets/logo_symbol.png";
+import logo from "../../assets/logo.png";
 
 //
 //
 //
 
-const ICON_BUTTON_STYLE = "h-6 w-6 cursor-pointer text-alpha-black-100";
+const ICON_BUTTON_STYLE = "h-4 w-4 cursor-pointer text-alpha-black100";
 
 //
 //
@@ -76,7 +76,7 @@ const Header = ({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) => {
 
 		return (
 			<div className="fixed left-0 top-0 flex h-24 w-full place-content-between items-center bg-alpha-white-100 p-8">
-				<div className="flex items-center gap-[4.5rem]">
+				<div className="flex items-center gap-5">
 					<BrandMenu onMenuOpen={handleMenuButtonClick} />
 					<HistoryController />
 				</div>
@@ -101,16 +101,9 @@ const Header = ({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) => {
  */
 const BrandMenu = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
 	return (
-		<div className="flex items-center gap-[0.63rem]">
-			<img
-				className="h-8 w-8 cursor-pointer"
-				src={logoSymbol}
-				alt="심볼 로고"
-			/>
-			<Menu
-				className="h-6 w-6 cursor-pointer text-alpha-black-100"
-				onClick={onMenuOpen}
-			/>
+		<div className="flex items-center gap-3">
+			<img className="h-6 cursor-pointer" src={logo} alt="로고" />
+			<Menu className={ICON_BUTTON_STYLE} onClick={onMenuOpen} />
 		</div>
 	);
 };
@@ -120,9 +113,9 @@ const BrandMenu = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
  */
 const HistoryController = () => {
 	return (
-		<div className="flex items-center gap-5">
-			<ChevronLeft className={ICON_BUTTON_STYLE} />
-			<ChevronRight className={ICON_BUTTON_STYLE} />
+		<div className="flex items-center gap-3">
+			<ChevronLeft className="h-4 w-4 cursor-pointer text-color-gray-40" />
+			<ChevronRight className="h-4 w-4 cursor-pointer text-color-alpha-black100" />
 		</div>
 	);
 };
@@ -132,10 +125,10 @@ const HistoryController = () => {
  */
 const SearchBar = () => {
 	return (
-		<div className="flex h-8 w-96 items-center gap-[0.63rem] rounded-md bg-gray-5 px-3 py-[0.38rem]">
-			<Search className="h-5 w-5 text-gray-30" />
+		<div className="flex h-5 w-[372px] items-center gap-[0.63rem] rounded-md bg-gray-5 px-3 py-[0.38rem]">
+			<Search className="h-2 w-2 text-gray-30" />
 			<input
-				className="w-full bg-transparent text-alpha-black-100 outline-none"
+				className="w-full bg-transparent text-alpha-black100 outline-none typo-body-xsmall"
 				type="text"
 				placeholder="문제 검색"
 			/>
@@ -148,11 +141,13 @@ const SearchBar = () => {
  */
 const UserMenu = () => {
 	return (
-		<div className="flex items-center gap-5">
-			<Bell className="h-6 w-6 cursor-pointer text-alpha-black-100" />
-			<div className="flex cursor-pointer items-center gap-5">
+		<div className="flex items-center gap-3">
+			<Bell className={ICON_BUTTON_STYLE} />
+			<div className="flex cursor-pointer items-center gap-3">
 				<UserRound className={ICON_BUTTON_STYLE} />
-				<span className="text-base text-alpha-black-100">전민쟁</span>
+				<span className="text-base text-alpha-black100 typo-body-small">
+					전민쟁
+				</span>
 			</div>
 		</div>
 	);
