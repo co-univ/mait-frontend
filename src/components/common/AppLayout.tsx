@@ -1,7 +1,6 @@
 import type React from "react";
-import { useState } from "react";
 import Header from "./Header";
-import SideBar from "./SideBar";
+import SideBar, { type SIDEBAR_VARIANT } from "./SideBar";
 
 //
 //
@@ -10,20 +9,21 @@ import SideBar from "./SideBar";
 interface AppLayoutProps {
 	isSideBarOpen: boolean;
 	setIsSideBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	variant?: SIDEBAR_VARIANT;
 }
 
 //
 //
 //
 
-const AppLayout = ({ isSideBarOpen, setIsSideBarOpen }: AppLayoutProps) => {
+const AppLayout = ({ isSideBarOpen, setIsSideBarOpen, variant }: AppLayoutProps) => {
 	return (
 		<div>
 			<Header
 				isSideBarOpen={isSideBarOpen}
 				setIsSideBarOpen={setIsSideBarOpen}
 			/>
-			<SideBar isSideBarOpen={isSideBarOpen} />
+			<SideBar isSideBarOpen={isSideBarOpen} variant={variant} />
 		</div>
 	);
 };

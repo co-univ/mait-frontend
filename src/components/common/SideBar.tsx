@@ -36,22 +36,30 @@ const TEAM_SPACES: IconContent[] = [
 //
 //
 
+export type SIDEBAR_VARIANT = "default" | "overlay";
+
 interface SideBarProps {
 	isSideBarOpen: boolean;
+	variant?: SIDEBAR_VARIANT;
 }
 
 //
 //
 //
 
-const SideBar = ({ isSideBarOpen }: SideBarProps) => {
+const SideBar = ({ isSideBarOpen, variant = "default" }: SideBarProps) => {
 	return (
 		<div
 			className={clsx(
-				"fixed left-0 top-[6rem] h-[calc(100vh-6rem)] w-[17.5rem] bg-alpha-white-100 p-5 shadow-xxl transition-all duration-300 ease-in-out",
+				"fixed left-0 top-[6rem] w-[17.5rem] bg-alpha-white100 p-5 shadow-xxl transition-all duration-300 ease-in-out",
 				{
 					"translate-x-0": isSideBarOpen,
 					"-translate-x-full": !isSideBarOpen,
+				},
+				{
+					"h-[calc(100vh-6rem)]": variant === "default",
+					"h-[calc(100vh-12rem)] rounded-r-radius-large1 border-gray-10 border":
+						variant === "overlay",
 				},
 			)}
 		>
