@@ -5,10 +5,13 @@ import { Outlet, useLocation } from "react-router-dom";
 import AppLayout from "./components/common/AppLayout";
 import type { SIDEBAR_VARIANT } from "./components/common/SideBar";
 
+//
+//
+//
+
 const App = () => {
 	const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
-	// TODO: use this to determine the sidebar variant based on the current route
   const location = useLocation();
 
   const sidebarVariant: SIDEBAR_VARIANT = location.pathname.startsWith(
