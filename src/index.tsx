@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import "./index.css";
+import { RouterProvider } from "react-router-dom";
+import router from "./routes";
 
 // TanStack Query 클라이언트 생성
 const queryClient = new QueryClient({
@@ -24,7 +25,7 @@ if (rootEl) {
 	root.render(
 		<React.StrictMode>
 			<QueryClientProvider client={queryClient}>
-				<App />
+                <RouterProvider router={router} />
 			</QueryClientProvider>
 		</React.StrictMode>,
 	);

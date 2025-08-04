@@ -1,8 +1,45 @@
 import "./App.css";
-import { QuestionCreation } from "./pages/creation";
+import clsx from "clsx";
+import { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import AppLayout from "./components/common/AppLayout";
+import type { SIDEBAR_VARIANT } from "./components/common/SideBar";
+
+//
+//
+//
 
 const App = () => {
-	return <QuestionCreation />;
+	const [isSideBarOpen, setIsSideBarOpen] = useState(true);
+
+  const location = useLocation();
+
+  const sidebarVariant: SIDEBAR_VARIANT = location.pathname.startsWith(
+    "/quiz-solving",
+  )
+    ? "overlay"
+    : "default";
+
+	return (
+		<div className="app-container">
+			<AppLayout
+				isSideBarOpen={isSideBarOpen}
+				setIsSideBarOpen={setIsSideBarOpen}
+				variant={sidebarVariant}
+			/>
+			<main
+				className={clsx(
+					"main-content transition-all duration-300 ease-in-out",
+					{
+						"pl-[calc(17.5rem+2rem)] pr-8": isSideBarOpen && sidebarVariant === "default",
+						"px-[10.75rem]": !isSideBarOpen && sidebarVariant === "default",
+					},
+				)}
+			>
+				<Outlet />
+			</main>
+		</div>
+	);
 };
 
 export default App;
