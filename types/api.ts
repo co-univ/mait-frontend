@@ -4,434 +4,478 @@
  */
 
 export interface paths {
-    "/api/v1/teams": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 팀 생성 API */
-        post: operations["createTeam"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/question-sets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 문제 셋 목록 조회 */
-        get: operations["getQuestionSets"];
-        put?: never;
-        /**
-         * 문제 셋 생성 API
-         * @description 새로운 문제 셋을 생성합니다.
-         */
-        post: operations["createQuestionSet"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/question-sets/{questionSetId}/questions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 문제 셋에 주관식 문제 저장 API */
-        post: operations["createShortQuestion"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/question-sets/{questionSetId}/questions/{questionId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 문제 조회 API */
-        get: operations["getQuestion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+	"/api/v1/teams": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/** 팀 생성 API */
+		post: operations["createTeam"];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	"/api/v1/question-sets": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/** 문제 셋 목록 조회 */
+		get: operations["getQuestionSets"];
+		put?: never;
+		/**
+		 * 문제 셋 생성 API
+		 * @description 새로운 문제 셋을 생성합니다.
+		 */
+		post: operations["createQuestionSet"];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	"/api/v1/question-sets/{questionSetId}/questions": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/** 문제 셋에 주관식 문제 저장 API */
+		post: operations["createShortQuestion"];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	"/api/v1/question-sets/{questionSetId}/questions/{questionId}": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/** 문제 조회 API */
+		get: operations["getQuestion"];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        CreateTeamApiRequest: {
-            name: string;
-        };
-        ApiResponseVoid: {
-            isSuccess?: boolean;
-            data?: Record<string, never>;
-        };
-        CreateQuestionSetApiRequest: {
-            subject: string;
-            /** @enum {string} */
-            creationType: "AI_GENERATED" | "MANUAL";
-        };
-        ApiResponseCreateQuestionSetApiResponse: {
-            isSuccess?: boolean;
-            data?: components["schemas"]["CreateQuestionSetApiResponse"];
-        };
-        CreateQuestionSetApiResponse: {
-            /**
-             * Format: int64
-             * @description 생성된 문제 셋의 ID
-             */
-            questionSetId: number;
-            /** @description 문제 셋 주제 */
-            subject: string;
-        };
-        CreateFillBlankQuestionApiRequest: {
-            type: "CreateFillBlankQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">, "type"> & {
-            fillBlankAnswers: components["schemas"]["FillBlankAnswerDto"][];
-        });
-        CreateMultipleQuestionApiRequest: {
-            type: "CreateMultipleQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">, "type"> & {
-            choices: components["schemas"]["MultipleChoiceDto"][];
-        });
-        CreateOrderingQuestionApiRequest: {
-            type: "CreateOrderingQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">, "type"> & {
-            options: components["schemas"]["OrderingQuestionOptionDto"][];
-        });
-        CreateQuestionApiRequest: {
-            content?: string;
-            explanation?: string;
-            /** Format: int64 */
-            number: number;
-            type: string;
-        };
-        CreateShortQuestionApiRequest: {
-            type: "CreateShortQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">, "type"> & {
-            shortAnswers: components["schemas"]["ShortAnswerDto"][];
-        });
-        FillBlankAnswerDto: {
-            /** Format: int64 */
-            id?: number;
-            answer?: string;
-            /**
-             * Format: int64
-             * @description 빈칸 문제 정답 그룹 번호
-             */
-            number: number;
-            main?: boolean;
-        };
-        MultipleChoiceDto: {
-            /** Format: int64 */
-            id?: number;
-            /** Format: int32 */
-            number: number;
-            content: string;
-            correct?: boolean;
-        };
-        OrderingQuestionOptionDto: {
-            /** Format: int64 */
-            id?: number;
-            /**
-             * Format: int32
-             * @description 보기에 보여질 순서
-             */
-            originOrder: number;
-            /** @description 보기 내용 */
-            content: string;
-            /**
-             * Format: int32
-             * @description 정답이 되는 순서
-             */
-            answerOrder: number;
-        };
-        ShortAnswerDto: {
-            /** Format: int64 */
-            id?: number;
-            answer?: string;
-            /**
-             * Format: int64
-             * @description 주관식 문제 정답 그룹 번호
-             */
-            number: number;
-            main?: boolean;
-        };
-        ApiResponseListQuestionSetApiResponse: {
-            isSuccess?: boolean;
-            data?: components["schemas"]["QuestionSetApiResponse"][];
-        };
-        /**
-         * @description 문제 모드
-         * @enum {string}
-         */
-        DeliveryMode: "LIVE_TIME" | "REVIEW";
-        QuestionSetApiResponse: {
-            /** Format: int64 */
-            id: number;
-            subject?: string;
-            title?: string;
-            creationType: components["schemas"]["QuestionSetCreationType"];
-            visibility: components["schemas"]["QuestionSetVisibility"];
-            deliveryMode: components["schemas"]["DeliveryMode"];
-            /** Format: int64 */
-            teamId: number;
-            /** Format: date-time */
-            createdAt: string;
-        };
-        /**
-         * @description 문제 셋 생성 유형
-         * @enum {string}
-         */
-        QuestionSetCreationType: "AI_GENERATED" | "MANUAL";
-        /**
-         * @description 문제 셋 노출 단위
-         * @enum {string}
-         */
-        QuestionSetVisibility: "PUBLIC" | "GROUP" | "PRIVATE";
-        ApiResponseQuestionApiResponse: {
-            isSuccess?: boolean;
-            data?: components["schemas"]["FillBlankQuestionApiResponse"] | components["schemas"]["MultipleQuestionApiResponse"] | components["schemas"]["OrderingQuestionApiResponse"] | components["schemas"]["ShortQuestionApiResponse"];
-        };
-        /** @description 빈칸 문제의 정답 목록 */
-        FillBlankAnswerApiResponse: {
-            /**
-             * Format: int64
-             * @description 빈칸 문제 답안 ID
-             */
-            id: number;
-            answer?: string;
-            /** @description 빈칸 문제 답안이 주관식인지 객관식인지 여부 */
-            isMain: boolean;
-            /**
-             * Format: int64
-             * @description 빈칸 문제 답안의 순서
-             */
-            number: number;
-        };
-        FillBlankQuestionApiResponse: {
-            type: "FillBlankQuestionApiResponse";
-        } & (Omit<WithRequired<components["schemas"]["QuestionApiResponse"], "id" | "number" | "type">, "type"> & {
-            /** @description 빈칸 문제의 정답 목록 */
-            answers: components["schemas"]["FillBlankAnswerApiResponse"][];
-        });
-        /** @description 객관식 문제의 선택지 목록 */
-        MultipleChoiceApiResponse: {
-            /** Format: int64 */
-            id: number;
-            /** Format: int32 */
-            number: number;
-            content?: string;
-            isCorrect: boolean;
-        };
-        MultipleQuestionApiResponse: {
-            type: "MultipleQuestionApiResponse";
-        } & (Omit<WithRequired<components["schemas"]["QuestionApiResponse"], "id" | "number" | "type">, "type"> & {
-            /** @description 객관식 문제의 선택지 목록 */
-            choices: components["schemas"]["MultipleChoiceApiResponse"][];
-        });
-        /** @description 순서 문제의 보기 목록 */
-        OrderingOptionApiResponse: {
-            /**
-             * Format: int64
-             * @description 정렬 문제 옵션 ID
-             */
-            id: number;
-            /**
-             * Format: int32
-             * @description 정렬 문제 옵션의 원래 순서
-             */
-            originOrder: number;
-            content?: string;
-            /**
-             * Format: int32
-             * @description 정렬 문제 옵션의 답안 순서
-             */
-            answerOrder: number;
-        };
-        OrderingQuestionApiResponse: {
-            type: "OrderingQuestionApiResponse";
-        } & (Omit<WithRequired<components["schemas"]["QuestionApiResponse"], "id" | "number" | "type">, "type"> & {
-            /** @description 순서 문제의 보기 목록 */
-            options: components["schemas"]["OrderingOptionApiResponse"][];
-        });
-        QuestionApiResponse: {
-            /** Format: int64 */
-            id: number;
-            content?: string;
-            explanation?: string;
-            /** Format: int64 */
-            number: number;
-            /** @enum {string} */
-            type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
-        };
-        /** @description 주관식 문제의 정답 목록 */
-        ShortAnswerApiResponse: {
-            /** Format: int64 */
-            id: number;
-            answer?: string;
-            isMain: boolean;
-            /** Format: int64 */
-            number: number;
-        };
-        ShortQuestionApiResponse: {
-            type: "ShortQuestionApiResponse";
-        } & (Omit<WithRequired<components["schemas"]["QuestionApiResponse"], "id" | "number" | "type">, "type"> & {
-            /** @description 주관식 문제의 정답 목록 */
-            answers: components["schemas"]["ShortAnswerApiResponse"][];
-        });
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+	schemas: {
+		CreateTeamApiRequest: {
+			name: string;
+		};
+		ApiResponseVoid: {
+			isSuccess?: boolean;
+			data?: Record<string, never>;
+		};
+		CreateQuestionSetApiRequest: {
+			subject: string;
+			/** @enum {string} */
+			creationType: "AI_GENERATED" | "MANUAL";
+		};
+		ApiResponseCreateQuestionSetApiResponse: {
+			isSuccess?: boolean;
+			data?: components["schemas"]["CreateQuestionSetApiResponse"];
+		};
+		CreateQuestionSetApiResponse: {
+			/**
+			 * Format: int64
+			 * @description 생성된 문제 셋의 ID
+			 */
+			questionSetId: number;
+			/** @description 문제 셋 주제 */
+			subject: string;
+		};
+		CreateFillBlankQuestionApiRequest: {
+			type: "CreateFillBlankQuestionApiRequest";
+		} & (Omit<
+			WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">,
+			"type"
+		> & {
+			fillBlankAnswers: components["schemas"]["FillBlankAnswerDto"][];
+		});
+		CreateMultipleQuestionApiRequest: {
+			type: "CreateMultipleQuestionApiRequest";
+		} & (Omit<
+			WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">,
+			"type"
+		> & {
+			choices: components["schemas"]["MultipleChoiceDto"][];
+		});
+		CreateOrderingQuestionApiRequest: {
+			type: "CreateOrderingQuestionApiRequest";
+		} & (Omit<
+			WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">,
+			"type"
+		> & {
+			options: components["schemas"]["OrderingQuestionOptionDto"][];
+		});
+		CreateQuestionApiRequest: {
+			content?: string;
+			explanation?: string;
+			/** Format: int64 */
+			number: number;
+			type: string;
+		};
+		CreateShortQuestionApiRequest: {
+			type: "CreateShortQuestionApiRequest";
+		} & (Omit<
+			WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">,
+			"type"
+		> & {
+			shortAnswers: components["schemas"]["ShortAnswerDto"][];
+		});
+		FillBlankAnswerDto: {
+			/** Format: int64 */
+			id?: number;
+			answer?: string;
+			/**
+			 * Format: int64
+			 * @description 빈칸 문제 정답 그룹 번호
+			 */
+			number: number;
+			main?: boolean;
+		};
+		MultipleChoiceDto: {
+			/** Format: int64 */
+			id?: number;
+			/** Format: int32 */
+			number: number;
+			content: string;
+			correct?: boolean;
+		};
+		OrderingQuestionOptionDto: {
+			/** Format: int64 */
+			id?: number;
+			/**
+			 * Format: int32
+			 * @description 보기에 보여질 순서
+			 */
+			originOrder: number;
+			/** @description 보기 내용 */
+			content: string;
+			/**
+			 * Format: int32
+			 * @description 정답이 되는 순서
+			 */
+			answerOrder: number;
+		};
+		ShortAnswerDto: {
+			/** Format: int64 */
+			id?: number;
+			answer?: string;
+			/**
+			 * Format: int64
+			 * @description 주관식 문제 정답 그룹 번호
+			 */
+			number: number;
+			main?: boolean;
+		};
+		ApiResponseListQuestionSetApiResponse: {
+			isSuccess?: boolean;
+			data?: components["schemas"]["QuestionSetApiResponse"][];
+		};
+		/**
+		 * @description 문제 모드
+		 * @enum {string}
+		 */
+		DeliveryMode: "LIVE_TIME" | "REVIEW";
+		QuestionSetApiResponse: {
+			/** Format: int64 */
+			id: number;
+			subject?: string;
+			title?: string;
+			creationType: components["schemas"]["QuestionSetCreationType"];
+			visibility: components["schemas"]["QuestionSetVisibility"];
+			deliveryMode: components["schemas"]["DeliveryMode"];
+			/** Format: int64 */
+			teamId: number;
+			/** Format: date-time */
+			createdAt: string;
+		};
+		/**
+		 * @description 문제 셋 생성 유형
+		 * @enum {string}
+		 */
+		QuestionSetCreationType: "AI_GENERATED" | "MANUAL";
+		/**
+		 * @description 문제 셋 노출 단위
+		 * @enum {string}
+		 */
+		QuestionSetVisibility: "PUBLIC" | "GROUP" | "PRIVATE";
+		ApiResponseQuestionApiResponse: {
+			isSuccess?: boolean;
+			data?:
+				| components["schemas"]["FillBlankQuestionApiResponse"]
+				| components["schemas"]["MultipleQuestionApiResponse"]
+				| components["schemas"]["OrderingQuestionApiResponse"]
+				| components["schemas"]["ShortQuestionApiResponse"];
+		};
+		/** @description 빈칸 문제의 정답 목록 */
+		FillBlankAnswerApiResponse: {
+			/**
+			 * Format: int64
+			 * @description 빈칸 문제 답안 ID
+			 */
+			id: number;
+			answer?: string;
+			/** @description 빈칸 문제 답안이 주관식인지 객관식인지 여부 */
+			isMain: boolean;
+			/**
+			 * Format: int64
+			 * @description 빈칸 문제 답안의 순서
+			 */
+			number: number;
+		};
+		FillBlankQuestionApiResponse: {
+			type: "FillBlankQuestionApiResponse";
+		} & (Omit<
+			WithRequired<
+				components["schemas"]["QuestionApiResponse"],
+				"id" | "number" | "type"
+			>,
+			"type"
+		> & {
+			/** @description 빈칸 문제의 정답 목록 */
+			answers: components["schemas"]["FillBlankAnswerApiResponse"][];
+		});
+		/** @description 객관식 문제의 선택지 목록 */
+		MultipleChoiceApiResponse: {
+			/** Format: int64 */
+			id: number;
+			/** Format: int32 */
+			number: number;
+			content?: string;
+			isCorrect: boolean;
+		};
+		MultipleQuestionApiResponse: {
+			type: "MultipleQuestionApiResponse";
+		} & (Omit<
+			WithRequired<
+				components["schemas"]["QuestionApiResponse"],
+				"id" | "number" | "type"
+			>,
+			"type"
+		> & {
+			/** @description 객관식 문제의 선택지 목록 */
+			choices: components["schemas"]["MultipleChoiceApiResponse"][];
+		});
+		/** @description 순서 문제의 보기 목록 */
+		OrderingOptionApiResponse: {
+			/**
+			 * Format: int64
+			 * @description 정렬 문제 옵션 ID
+			 */
+			id: number;
+			/**
+			 * Format: int32
+			 * @description 정렬 문제 옵션의 원래 순서
+			 */
+			originOrder: number;
+			content?: string;
+			/**
+			 * Format: int32
+			 * @description 정렬 문제 옵션의 답안 순서
+			 */
+			answerOrder: number;
+		};
+		OrderingQuestionApiResponse: {
+			type: "OrderingQuestionApiResponse";
+		} & (Omit<
+			WithRequired<
+				components["schemas"]["QuestionApiResponse"],
+				"id" | "number" | "type"
+			>,
+			"type"
+		> & {
+			/** @description 순서 문제의 보기 목록 */
+			options: components["schemas"]["OrderingOptionApiResponse"][];
+		});
+		QuestionApiResponse: {
+			/** Format: int64 */
+			id: number;
+			content?: string;
+			explanation?: string;
+			/** Format: int64 */
+			number: number;
+			/** @enum {string} */
+			type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+		};
+		/** @description 주관식 문제의 정답 목록 */
+		ShortAnswerApiResponse: {
+			/** Format: int64 */
+			id: number;
+			answer?: string;
+			isMain: boolean;
+			/** Format: int64 */
+			number: number;
+		};
+		ShortQuestionApiResponse: {
+			type: "ShortQuestionApiResponse";
+		} & (Omit<
+			WithRequired<
+				components["schemas"]["QuestionApiResponse"],
+				"id" | "number" | "type"
+			>,
+			"type"
+		> & {
+			/** @description 주관식 문제의 정답 목록 */
+			answers: components["schemas"]["ShortAnswerApiResponse"][];
+		});
+	};
+	responses: never;
+	parameters: never;
+	requestBodies: never;
+	headers: never;
+	pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    createTeam: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateTeamApiRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseVoid"];
-                };
-            };
-        };
-    };
-    getQuestionSets: {
-        parameters: {
-            query: {
-                teamId: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseListQuestionSetApiResponse"];
-                };
-            };
-        };
-    };
-    createQuestionSet: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateQuestionSetApiRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseCreateQuestionSetApiResponse"];
-                };
-            };
-        };
-    };
-    createShortQuestion: {
-        parameters: {
-            query: {
-                type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
-            };
-            header?: never;
-            path: {
-                questionSetId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateFillBlankQuestionApiRequest"] | components["schemas"]["CreateMultipleQuestionApiRequest"] | components["schemas"]["CreateOrderingQuestionApiRequest"] | components["schemas"]["CreateShortQuestionApiRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseVoid"];
-                };
-            };
-        };
-    };
-    getQuestion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                questionSetId: number;
-                questionId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseQuestionApiResponse"];
-                };
-            };
-        };
-    };
+	createTeam: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				"application/json": components["schemas"]["CreateTeamApiRequest"];
+			};
+		};
+		responses: {
+			/** @description OK */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"*/*": components["schemas"]["ApiResponseVoid"];
+				};
+			};
+		};
+	};
+	getQuestionSets: {
+		parameters: {
+			query: {
+				teamId: number;
+			};
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description OK */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"*/*": components["schemas"]["ApiResponseListQuestionSetApiResponse"];
+				};
+			};
+		};
+	};
+	createQuestionSet: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				"application/json": components["schemas"]["CreateQuestionSetApiRequest"];
+			};
+		};
+		responses: {
+			/** @description OK */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"*/*": components["schemas"]["ApiResponseCreateQuestionSetApiResponse"];
+				};
+			};
+		};
+	};
+	createShortQuestion: {
+		parameters: {
+			query: {
+				type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+			};
+			header?: never;
+			path: {
+				questionSetId: number;
+			};
+			cookie?: never;
+		};
+		requestBody: {
+			content: {
+				"application/json":
+					| components["schemas"]["CreateFillBlankQuestionApiRequest"]
+					| components["schemas"]["CreateMultipleQuestionApiRequest"]
+					| components["schemas"]["CreateOrderingQuestionApiRequest"]
+					| components["schemas"]["CreateShortQuestionApiRequest"];
+			};
+		};
+		responses: {
+			/** @description OK */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"*/*": components["schemas"]["ApiResponseVoid"];
+				};
+			};
+		};
+	};
+	getQuestion: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path: {
+				questionSetId: number;
+				questionId: number;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description OK */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"*/*": components["schemas"]["ApiResponseQuestionApiResponse"];
+				};
+			};
+		};
+	};
 }
 type WithRequired<T, K extends keyof T> = T & {
-    [P in K]-?: T[P];
+	[P in K]-?: T[P];
 };

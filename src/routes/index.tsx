@@ -6,17 +6,17 @@ import QuizSolving from "../pages/quiz-solving/QuizSolving";
 import TeamManagement from "../pages/team-management/TeamManagement";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <App />,
-		children: [
-			{ path: "", element: <QuizManagement /> }, // TODO: if member is player, redirect to quiz-solving; if maker, redirect to quiz-management
-			{ path: "quiz-management", element: <QuizManagement /> },
-			{ path: "quiz-solving", element: <QuizSolving /> },
-			{ path: "dashboard", element: <Dashboard /> },
-			{ path: "team-management", element: <TeamManagement /> },
-		],
-	},
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { path: "", element: <QuizManagement /> }, // TODO: if member is player, redirect to quiz-solving; if maker, redirect to quiz-management
+      { path: "quiz-management", element: <QuizManagement /> },
+      { path: "quiz-solving", element: <QuizSolving /> },
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "team-management", element: <TeamManagement /> },
+    ],
+  },
 ]);
 
 export default router;
