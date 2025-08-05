@@ -27,6 +27,15 @@ module.exports = {
 			addUtilities(utilities);
 		},
 
+		// Custom plugin to set default text color
+		({ addBase, theme }) => {
+			addBase({
+				'*': {
+					color: theme('colors.alpha-black100'),
+				},
+			});
+		},
+
 		// Custom plugin to allow font family override
 		({ addUtilities, theme }) => {
 			const fontFamilies = theme("fontFamily");
