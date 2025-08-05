@@ -1,10 +1,20 @@
 import { defineConfig, type PostCSSPlugin } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import autoprefixer from "autoprefixer";
+import * as dotenv from "dotenv";
 import tailwindcss from "tailwindcss";
+
+dotenv.config({ path: `.env.${process.env.RSBUILD_WS_ENDPOINT}` });
 
 export default defineConfig({
 	plugins: [pluginReact()],
+	source: {
+		define: {
+			"process.env.RSBUILD_WS_ENDPOINT": JSON.stringify(
+				process.env.RSBUILD_WS_ENDPOINT,
+			),
+		},
+	},
 	tools: {
 		postcss: {
 			postcssOptions: {
@@ -18,5 +28,15 @@ export default defineConfig({
 	html: {
 		title: "MAIT",
 		favicon: "./src/assets/favicon.svg",
+	},
+	server: {
+		port: 3000,
+		proxy: {
+			"/ws": {
+				target: "http://localhost:8080",
+				changeOrigin: true,
+				ws: true,
+			},
+		},
 	},
 });

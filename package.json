@@ -18,9 +18,12 @@
 	},
 	"dependencies": {
 		"@hello-pangea/dnd": "^18.0.1",
+		"@stomp/stompjs": "^7.1.1",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tanstack/react-query": "^5.84.0",
-		"clsx": "^2.1.1",
+		"@types/sockjs-client": "^1.5.4",
+		"http-proxy-middleware": "^3.0.5",
+		"install": "^0.13.0",
 		"lodash.merge": "^4.6.2",
 		"clsx": "^2.1.1",
 		"framer-motion": "^12.23.12",
@@ -28,7 +31,8 @@
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-router-dom": "^7.7.0",
-		"react-toastify": "^11.0.5"
+		"react-toastify": "^11.0.5",
+		"sockjs-client": "^1.6.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.0.5",
@@ -45,6 +49,7 @@
 		"postcss-loader": "^8.1.1",
 		"prettier": "^3.6.2",
 		"prettier-plugin-tailwindcss": "^0.6.14",
+		"rspack-plugin-dotenv": "^0.0.3",
 		"style-dictionary": "^5.0.1",
 		"tailwindcss": "^3.4.17",
 		"typescript": "^5.8.3"
