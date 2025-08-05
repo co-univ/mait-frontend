@@ -5,6 +5,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import AppLayout from "./components/common/AppLayout";
 import type { SIDEBAR_VARIANT } from "./components/common/SideBar";
 import Toast from "./components/common/Toast";
+import WaitView from "./pages/quiz-solving/WaitView";
 
 //
 //
@@ -31,7 +32,7 @@ const App = () => {
       />
       <main
         className={clsx(
-          "main-content transition-all duration-300 ease-in-out",
+          "main-content",
           {
             "pl-[calc(17.5rem+2rem)] pr-8":
               isSideBarOpen && sidebarVariant === "default",
