@@ -1,4 +1,3 @@
-import { Draggable } from "@hello-pangea/dnd";
 import clsx from "clsx";
 import type React from "react";
 import { useEffect, useRef } from "react";
@@ -9,7 +8,7 @@ import { useEffect, useRef } from "react";
 
 export const ANSWER_HEIGHT = 94;
 
-interface SolvingQuizAnswerProps {
+export interface SolvingQuizAnswerProps {
 	readonly?: boolean;
 	isActive?: boolean;
 	draggable?: boolean;
@@ -127,7 +126,7 @@ const SolvingQuizAnswer = ({
 					maxHeight: ANSWER_HEIGHT - 20,
 					...style,
 				}}
-				data-placeholder={readonly ? undefined : placeholder}
+				data-placeholder={placeholder}
 			/>
 		</div>
 	);

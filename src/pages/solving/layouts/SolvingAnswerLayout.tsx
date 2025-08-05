@@ -1,15 +1,14 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import SolvingQuizAnswer, {
 	ANSWER_HEIGHT,
+	type SolvingQuizAnswerProps,
 } from "../components/SolvingQuizAnswer";
 
 //
 //
 //
 
-interface SolvingAnswerLayoutProps {
-	readonly?: boolean;
-	draggable?: boolean;
+interface SolvingAnswerLayoutProps extends SolvingQuizAnswerProps {
 	prefix?: "alphabet" | "number";
 	answers: any[];
 }
@@ -19,13 +18,12 @@ interface SolvingAnswerLayoutProps {
 //
 
 const SolvingAnswerLayout = ({
-	readonly = true,
-	draggable = false,
 	prefix,
 	answers,
+	...solvingQuizAnswerProps
 }: SolvingAnswerLayoutProps) => {
 	const handleDragEnd = () => {};
-
+	console.log(solvingQuizAnswerProps);
 	/**
 	 * Renders the prefix (A, B, C, ... or (1), (2), (3), ...) for each answer.
 	 */
@@ -65,44 +63,53 @@ const SolvingAnswerLayout = ({
 	 *
 	 */
 	const renderAnswers = () => {
+		const answerWrapperClass = "flex flex-col gap-gap-11 w-full";
+
+		if (solvingQuizAnswerProps.draggable) {
+			return (
+				<div className={answerWrapperClass}>
+					<DragDropContext onDragEnd={handleDragEnd}>
+						<Droppable droppableId="answers" direction="vertical">
+							{(provided) => (
+								<div
+									{...provided.droppableProps}
+									ref={provided.innerRef}
+									className={answerWrapperClass}
+								>
+									{answers.map((answer) => (
+										<Draggable
+											key={answer.number}
+											draggableId={`answer-${answer.number}`}
+											index={answer.number - 1}
+										>
+											{(provided, snapshot) => (
+												<div
+													ref={provided.innerRef}
+													{...provided.draggableProps}
+													{...provided.dragHandleProps}
+												>
+													<SolvingQuizAnswer
+														isActive={snapshot.isDragging}
+														{...solvingQuizAnswerProps}
+													/>
+												</div>
+											)}
+										</Draggable>
+									))}
+									{provided.placeholder}
+								</div>
+							)}
+						</Droppable>
+					</DragDropContext>
+				</div>
+			);
+		}
+
 		return (
-			<div className="flex flex-col gap-gap-11 w-full">
-				<DragDropContext onDragEnd={handleDragEnd}>
-					<Droppable droppableId="answers" direction="vertical">
-						{(provided) => (
-							<div
-								{...provided.droppableProps}
-								ref={provided.innerRef}
-								className="flex flex-col gap-gap-11"
-							>
-								{answers.map((answer) => (
-									<Draggable
-										isDragDisabled={!draggable}
-										key={answer.number}
-										draggableId={`answer-${answer.number}`}
-										index={answer.number - 1}
-									>
-										{(provided, snapshot) => (
-											<div
-												ref={provided.innerRef}
-												{...provided.draggableProps}
-												{...provided.dragHandleProps}
-											>
-												<SolvingQuizAnswer
-													isActive={snapshot.isDragging}
-													readonly={readonly}
-													draggable={draggable}
-													value={answer.value}
-												/>
-											</div>
-										)}
-									</Draggable>
-								))}
-								{provided.placeholder}
-							</div>
-						)}
-					</Droppable>
-				</DragDropContext>
+			<div className={answerWrapperClass}>
+				{answers.map((answer) => (
+					<SolvingQuizAnswer key={answer.number} {...solvingQuizAnswerProps} />
+				))}
 			</div>
 		);
 	};
