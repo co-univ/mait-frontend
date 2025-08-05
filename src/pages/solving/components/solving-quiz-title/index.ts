@@ -1,1 +1,1 @@
-export { default } from "./SolvingQuizTitle";
+export { default } from "@/pages/solving/components/solving-quiz-title/SolvingQuizTitle";

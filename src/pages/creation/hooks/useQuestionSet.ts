@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CreateQuestionSetApiRequest } from "@/types";
-import { apiClient } from "./api";
+import { apiClient } from "@/pages/creation/hooks/api";
 
 //
 //

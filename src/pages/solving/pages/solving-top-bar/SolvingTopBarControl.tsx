@@ -1,6 +1,6 @@
 import type React from "react";
-import SolvingBadege from "../../components/SolvingBadege";
-import SolvingButton from "../../components/SolvingButton";
+import SolvingBadege from "@/pages/solving/components/SolvingBadege";
+import SolvingButton from "@/pages/solving/components/SolvingButton";
 
 //
 //

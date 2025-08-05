@@ -5,8 +5,8 @@ import type {
   CreateOrderingQuestionApiRequest,
   CreateShortQuestionApiRequest,
 } from "@/types";
-import { apiClient } from "./api";
-import { QUESTION_SET_QUERY_KEYS } from "./useQuestionSet";
+import { apiClient } from "@/pages/creation/hooks/api";
+import { QUESTION_SET_QUERY_KEYS } from "@/pages/creation/hooks/useQuestionSet";
 
 // 문제 유형 정의 - API에서 사용되는 문제 유형들
 type QuestionType = "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";

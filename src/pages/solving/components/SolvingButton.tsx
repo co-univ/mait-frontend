@@ -1,5 +1,5 @@
-import type { SolvingBadegeProps } from "./SolvingBadege";
-import SolvingBadege from "./SolvingBadege";
+import type { SolvingBadegeProps } from "@/pages/solving/components/SolvingBadege";
+import SolvingBadege from "@/pages/solving/components/SolvingBadege";
 
 //
 //

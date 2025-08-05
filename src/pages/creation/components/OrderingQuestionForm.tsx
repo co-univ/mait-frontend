@@ -1,8 +1,8 @@
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
 import type { OrderingQuestionOptionDto } from "@/types";
-import type { OrderingQuestionFormData } from "../types";
-import FormInput from "./FormInput";
-import QuestionFormBase from "./QuestionFormBase";
+import type { OrderingQuestionFormData } from "@/pages/creation/types";
+import FormInput from "@/pages/creation/components/FormInput";
+import QuestionFormBase from "@/pages/creation/components/QuestionFormBase";
 
 //
 //

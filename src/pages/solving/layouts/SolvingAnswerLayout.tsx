@@ -2,7 +2,7 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import SolvingQuizAnswer, {
 	ANSWER_HEIGHT,
 	type SolvingQuizAnswerProps,
-} from "../components/SolvingQuizAnswer";
+} from "@/pages/solving/components/SolvingQuizAnswer";
 
 //
 //

@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type React from "react";
-import type { Size } from "./Dropdown";
+import type { Size } from "@/components/common/Dropdown";
 
 //
 //

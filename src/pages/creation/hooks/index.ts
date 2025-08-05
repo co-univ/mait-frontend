@@ -4,18 +4,18 @@
  */
 
 // API 클라이언트 export
-export { apiClient } from "./api";
+export { apiClient } from "@/pages/creation/hooks/api";
 
 // 문제 관련 훅들 export
 export {
   QUESTION_QUERY_KEYS,
   useCreateQuestion,
   useUpdateQuestion,
-} from "./useQuestion";
+} from "@/pages/creation/hooks/useQuestion";
 
 // 문제 세트 관련 훅들 export
 export {
   QUESTION_SET_QUERY_KEYS,
   useCreateQuestionSet,
   useUpdateQuestionSet,
-} from "./useQuestionSet";
+} from "@/pages/creation/hooks/useQuestionSet";

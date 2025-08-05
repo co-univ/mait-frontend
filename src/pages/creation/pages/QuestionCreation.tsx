@@ -6,13 +6,13 @@ import type {
   CreateOrderingQuestionApiRequest,
   CreateShortQuestionApiRequest,
 } from "@/types";
-import FillBlankQuestionForm from "../components/FillBlankQuestionForm";
-import FormInput from "../components/FormInput";
-import MultipleQuestionForm from "../components/MultipleQuestionForm";
-import OrderingQuestionForm from "../components/OrderingQuestionForm";
-import ShortQuestionForm from "../components/ShortQuestionForm";
-import { useCreateQuestion } from "../hooks/useQuestion";
-import { useCreateQuestionSet, useQuestionSets } from "../hooks/useQuestionSet";
+import FillBlankQuestionForm from "@/pages/creation/components/FillBlankQuestionForm";
+import FormInput from "@/pages/creation/components/FormInput";
+import MultipleQuestionForm from "@/pages/creation/components/MultipleQuestionForm";
+import OrderingQuestionForm from "@/pages/creation/components/OrderingQuestionForm";
+import ShortQuestionForm from "@/pages/creation/components/ShortQuestionForm";
+import { useCreateQuestion } from "@/pages/creation/hooks/useQuestion";
+import { useCreateQuestionSet, useQuestionSets } from "@/pages/creation/hooks/useQuestionSet";
 import type {
   AnyQuestionFormData,
   CreationState,
@@ -21,7 +21,7 @@ import type {
   OrderingQuestionFormData,
   QuestionType,
   ShortQuestionFormData,
-} from "../types";
+} from "@/pages/creation/types";
 
 //
 //
