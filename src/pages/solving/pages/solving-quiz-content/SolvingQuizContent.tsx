@@ -3,6 +3,7 @@ import SolvingQuizTitle from "../../components/solving-quiz-title";
 import SolvingQuizContentBlankAnswer from "./SolvingQuizContentBlankAnswer";
 import SolvingQuizContentMultipleAnswers from "./SolvingQuizContentMultipleAnswers";
 import SolvingQuizContentOrderAnswers from "./SolvingQuizContentOrderAnswers";
+import SolvingQuizContentShortAnswer from "./SolvingQuizContentShortAnswer";
 
 //
 //
@@ -19,7 +20,8 @@ const SolvingQuizContent = () => {
 			<div className="flex-grow h-size-height-5" />
 			{/* <SolvingQuizContentMultipleAnswers /> */}
 			{/* <SolvingQuizContentOrderAnswers /> */}
-			<SolvingQuizContentBlankAnswer />
+			{/* <SolvingQuizContentBlankAnswer /> */}
+			<SolvingQuizContentShortAnswer />
 		</div>
 	);
 };
