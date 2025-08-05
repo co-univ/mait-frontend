@@ -53,7 +53,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 				<main
 					className={clsx(
 						"flex-1 transition-all duration-300 ease-in-out",
-						"p-8",
+						"py-[30px]",
 					)}
 				>
 					{children}
