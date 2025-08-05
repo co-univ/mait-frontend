@@ -1,9 +1,9 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import SolvingQuizCorrect from "../components/SolvingQuizCorrect";
-import SolvingLayout from "../layouts/SolvingLayout";
-import SolvingQuizContent from "./solving-quiz-content";
-import SolvingTopBar from "./solving-top-bar";
+import SolvingQuizCorrect from "@/pages/solving/components/SolvingQuizCorrect";
+import SolvingLayout from "@/pages/solving/layouts/SolvingLayout";
+import SolvingQuizContent from "@/pages/solving/pages/solving-quiz-content";
+import SolvingTopBar from "@/pages/solving/pages/solving-top-bar";
 
 //
 //

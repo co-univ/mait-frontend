@@ -2,9 +2,9 @@ import "./App.css";
 import clsx from "clsx";
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import AppLayout from "./components/common/AppLayout";
-import type { SIDEBAR_VARIANT } from "./components/common/SideBar";
-import Toast from "./components/common/Toast";
+import AppLayout from "@/components/common/AppLayout";
+import type { SIDEBAR_VARIANT } from "@/components/common/SideBar";
+import Toast from "@/components/common/Toast";
 
 //
 //

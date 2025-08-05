@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import quizSuccess from "../../../assets/images/quis-success.png";
-import quizFail from "../../../assets/images/quiz-fail.png";
+import quizSuccess from "@/assets/images/quis-success.png";
+import quizFail from "@/assets/images/quiz-fail.png";
 
 //
 //

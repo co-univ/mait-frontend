@@ -1,6 +1,6 @@
 import type React from "react";
-import Header from "./Header";
-import SideBar, { type SIDEBAR_VARIANT } from "./SideBar";
+import Header from "@/components/common/Header";
+import SideBar, { type SIDEBAR_VARIANT } from "@/components/common/SideBar";
 
 //
 //

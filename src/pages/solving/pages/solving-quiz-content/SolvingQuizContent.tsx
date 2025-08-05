@@ -1,9 +1,9 @@
-import SolvingQuizImage from "../../components/SolvingQuizImage";
-import SolvingQuizTitle from "../../components/solving-quiz-title";
-import SolvingQuizContentBlankAnswer from "./SolvingQuizContentBlankAnswer";
-import SolvingQuizContentMultipleAnswers from "./SolvingQuizContentMultipleAnswers";
-import SolvingQuizContentOrderAnswers from "./SolvingQuizContentOrderAnswers";
-import SolvingQuizContentShortAnswer from "./SolvingQuizContentShortAnswer";
+import SolvingQuizImage from "@/pages/solving/components/SolvingQuizImage";
+import SolvingQuizTitle from "@/pages/solving/components/solving-quiz-title";
+import SolvingQuizContentBlankAnswer from "@/pages/solving/pages/solving-quiz-content/SolvingQuizContentBlankAnswer";
+import SolvingQuizContentMultipleAnswers from "@/pages/solving/pages/solving-quiz-content/SolvingQuizContentMultipleAnswers";
+import SolvingQuizContentOrderAnswers from "@/pages/solving/pages/solving-quiz-content/SolvingQuizContentOrderAnswers";
+import SolvingQuizContentShortAnswer from "@/pages/solving/pages/solving-quiz-content/SolvingQuizContentShortAnswer";
 
 //
 //

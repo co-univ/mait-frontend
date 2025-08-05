@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { ChevronsLeft, NotebookPen } from "lucide-react";
 import type React from "react";
-import logo from "../../assets/logo.png";
-import Dropdown, { type IconContent } from "./Dropdown";
-import SideBarMenuList from "./SideBarMenuList";
+import logo from "@/assets/logo.png";
+import Dropdown, { type IconContent } from "@/components/common/Dropdown";
+import SideBarMenuList from "@/components/common/SideBarMenuList";
 
 //
 //

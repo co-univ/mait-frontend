@@ -1,8 +1,8 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import DropdownCollapse from "./DropdownCollapse";
-import DropdownList from "./DropdownList";
-import DropdownSelectBox from "./DropdownSelectBox";
+import DropdownCollapse from "@/components/common/DropdownCollapse";
+import DropdownList from "@/components/common/DropdownList";
+import DropdownSelectBox from "@/components/common/DropdownSelectBox";
 
 //
 //

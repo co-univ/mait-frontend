@@ -1,8 +1,8 @@
 import { Plus, Trash2 } from "lucide-react";
 import type { MultipleChoiceDto } from "@/types";
-import type { MultipleQuestionFormData } from "../types";
-import FormInput from "./FormInput";
-import QuestionFormBase from "./QuestionFormBase";
+import type { MultipleQuestionFormData } from "@/pages/creation/types";
+import FormInput from "@/pages/creation/components/FormInput";
+import QuestionFormBase from "@/pages/creation/components/QuestionFormBase";
 
 //
 //

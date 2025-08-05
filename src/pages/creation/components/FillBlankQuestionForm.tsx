@@ -1,9 +1,9 @@
 import { Plus, Star, Trash2 } from "lucide-react";
 import { useEffect } from "react";
 import type { FillBlankAnswerDto } from "@/types";
-import type { FillBlankQuestionFormData } from "../types";
-import FormInput from "./FormInput";
-import QuestionFormBase from "./QuestionFormBase";
+import type { FillBlankQuestionFormData } from "@/pages/creation/types";
+import FormInput from "@/pages/creation/components/FormInput";
+import QuestionFormBase from "@/pages/creation/components/QuestionFormBase";
 
 //
 //

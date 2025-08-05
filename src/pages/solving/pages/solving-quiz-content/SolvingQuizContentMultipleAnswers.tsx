@@ -1,4 +1,4 @@
-import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
+import SolvingAnswerLayout from "@/pages/solving/layouts/SolvingAnswerLayout";
 
 //
 //

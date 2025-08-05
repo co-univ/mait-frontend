@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
-import type { Content, IconContent } from "./Dropdown";
+import type { Content, IconContent } from "@/components/common/Dropdown";
 
 //
 //

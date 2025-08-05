@@ -1,6 +1,6 @@
 import { ChevronRight, Puzzle } from "lucide-react";
-import SolvingHeader from "../../components/SolvingHeader";
-import SolvingTopBarControl from "./SolvingTopBarControl";
+import SolvingHeader from "@/pages/solving/components/SolvingHeader";
+import SolvingTopBarControl from "@/pages/solving/pages/solving-top-bar/SolvingTopBarControl";
 
 //
 //

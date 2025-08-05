@@ -1,7 +1,7 @@
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import SideBarMenuItem from "./SideBarMenuItem";
+import SideBarMenuItem from "@/components/common/SideBarMenuItem";
 
 //
 //
