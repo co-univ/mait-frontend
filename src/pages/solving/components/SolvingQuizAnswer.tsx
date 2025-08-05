@@ -10,8 +10,8 @@ export const ANSWER_HEIGHT = 94;
 
 export interface SolvingQuizAnswerProps {
 	readonly?: boolean;
-	isActive?: boolean;
 	draggable?: boolean;
+	color?: "gray" | "primary" | "success" | "point";
 	value?: string;
 	placeholder?: string;
 	className?: string;
@@ -25,8 +25,8 @@ export interface SolvingQuizAnswerProps {
 
 const SolvingQuizAnswer = ({
 	readonly = true,
-	isActive = false,
 	draggable = false,
+	color = "gray",
 	value = "",
 	placeholder = "",
 	className = "",
@@ -35,6 +35,9 @@ const SolvingQuizAnswer = ({
 }: SolvingQuizAnswerProps) => {
 	const paragraphRef = useRef<HTMLParagraphElement>(null);
 
+	/**
+	 * Returns the cursor style based on the readonly and draggable props.
+	 */
 	const cursorStyle = () => {
 		if (draggable) {
 			return "cursor-grab";
@@ -101,9 +104,13 @@ const SolvingQuizAnswer = ({
 			className={clsx(
 				"flex items-center w-full px-padding-12 py-padding-6 rounded-medium1 border",
 				{
+					"bg-gray-5 border-transparent typo-body-medium": color === "gray",
 					"bg-primary-5 border-primary-50 text-primary-50 typo-heading-small":
-						isActive,
-					"bg-gray-5 border-transparent typo-body-medium": !isActive,
+						color === "primary",
+					"bg-success-5 border-success-50 text-success-50 typo-heading-small":
+						color === "success",
+					"bg-point-5 border-point-50 text-point-50 typo-heading-small":
+						color === "point",
 				},
 			)}
 			style={{
@@ -119,7 +126,11 @@ const SolvingQuizAnswer = ({
 				className={clsx(
 					"w-full outline-none bg-transparent break-words whitespace-pre-wrap overflow-y-auto",
 					"empty:before:content-[attr(data-placeholder)] empty:before:text-gray-400 empty:before:pointer-events-none",
-					cursorStyle(),
+					{
+						"cursor-grab": draggable,
+						"cursor-text": !readonly,
+						"cursor-default": readonly,
+					},
 					className,
 				)}
 				style={{

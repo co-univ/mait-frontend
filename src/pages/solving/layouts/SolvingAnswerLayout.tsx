@@ -23,7 +23,7 @@ const SolvingAnswerLayout = ({
 	...solvingQuizAnswerProps
 }: SolvingAnswerLayoutProps) => {
 	const handleDragEnd = () => {};
-	console.log(solvingQuizAnswerProps);
+
 	/**
 	 * Renders the prefix (A, B, C, ... or (1), (2), (3), ...) for each answer.
 	 */
@@ -89,7 +89,7 @@ const SolvingAnswerLayout = ({
 													{...provided.dragHandleProps}
 												>
 													<SolvingQuizAnswer
-														isActive={snapshot.isDragging}
+														color={snapshot.isDragging ? "primary" : "gray"}
 														{...solvingQuizAnswerProps}
 													/>
 												</div>
