@@ -1,5 +1,5 @@
-const fs = require("node:fs");
-const path = require("node:path");
+const fs = require("fs");
+const path = require("path");
 
 // Read all token files based on the new structure
 function readTokenFiles() {
@@ -84,7 +84,7 @@ function resolveTokenReference(
 	) {
 		const refKey = value.slice(1, -1);
 		const refToken = tokenSets[defaultTokenSetName]?.[refKey];
-		if (refToken?.value) {
+		if (refToken && refToken.value) {
 			let resolvedValue = refToken.value;
 			if (typeof resolvedValue === "string" && resolvedValue.includes("rem")) {
 				resolvedValue = `${parseFloat(resolvedValue) * 16}px`;
@@ -95,7 +95,7 @@ function resolveTokenReference(
 		} else {
 			// If reference not found, try to parse as number
 			const numValue = parseFloat(refKey);
-			if (!Number.isNaN(numValue)) {
+			if (!isNaN(numValue)) {
 				return `${numValue}px`;
 			}
 		}
@@ -229,7 +229,7 @@ Object.entries(flatTokens).forEach(([key, tokenData]) => {
 						spacing = `${parseFloat(spacing) * 16}px`;
 					} else if (!spacing.includes("px") && !spacing.includes("%")) {
 						const numValue = parseFloat(spacing);
-						if (!Number.isNaN(numValue)) {
+						if (!isNaN(numValue)) {
 							spacing = `${numValue}px`;
 						}
 					}

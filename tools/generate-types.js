@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import { spawnSync } from "node:child_process";
-import fs from "node:fs";
-import path from "node:path";
+import { spawnSync } from "child_process";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 
 // Load environment variables
 dotenv.config();
@@ -126,14 +126,13 @@ function extractSchemaNames(apiContent) {
 			// Extract schema names from the schemas section
 			const schemasSection = componentsMatch[1];
 			const schemaRegex = /^\s+([A-Za-z][A-Za-z0-9_-]*):/gm;
-			let match = schemaRegex.exec(schemasSection);
+			let match;
 
-			while (match !== null) {
+			while ((match = schemaRegex.exec(schemasSection)) !== null) {
 				const schemaName = match[1];
 				if (!schemaNames.includes(schemaName)) {
 					schemaNames.push(schemaName);
 				}
-				match = schemaRegex.exec(schemasSection);
 			}
 		}
 
@@ -141,17 +140,16 @@ function extractSchemaNames(apiContent) {
 		if (schemaNames.length === 0) {
 			const fallbackRegex =
 				/^\s+([A-Za-z][A-Za-z0-9]*(?:Api)?(?:Request|Response|Dto)):\s*\{/gm;
-			let match = fallbackRegex.exec(apiContent);
+			let match;
 
-			while (match !== null) {
+			while ((match = fallbackRegex.exec(apiContent)) !== null) {
 				const schemaName = match[1];
 				if (!schemaNames.includes(schemaName)) {
 					schemaNames.push(schemaName);
 				}
-				match = fallbackRegex.exec(apiContent);
 			}
 		}
-	} catch (_error) {
+	} catch (error) {
 		console.warn(
 			"Warning: Could not parse schema names, using fallback method",
 		);
@@ -166,14 +164,13 @@ function extractPathNames(apiContent) {
 
 	const pathNames = [];
 	const pathRegex = /^\s+"([^"]+)":\s*\{/gm;
-	let match = pathRegex.exec(apiContent);
+	let match;
 
-	while (match !== null) {
+	while ((match = pathRegex.exec(apiContent)) !== null) {
 		const pathName = match[1];
 		if (pathName.startsWith("/") && !pathNames.includes(pathName)) {
 			pathNames.push(pathName);
 		}
-		match = pathRegex.exec(apiContent);
 	}
 
 	console.log(`Found paths: ${pathNames.join(", ")}`);
@@ -188,14 +185,15 @@ function generateIndexContent(schemaNames, pathNames) {
 	// Create path type exports with sanitized names
 	const pathExports = pathNames
 		.map((path) => {
-			const sanitizedName = `${path
-				.replace(/^\/api\/v1\//, "") // Remove /api/v1/ prefix
-				.replace(/\//g, "_") // Replace / with _
-				.replace(/[{}]/g, "") // Remove curly braces
-				.replace(/-/g, "_") // Replace hyphens with underscores
-				.split("_")
-				.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-				.join("")}Path`;
+			const sanitizedName =
+				path
+					.replace(/^\/api\/v1\//, "") // Remove /api/v1/ prefix
+					.replace(/\//g, "_") // Replace / with _
+					.replace(/[{}]/g, "") // Remove curly braces
+					.replace(/-/g, "_") // Replace hyphens with underscores
+					.split("_")
+					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+					.join("") + "Path";
 
 			return `export type ${sanitizedName} = paths['${path}'];`;
 		})
