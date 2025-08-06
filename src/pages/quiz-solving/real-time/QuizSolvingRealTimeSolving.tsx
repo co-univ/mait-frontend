@@ -4,7 +4,10 @@ import { useLocation } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
 import { QuestionStatusType } from "src/enums/solving.enum";
-import type { QuestionSetApiResponse } from "@/types";
+import SolvingQuizContent from "src/pages/solving/pages/solving-quiz-content";
+import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
+import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
+import Solving from "src/pages/solving/pages";
 
 //
 //
@@ -13,7 +16,8 @@ import type { QuestionSetApiResponse } from "@/types";
 const QuizSolvingRealTimeSolving = () => {
 	const [questionSetInfo, setQuestionSetInfo] =
 		useState<QuestionSetApiResponse | null>(null); // 문제 셋 정보
-	const [questionInfo, setQuestionInfo] = useState(null); // 문제 정보
+	const [questionId, setQuestionId] = useState<number | null>(null); // 문제 id
+	const [questionInfo, setQuestionInfo] = useState<any>(null); // 문제 정보
 	const [isSubmitAllowed, setIsSubmitAllowed] = useState(false); // 답안 제출 가능 여부
 
 	const location = useLocation();
@@ -32,6 +36,21 @@ const QuizSolvingRealTimeSolving = () => {
 		}
 	};
 
+	const fetchQuestionInfo = async (questionId: number) => {
+		try {
+			const res = await apiClient.getQuestionSetsQuestions(
+				Number(questionSetId),
+				questionId as number,
+			);
+			if (res.data) {
+				setQuestionInfo(res.data);
+				console.log(res.data);
+			}
+		} catch (err) {
+			console.error("Failed to fetch question info", err);
+		}
+	};
+
 	const handleWebSocketMessage = (msg: any) => {
 		const questionSetId = msg.questionSetId; // 문제 셋 id
 		const questionId = msg.questionId; // 문제 id
@@ -43,7 +62,8 @@ const QuizSolvingRealTimeSolving = () => {
 				break;
 			case QuestionStatusType.ACCESS_PERMISSION: // 문제 접근 허용
 				// 문제 화면 노출
-
+				setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
+				fetchQuestionInfo(questionId); // 문제 정보 가져오기
 				break;
 			case QuestionStatusType.SOLVE_PERMISSION: // 답안 제출 허용
 				// 답안 제출 가능 여부 가능하도록 변경
@@ -97,9 +117,11 @@ const QuizSolvingRealTimeSolving = () => {
 	return (
 		<div>
 			<div>
-				<h1 className="text-alpha-black100 typo-heading-xlarge">
-					실시간 문제 풀이 페이지
-				</h1>
+				{questionId !== null ? (
+					<Solving questionInfo={questionInfo} />
+				) : (
+					<QuizSolvingRealTimeWaitView />
+				)}
 			</div>
 		</div>
 	);

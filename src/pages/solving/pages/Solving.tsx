@@ -1,5 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import type { QuestionApiResponse } from "@/types";
 import SolvingQuizCorrect from "../components/SolvingQuizCorrect";
 import SolvingLayout from "../layouts/SolvingLayout";
 import SolvingQuizContent from "./solving-quiz-content";
@@ -9,7 +10,15 @@ import SolvingTopBar from "./solving-top-bar";
 //
 //
 
-const Solving = () => {
+interface SolvingQuizContentProps {
+	questionInfo: QuestionApiResponse | null;
+}
+
+//
+//
+//
+
+const Solving = ({ questionInfo }: SolvingQuizContentProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 	const [isCorrect, setIsCorrect] = useState(true);
 
@@ -42,7 +51,7 @@ const Solving = () => {
 			</AnimatePresence>
 			<SolvingTopBar />
 			<div className="h-size-height-5" />
-			<SolvingQuizContent />
+			<SolvingQuizContent questionInfo={questionInfo} />
 		</SolvingLayout>
 	);
 };
