@@ -48,7 +48,7 @@ const SolvingAnswerLayout = ({
 					<span
 						// biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here since answers are static
 						key={index}
-						className="typo-heading-small"
+						className="typo-heading-small text-alpha-black100"
 					>
 						{prefix === "alphabet"
 							? String.fromCharCode(65 + index)
@@ -90,6 +90,7 @@ const SolvingAnswerLayout = ({
 												>
 													<SolvingQuizAnswer
 														color={snapshot.isDragging ? "primary" : "gray"}
+														value={answer.content}
 														{...solvingQuizAnswerProps}
 													/>
 												</div>
@@ -108,7 +109,11 @@ const SolvingAnswerLayout = ({
 		return (
 			<div className={answerWrapperClass}>
 				{answers.map((answer) => (
-					<SolvingQuizAnswer key={answer.number} {...solvingQuizAnswerProps} />
+					<SolvingQuizAnswer
+						key={answer.number}
+						value={answer.content}
+						{...solvingQuizAnswerProps}
+					/>
 				))}
 			</div>
 		);

@@ -1,17 +1,34 @@
+import type { QuestionApiResponse } from "@/types";
 import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 
 //
 //
 //
 
-const SolvingQuizContentShortAnswer = () => {
-	const answers = Array.from({ length: 2 }).map((_, index) => ({
+interface SolvingQuizContentShortAnswerProps {
+	questionInfo: any | null;
+}
+
+//
+//
+//
+
+const SolvingQuizContentShortAnswer = ({
+	questionInfo,
+}: SolvingQuizContentShortAnswerProps) => {
+	const count = questionInfo.answerCount;
+
+	const answers = Array.from({ length: count }).map((_, index) => ({
 		number: index + 1,
 		value: `${index + 1}번 문제의 답변.`,
 	}));
 
 	return (
-		<SolvingAnswerLayout answers={answers} placeholder="답변을 입력하세요." />
+		<SolvingAnswerLayout
+			readonly={false}
+			answers={answers}
+			placeholder="답변을 입력하세요."
+		/>
 	);
 };
 

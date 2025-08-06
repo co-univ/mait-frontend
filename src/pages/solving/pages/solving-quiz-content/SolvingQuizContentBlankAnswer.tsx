@@ -1,21 +1,39 @@
+import type { QuestionApiResponse } from "@/types";
 import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 
 //
 //
-///
+//
 
-const SolvingQuizContentBlankAnswer = () => {
-	const answers = Array.from({ length: 2 }).map((_, index) => ({
-		number: index + 1,
-		value: `${index + 1}번 문제의 답변.`,
-	}));
+interface SolvingQuizContentBlankAnswerProps {
+	questionInfo: any | null;
+}
+
+interface Answer {
+	id: number;
+	answer: string;
+	isMain: boolean;
+	number: number;
+}
+
+//
+//
+//
+
+const SolvingQuizContentBlankAnswer = ({
+	questionInfo,
+}: SolvingQuizContentBlankAnswerProps) => {
+	const answers = questionInfo.answers.slice(
+		0,
+		questionInfo.answers.length / 2,
+	);
 
 	return (
 		<SolvingAnswerLayout
 			readonly={false}
-			answers={answers}
+			answers={answers as Answer[]}
 			prefix="number"
-			placeholder="1234"
+			placeholder="빈칸에 들어갈 답안을 입력하세요."
 		/>
 	);
 };

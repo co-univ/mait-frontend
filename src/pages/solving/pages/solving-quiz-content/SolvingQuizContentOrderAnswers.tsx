@@ -1,16 +1,35 @@
+import type { QuestionApiResponse } from "@/types";
 import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 
 //
 //
 //
 
-const SolvingQuizContentOrderAnswers = () => {
-	const answers = Array.from({ length: 4 }).map((_, index) => ({
-		number: index + 1,
-		value: `${index + 1}번 순서.`,
-	}));
+interface SolvingQuizContentOrderAnswersProps {
+	questionInfo: any | null;
+}
 
-	return <SolvingAnswerLayout draggable answers={answers} prefix="alphabet" />;
+interface Option {
+	id: number;
+	originOrder: number;
+	content: string;
+	answerOrder: number;
+}
+
+//
+//
+//
+
+const SolvingQuizContentOrderAnswers = ({
+	questionInfo,
+}: SolvingQuizContentOrderAnswersProps) => {
+	return (
+		<SolvingAnswerLayout
+			draggable
+			answers={questionInfo.options as Option[]}
+			prefix="alphabet"
+		/>
+	);
 };
 
 export default SolvingQuizContentOrderAnswers;

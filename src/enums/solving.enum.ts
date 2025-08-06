@@ -2,6 +2,9 @@ export enum QuestionStatusType {
 	NOT_OPEN = "NOT_OPEN",
 	ACCESS_PERMISSION = "ACCESS_PERMISSION",
 	SOLVE_PERMISSION = "SOLVE_PERMISSION",
+}
+
+export enum CommandType {
 	QUALIFIER = "QUALIFIER",
 	WINNER = "WINNER",
 }

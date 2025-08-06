@@ -37,10 +37,18 @@ const SolvingQuizContent = ({ questionInfo }: SolvingQuizContentProps) => {
 			/>
 			{/* <SolvingQuizImage src="https://cotatos3.s3.ap-northeast-2.amazonaws.com/session/c71fff82-b7f9-4f9c-87aa-48f1b22bcc5f.jpeg" /> */}
 			<div className="flex-grow h-size-height-5" />
-			{type === QuestionType.SHORT && <SolvingQuizContentShortAnswer />}
-			{type === QuestionType.MULTIPLE && <SolvingQuizContentMultipleAnswers />}
-			{type === QuestionType.FILL_BLANK && <SolvingQuizContentBlankAnswer />}
-			{type === QuestionType.ORDERING && <SolvingQuizContentOrderAnswers />}
+			{type === QuestionType.SHORT && (
+				<SolvingQuizContentShortAnswer questionInfo={questionInfo} />
+			)}
+			{type === QuestionType.MULTIPLE && (
+				<SolvingQuizContentMultipleAnswers questionInfo={questionInfo} />
+			)}
+			{type === QuestionType.FILL_BLANK && (
+				<SolvingQuizContentBlankAnswer questionInfo={questionInfo} />
+			)}
+			{type === QuestionType.ORDERING && (
+				<SolvingQuizContentOrderAnswers questionInfo={questionInfo} />
+			)}
 		</div>
 	);
 };

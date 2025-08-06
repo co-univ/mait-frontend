@@ -49,7 +49,7 @@ const Solving = ({ questionInfo }: SolvingQuizContentProps) => {
 					/>
 				)}
 			</AnimatePresence>
-			<SolvingTopBar />
+			<SolvingTopBar questionNum={questionInfo?.number} />
 			<div className="h-size-height-5" />
 			<SolvingQuizContent questionInfo={questionInfo} />
 		</SolvingLayout>
