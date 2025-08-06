@@ -67,7 +67,7 @@ const SolvingQuizTitle = ({
 
 	return (
 		<div className="w-full">
-			<span className="typo-heading-small">
+			<span className="typo-heading-small text-alpha-black100">
 				{lines.map((line, index) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here since lines are static
 					<span key={index}>
