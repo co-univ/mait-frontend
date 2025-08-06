@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
-import { QuestionStatusType } from "src/enums/solving.enum";
+import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
+import Solving from "src/pages/solving/pages";
 import SolvingQuizContent from "src/pages/solving/pages/solving-quiz-content";
 import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
 import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
-import Solving from "src/pages/solving/pages";
 
 //
 //
@@ -69,11 +69,11 @@ const QuizSolvingRealTimeSolving = () => {
 				// 답안 제출 가능 여부 가능하도록 변경
 
 				break;
-			case QuestionStatusType.QUALIFIER:
+			case CommandType.QUALIFIER:
 				// 다음 단계 진출자 출력
 
 				break;
-			case QuestionStatusType.WINNER:
+			case CommandType.WINNER:
 				// 우승자 출력
 
 				break;
@@ -118,7 +118,11 @@ const QuizSolvingRealTimeSolving = () => {
 		<div>
 			<div>
 				{questionId !== null ? (
-					<Solving questionInfo={questionInfo} />
+					<Solving
+						questionInfo={questionInfo}
+						quizTitle={questionSetInfo?.title as string}
+						questionCount={questionSetInfo?.questionCount as number}
+					/>
 				) : (
 					<QuizSolvingRealTimeWaitView />
 				)}

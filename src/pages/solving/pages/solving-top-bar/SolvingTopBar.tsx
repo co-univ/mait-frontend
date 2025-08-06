@@ -7,17 +7,19 @@ import SolvingTopBarControl from "./SolvingTopBarControl";
 //
 
 interface SolvingTopBarProps {
-	questionNum?: number;
+	questionNum: number;
+	quizTitle: string;
+	questionCount: number;
 }
 
 //
 //
 //
 
-const SolvingTopBar = ({ questionNum }: SolvingTopBarProps) => {
+const SolvingTopBar = ({ questionNum, quizTitle, questionCount }: SolvingTopBarProps) => {
 	return (
 		<div className="sticky top-0 bg-alpha-white100">
-			<SolvingHeader title="문제 해결" percentage={20} />
+			<SolvingHeader title={quizTitle} questionNum={questionNum} questionCount={questionCount}/>
 			<div className="h-size-height-5" />
 			<SolvingTopBarControl
 				badgeLabel={`Q${questionNum}`}

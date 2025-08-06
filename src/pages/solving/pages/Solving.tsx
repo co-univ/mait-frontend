@@ -12,13 +12,15 @@ import SolvingTopBar from "./solving-top-bar";
 
 interface SolvingQuizContentProps {
 	questionInfo: QuestionApiResponse | null;
+	quizTitle: string;
+	questionCount: number;
 }
 
 //
 //
 //
 
-const Solving = ({ questionInfo }: SolvingQuizContentProps) => {
+const Solving = ({ questionInfo, quizTitle, questionCount }: SolvingQuizContentProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 	const [isCorrect, setIsCorrect] = useState(true);
 
@@ -49,7 +51,11 @@ const Solving = ({ questionInfo }: SolvingQuizContentProps) => {
 					/>
 				)}
 			</AnimatePresence>
-			<SolvingTopBar questionNum={questionInfo?.number} />
+			<SolvingTopBar
+				questionNum={questionInfo?.number as number}
+				quizTitle={quizTitle}
+				questionCount={questionCount as number}
+			/>
 			<div className="h-size-height-5" />
 			<SolvingQuizContent questionInfo={questionInfo} />
 		</SolvingLayout>

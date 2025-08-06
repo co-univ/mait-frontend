@@ -6,14 +6,19 @@ import { PencilLine } from "lucide-react";
 
 interface SolvingHeaderProps {
 	title: string;
-	percentage: number;
+	questionNum: number;
+	questionCount: number;
 }
 
 //
 //
 //
 
-const SolvingHeader = ({ title, percentage }: SolvingHeaderProps) => {
+const SolvingHeader = ({
+	title,
+	questionNum,
+	questionCount,
+}: SolvingHeaderProps) => {
 	return (
 		<div className="w-full h-size-height-11 flex flex-col justify-between">
 			<div className="flex gap-gap-5 items-center">
@@ -24,7 +29,7 @@ const SolvingHeader = ({ title, percentage }: SolvingHeaderProps) => {
 				<div
 					className="absolute h-[10px] inset-0 bg-primary-50 rounded-max"
 					style={{
-						width: `${percentage}%`,
+						width: `${(100 / questionCount) * questionNum}%`,
 					}}
 				/>
 			</div>
