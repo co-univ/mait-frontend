@@ -11,8 +11,6 @@ interface SolvingTopBarProps {
 	quizTitle: string;
 	questionCount: number;
 	onSubmit: () => void;
-	isSubmitting?: boolean;
-	isSubmitAllowed: boolean;
 	disabled: boolean;
 }
 
@@ -25,8 +23,6 @@ const SolvingTopBar = ({
 	quizTitle,
 	questionCount,
 	onSubmit,
-	isSubmitting,
-	isSubmitAllowed,
 	disabled,
 }: SolvingTopBarProps) => {
 	return (
@@ -39,19 +35,11 @@ const SolvingTopBar = ({
 			<div className="h-size-height-5" />
 			<SolvingTopBarControl
 				badgeLabel={`Q${questionNum}`}
-				badgeIcon={<Puzzle className="stroke-primary-50" />}
+				badgeIcon={<Puzzle />}
 				buttonLabel="제출하기"
-				buttonIcon={
-					<ChevronRight
-						className={
-							isSubmitAllowed && !disabled
-								? "stroke-primary-50"
-								: "stroke-color-gray-20"
-						}
-					/>
-				}
+				buttonIcon={<ChevronRight />}
 				onSubmit={onSubmit}
-				disabled={isSubmitting || !isSubmitAllowed || disabled}
+				disabled={disabled}
 			/>
 		</div>
 	);

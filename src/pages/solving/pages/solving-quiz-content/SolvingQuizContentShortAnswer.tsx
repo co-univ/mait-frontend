@@ -68,6 +68,9 @@ const SolvingQuizContentShortAnswer = ({
 			answers={shortAnswers}
 			placeholder="답변을 입력하세요."
 			onAnswerChange={isAnswered ? undefined : handleAnswerChange}
+			selectedChoices={userAnswers
+				?.filter((ans: { answer: string | any[] }) => ans.answer.length > 0)
+				.map((ans: { number: number }) => ans.number)}
 		/>
 	);
 };
