@@ -30,7 +30,7 @@ export const useAnswerSubmit = () => {
 			switch (questionType) {
 				case "SHORT":
 					submitData = {
-						userId: 1, // 추후 실제 유저 ID로 변경
+						userId: localStorage.getItem("id"), // 추후 실제 유저 ID로 변경
 						type: "SHORT",
 						submitAnswers: userAnswers
 							.filter(
@@ -42,14 +42,14 @@ export const useAnswerSubmit = () => {
 					break;
 				case "MULTIPLE":
 					submitData = {
-						userId: 1, // 추후 실제 유저 ID로 변경
+						userId: localStorage.getItem("id"), // 추후 실제 유저 ID로 변경
 						type: "MULTIPLE",
 						submitAnswers: Array.isArray(userAnswers) ? userAnswers : [], // 선택된 선택지 number 배열
 					};
 					break;
 				case "FILL_BLANK":
 					submitData = {
-						userId: 1, // 추후 실제 유저 ID로 변경
+						userId: localStorage.getItem("id"), // 추후 실제 유저 ID로 변경
 						type: "FILL_BLANK",
 						submitAnswers: userAnswers.map((answer: any) => ({
 							number: answer.number,
@@ -66,7 +66,7 @@ export const useAnswerSubmit = () => {
 						) ||
 						[];
 					submitData = {
-						userId: 1, // 추후 실제 유저 ID로 변경
+						userId: localStorage.getItem("id"), // 추후 실제 유저 ID로 변경
 						type: "ORDERING",
 						submitAnswers: orderingAnswers, // 정렬된 originOrder 배열
 					};

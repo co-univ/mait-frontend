@@ -34,26 +34,7 @@ const QuizSolvingRealTimeSolving = () => {
 	>([]);
 	// const [currentUserId] = useState(1);
 
-	const fetchUser = async () => {
-		const res = await fetch(`${process.env.PUBLIC_BASE_URL}/api/v1/users/me`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `${localStorage.getItem("token")}`,
-			},
-		});
-		if (!res.ok) {
-			throw new Error("Failed to fetch user data");
-		}
-		return res.json();
-	};
-
-	const { data: userData } = useQuery({
-		queryKey: ["/api/v1/users/me"],
-		queryFn: fetchUser,
-	});
-
-	const currentUserId = userData?.data.id || 0; // 현재 유저 id
+	const currentUserId = localStorage.getItem("id");
 
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
