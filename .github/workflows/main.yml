@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      RSBUILD_WS_ENDPOINT: ${{ secrets.RSBUILD_WS_ENDPOINT }}
+      PUBLIC_WS_ENDPOINT: ${{ secrets.PUBLIC_WS_ENDPOINT }}
       PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
 
     steps:
@@ -38,7 +38,7 @@ jobs:
         
       - name: Env Setting
         run: |
-          echo "RSBUILD_WS_ENDPOINT=${RSBUILD_WS_ENDPOINT}" > .env
+          echo "PUBLIC_WS_ENDPOINT=${PUBLIC_WS_ENDPOINT}" > .env
           echo "PUBLIC_BASE_URL=${PUBLIC_BASE_URL}" >> .env
 
       - name: Build project

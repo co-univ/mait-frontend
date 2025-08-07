@@ -152,7 +152,7 @@ const QuizSolvingRealTimeSolving = () => {
 	useEffect(() => {
 		// WebSocket 연결
 		const client = new StompJs.Client({
-			webSocketFactory: () => new SockJS(process.env.RSBUILD_WS_ENDPOINT || ""),
+			webSocketFactory: () => new SockJS(process.env.PUBLIC_WS_ENDPOINT || ""),
 			reconnectDelay: 5000,
 			heartbeatIncoming: 4000,
 			heartbeatOutgoing: 4000,

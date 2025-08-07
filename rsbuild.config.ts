@@ -1,24 +1,11 @@
 import { defineConfig, type PostCSSPlugin } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import autoprefixer from "autoprefixer";
-import * as dotenv from "dotenv";
+// import * as dotenv from "dotenv";
 import tailwindcss from "tailwindcss";
-
-dotenv.config({ path: `.env.${process.env.RSBUILD_WS_ENDPOINT}` });
-dotenv.config({ path: `.env.${process.env.PUBLIC_BASE_URL}` });
 
 export default defineConfig({
 	plugins: [pluginReact()],
-	source: {
-		define: {
-			"process.env.PUBLIC_WS_ENDPOINT": JSON.stringify(
-				process.env.PUBLIC_WS_ENDPOINT,
-			),
-			"process.env.PUBLIC_BASE_URL": JSON.stringify(
-				process.env.PUBLIC_BASE_URL,
-			),
-		},
-	},
 	tools: {
 		postcss: {
 			postcssOptions: {
