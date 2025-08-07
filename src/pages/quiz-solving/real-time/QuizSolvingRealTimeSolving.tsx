@@ -1,6 +1,6 @@
 import * as StompJs from "@stomp/stompjs";
 import React, { use, useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
@@ -33,6 +33,8 @@ const QuizSolvingRealTimeSolving = () => {
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
 	const [winner, setWinner] = useState<string | null>(null); // 우승자
+
+	const navigate = useNavigate();
 
 	const location = useLocation();
 
@@ -96,6 +98,11 @@ const QuizSolvingRealTimeSolving = () => {
 					setShowWinner(true);
 					break;
 				}
+				case CommandType.LIVE_END: {
+					navigate("/quiz-solving");
+					setShowWinner(false);
+					break;
+				}
 			}
 			return;
 		}
@@ -120,6 +127,10 @@ const QuizSolvingRealTimeSolving = () => {
 			}
 		}
 	};
+
+	useEffect(() => {
+		console.log("showWinner", showWinner);
+	}, [showWinner]);
 
 	useEffect(() => {
 		setShowQualifierView(false);

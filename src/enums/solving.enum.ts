@@ -7,6 +7,7 @@ export enum QuestionStatusType {
 export enum CommandType {
 	ACTIVE_PARTICIPANTS = "ACTIVE_PARTICIPANTS",
 	WINNER = "WINNER",
+	LIVE_END = "LIVE_END",
 }
 
 export enum QuestionType {
