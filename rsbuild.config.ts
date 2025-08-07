@@ -5,6 +5,7 @@ import * as dotenv from "dotenv";
 import tailwindcss from "tailwindcss";
 
 dotenv.config({ path: `.env.${process.env.RSBUILD_WS_ENDPOINT}` });
+dotenv.config({ path: `.env.${process.env.PUBLIC_BASE_URL}` });
 
 export default defineConfig({
 	plugins: [pluginReact()],
@@ -12,6 +13,9 @@ export default defineConfig({
 		define: {
 			"process.env.RSBUILD_WS_ENDPOINT": JSON.stringify(
 				process.env.RSBUILD_WS_ENDPOINT,
+			),
+			"process.env.PUBLIC_BASE_URL": JSON.stringify(
+				process.env.PUBLIC_BASE_URL,
 			),
 		},
 	},
