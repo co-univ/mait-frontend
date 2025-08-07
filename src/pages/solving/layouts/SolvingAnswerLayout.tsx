@@ -92,11 +92,11 @@ const SolvingAnswerLayout = ({
 									ref={provided.innerRef}
 									className={answerWrapperClass}
 								>
-									{answers.map((answer) => (
+									{answers.map((answer, index) => (
 										<Draggable
-											key={answer.number}
-											draggableId={`answer-${answer.number}`}
-											index={answer.number - 1}
+											key={answer.id}
+											draggableId={`answer-${answer.id}`}
+											index={index}
 										>
 											{(provided, snapshot) => (
 												<div

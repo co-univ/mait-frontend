@@ -18,10 +18,20 @@ interface SolvingTopBarProps {
 //
 //
 
-const SolvingTopBar = ({ questionNum, quizTitle, questionCount, onSubmit, isSubmitting }: SolvingTopBarProps) => {
+const SolvingTopBar = ({
+	questionNum,
+	quizTitle,
+	questionCount,
+	onSubmit,
+	isSubmitting,
+}: SolvingTopBarProps) => {
 	return (
 		<div className="sticky top-0 bg-alpha-white100">
-			<SolvingHeader title={quizTitle} questionNum={questionNum} questionCount={questionCount}/>
+			<SolvingHeader
+				title={quizTitle}
+				questionNum={questionNum}
+				questionCount={questionCount}
+			/>
 			<div className="h-size-height-5" />
 			<SolvingTopBarControl
 				badgeLabel={`Q${questionNum}`}
