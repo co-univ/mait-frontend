@@ -10,6 +10,7 @@ export { apiClient } from "./api";
 export {
 	QUESTION_QUERY_KEYS,
 	useCreateQuestion,
+	useQuestions,
 	useUpdateQuestion,
 } from "./useQuestion";
 

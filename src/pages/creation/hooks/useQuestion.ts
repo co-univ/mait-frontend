@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
 	CreateFillBlankQuestionApiRequest,
 	CreateMultipleQuestionApiRequest,
@@ -33,6 +33,19 @@ export const QUESTION_QUERY_KEYS = {
 //
 //
 //
+
+/**
+ * 특정 문제 세트의 문제 목록을 조회하는 TanStack Query 훅
+ * @param questionSetId - 조회할 문제 세트의 ID
+ * @returns 문제 목록 쿼리 객체
+ */
+export const useQuestions = (questionSetId: number) => {
+	return useQuery({
+		queryKey: QUESTION_QUERY_KEYS.byQuestionSet(questionSetId),
+		queryFn: () => apiClient.getQuestions(questionSetId),
+		enabled: !!questionSetId,
+	});
+};
 
 /**
  * 새로운 문제 생성을 위한 TanStack Query 뮤테이션 훅

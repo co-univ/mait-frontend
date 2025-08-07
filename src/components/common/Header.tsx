@@ -8,6 +8,8 @@ import {
 	UserRound,
 } from "lucide-react";
 import type React from "react";
+import useUser from "src/hooks/useUser";
+import useLoginModalOpenStore from "src/stores/useLoginModalOpenStore";
 import logo from "../../assets/logo.png";
 
 //
@@ -38,7 +40,7 @@ const Header = ({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) => {
 	};
 
 	return (
-		<div className="bg-alpha-white-100 fixed left-0 top-0 flex h-24 w-full place-content-between items-center p-8">
+		<div className="bg-color-alpha-white100 fixed left-0 top-0 flex h-24 w-full place-content-between items-center p-8 z-10">
 			<div className="flex items-center gap-5">
 				<BrandMenu onMenuOpen={handleMenuButtonClick} />
 				<HistoryController />
@@ -102,14 +104,22 @@ const SearchBar = () => {
  *
  */
 const UserMenu = () => {
+	const { user } = useUser();
+
+	const { openLoginModal } = useLoginModalOpenStore();
+
 	return (
 		<div className="flex items-center gap-3">
 			<Bell className={ICON_BUTTON_STYLE} />
 			<div className="flex cursor-pointer items-center gap-3">
 				<UserRound className={ICON_BUTTON_STYLE} />
-				<span className="text-base text-alpha-black100 typo-body-small">
-					전민쟁
-				</span>
+				<button
+					type="button"
+					className="text-base text-alpha-black100 typo-body-small"
+					onClick={user ? undefined : openLoginModal}
+				>
+					{user ? user.name : "로그인"}
+				</button>
 			</div>
 		</div>
 	);

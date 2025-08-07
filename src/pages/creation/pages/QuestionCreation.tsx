@@ -1,5 +1,5 @@
 import { Plus, Save } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
 	CreateFillBlankQuestionApiRequest,
 	CreateMultipleQuestionApiRequest,
@@ -11,7 +11,7 @@ import FormInput from "../components/FormInput";
 import MultipleQuestionForm from "../components/MultipleQuestionForm";
 import OrderingQuestionForm from "../components/OrderingQuestionForm";
 import ShortQuestionForm from "../components/ShortQuestionForm";
-import { useCreateQuestion } from "../hooks/useQuestion";
+import { useCreateQuestion, useQuestions } from "../hooks/useQuestion";
 import { useCreateQuestionSet, useQuestionSets } from "../hooks/useQuestionSet";
 import type {
 	AnyQuestionFormData,
@@ -70,6 +70,10 @@ const QuestionCreation = ({ initialState }: QuestionCreationProps) => {
 	const { data: questionSetsData, isLoading: isLoadingQuestionSets } =
 		useQuestionSets(teamId);
 
+	// 선택된 문제 세트의 기존 문제들 조회
+	const { data: existingQuestionsData, isLoading: isLoadingQuestions } =
+		useQuestions(creationState.questionSetId || 0);
+
 	// 만들어지는 문제들의 목록 관리
 	const [questions, setQuestions] = useState<AnyQuestionFormData[]>([]);
 
@@ -77,6 +81,57 @@ const QuestionCreation = ({ initialState }: QuestionCreationProps) => {
 	const createQuestionSet = useCreateQuestionSet();
 	const createQuestion = useCreateQuestion();
 	// const updateQuestion = useUpdateQuestion(); // PUT API가 구현되지 않으므로 주석 처리
+
+	// 기존 문제 데이터 로드 useEffect
+	useEffect(() => {
+		if (existingQuestionsData?.data && creationState.mode === "edit" && isQuestionSetCreated) {
+			const convertedQuestions: AnyQuestionFormData[] = existingQuestionsData.data.map((serverQuestion) => {
+				const baseQuestion = {
+					id: `existing-${serverQuestion.id}`,
+					content: serverQuestion.content || "",
+					explanation: serverQuestion.explanation || "",
+					number: serverQuestion.number,
+					isSaved: true,
+					questionId: serverQuestion.id.toString(),
+					hasChanges: false,
+				};
+
+				switch (serverQuestion.type) {
+					case "MULTIPLE":
+						return {
+							...baseQuestion,
+							type: "MULTIPLE" as const,
+							choices: (serverQuestion as any).choices || [],
+						};
+					case "SHORT":
+						return {
+							...baseQuestion,
+							type: "SHORT" as const,
+							shortAnswers: (serverQuestion as any).answers || [],
+						};
+					case "ORDERING":
+						return {
+							...baseQuestion,
+							type: "ORDERING" as const,
+							options: (serverQuestion as any).options || [],
+						};
+					case "FILL_BLANK":
+						return {
+							...baseQuestion,
+							type: "FILL_BLANK" as const,
+							fillBlankAnswers: (serverQuestion as any).answers || [],
+						};
+					default:
+						return {
+							...baseQuestion,
+							type: "SHORT" as const,
+							shortAnswers: [],
+						};
+				}
+			});
+			setQuestions(convertedQuestions);
+		}
+	}, [existingQuestionsData, creationState.mode, isQuestionSetCreated]);
 
 	// 다양한 로딩 상태들을 개별적으로 처리
 
@@ -266,6 +321,7 @@ const QuestionCreation = ({ initialState }: QuestionCreationProps) => {
 					questionSetId: result.data.questionSetId,
 				});
 				setIsQuestionSetCreated(true);
+				setQuestions([]); // 새로 생성된 문제 세트는 문제가 없음
 				alert("퀴즈 셋이 생성되었습니다! 이제 문제를 추가해보세요.");
 			}
 		} catch (error) {

@@ -1,4 +1,5 @@
 import * as StompJs from "@stomp/stompjs";
+import { useQuery } from "@tanstack/react-query";
 import React, { use, useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
@@ -31,7 +32,10 @@ const QuizSolvingRealTimeSolving = () => {
 			participantName: string;
 		}>
 	>([]);
-	const [currentUserId] = useState(1); // 임시로 userId 1 설정 (나중에 실제 로그인 유저 정보로 교체)
+	// const [currentUserId] = useState(1);
+
+	const currentUserId = localStorage.getItem("id");
+
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
 	const [winner, setWinner] = useState<string | null>(null); // 우승자

@@ -4,7 +4,7 @@ import autoprefixer from "autoprefixer";
 import * as dotenv from "dotenv";
 import tailwindcss from "tailwindcss";
 
-dotenv.config({ path: `.env.${process.env.PUBLIC_WS_ENDPOINT}` });
+dotenv.config({ path: `.env.${process.env.RSBUILD_WS_ENDPOINT}` });
 dotenv.config({ path: `.env.${process.env.PUBLIC_BASE_URL}` });
 
 export default defineConfig({
