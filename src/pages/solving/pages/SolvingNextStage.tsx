@@ -26,7 +26,12 @@ interface QualifierViewProps {
 //
 //
 
-const SolvingNextStage = ({ open, onClose, 	activeParticipants, currentUserId }: QualifierViewProps) => {
+const SolvingNextStage = ({
+	open,
+	onClose,
+	activeParticipants,
+	currentUserId,
+}: QualifierViewProps) => {
 	return (
 		<SolvingFullModalLayout open={open} onClose={onClose}>
 			<div className="flex justify-center w-full h-full px-[172px] pb-[84px]">

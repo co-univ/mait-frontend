@@ -76,7 +76,7 @@ const SolvingQuizContentBlankAnswer = ({
 			placeholder="빈칸에 들어갈 답안을 입력하세요."
 			onAnswerChange={isAnswered ? undefined : handleAnswerChange}
 			selectedChoices={userAnswers
-				?.filter((ans: { answer: string | any[] }) => ans.answer.length > 0)
+				?.filter((ans: { answer: string | any[] }) => ans.answer?.length > 0)
 				.map((ans: { number: number }) => ans.number)}
 		/>
 	);
