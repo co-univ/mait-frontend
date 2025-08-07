@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { ParticipantsList } from "../components";
 import { ParticipantsLayout } from "../layouts";

@@ -1,8 +1,11 @@
 import type React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
+	useCorrectAnswerRank,
 	useEndLiveQuestionSet,
 	useLiveStatus,
+	useSendWinner,
 	useStartLiveQuestionSet,
 } from "../hooks";
 
@@ -13,9 +16,13 @@ interface QuizSetControlProps {
 export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 	questionSetId,
 }) => {
+	const [showWinnerModal, setShowWinnerModal] = useState(false);
+	
 	const { data: liveStatusData, isLoading } = useLiveStatus(questionSetId);
+	const { data: rankData } = useCorrectAnswerRank(questionSetId);
 	const startLiveMutation = useStartLiveQuestionSet();
 	const endLiveMutation = useEndLiveQuestionSet();
+	const sendWinnerMutation = useSendWinner();
 
 	const liveStatus = liveStatusData?.data?.liveStatus;
 	const isBeforeLive = liveStatus === "BEFORE_LIVE";
@@ -42,6 +49,29 @@ export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 			},
 			onError: (error) => {
 				console.error("End mutation error:", error);
+			},
+		});
+	};
+
+	const handleSendWinner = () => {
+		const activeParticipants = rankData?.data?.activeParticipants || [];
+		const winnerUserIds = activeParticipants.map(participant => participant.participantInfos?.userId).filter((id): id is number => id !== undefined);
+		
+		if (winnerUserIds.length === 0) {
+			alert("우승자로 설정할 참가자가 없습니다.");
+			return;
+		}
+
+		sendWinnerMutation.mutate({
+			questionSetId,
+			data: { winnerUserIds }
+		}, {
+			onSuccess: () => {
+				alert(`${winnerUserIds.length}명의 우승자가 전송되었습니다!`);
+			},
+			onError: (error) => {
+				console.error("Send winner error:", error);
+				alert("우승자 전송에 실패했습니다.");
 			},
 		});
 	};
@@ -111,12 +141,26 @@ export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 			<div className="border-t border-gray-200 pt-4">
 				<div className="flex items-center justify-between">
 					<span className="text-sm text-gray-600">추가 관리 기능</span>
-					<Link
-						to={`/control/${questionSetId}/participants`}
-						className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
-					>
-						👥 참가자 관리
-					</Link>
+					<div className="flex gap-3">
+						<Link
+							to={`/control/${questionSetId}/participants`}
+							className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
+						>
+							👥 참가자 관리
+						</Link>
+						<button
+							type="button"
+							onClick={handleSendWinner}
+							disabled={sendWinnerMutation.isPending || !rankData?.data?.activeParticipants?.length}
+							className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+								!sendWinnerMutation.isPending && rankData?.data?.activeParticipants?.length
+									? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+									: "bg-gray-100 text-gray-500 cursor-not-allowed"
+							}`}
+						>
+							🏆 {sendWinnerMutation.isPending ? "전송 중..." : "우승자 보내기"}
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
