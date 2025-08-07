@@ -38,8 +38,8 @@ jobs:
         
       - name: Build
         run: |
-          printf "RSBUILD_WS_ENDPOINT=%s\n" "$RSBUILD_WS_ENDPOINT" >> .env.production
-          printf "PUBLIC_BASE_URL=%s\n"    "$PUBLIC_BASE_URL"    >> .env.production
+          echo "RSBUILD_WS_ENDPOINT=${RSBUILD_WS_ENDPOINT}" > .env
+          echo "PUBLIC_BASE_URL=${PUBLIC_BASE_URL}" >> .env
           pnpm build
 
       - name: Upload build artifacts
