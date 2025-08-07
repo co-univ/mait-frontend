@@ -125,12 +125,14 @@ const SolvingAnswerLayout = ({
 		return (
 			<div className={answerWrapperClass}>
 				{answers.map((answer, index) => {
-					const isSelected = selectedChoices?.includes(answer.id);
+					const isSelected = selectedChoices?.includes(answer.number);
 					return (
 						<div
 							key={answer.number || answer.id}
 							onClick={
-								onChoiceSelect ? () => onChoiceSelect(answer.id) : undefined
+								onChoiceSelect
+									? () => onChoiceSelect(answer.number)
+									: undefined
 							}
 							style={{
 								cursor: onChoiceSelect ? "pointer" : undefined,

@@ -1,4 +1,3 @@
-import type { QuestionApiResponse } from "@/types";
 import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 
 //
@@ -27,16 +26,16 @@ const SolvingQuizContentMultipleAnswers = ({
 	userAnswers,
 	onAnswersChange,
 }: SolvingQuizContentMultipleAnswersProps) => {
-	const handleChoiceSelect = (choiceId: number) => {
+	const handleChoiceSelect = (choiceNumber: number) => {
 		const currentAnswers = userAnswers || [];
 		let newAnswers: number[];
 		
-		if (currentAnswers.includes(choiceId)) {
+		if (currentAnswers.includes(choiceNumber)) {
 			// 이미 선택된 경우 제거
-			newAnswers = currentAnswers.filter((id: number) => id !== choiceId);
+			newAnswers = currentAnswers.filter((num: number) => num !== choiceNumber);
 		} else {
 			// 선택되지 않은 경우 추가
-			newAnswers = [...currentAnswers, choiceId];
+			newAnswers = [...currentAnswers, choiceNumber];
 		}
 		
 		onAnswersChange(newAnswers);

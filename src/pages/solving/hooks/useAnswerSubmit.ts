@@ -44,7 +44,7 @@ export const useAnswerSubmit = () => {
 					submitData = {
 						userId: 1, // 추후 실제 유저 ID로 변경
 						type: "MULTIPLE",
-						submitAnswers: Array.isArray(userAnswers) ? userAnswers : [], // 선택된 선택지 ID 배열
+						submitAnswers: Array.isArray(userAnswers) ? userAnswers : [], // 선택된 선택지 number 배열
 					};
 					break;
 				case "FILL_BLANK":
