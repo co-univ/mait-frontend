@@ -12,7 +12,7 @@ export const ParticipantsLayout: React.FC<ParticipantsLayoutProps> = ({
 	subtitle,
 }) => {
 	return (
-		<div className="min-h-screen p-6">
+		<div className="min-h-screen w-full p-6">
 			<div className="mx-auto max-w-4xl">
 				<div className="mb-8">
 					<h1 className="text-3xl font-bold text-gray-900">{title}</h1>
