@@ -38,7 +38,7 @@ const Header = ({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) => {
 	};
 
 	return (
-		<div className="bg-alpha-white-100 fixed left-0 top-0 flex h-24 w-full place-content-between items-center p-8">
+		<div className="bg-color-alpha-white100 fixed left-0 top-0 flex h-24 w-full place-content-between items-center p-8 z-10">
 			<div className="flex items-center gap-5">
 				<BrandMenu onMenuOpen={handleMenuButtonClick} />
 				<HistoryController />
