@@ -79,7 +79,6 @@ const QuizSolvingRealTimeSolving = () => {
 				break;
 			case CommandType.WINNER:
 				// 우승자 출력
-
 				break;
 		}
 	};

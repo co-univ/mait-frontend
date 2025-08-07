@@ -34,11 +34,13 @@ const Solving = ({
 	const [showCorrect, setShowCorrect] = useState(false);
 	const [isCorrect, setIsCorrect] = useState(true);
 	const [userAnswers, setUserAnswers] = useState<any>(null);
+	const [isAnswered, setIsAnswered] = useState(false);
 	const { submitAnswer, isSubmitting } = useAnswerSubmit();
 
-	// 문제가 바뀔 때 userAnswers 초기화
+	// 문제가 바뀔 때 userAnswers와 isAnswered 초기화
 	useEffect(() => {
 		setUserAnswers(null);
+		setIsAnswered(false);
 	}, [questionInfo?.id]);
 
 	// isSubmitAllowed 변경 시 로그
@@ -90,7 +92,7 @@ const Solving = ({
 
 				// number로 그룹화된 답안 개수 확인
 				const shortAnswerGroups =
-					questionInfo.answers?.reduce((acc: any, answer: any) => {
+					(questionInfo as any).answers?.reduce((acc: any, answer: any) => {
 						if (!acc[answer.number]) {
 							acc[answer.number] = true;
 						}
@@ -119,7 +121,7 @@ const Solving = ({
 
 				// number로 그룹화된 빈칸 개수 확인
 				const blankGroups =
-					questionInfo.answers?.reduce((acc: any, answer: any) => {
+					(questionInfo as any).answers?.reduce((acc: any, answer: any) => {
 						if (!acc[answer.number]) {
 							acc[answer.number] = true;
 						}
@@ -165,8 +167,13 @@ const Solving = ({
 				userAnswers,
 			);
 			if (response?.data) {
-				setIsCorrect(response.data.isCorrect || false);
+				const isCorrect = response.data.isCorrect || false;
+				setIsCorrect(isCorrect);
 				setShowCorrect(true);
+				// 정답을 맞췄을 때만 상호작용 비활성화
+				if (isCorrect) {
+					setIsAnswered(true);
+				}
 			}
 		} catch (err) {
 			console.error(err);
@@ -191,12 +198,14 @@ const Solving = ({
 				onSubmit={handleSubmitAnswer}
 				isSubmitting={isSubmitting}
 				isSubmitAllowed={isSubmitAllowed}
+				isAnswered={isAnswered}
 			/>
 			<div className="h-size-height-5" />
 			<SolvingQuizContent
 				questionInfo={questionInfo}
 				userAnswers={userAnswers}
-				onAnswersChange={setUserAnswers}
+				onAnswersChange={isAnswered ? () => {} : setUserAnswers}
+				isAnswered={isAnswered}
 			/>
 		</SolvingLayout>
 	);

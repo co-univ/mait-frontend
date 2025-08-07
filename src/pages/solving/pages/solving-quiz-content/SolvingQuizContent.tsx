@@ -1,4 +1,3 @@
-import { P } from "node_modules/framer-motion/dist/types.d-Cjd591yU";
 import { useEffect } from "react";
 import { QuestionType } from "src/enums/solving.enum";
 import type { QuestionApiResponse } from "@/types";
@@ -17,13 +16,19 @@ interface SolvingQuizContentProps {
 	questionInfo: QuestionApiResponse | null;
 	userAnswers: any;
 	onAnswersChange: (answers: any) => void;
+	isAnswered?: boolean;
 }
 
 //
 //
 //
 
-const SolvingQuizContent = ({ questionInfo, userAnswers, onAnswersChange }: SolvingQuizContentProps) => {
+const SolvingQuizContent = ({
+	questionInfo,
+	userAnswers,
+	onAnswersChange,
+	isAnswered = false,
+}: SolvingQuizContentProps) => {
 	const type = questionInfo?.type;
 
 	useEffect(() => {
@@ -40,31 +45,35 @@ const SolvingQuizContent = ({ questionInfo, userAnswers, onAnswersChange }: Solv
 			{/* <SolvingQuizImage src="https://cotatos3.s3.ap-northeast-2.amazonaws.com/session/c71fff82-b7f9-4f9c-87aa-48f1b22bcc5f.jpeg" /> */}
 			<div className="flex-grow h-size-height-5" />
 			{type === QuestionType.SHORT && (
-				<SolvingQuizContentShortAnswer 
-					questionInfo={questionInfo} 
+				<SolvingQuizContentShortAnswer
+					questionInfo={questionInfo}
 					userAnswers={userAnswers}
 					onAnswersChange={onAnswersChange}
+					isAnswered={isAnswered}
 				/>
 			)}
 			{type === QuestionType.MULTIPLE && (
-				<SolvingQuizContentMultipleAnswers 
-					questionInfo={questionInfo} 
+				<SolvingQuizContentMultipleAnswers
+					questionInfo={questionInfo}
 					userAnswers={userAnswers}
 					onAnswersChange={onAnswersChange}
+					isAnswered={isAnswered}
 				/>
 			)}
 			{type === QuestionType.FILL_BLANK && (
-				<SolvingQuizContentBlankAnswer 
-					questionInfo={questionInfo} 
+				<SolvingQuizContentBlankAnswer
+					questionInfo={questionInfo}
 					userAnswers={userAnswers}
 					onAnswersChange={onAnswersChange}
+					isAnswered={isAnswered}
 				/>
 			)}
 			{type === QuestionType.ORDERING && (
-				<SolvingQuizContentOrderAnswers 
-					questionInfo={questionInfo} 
+				<SolvingQuizContentOrderAnswers
+					questionInfo={questionInfo}
 					userAnswers={userAnswers}
 					onAnswersChange={onAnswersChange}
+					isAnswered={isAnswered}
 				/>
 			)}
 		</div>

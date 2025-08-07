@@ -8,6 +8,7 @@ interface SolvingQuizContentMultipleAnswersProps {
 	questionInfo: any | null;
 	userAnswers: any;
 	onAnswersChange: (answers: any) => void;
+	isAnswered?: boolean;
 }
 
 interface Choice {
@@ -25,11 +26,12 @@ const SolvingQuizContentMultipleAnswers = ({
 	questionInfo,
 	userAnswers,
 	onAnswersChange,
+	isAnswered = false,
 }: SolvingQuizContentMultipleAnswersProps) => {
 	const handleChoiceSelect = (choiceNumber: number) => {
 		const currentAnswers = userAnswers || [];
 		let newAnswers: number[];
-		
+
 		if (currentAnswers.includes(choiceNumber)) {
 			// 이미 선택된 경우 제거
 			newAnswers = currentAnswers.filter((num: number) => num !== choiceNumber);
@@ -37,7 +39,7 @@ const SolvingQuizContentMultipleAnswers = ({
 			// 선택되지 않은 경우 추가
 			newAnswers = [...currentAnswers, choiceNumber];
 		}
-		
+
 		onAnswersChange(newAnswers);
 	};
 
@@ -47,7 +49,7 @@ const SolvingQuizContentMultipleAnswers = ({
 			answers={questionInfo.choices as Choice[]}
 			readonly={true} // 객관식 보기 텍스트는 수정 불가
 			draggable={false} // 보기 순서 고정(정렬형이면 true로)
-			onChoiceSelect={handleChoiceSelect}
+			onChoiceSelect={isAnswered ? undefined : handleChoiceSelect}
 			selectedChoices={userAnswers || []}
 		/>
 	);

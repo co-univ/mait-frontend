@@ -9,6 +9,7 @@ interface SolvingQuizContentOrderAnswersProps {
 	questionInfo: any | null;
 	userAnswers: any;
 	onAnswersChange: (answers: any) => void;
+	isAnswered?: boolean;
 }
 
 interface Option {
@@ -26,6 +27,7 @@ const SolvingQuizContentOrderAnswers = ({
 	questionInfo,
 	userAnswers,
 	onAnswersChange,
+	isAnswered = false,
 }: SolvingQuizContentOrderAnswersProps) => {
 	const [orderedOptions, setOrderedOptions] = useState<Option[]>([]);
 	const initializedRef = useRef<number | null>(null);
@@ -35,7 +37,9 @@ const SolvingQuizContentOrderAnswers = ({
 		if (questionInfo?.options && questionInfo.id !== initializedRef.current) {
 			setOrderedOptions([...questionInfo.options]);
 			// 초기 순서를 userAnswers에도 설정 (originOrder 배열)
-			const initialOrder = questionInfo.options.map((option: Option) => option.originOrder);
+			const initialOrder = questionInfo.options.map(
+				(option: Option) => option.originOrder,
+			);
 			onAnswersChange(initialOrder);
 			initializedRef.current = questionInfo.id;
 		}
@@ -44,16 +48,16 @@ const SolvingQuizContentOrderAnswers = ({
 	const handleOrderChange = (newOrder: Option[]) => {
 		setOrderedOptions(newOrder);
 		// userAnswers에 순서 변경된 옵션들의 originOrder 배열 저장
-		const orderedOriginOrders = newOrder.map(option => option.originOrder);
+		const orderedOriginOrders = newOrder.map((option) => option.originOrder);
 		onAnswersChange(orderedOriginOrders);
 	};
 
 	return (
 		<SolvingAnswerLayout
-			draggable
+			draggable={!isAnswered}
 			answers={orderedOptions}
 			prefix="alphabet"
-			onOrderChange={handleOrderChange}
+			onOrderChange={isAnswered ? undefined : handleOrderChange}
 		/>
 	);
 };

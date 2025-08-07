@@ -9,6 +9,7 @@ interface SolvingQuizContentShortAnswerProps {
 	questionInfo: any | null;
 	userAnswers: any;
 	onAnswersChange: (answers: any) => void;
+	isAnswered?: boolean;
 }
 
 //
@@ -19,6 +20,7 @@ const SolvingQuizContentShortAnswer = ({
 	questionInfo,
 	userAnswers,
 	onAnswersChange,
+	isAnswered = false,
 }: SolvingQuizContentShortAnswerProps) => {
 	// number를 기준으로 그룹화하여 답안 개수 파악
 	const answerGroups = questionInfo.answers.reduce(
@@ -62,10 +64,10 @@ const SolvingQuizContentShortAnswer = ({
 
 	return (
 		<SolvingAnswerLayout
-			readonly={false}
+			readonly={isAnswered}
 			answers={shortAnswers}
 			placeholder="답변을 입력하세요."
-			onAnswerChange={handleAnswerChange}
+			onAnswerChange={isAnswered ? undefined : handleAnswerChange}
 		/>
 	);
 };
