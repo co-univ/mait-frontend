@@ -114,49 +114,105 @@ async function generateTypes(specUrl) {
 function extractSchemaNames(apiContent) {
 	console.log("🔍 Extracting schema names...");
 
-	const schemaNames = [];
+	const schemaNames = new Set(); // Use Set to automatically handle duplicates
 
-	// Try to parse the generated file to extract actual schema names from components.schemas
 	try {
-		// Look for components.schemas section in the generated file
+		// Method 1: Parse components.schemas section more accurately
 		const componentsMatch = apiContent.match(
-			/components:\s*\{[\s\S]*?schemas:\s*\{([\s\S]*?)\}[\s\S]*?\}/m,
+			/components:\s*\{[\s\S]*?schemas:\s*\{([\s\S]*?)\};?[\s\S]*?\}/m,
 		);
+
 		if (componentsMatch) {
-			// Extract schema names from the schemas section
+			console.log("📋 Using components.schemas section for type extraction");
 			const schemasSection = componentsMatch[1];
-			const schemaRegex = /^\s+([A-Za-z][A-Za-z0-9_-]*):/gm;
+
+			// More comprehensive regex to catch all schema names including ones with underscores, numbers, etc.
+			const schemaRegex = /^\s+([A-Za-z_][A-Za-z0-9_-]*):\s*\{/gm;
 			let match;
 
 			while ((match = schemaRegex.exec(schemasSection)) !== null) {
 				const schemaName = match[1];
-				if (!schemaNames.includes(schemaName)) {
-					schemaNames.push(schemaName);
-				}
+				schemaNames.add(schemaName);
 			}
 		}
 
-		// Fallback: use the original regex as backup
-		if (schemaNames.length === 0) {
-			const fallbackRegex =
-				/^\s+([A-Za-z][A-Za-z0-9]*(?:Api)?(?:Request|Response|Dto)):\s*\{/gm;
+		// Method 2: Global search for all possible schema definitions with comprehensive patterns
+		const globalPatterns = [
+			// Standard naming patterns
+			/^\s+([A-Za-z][A-Za-z0-9]*(?:Api)?(?:Request|Response|Dto|Void|Error|Info|Status|Config|Data|Result)):\s*\{/gm,
+			// ApiResponse* patterns
+			/^\s+(ApiResponse[A-Za-z0-9]*):\s*\{/gm,
+			// Any camelCase/PascalCase types
+			/^\s+([A-Z][a-zA-Z0-9]*(?:[A-Z][a-zA-Z0-9]*)*):\s*\{/gm,
+		];
+
+		globalPatterns.forEach((pattern, index) => {
 			let match;
-
-			while ((match = fallbackRegex.exec(apiContent)) !== null) {
+			pattern.lastIndex = 0; // Reset regex state
+			while ((match = pattern.exec(apiContent)) !== null) {
 				const schemaName = match[1];
-				if (!schemaNames.includes(schemaName)) {
-					schemaNames.push(schemaName);
+				// Filter out common false positives
+				if (
+					!schemaName.match(
+						/^(export|import|interface|type|const|let|var|function)$/i,
+					)
+				) {
+					schemaNames.add(schemaName);
 				}
 			}
-		}
+		});
+
+		// Method 3: Specific search for known missing types
+		const knownTypes = ["ApiResponseVoid", "ApiResponse"];
+		knownTypes.forEach((typeName) => {
+			const typeRegex = new RegExp(
+				`^\\s+(${typeName}[A-Za-z0-9]*):\\s*\\{`,
+				"gm",
+			);
+			let match;
+			while ((match = typeRegex.exec(apiContent)) !== null) {
+				schemaNames.add(match[1]);
+			}
+		});
 	} catch (error) {
 		console.warn(
-			"Warning: Could not parse schema names, using fallback method",
+			"⚠️  Warning: Could not parse schema names, using basic fallback",
 		);
+
+		// Ultra-basic fallback: just look for any TypeScript interface/type definition
+		const basicRegex =
+			/^\s+([A-Z][a-zA-Z0-9]*(?:Request|Response|Api|Dto|Void)):\s*\{/gm;
+		let match;
+		while ((match = basicRegex.exec(apiContent)) !== null) {
+			schemaNames.add(match[1]);
+		}
 	}
 
-	console.log(`Found schemas: ${schemaNames.join(", ")}`);
-	return schemaNames;
+	// Convert Set back to sorted array
+	const schemaArray = Array.from(schemaNames).sort();
+
+	console.log(`✅ Found ${schemaArray.length} schemas:`);
+	console.log(
+		`   ${schemaArray.slice(0, 5).join(", ")}${schemaArray.length > 5 ? `... and ${schemaArray.length - 5} more` : ""}`,
+	);
+
+	// Validate that common types are included
+	const commonTypes = ["ApiResponseVoid"];
+	const missingTypes = commonTypes.filter(
+		(type) => !schemaArray.includes(type),
+	);
+	if (missingTypes.length > 0) {
+		console.warn(
+			`⚠️  Warning: Expected types not found: ${missingTypes.join(", ")}`,
+		);
+		console.warn(
+			"   Consider checking if these types exist in the OpenAPI spec or update the extraction patterns",
+		);
+	} else {
+		console.log(`✅ All expected common types found`);
+	}
+
+	return schemaArray;
 }
 
 function extractPathNames(apiContent) {
