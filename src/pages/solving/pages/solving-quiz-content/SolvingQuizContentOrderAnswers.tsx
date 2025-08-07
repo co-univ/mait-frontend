@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 
 //
@@ -28,11 +28,16 @@ const SolvingQuizContentOrderAnswers = ({
 	onAnswersChange,
 }: SolvingQuizContentOrderAnswersProps) => {
 	const [orderedOptions, setOrderedOptions] = useState<Option[]>([]);
+	const initializedRef = useRef<number | null>(null);
 
 	// questionInfo가 변경될 때마다 초기 순서로 설정
 	useEffect(() => {
-		if (questionInfo?.options) {
+		if (questionInfo?.options && questionInfo.id !== initializedRef.current) {
 			setOrderedOptions([...questionInfo.options]);
+			// 초기 순서를 userAnswers에도 설정
+			const initialOrder = questionInfo.options.map((option: Option) => option.id);
+			onAnswersChange(initialOrder);
+			initializedRef.current = questionInfo.id;
 		}
 	}, [questionInfo]);
 

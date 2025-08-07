@@ -10,8 +10,14 @@ export const useAnswerSubmit = () => {
 		questionInfo: QuestionApiResponse,
 		userAnswers: any,
 	) => {
-		if (!questionInfo || !userAnswers) {
-			console.error("문제 정보 또는 답안이 없습니다.");
+		if (!questionInfo) {
+			console.error("문제 정보가 없습니다.");
+			return null;
+		}
+
+		// 순서 정렬 문제가 아닌 경우에만 userAnswers 체크
+		if (questionInfo.type !== "ORDERING" && !userAnswers) {
+			console.error("답안이 없습니다.");
 			return null;
 		}
 
@@ -51,13 +57,19 @@ export const useAnswerSubmit = () => {
 						})),
 					};
 					break;
-				case "ORDERING":
+				case "ORDERING": {
+					// userAnswers가 없으면 초기 순서 사용
+					const orderingAnswers =
+						userAnswers ||
+						(questionInfo as any).options?.map((option: any) => option.id) ||
+						[];
 					submitData = {
 						userId: 1, // 추후 실제 유저 ID로 변경
 						type: "ORDERING",
-						submitAnswers: userAnswers, // 정렬된 선택지 ID 배열
+						submitAnswers: orderingAnswers, // 정렬된 선택지 ID 배열
 					};
 					break;
+				}
 				default:
 					console.error("지원하지 않는 문제 타입입니다.");
 					return null;

@@ -68,7 +68,7 @@ const QuizSolvingRealTimeSolving = () => {
 				break;
 			case QuestionStatusType.SOLVE_PERMISSION: // 답안 제출 허용
 				// 답안 제출 가능 여부 가능하도록 변경
-				console.log("답안 제출 허용");
+				console.log("답안 제출 허용 - isSubmitAllowed를 true로 설정");
 				setIsSubmitAllowed(true);
 				break;
 			case CommandType.QUALIFIER:
@@ -132,7 +132,7 @@ const QuizSolvingRealTimeSolving = () => {
 				)}
 			</div>
 		</div>
-	);
+	)
 };
 
 export default QuizSolvingRealTimeSolving;
