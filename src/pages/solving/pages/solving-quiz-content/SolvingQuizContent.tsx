@@ -41,6 +41,8 @@ const SolvingQuizContent = ({
 			<SolvingQuizTitle
 				title={questionInfo?.content || ""}
 				type={type as QuestionType}
+				questionInfo={questionInfo}
+				userAnswers={userAnswers}
 			/>
 			{/* <SolvingQuizImage src="https://cotatos3.s3.ap-northeast-2.amazonaws.com/session/c71fff82-b7f9-4f9c-87aa-48f1b22bcc5f.jpeg" /> */}
 			<div className="flex-grow h-size-height-5" />
