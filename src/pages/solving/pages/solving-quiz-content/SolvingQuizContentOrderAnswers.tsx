@@ -45,6 +45,17 @@ const SolvingQuizContentOrderAnswers = ({
 		}
 	}, [questionInfo]);
 
+	// userAnswers가 null로 변경되면 초기화
+	useEffect(() => {
+		if (userAnswers === null && questionInfo?.options) {
+			setOrderedOptions([...questionInfo.options]);
+			const initialOrder = questionInfo.options.map(
+				(option: Option) => option.originOrder,
+			);
+			onAnswersChange(initialOrder);
+		}
+	}, [userAnswers, questionInfo]);
+
 	const handleOrderChange = (newOrder: Option[]) => {
 		setOrderedOptions(newOrder);
 		// userAnswers에 순서 변경된 옵션들의 originOrder 배열 저장
@@ -58,6 +69,7 @@ const SolvingQuizContentOrderAnswers = ({
 			answers={orderedOptions}
 			prefix="alphabet"
 			onOrderChange={isAnswered ? undefined : handleOrderChange}
+			selectedChoices={userAnswers || []}
 		/>
 	);
 };
