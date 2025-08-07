@@ -30,11 +30,5 @@ const loginApi = async (credentials: LoginApiRequest): Promise<void> => {
 export const useLogin = () => {
 	return useMutation({
 		mutationFn: loginApi,
-		onSuccess: () => {
-			console.log("로그인 성공");
-		},
-		onError: (error) => {
-			console.error("로그인 실패:", error);
-		},
 	});
 };

@@ -1,6 +1,8 @@
 /** biome-ignore-all lint/nursery/useUniqueElementIds: ex */
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import useLoginModalOpenStore from "src/stores/useLoginModalOpenStore";
 import { useLogin } from "../../hooks/useAuth";
 
 interface LoginModalProps {
@@ -12,8 +14,12 @@ const LoginModal = ({ open, onClose }: LoginModalProps) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
+		null,
+	);
 
 	const loginMutation = useLogin();
+	const { handleLoginSuccess } = useLoginModalOpenStore();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -25,8 +31,7 @@ const LoginModal = ({ open, onClose }: LoginModalProps) => {
 
 		try {
 			await loginMutation.mutateAsync({ email, password });
-			alert("로그인에 성공했습니다!");
-			onClose();
+			handleLoginSuccess();
 			setEmail("");
 			setPassword("");
 		} catch (error) {
@@ -41,10 +46,61 @@ const LoginModal = ({ open, onClose }: LoginModalProps) => {
 		onClose();
 	};
 
-	if (!open) return null;
+	// 백드롭 클릭시 모달 닫기
+	const handleBackdropClick = (e: React.MouseEvent) => {
+		if (e.target === e.currentTarget) {
+			handleClose();
+		}
+	};
 
-	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+	// Portal container 설정
+	useEffect(() => {
+		let container = document.getElementById("modal-portal");
+		if (!container) {
+			container = document.createElement("div");
+			container.id = "modal-portal";
+			document.body.appendChild(container);
+		}
+		setPortalContainer(container);
+
+		return () => {
+			// 컴포넌트 언마운트시 컨테이너가 비어있다면 제거
+			if (container && container.children.length === 0) {
+				document.body.removeChild(container);
+			}
+		};
+	}, []);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: event listeners should be added only once
+	useEffect(() => {
+		const handleEscapeKey = (event: KeyboardEvent) => {
+			if (event.key === "Escape" && open) {
+				handleClose();
+			}
+		};
+
+		if (open) {
+			document.addEventListener("keydown", handleEscapeKey);
+			// 모달이 열릴 때 body 스크롤 방지
+			document.body.style.overflow = "hidden";
+		}
+
+		return () => {
+			document.removeEventListener("keydown", handleEscapeKey);
+			// 모달이 닫힐 때 body 스크롤 복원
+			document.body.style.overflow = "unset";
+		};
+	}, [open]);
+
+	if (!open || !portalContainer) {
+		return null;
+	}
+
+	const modalContent = (
+		<div
+			className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+			onClick={handleBackdropClick}
+		>
 			<div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
 				{/* Header */}
 				<div className="mb-6 flex items-center justify-between">
@@ -119,6 +175,8 @@ const LoginModal = ({ open, onClose }: LoginModalProps) => {
 			</div>
 		</div>
 	);
+
+	return createPortal(modalContent, portalContainer);
 };
 
 export default LoginModal;

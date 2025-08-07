@@ -6,6 +6,8 @@ import LoginModal from "./components/auth/LoginModal";
 import AppLayout from "./components/common/AppLayout";
 import type { SIDEBAR_VARIANT } from "./components/common/SideBar";
 import Toast from "./components/common/Toast";
+import useUser from "./hooks/useUser";
+import useLoginModalOpenStore from "./stores/useLoginModalOpenStore";
 
 //
 //
@@ -13,7 +15,11 @@ import Toast from "./components/common/Toast";
 
 const App = () => {
 	const [isSideBarOpen, setIsSideBarOpen] = useState(true);
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+	const { isLoginModalOpen, openLoginModal, closeLoginModal } =
+		useLoginModalOpenStore();
+
+	const { user } = useUser();
 
 	const location = useLocation();
 
@@ -22,6 +28,13 @@ const App = () => {
 	)
 		? "overlay"
 		: "default";
+
+	/**
+	 *
+	 */
+	const handleLoginButtonClick = () => {
+		openLoginModal();
+	};
 
 	useEffect(() => {
 		if (location.pathname.startsWith("/quiz-solving")) {
@@ -44,17 +57,16 @@ const App = () => {
 					"px-[10.75rem]": !isSideBarOpen && sidebarVariant === "default",
 				})}
 			>
-				<button
-					type="button"
-					className="fixed bottom-4 right-4 z-50 rounded-full bg-blue-600 p-3 text-white shadow-lg transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-					onClick={() => setIsLoginModalOpen(true)}
-				>
-					로그인
-				</button>
-				<LoginModal
-					open={isLoginModalOpen}
-					onClose={() => setIsLoginModalOpen(false)}
-				/>
+				{!user && (
+					<button
+						type="button"
+						className="fixed bottom-4 right-4 z-50 rounded-full bg-blue-600 p-3 text-white shadow-lg transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+						onClick={handleLoginButtonClick}
+					>
+						로그인
+					</button>
+				)}
+				<LoginModal open={isLoginModalOpen} onClose={closeLoginModal} />
 				<Outlet />
 			</main>
 		</div>
