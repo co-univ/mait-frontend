@@ -11,6 +11,10 @@ import SolvingQuizAnswer, {
 interface SolvingAnswerLayoutProps extends SolvingQuizAnswerProps {
 	prefix?: "alphabet" | "number";
 	answers: any[];
+	onAnswerChange?: (index: number, value: string) => void;
+	onChoiceSelect?: (choiceId: number) => void;
+	selectedChoices?: number[];
+	onOrderChange?: (newOrder: any[]) => void;
 }
 
 //
@@ -20,9 +24,21 @@ interface SolvingAnswerLayoutProps extends SolvingQuizAnswerProps {
 const SolvingAnswerLayout = ({
 	prefix,
 	answers,
+	onAnswerChange,
+	onChoiceSelect,
+	selectedChoices,
+	onOrderChange,
 	...solvingQuizAnswerProps
 }: SolvingAnswerLayoutProps) => {
-	const handleDragEnd = () => {};
+	const handleDragEnd = (result: any) => {
+		if (!result.destination) return;
+
+		const items = Array.from(answers);
+		const [reorderedItem] = items.splice(result.source.index, 1);
+		items.splice(result.destination.index, 0, reorderedItem);
+
+		onOrderChange?.(items);
+	};
 
 	/**
 	 * Renders the prefix (A, B, C, ... or (1), (2), (3), ...) for each answer.
@@ -108,13 +124,41 @@ const SolvingAnswerLayout = ({
 
 		return (
 			<div className={answerWrapperClass}>
-				{answers.map((answer) => (
-					<SolvingQuizAnswer
-						key={answer.number}
-						value={answer.content}
-						{...solvingQuizAnswerProps}
-					/>
-				))}
+				{answers.map((answer, index) => {
+					const isSelected = selectedChoices?.includes(answer.id);
+					return (
+						<div
+							key={answer.number || answer.id}
+							onClick={
+								onChoiceSelect ? () => onChoiceSelect(answer.id) : undefined
+							}
+							onKeyDown={
+								onChoiceSelect
+									? (e) => {
+											if (e.key === "Enter" || e.key === " ") {
+												e.preventDefault();
+												onChoiceSelect(answer.id);
+											}
+										}
+									: undefined
+							}
+							role={onChoiceSelect ? "button" : undefined}
+							tabIndex={onChoiceSelect ? 0 : undefined}
+							style={{ cursor: onChoiceSelect ? "pointer" : undefined }}
+						>
+							<SolvingQuizAnswer
+								value={answer.content || answer.value || answer.answer || ""}
+								color={isSelected ? "primary" : "gray"}
+								onChange={
+									onAnswerChange
+										? (value) => onAnswerChange(index, value)
+										: undefined
+								}
+								{...solvingQuizAnswerProps}
+							/>
+						</div>
+					);
+				})}
 			</div>
 		);
 	};

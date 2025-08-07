@@ -10,6 +10,7 @@ export interface SolvingBadegeProps {
 	direction?: "row" | "row-reverse";
 	icon: React.ReactNode;
 	as?: keyof JSX.IntrinsicElements;
+	onClick?: () => void;
 }
 
 //
@@ -21,6 +22,7 @@ const SolvingBadege = ({
 	direction = "row",
 	icon,
 	as: Component = "div",
+	onClick,
 }: SolvingBadegeProps) => {
 	const flexDirection =
 		direction === "row-reverse" ? "flex-row-reverse" : "flex-row";
@@ -28,6 +30,7 @@ const SolvingBadege = ({
 	return (
 		<Component
 			className={`flex p-padding-6 gap-gap-5 rounded-radius-medium1 bg-primary-5 items-center ${flexDirection}`}
+			onClick={onClick}
 		>
 			{icon}
 			<span className="typo-heading-small text-primary-50">{lable}</span>

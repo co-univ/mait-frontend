@@ -10,13 +10,15 @@ interface SolvingTopBarProps {
 	questionNum: number;
 	quizTitle: string;
 	questionCount: number;
+	onSubmit: () => void;
+	isSubmitting?: boolean;
 }
 
 //
 //
 //
 
-const SolvingTopBar = ({ questionNum, quizTitle, questionCount }: SolvingTopBarProps) => {
+const SolvingTopBar = ({ questionNum, quizTitle, questionCount, onSubmit, isSubmitting }: SolvingTopBarProps) => {
 	return (
 		<div className="sticky top-0 bg-alpha-white100">
 			<SolvingHeader title={quizTitle} questionNum={questionNum} questionCount={questionCount}/>
@@ -24,8 +26,10 @@ const SolvingTopBar = ({ questionNum, quizTitle, questionCount }: SolvingTopBarP
 			<SolvingTopBarControl
 				badgeLabel={`Q${questionNum}`}
 				badgeIcon={<Puzzle className="stroke-primary-50" />}
-				buttonLabel="제출하기"
+				buttonLabel={isSubmitting ? "제출 중..." : "제출하기"}
 				buttonIcon={<ChevronRight className="stroke-primary-50" />}
+				onSubmit={onSubmit}
+				disabled={isSubmitting}
 			/>
 		</div>
 	);

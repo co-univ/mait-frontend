@@ -122,6 +122,7 @@ const QuizSolvingRealTimeSolving = () => {
 						questionInfo={questionInfo}
 						quizTitle={questionSetInfo?.title as string}
 						questionCount={questionSetInfo?.questionCount as number}
+						questionSetId={Number(questionSetId)}
 					/>
 				) : (
 					<QuizSolvingRealTimeWaitView />

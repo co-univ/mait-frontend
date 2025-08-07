@@ -1,4 +1,3 @@
-import type { QuestionApiResponse } from "@/types";
 import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 
 //
@@ -7,6 +6,8 @@ import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 
 interface SolvingQuizContentOrderAnswersProps {
 	questionInfo: any | null;
+	userAnswers: any;
+	onAnswersChange: (answers: any) => void;
 }
 
 interface Option {
@@ -22,12 +23,21 @@ interface Option {
 
 const SolvingQuizContentOrderAnswers = ({
 	questionInfo,
+	userAnswers,
+	onAnswersChange,
 }: SolvingQuizContentOrderAnswersProps) => {
+	const handleOrderChange = (newOrder: any[]) => {
+		const orderedIds = newOrder.map(option => option.id);
+		onAnswersChange(orderedIds);
+	};
+
 	return (
 		<SolvingAnswerLayout
 			draggable
 			answers={questionInfo.options as Option[]}
 			prefix="alphabet"
+			onOrderChange={handleOrderChange}
+			onChoiceSelect={undefined}
 		/>
 	);
 };

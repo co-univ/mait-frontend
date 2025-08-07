@@ -15,13 +15,15 @@ import SolvingQuizContentShortAnswer from "./SolvingQuizContentShortAnswer";
 
 interface SolvingQuizContentProps {
 	questionInfo: QuestionApiResponse | null;
+	userAnswers: any;
+	onAnswersChange: (answers: any) => void;
 }
 
 //
 //
 //
 
-const SolvingQuizContent = ({ questionInfo }: SolvingQuizContentProps) => {
+const SolvingQuizContent = ({ questionInfo, userAnswers, onAnswersChange }: SolvingQuizContentProps) => {
 	const type = questionInfo?.type;
 
 	useEffect(() => {
@@ -38,16 +40,32 @@ const SolvingQuizContent = ({ questionInfo }: SolvingQuizContentProps) => {
 			{/* <SolvingQuizImage src="https://cotatos3.s3.ap-northeast-2.amazonaws.com/session/c71fff82-b7f9-4f9c-87aa-48f1b22bcc5f.jpeg" /> */}
 			<div className="flex-grow h-size-height-5" />
 			{type === QuestionType.SHORT && (
-				<SolvingQuizContentShortAnswer questionInfo={questionInfo} />
+				<SolvingQuizContentShortAnswer 
+					questionInfo={questionInfo} 
+					userAnswers={userAnswers}
+					onAnswersChange={onAnswersChange}
+				/>
 			)}
 			{type === QuestionType.MULTIPLE && (
-				<SolvingQuizContentMultipleAnswers questionInfo={questionInfo} />
+				<SolvingQuizContentMultipleAnswers 
+					questionInfo={questionInfo} 
+					userAnswers={userAnswers}
+					onAnswersChange={onAnswersChange}
+				/>
 			)}
 			{type === QuestionType.FILL_BLANK && (
-				<SolvingQuizContentBlankAnswer questionInfo={questionInfo} />
+				<SolvingQuizContentBlankAnswer 
+					questionInfo={questionInfo} 
+					userAnswers={userAnswers}
+					onAnswersChange={onAnswersChange}
+				/>
 			)}
 			{type === QuestionType.ORDERING && (
-				<SolvingQuizContentOrderAnswers questionInfo={questionInfo} />
+				<SolvingQuizContentOrderAnswers 
+					questionInfo={questionInfo} 
+					userAnswers={userAnswers}
+					onAnswersChange={onAnswersChange}
+				/>
 			)}
 		</div>
 	);
