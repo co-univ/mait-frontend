@@ -5,6 +5,8 @@ import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import Solving from "src/pages/solving/pages";
+import SolvingNextStage from "src/pages/solving/pages/SolvingNextStage";
+import SolvingWinner from "src/pages/solving/pages/SolvingWinner";
 import SolvingQuizContent from "src/pages/solving/pages/solving-quiz-content";
 import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
 import QualifierView from "./QualifierView";
@@ -173,13 +175,13 @@ const QuizSolvingRealTimeSolving = () => {
 	return (
 		<div className="w-full">
 			{showQualifierView && (
-				<QualifierView
+				<SolvingNextStage
 					activeParticipants={activeParticipants}
 					currentUserId={currentUserId}
 				/>
 			)}
 			{showWinner && (
-				<WinnerView
+				<SolvingWinner
 					activeParticipants={activeParticipants}
 					currentUserId={currentUserId}
 				/>
