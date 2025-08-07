@@ -34,14 +34,6 @@ const Solving = ({ questionInfo, quizTitle, questionCount, questionSetId, isSubm
 		setUserAnswers(null);
 	}, [questionInfo?.id]);
 
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setShowCorrect(true);
-		}, 1000);
-
-		return () => clearTimeout(timer);
-	}, []);
-
 	const handleAnimationComplete = () => {
 		const hideTimer = setTimeout(() => {
 			setShowCorrect(false);

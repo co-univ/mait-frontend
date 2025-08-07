@@ -39,7 +39,13 @@ const SolvingTopBar = ({
 				badgeLabel={`Q${questionNum}`}
 				badgeIcon={<Puzzle className="stroke-primary-50" />}
 				buttonLabel="제출하기"
-				buttonIcon={<ChevronRight className={isSubmitAllowed ? "stroke-primary-50" : "stroke-color-gray-20"} />}
+				buttonIcon={
+					<ChevronRight
+						className={
+							isSubmitAllowed ? "stroke-primary-50" : "stroke-color-gray-20"
+						}
+					/>
+				}
 				onSubmit={onSubmit}
 				disabled={isSubmitting || !isSubmitAllowed}
 			/>
