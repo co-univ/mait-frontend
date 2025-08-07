@@ -67,6 +67,8 @@ const QuizSolvingRealTimeSolving = () => {
 				setIsSubmitAllowed(false); // 제출 비허용
 				break;
 			case QuestionStatusType.SOLVE_PERMISSION: // 답안 제출 허용
+				setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
+				fetchQuestionInfo(questionId); // 문제 정보 가져오기
 				// 답안 제출 가능 여부 가능하도록 변경
 				console.log("답안 제출 허용 - isSubmitAllowed를 true로 설정");
 				setIsSubmitAllowed(true);
