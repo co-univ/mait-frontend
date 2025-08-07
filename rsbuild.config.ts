@@ -16,6 +16,7 @@ export default defineConfig({
 			"process.env.PUBLIC_BASE_URL": JSON.stringify(
 				process.env.PUBLIC_BASE_URL,
 			),
+			"process": JSON.stringify({ env: {} }),
 		},
 	},
 	tools: {
