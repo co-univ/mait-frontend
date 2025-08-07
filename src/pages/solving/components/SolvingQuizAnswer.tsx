@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 //
 //
@@ -34,70 +34,101 @@ const SolvingQuizAnswer = ({
 	style = {},
 }: SolvingQuizAnswerProps) => {
 	const paragraphRef = useRef<HTMLParagraphElement>(null);
+	const [isInitialized, setIsInitialized] = useState(false);
 
 	/**
-	 * Returns the cursor style based on the readonly and draggable props.
+	 * 커서를 텍스트 끝으로 이동시키는 함수
 	 */
-	const cursorStyle = () => {
-		if (draggable) {
-			return "cursor-grab";
+	const moveCursorToEnd = () => {
+		if (!paragraphRef.current) return;
+
+		const element = paragraphRef.current;
+		const range = document.createRange();
+		const selection = window.getSelection();
+
+		if (element.childNodes.length > 0) {
+			const lastNode = element.childNodes[element.childNodes.length - 1];
+			const offset =
+				lastNode.nodeType === Node.TEXT_NODE
+					? lastNode.textContent?.length || 0
+					: 0;
+			range.setStart(lastNode, offset);
+		} else {
+			range.setStart(element, 0);
 		}
 
-		if (readonly) {
-			return "cursor-default";
-		}
-
-		return "cursor-text";
+		range.collapse(true);
+		selection?.removeAllRanges();
+		selection?.addRange(range);
 	};
 
 	/**
-	 *
+	 * input 이벤트 처리 - 타이핑 시 실행
 	 */
 	const handleInput = (e: React.FormEvent<HTMLParagraphElement>) => {
 		const text = e.currentTarget.textContent || "";
 		onChange?.(text);
+
+		// 타이핑 후 커서를 끝으로 이동
+		setTimeout(moveCursorToEnd, 0);
 	};
 
 	/**
-	 * Handles paste events to insert text at the cursor position.
-	 * This allows for pasting text directly into the contentEditable element.
+	 * 붙여넣기 이벤트 처리 - 스타일 제거하고 순수 텍스트만 삽입
 	 */
 	const handlePaste = (e: React.ClipboardEvent<HTMLParagraphElement>) => {
 		e.preventDefault();
 
+		// 클립보드에서 순수 텍스트만 가져오기
 		const text = e.clipboardData.getData("text/plain");
-		const selection = window.getSelection();
 
+		if (!text) return;
+
+		// 현재 selection 위치에 텍스트 삽입
+		const selection = window.getSelection();
 		if (selection && selection.rangeCount > 0) {
 			const range = selection.getRangeAt(0);
 			range.deleteContents();
 
+			// 순수 텍스트 노드 생성하여 삽입
 			const textNode = document.createTextNode(text);
 			range.insertNode(textNode);
-
-			// Move the cursor to the end of the inserted text
-			range.setStartAfter(textNode);
-			range.setEndAfter(textNode);
-			range.collapse(false);
-
-			selection.removeAllRanges();
-			selection.addRange(range);
-
-			// Keep focus
-			e.currentTarget.focus();
-		}
-	};
-
-	// Set the initial value of the paragraph element
-	useEffect(() => {
-		if (paragraphRef.current) {
-			if (value !== "") {
-				paragraphRef.current.textContent = value;
-			} else {
-				paragraphRef.current.textContent = "";
+		} else {
+			// selection이 없는 경우 기존 내용을 완전히 교체
+			if (paragraphRef.current) {
+				paragraphRef.current.textContent = text;
 			}
 		}
-	}, [value]);
+
+		// 변경된 내용을 상위 컴포넌트에 알리고 커서를 끝으로 이동
+		const newText = paragraphRef.current?.textContent || "";
+		onChange?.(newText);
+		setTimeout(moveCursorToEnd, 0);
+	};
+
+	/**
+	 * 컴포넌트 마운트 시 초기값 설정
+	 */
+	useEffect(() => {
+		if (paragraphRef.current && !isInitialized) {
+			paragraphRef.current.textContent = value;
+			setIsInitialized(true);
+		}
+	}, [value, isInitialized]);
+
+	/**
+	 * 외부에서 value가 변경될 때만 동기화
+	 * (사용자 입력이 아닌 외부 상태 변경 시)
+	 */
+	useEffect(() => {
+		if (paragraphRef.current && isInitialized) {
+			const currentText = paragraphRef.current.textContent || "";
+			if (currentText !== value) {
+				paragraphRef.current.textContent = value;
+				setTimeout(moveCursorToEnd, 0);
+			}
+		}
+	}, [value, isInitialized]);
 
 	return (
 		<div
