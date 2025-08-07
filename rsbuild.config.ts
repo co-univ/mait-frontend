@@ -11,13 +11,12 @@ export default defineConfig({
 	plugins: [pluginReact()],
 	source: {
 		define: {
-			"process.env.RSBUILD_WS_ENDPOINT": JSON.stringify(
-				process.env.RSBUILD_WS_ENDPOINT,
+			"process.env.PUBLIC_WS_ENDPOINT": JSON.stringify(
+				process.env.PUBLIC_WS_ENDPOINT,
 			),
 			"process.env.PUBLIC_BASE_URL": JSON.stringify(
 				process.env.PUBLIC_BASE_URL,
 			),
-			// "process": JSON.stringify({ env: {} }),
 		},
 	},
 	tools: {
