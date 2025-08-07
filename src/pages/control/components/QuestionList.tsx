@@ -14,13 +14,13 @@ export const QuestionList: React.FC<QuestionListProps> = ({
 	if (isLoading) {
 		return (
 			<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-				<h3 className="text-lg font-semibold text-gray-900 mb-4">
+				<h3 className="mb-4 text-lg font-semibold text-gray-900">
 					문제별 제어
 				</h3>
 				<div className="space-y-4">
 					{[1, 2, 3].map((i) => (
 						<div key={i} className="animate-pulse">
-							<div className="h-20 bg-gray-200 rounded"></div>
+							<div className="h-20 rounded bg-gray-200"></div>
 						</div>
 					))}
 				</div>
@@ -31,7 +31,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
 	if (error) {
 		return (
 			<div className="rounded-lg border border-red-200 bg-red-50 p-6 shadow-sm">
-				<h3 className="text-lg font-semibold text-red-900 mb-2">문제별 제어</h3>
+				<h3 className="mb-2 text-lg font-semibold text-red-900">문제별 제어</h3>
 				<p className="text-sm text-red-700">
 					문제 목록을 불러오는데 실패했습니다.
 				</p>
@@ -44,7 +44,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
 	if (questions.length === 0) {
 		return (
 			<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-				<h3 className="text-lg font-semibold text-gray-900 mb-4">
+				<h3 className="mb-4 text-lg font-semibold text-gray-900">
 					문제별 제어
 				</h3>
 				<p className="text-sm text-gray-600">등록된 문제가 없습니다.</p>
@@ -54,7 +54,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
 
 	return (
 		<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-			<h3 className="text-lg font-semibold text-gray-900 mb-4">
+			<h3 className="mb-4 text-lg font-semibold text-gray-900">
 				문제별 제어 ({questions.length}개)
 			</h3>
 			<div className="space-y-3">

@@ -119,7 +119,7 @@ const LoginModal = ({ open, onClose }: LoginModalProps) => {
 					<div>
 						<label
 							htmlFor="email"
-							className="block text-sm font-medium text-gray-700 mb-1"
+							className="mb-1 block text-sm font-medium text-gray-700"
 						>
 							이메일
 						</label>
@@ -129,7 +129,7 @@ const LoginModal = ({ open, onClose }: LoginModalProps) => {
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							placeholder="이메일을 입력하세요"
-							className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-alpha-black100"
+							className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-alpha-black100 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
 							disabled={loginMutation.isPending}
 						/>
 					</div>
@@ -137,7 +137,7 @@ const LoginModal = ({ open, onClose }: LoginModalProps) => {
 					<div>
 						<label
 							htmlFor="password"
-							className="block text-sm font-medium text-gray-700 mb-1"
+							className="mb-1 block text-sm font-medium text-gray-700"
 						>
 							비밀번호
 						</label>
@@ -148,7 +148,7 @@ const LoginModal = ({ open, onClose }: LoginModalProps) => {
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								placeholder="비밀번호를 입력하세요"
-								className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 text-alpha-black100"
+								className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm text-alpha-black100 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
 								disabled={loginMutation.isPending}
 							/>
 							<button

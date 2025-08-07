@@ -84,51 +84,56 @@ const QuestionCreation = ({ initialState }: QuestionCreationProps) => {
 
 	// 기존 문제 데이터 로드 useEffect
 	useEffect(() => {
-		if (existingQuestionsData?.data && creationState.mode === "edit" && isQuestionSetCreated) {
-			const convertedQuestions: AnyQuestionFormData[] = existingQuestionsData.data.map((serverQuestion) => {
-				const baseQuestion = {
-					id: `existing-${serverQuestion.id}`,
-					content: serverQuestion.content || "",
-					explanation: serverQuestion.explanation || "",
-					number: serverQuestion.number,
-					isSaved: true,
-					questionId: serverQuestion.id.toString(),
-					hasChanges: false,
-				};
+		if (
+			existingQuestionsData?.data &&
+			creationState.mode === "edit" &&
+			isQuestionSetCreated
+		) {
+			const convertedQuestions: AnyQuestionFormData[] =
+				existingQuestionsData.data.map((serverQuestion) => {
+					const baseQuestion = {
+						id: `existing-${serverQuestion.id}`,
+						content: serverQuestion.content || "",
+						explanation: serverQuestion.explanation || "",
+						number: serverQuestion.number,
+						isSaved: true,
+						questionId: serverQuestion.id.toString(),
+						hasChanges: false,
+					};
 
-				switch (serverQuestion.type) {
-					case "MULTIPLE":
-						return {
-							...baseQuestion,
-							type: "MULTIPLE" as const,
-							choices: (serverQuestion as any).choices || [],
-						};
-					case "SHORT":
-						return {
-							...baseQuestion,
-							type: "SHORT" as const,
-							shortAnswers: (serverQuestion as any).answers || [],
-						};
-					case "ORDERING":
-						return {
-							...baseQuestion,
-							type: "ORDERING" as const,
-							options: (serverQuestion as any).options || [],
-						};
-					case "FILL_BLANK":
-						return {
-							...baseQuestion,
-							type: "FILL_BLANK" as const,
-							fillBlankAnswers: (serverQuestion as any).answers || [],
-						};
-					default:
-						return {
-							...baseQuestion,
-							type: "SHORT" as const,
-							shortAnswers: [],
-						};
-				}
-			});
+					switch (serverQuestion.type) {
+						case "MULTIPLE":
+							return {
+								...baseQuestion,
+								type: "MULTIPLE" as const,
+								choices: (serverQuestion as any).choices || [],
+							};
+						case "SHORT":
+							return {
+								...baseQuestion,
+								type: "SHORT" as const,
+								shortAnswers: (serverQuestion as any).answers || [],
+							};
+						case "ORDERING":
+							return {
+								...baseQuestion,
+								type: "ORDERING" as const,
+								options: (serverQuestion as any).options || [],
+							};
+						case "FILL_BLANK":
+							return {
+								...baseQuestion,
+								type: "FILL_BLANK" as const,
+								fillBlankAnswers: (serverQuestion as any).answers || [],
+							};
+						default:
+							return {
+								...baseQuestion,
+								type: "SHORT" as const,
+								shortAnswers: [],
+							};
+					}
+				});
 			setQuestions(convertedQuestions);
 		}
 	}, [existingQuestionsData, creationState.mode, isQuestionSetCreated]);
@@ -496,7 +501,7 @@ const QuestionCreation = ({ initialState }: QuestionCreationProps) => {
 	};
 
 	return (
-		<div className="mx-auto w-full min-h-screen max-w-4xl space-y-8 bg-white p-6">
+		<div className="mx-auto min-h-screen w-full max-w-4xl space-y-8 bg-white p-6">
 			{/* Header */}
 			<div className="flex items-center justify-between">
 				<h1 className="text-3xl font-bold text-gray-900">

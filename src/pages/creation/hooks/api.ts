@@ -1,7 +1,6 @@
 import type {
 	ApiResponseCreateQuestionSetApiResponse,
 	ApiResponseListQuestionApiResponse,
-	ApiResponseListQuestionApiResponse,
 	CreateFillBlankQuestionApiRequest,
 	CreateMultipleQuestionApiRequest,
 	CreateOrderingQuestionApiRequest,
@@ -134,7 +133,9 @@ class ApiClient {
 	 * @param questionSetId - 조회할 문제 세트의 ID
 	 * @returns 문제 목록
 	 */
-	async getQuestions(questionSetId: number): Promise<ApiResponseListQuestionApiResponse> {
+	async getQuestions(
+		questionSetId: number,
+	): Promise<ApiResponseListQuestionApiResponse> {
 		return this.request(`/api/v1/question-sets/${questionSetId}/questions`, {
 			method: "GET",
 		});

@@ -64,8 +64,8 @@ export const QuestionControl: React.FC<QuestionControlProps> = ({
 	return (
 		<div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
 			<div className="flex items-start justify-between">
-				<div className="flex-1 min-w-0">
-					<div className="flex items-center gap-3 mb-2">
+				<div className="min-w-0 flex-1">
+					<div className="mb-2 flex items-center gap-3">
 						<span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
 							문제 {questionNumber}
 						</span>
@@ -90,12 +90,12 @@ export const QuestionControl: React.FC<QuestionControlProps> = ({
 							</span>
 						</div>
 					</div>
-					<p className="text-sm text-gray-700 line-clamp-2">
+					<p className="line-clamp-2 text-sm text-gray-700">
 						{questionContent}
 					</p>
 				</div>
 
-				<div className="flex flex-col gap-2 ml-4">
+				<div className="ml-4 flex flex-col gap-2">
 					<button
 						type="button"
 						onClick={handleAccessToggle}
@@ -135,7 +135,7 @@ export const QuestionControl: React.FC<QuestionControlProps> = ({
 						onClick={() =>
 							setIsSubmissionInfoExpanded(!isSubmissionInfoExpanded)
 						}
-						className="rounded-md px-3 py-1.5 text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+						className="rounded-md bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
 					>
 						{isSubmissionInfoExpanded ? "제출 정보 숨기기" : "제출 정보 보기"}
 					</button>

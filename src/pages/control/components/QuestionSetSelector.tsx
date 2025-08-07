@@ -17,8 +17,8 @@ export const QuestionSetSelector: React.FC<QuestionSetSelectorProps> = ({
 		return (
 			<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
 				<div className="animate-pulse">
-					<div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
-					<div className="h-10 bg-gray-200 rounded w-full"></div>
+					<div className="mb-4 h-6 w-1/4 rounded bg-gray-200"></div>
+					<div className="h-10 w-full rounded bg-gray-200"></div>
 				</div>
 			</div>
 		);
@@ -27,7 +27,7 @@ export const QuestionSetSelector: React.FC<QuestionSetSelectorProps> = ({
 	if (error) {
 		return (
 			<div className="rounded-lg border border-red-200 bg-red-50 p-6 shadow-sm">
-				<h3 className="text-lg font-semibold text-red-900 mb-2">문제셋 선택</h3>
+				<h3 className="mb-2 text-lg font-semibold text-red-900">문제셋 선택</h3>
 				<p className="text-sm text-red-700">
 					문제셋 목록을 불러오는데 실패했습니다.
 				</p>
@@ -40,7 +40,7 @@ export const QuestionSetSelector: React.FC<QuestionSetSelectorProps> = ({
 	if (questionSets.length === 0) {
 		return (
 			<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-				<h3 className="text-lg font-semibold text-gray-900 mb-4">
+				<h3 className="mb-4 text-lg font-semibold text-gray-900">
 					문제셋 선택
 				</h3>
 				<p className="text-sm text-gray-600">등록된 문제셋이 없습니다.</p>
@@ -50,7 +50,7 @@ export const QuestionSetSelector: React.FC<QuestionSetSelectorProps> = ({
 
 	return (
 		<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-			<h3 className="text-lg font-semibold text-gray-900 mb-4">
+			<h3 className="mb-4 text-lg font-semibold text-gray-900">
 				문제셋 선택 ({questionSets.length}개)
 			</h3>
 
@@ -72,8 +72,8 @@ export const QuestionSetSelector: React.FC<QuestionSetSelectorProps> = ({
 							onClick={() => onSelectQuestionSet(questionSet.id)}
 						>
 							<div className="flex items-start justify-between">
-								<div className="flex-1 min-w-0">
-									<div className="flex items-center gap-3 mb-2">
+								<div className="min-w-0 flex-1">
+									<div className="mb-2 flex items-center gap-3">
 										<h4 className="text-base font-medium text-gray-900">
 											{questionSet.title ||
 												questionSet.subject ||
@@ -116,9 +116,9 @@ export const QuestionSetSelector: React.FC<QuestionSetSelectorProps> = ({
 
 								{isSelected && (
 									<div className="ml-4 flex-shrink-0">
-										<div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+										<div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500">
 											<svg
-												className="w-3 h-3 text-white"
+												className="h-3 w-3 text-white"
 												fill="currentColor"
 												viewBox="0 0 20 20"
 											>
@@ -138,7 +138,7 @@ export const QuestionSetSelector: React.FC<QuestionSetSelectorProps> = ({
 			</div>
 
 			{selectedQuestionSetId && (
-				<div className="mt-4 p-3 bg-blue-50 rounded-md">
+				<div className="mt-4 rounded-md bg-blue-50 p-3">
 					<p className="text-sm text-blue-800">
 						✅ 문제셋 #{selectedQuestionSetId}이(가) 선택되었습니다.
 					</p>
