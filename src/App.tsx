@@ -14,16 +14,9 @@ import SolvingWinner from "./pages/solving/pages/SolvingWinner";
 
 const App = () => {
 	const [isSideBarOpen, setIsSideBarOpen] = useState(true);
-	const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
 	const location = useLocation();
-	const location = useLocation();
 
-	const sidebarVariant: SIDEBAR_VARIANT = location.pathname.startsWith(
-		"/quiz-solving",
-	)
-		? "overlay"
-		: "default";
 	const sidebarVariant: SIDEBAR_VARIANT = location.pathname.startsWith(
 		"/quiz-solving",
 	)
