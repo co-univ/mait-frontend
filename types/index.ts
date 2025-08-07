@@ -4,6 +4,7 @@ export type { paths, components } from './api';
 // Individual schema exports for easier importing
 import type { components, paths } from './api';
 
+export type UpdateActiveParticipantsRequest = components['schemas']['UpdateActiveParticipantsRequest'];
 export type CreateTeamApiRequest = components['schemas']['CreateTeamApiRequest'];
 export type CreateQuestionSetApiRequest = components['schemas']['CreateQuestionSetApiRequest'];
 export type ApiResponseCreateQuestionSetApiResponse = components['schemas']['ApiResponseCreateQuestionSetApiResponse'];
@@ -24,6 +25,8 @@ export type QuestionAnswerSubmitApiRequest = components['schemas']['QuestionAnsw
 export type ShortQuestionSubmitApiRequest = components['schemas']['ShortQuestionSubmitApiRequest'];
 export type ApiResponseQuestionAnswerSubmitApiResponse = components['schemas']['ApiResponseQuestionAnswerSubmitApiResponse'];
 export type QuestionAnswerSubmitApiResponse = components['schemas']['QuestionAnswerSubmitApiResponse'];
+export type SendWinnerRequest = components['schemas']['SendWinnerRequest'];
+export type LoginApiRequest = components['schemas']['LoginApiRequest'];
 export type ApiResponseListQuestionSetApiResponse = components['schemas']['ApiResponseListQuestionSetApiResponse'];
 export type QuestionSetApiResponse = components['schemas']['QuestionSetApiResponse'];
 export type ApiResponseQuestionSetApiResponse = components['schemas']['ApiResponseQuestionSetApiResponse'];
@@ -38,17 +41,33 @@ export type QuestionApiResponse = components['schemas']['QuestionApiResponse'];
 export type ShortAnswerApiResponse = components['schemas']['ShortAnswerApiResponse'];
 export type ShortQuestionApiResponse = components['schemas']['ShortQuestionApiResponse'];
 export type ApiResponseQuestionApiResponse = components['schemas']['ApiResponseQuestionApiResponse'];
+export type ApiResponseListQuestionAnswerSubmitRecordApiResponse = components['schemas']['ApiResponseListQuestionAnswerSubmitRecordApiResponse'];
+export type QuestionAnswerSubmitRecordApiResponse = components['schemas']['QuestionAnswerSubmitRecordApiResponse'];
+export type ApiResponseQuestionScorerApiResponse = components['schemas']['ApiResponseQuestionScorerApiResponse'];
+export type QuestionScorerApiResponse = components['schemas']['QuestionScorerApiResponse'];
+export type ApiResponseQuestionSetLiveStatusResponse = components['schemas']['ApiResponseQuestionSetLiveStatusResponse'];
 export type QuestionSetLiveStatusResponse = components['schemas']['QuestionSetLiveStatusResponse'];
+export type ApiResponseParticipantsCorrectAnswerRankResponse = components['schemas']['ApiResponseParticipantsCorrectAnswerRankResponse'];
+export type ParticipantCorrectAnswerResponse = components['schemas']['ParticipantCorrectAnswerResponse'];
+export type ParticipantInfoResponse = components['schemas']['ParticipantInfoResponse'];
+export type ParticipantsCorrectAnswerRankResponse = components['schemas']['ParticipantsCorrectAnswerRankResponse'];
+export type ApiResponseListParticipantInfoResponse = components['schemas']['ApiResponseListParticipantInfoResponse'];
 
 // Individual path exports for easier importing
+export type QuestionSetsQuestionSetIdLiveStatusParticipantsPath = paths['/api/v1/question-sets/{questionSetId}/live-status/participants'];
 export type TeamsPath = paths['/api/v1/teams'];
 export type QuestionSetsPath = paths['/api/v1/question-sets'];
 export type QuestionSetsQuestionSetIdQuestionsPath = paths['/api/v1/question-sets/{questionSetId}/questions'];
 export type QuestionSetsQuestionSetIdQuestionsQuestionIdSubmitPath = paths['/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit'];
 export type QuestionSetsQuestionSetIdQuestionsQuestionIdControlSolvePath = paths['/api/v1/question-sets/{questionSetId}/questions/{questionId}/control/solve'];
 export type QuestionSetsQuestionSetIdQuestionsQuestionIdControlAccessPath = paths['/api/v1/question-sets/{questionSetId}/questions/{questionId}/control/access'];
+export type QuestionSetsQuestionSetIdLiveStatusWinnerPath = paths['/api/v1/question-sets/{questionSetId}/live-status/winner'];
+export type AuthLoginPath = paths['/api/v1/auth/login'];
 export type QuestionSetsQuestionSetIdLiveStatusStartPath = paths['/api/v1/question-sets/{questionSetId}/live-status/start'];
 export type QuestionSetsQuestionSetIdLiveStatusEndPath = paths['/api/v1/question-sets/{questionSetId}/live-status/end'];
 export type QuestionSetsQuestionSetIdPath = paths['/api/v1/question-sets/{questionSetId}'];
 export type QuestionSetsQuestionSetIdQuestionsQuestionIdPath = paths['/api/v1/question-sets/{questionSetId}/questions/{questionId}'];
+export type QuestionSetsQuestionSetIdQuestionsQuestionIdSubmitRecordsPath = paths['/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit-records'];
+export type QuestionSetsQuestionSetIdQuestionsQuestionIdScorerPath = paths['/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorer'];
 export type QuestionSetsQuestionSetIdLiveStatusPath = paths['/api/v1/question-sets/{questionSetId}/live-status'];
+export type QuestionSetsQuestionSetIdLiveStatusRankCorrectPath = paths['/api/v1/question-sets/{questionSetId}/live-status/rank/correct'];
