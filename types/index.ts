@@ -2,7 +2,7 @@ export type { components, paths } from "./api";
 export * from "./api";
 
 // Individual schema exports for easier importing
-import type { components, paths } from "./api";
+import type { components, paths } from './api';
 
 export type ApiResponseCreateQuestionSetApiResponse =
 	components["schemas"]["ApiResponseCreateQuestionSetApiResponse"];

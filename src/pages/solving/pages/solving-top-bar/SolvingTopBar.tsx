@@ -6,16 +6,52 @@ import SolvingTopBarControl from "./SolvingTopBarControl";
 //
 //
 
-const SolvingTopBar = () => {
+interface SolvingTopBarProps {
+	questionNum: number;
+	quizTitle: string;
+	questionCount: number;
+	onSubmit: () => void;
+	isSubmitting?: boolean;
+	isSubmitAllowed: boolean;
+	disabled: boolean;
+}
+
+//
+//
+//
+
+const SolvingTopBar = ({
+	questionNum,
+	quizTitle,
+	questionCount,
+	onSubmit,
+	isSubmitting,
+	isSubmitAllowed,
+	disabled,
+}: SolvingTopBarProps) => {
 	return (
 		<div className="sticky top-0 bg-alpha-white100">
-			<SolvingHeader title="문제 해결" percentage={20} />
+			<SolvingHeader
+				title={quizTitle}
+				questionNum={questionNum}
+				questionCount={questionCount}
+			/>
 			<div className="h-size-height-5" />
 			<SolvingTopBarControl
-				badgeLabel="Q1"
+				badgeLabel={`Q${questionNum}`}
 				badgeIcon={<Puzzle className="stroke-primary-50" />}
 				buttonLabel="제출하기"
-				buttonIcon={<ChevronRight className="stroke-primary-50" />}
+				buttonIcon={
+					<ChevronRight
+						className={
+							isSubmitAllowed && !disabled
+								? "stroke-primary-50"
+								: "stroke-color-gray-20"
+						}
+					/>
+				}
+				onSubmit={onSubmit}
+				disabled={isSubmitting || !isSubmitAllowed || disabled}
 			/>
 		</div>
 	);

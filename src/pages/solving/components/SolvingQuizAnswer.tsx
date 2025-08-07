@@ -104,7 +104,8 @@ const SolvingQuizAnswer = ({
 			className={clsx(
 				"flex items-center w-full px-padding-12 py-padding-6 rounded-medium1 border",
 				{
-					"bg-gray-5 border-transparent typo-body-medium": color === "gray",
+					"bg-gray-5 border-transparent text-alpha-black100 typo-body-medium":
+						color === "gray",
 					"bg-primary-5 border-primary-50 text-primary-50 typo-heading-small":
 						color === "primary",
 					"bg-success-5 border-success-50 text-success-50 typo-heading-small":

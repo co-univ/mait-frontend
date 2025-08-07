@@ -57,7 +57,14 @@ const Header = ({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) => {
 const BrandMenu = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
 	return (
 		<div className="flex items-center gap-3">
-			<img className="h-6 cursor-pointer" src={logo} alt="로고" />
+			<button
+				type="button"
+				onClick={() => {
+					window.location.href = "/";
+				}}
+			>
+				<img className="h-6 cursor-pointer" src={logo} alt="로고" />
+			</button>
 			<Menu className={ICON_BUTTON_STYLE} onClick={onMenuOpen} />
 		</div>
 	);

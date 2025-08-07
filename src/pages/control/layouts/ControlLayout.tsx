@@ -12,7 +12,7 @@ export const ControlLayout: React.FC<ControlLayoutProps> = ({
 	subtitle,
 }) => {
 	return (
-		<div className="min-h-screen p-6">
+		<div className="min-h-screen w-full p-6">
 			<div className="mx-auto max-w-6xl">
 				<div className="mb-8">
 					<h1 className="text-3xl font-bold text-gray-900">{title}</h1>

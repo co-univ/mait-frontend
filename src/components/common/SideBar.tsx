@@ -58,7 +58,7 @@ const SideBar = ({ isSideBarOpen, variant = "default" }: SideBarProps) => {
 				},
 				{
 					"h-[calc(100vh-6rem)]": variant === "default",
-					"h-[calc(100vh-12rem)] rounded-r-radius-large1 border border-gray-10":
+					"h-[calc(100vh-12rem)] rounded-r-radius-large1 border border-gray-10 z-[1000]":
 						variant === "overlay",
 				},
 			)}

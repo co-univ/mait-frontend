@@ -440,7 +440,7 @@ const QuestionCreation = ({ initialState }: QuestionCreationProps) => {
 	};
 
 	return (
-		<div className="mx-auto min-h-screen max-w-4xl space-y-8 bg-white p-6">
+		<div className="mx-auto w-full min-h-screen max-w-4xl space-y-8 bg-white p-6">
 			{/* Header */}
 			<div className="flex items-center justify-between">
 				<h1 className="text-3xl font-bold text-gray-900">
