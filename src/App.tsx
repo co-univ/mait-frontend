@@ -1,6 +1,6 @@
 import "./App.css";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import LoginModal from "./components/auth/LoginModal";
 import AppLayout from "./components/common/AppLayout";
@@ -23,6 +23,12 @@ const App = () => {
 		? "overlay"
 		: "default";
 
+	useEffect(() => {
+		if (location.pathname.startsWith("/quiz-solving")) {
+			setIsSideBarOpen(false);
+		}
+	}, [location.pathname]);
+
 	return (
 		<div className="app-container">
 			<Toast />
@@ -32,14 +38,11 @@ const App = () => {
 				variant={sidebarVariant}
 			/>
 			<main
-				className={clsx(
-					"main-content transition-all duration-300 ease-in-out",
-					{
-						"pl-[calc(17.5rem+2rem)] pr-8":
-							isSideBarOpen && sidebarVariant === "default",
-						"px-[10.75rem]": !isSideBarOpen && sidebarVariant === "default",
-					},
-				)}
+				className={clsx("main-content", {
+					"pl-[calc(17.5rem+2rem)] pr-8":
+						isSideBarOpen && sidebarVariant === "default",
+					"px-[10.75rem]": !isSideBarOpen && sidebarVariant === "default",
+				})}
 			>
 				<button
 					type="button"

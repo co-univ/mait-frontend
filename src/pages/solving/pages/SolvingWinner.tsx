@@ -10,13 +10,27 @@ import SolvingFullModalLayout, {
 //
 //
 
-type SolvingWinnerProps = Omit<SolvingFullModalLayoutProps, "children">;
-
+// type SolvingWinnerProps = Omit<SolvingFullModalLayoutProps, "children">;
+interface SolvingWinnerProps {
+	activeParticipants: Array<{
+		participantId: number;
+		userId: number;
+		participantName: string;
+	}>;
+	currentUserId: number;
+	open?: boolean;
+	onClose?: () => void;
+}
 //
 //
 //
 
-const SolvingWinner = ({ open, onClose }: SolvingWinnerProps) => {
+const SolvingWinner = ({
+	activeParticipants,
+	currentUserId,
+	open,
+	onClose,
+}: SolvingWinnerProps) => {
 	return (
 		<SolvingFullModalLayout open={open} onClose={onClose}>
 			<div className="flex items-center justify-center flex-col w-full h-full">
@@ -46,16 +60,21 @@ const SolvingWinner = ({ open, onClose }: SolvingWinnerProps) => {
 						<div className="h-[32px]" />
 
 						<div className="flex justify-center items-center py-[10px] w-[200px] border-t border-b border-dashed border-color-gray-40 typo-body-small text-color-warning-60">
-							n명 중에 1등하셨습니다
+							{activeParticipants.length}명 중에 1등하셨습니다
 						</div>
 
 						<div className="h-[34px]" />
 
 						<div className="flex gap-[10px] items-center">
 							<Award size={40} className="stroke-color-warning-60" />
-							<div className="typo-heading-xlarge text-color-warning-60">
-								누구
-							</div>
+							{activeParticipants.map((user) => (
+								<div
+									className="typo-heading-xlarge text-color-warning-60"
+									key={user.userId}
+								>
+									{user.participantName}
+								</div>
+							))}
 						</div>
 
 						<div className="h-[34px]" />

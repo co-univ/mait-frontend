@@ -1,16 +1,65 @@
+import { useEffect, useRef, useState } from "react";
 import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
 
 //
 //
 //
 
-const SolvingQuizContentOrderAnswers = () => {
-	const answers = Array.from({ length: 4 }).map((_, index) => ({
-		number: index + 1,
-		value: `${index + 1}번 순서.`,
-	}));
+interface SolvingQuizContentOrderAnswersProps {
+	questionInfo: any | null;
+	userAnswers: any;
+	onAnswersChange: (answers: any) => void;
+	isAnswered?: boolean;
+}
 
-	return <SolvingAnswerLayout draggable answers={answers} prefix="alphabet" />;
+interface Option {
+	id: number;
+	originOrder: number;
+	content: string;
+	answerOrder: number;
+}
+
+//
+//
+//
+
+const SolvingQuizContentOrderAnswers = ({
+	questionInfo,
+	userAnswers,
+	onAnswersChange,
+	isAnswered = false,
+}: SolvingQuizContentOrderAnswersProps) => {
+	const [orderedOptions, setOrderedOptions] = useState<Option[]>([]);
+	const initializedRef = useRef<number | null>(null);
+
+	// questionInfo가 변경될 때마다 초기 순서로 설정
+	useEffect(() => {
+		if (questionInfo?.options && questionInfo.id !== initializedRef.current) {
+			setOrderedOptions([...questionInfo.options]);
+			// 초기 순서를 userAnswers에도 설정 (originOrder 배열)
+			const initialOrder = questionInfo.options.map(
+				(option: Option) => option.originOrder,
+			);
+			onAnswersChange(initialOrder);
+			initializedRef.current = questionInfo.id;
+		}
+	}, [questionInfo]);
+
+	const handleOrderChange = (newOrder: Option[]) => {
+		setOrderedOptions(newOrder);
+		// userAnswers에 순서 변경된 옵션들의 originOrder 배열 저장
+		const orderedOriginOrders = newOrder.map((option) => option.originOrder);
+		onAnswersChange(orderedOriginOrders);
+	};
+
+	return (
+		<SolvingAnswerLayout
+			draggable={!isAnswered}
+			answers={orderedOptions}
+			prefix="alphabet"
+			onOrderChange={isAnswered ? undefined : handleOrderChange}
+		/>
+	);
 };
 
 export default SolvingQuizContentOrderAnswers;
