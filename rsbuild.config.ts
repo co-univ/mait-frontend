@@ -4,7 +4,7 @@ import autoprefixer from "autoprefixer";
 import * as dotenv from "dotenv";
 import tailwindcss from "tailwindcss";
 
-dotenv.config({ path: '.env.production' });
+dotenv.config({ path: '.env' });
 
 export default defineConfig({
 	plugins: [pluginReact()],
