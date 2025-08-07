@@ -37,7 +37,10 @@ jobs:
         run: pnpm install
         
       - name: Build
-        run: pnpm build
+        run: |
+          printf "RSBUILD_WS_ENDPOINT=%s\n" "$RSBUILD_WS_ENDPOINT" >> .env.production
+          printf "PUBLIC_BASE_URL=%s\n"    "$PUBLIC_BASE_URL"    >> .env.production
+          pnpm build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
