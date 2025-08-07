@@ -10,12 +10,6 @@ export const useAnswerSubmit = () => {
 		questionInfo: QuestionApiResponse,
 		userAnswers: any,
 	) => {
-		console.log("submitAnswer 호출됨:", {
-			questionSetId,
-			questionInfo,
-			userAnswers,
-		});
-
 		if (!questionInfo || !userAnswers) {
 			console.error("문제 정보 또는 답안이 없습니다.");
 			return null;
@@ -68,12 +62,6 @@ export const useAnswerSubmit = () => {
 					console.error("지원하지 않는 문제 타입입니다.");
 					return null;
 			}
-
-			console.log("API 호출 전:", {
-				questionSetId,
-				questionId: questionInfo.id,
-				submitData,
-			});
 
 			const response = await apiClient.postQuestionSetsQuestionsSubmit(
 				questionSetId,

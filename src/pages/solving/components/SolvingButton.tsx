@@ -18,6 +18,7 @@ const SolvingButton = ({
 	direction = "row-reverse",
 	icon,
 	onClick,
+	disabled,
 }: SolvingButtonProps) => {
 	return (
 		<SolvingBadege
@@ -26,6 +27,7 @@ const SolvingButton = ({
 			icon={icon}
 			as="button"
 			onClick={onClick}
+			disabled={disabled}
 		/>
 	);
 };

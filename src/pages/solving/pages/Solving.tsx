@@ -16,13 +16,14 @@ interface SolvingQuizContentProps {
 	quizTitle: string;
 	questionCount: number;
 	questionSetId: number;
+	isSubmitAllowed: boolean;
 }
 
 //
 //
 //
 
-const Solving = ({ questionInfo, quizTitle, questionCount, questionSetId }: SolvingQuizContentProps) => {
+const Solving = ({ questionInfo, quizTitle, questionCount, questionSetId, isSubmitAllowed }: SolvingQuizContentProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 	const [isCorrect, setIsCorrect] = useState(true);
 	const [userAnswers, setUserAnswers] = useState<any>(null);
@@ -55,13 +56,18 @@ const Solving = ({ questionInfo, quizTitle, questionCount, questionSetId }: Solv
 			return;
 		}
 
-		const response = await submitAnswer(questionSetId, questionInfo, userAnswers);
-		
-		if (response?.data) {
-			setIsCorrect(response.data.isCorrect || false);
-			setShowCorrect(true);
+		try {
+			const response = await submitAnswer(questionSetId, questionInfo, userAnswers);
+			if (response?.data) {
+				setIsCorrect(response.data.isCorrect || false);
+				setShowCorrect(true);
+			}
+		} catch(err) {
+			console.error(err);
 		}
 	};
+
+
 
 	return (
 		<SolvingLayout>
@@ -80,6 +86,7 @@ const Solving = ({ questionInfo, quizTitle, questionCount, questionSetId }: Solv
 				questionCount={questionCount as number}
 				onSubmit={handleSubmitAnswer}
 				isSubmitting={isSubmitting}
+				isSubmitAllowed={isSubmitAllowed}
 			/>
 			<div className="h-size-height-5" />
 			<SolvingQuizContent 

@@ -11,6 +11,7 @@ export interface SolvingBadegeProps {
 	icon: React.ReactNode;
 	as?: keyof JSX.IntrinsicElements;
 	onClick?: () => void;
+	disabled?: boolean;
 }
 
 //
@@ -23,17 +24,22 @@ const SolvingBadege = ({
 	icon,
 	as: Component = "div",
 	onClick,
+	disabled = false,
 }: SolvingBadegeProps) => {
 	const flexDirection =
 		direction === "row-reverse" ? "flex-row-reverse" : "flex-row";
 
+	const bgColor = disabled ? "bg-color-gray-5" : "bg-primary-5";
+	const textColor = disabled ? "text-color-gray-20" : "text-primary-50";
+	const cursor = disabled ? "cursor-not-allowed" : "cursor-pointer";
+
 	return (
 		<Component
-			className={`flex p-padding-6 gap-gap-5 rounded-radius-medium1 bg-primary-5 items-center ${flexDirection}`}
-			onClick={onClick}
+			className={`flex p-padding-6 gap-gap-5 rounded-radius-medium1 ${bgColor} items-center ${flexDirection} ${cursor}`}
+			onClick={disabled ? undefined : onClick}
 		>
 			{icon}
-			<span className="typo-heading-small text-primary-50">{lable}</span>
+			<span className={`typo-heading-small ${textColor}`}>{lable}</span>
 		</Component>
 	);
 };

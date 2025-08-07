@@ -33,7 +33,8 @@ const SolvingTopBarControl = ({
 			<SolvingButton
 				lable={buttonLabel}
 				icon={buttonIcon}
-				onClick={disabled ? undefined : onSubmit}
+				onClick={onSubmit}
+				disabled={disabled}
 			/>
 		</div>
 	);

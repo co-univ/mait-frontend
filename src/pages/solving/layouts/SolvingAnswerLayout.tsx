@@ -132,19 +132,9 @@ const SolvingAnswerLayout = ({
 							onClick={
 								onChoiceSelect ? () => onChoiceSelect(answer.id) : undefined
 							}
-							onKeyDown={
-								onChoiceSelect
-									? (e) => {
-											if (e.key === "Enter" || e.key === " ") {
-												e.preventDefault();
-												onChoiceSelect(answer.id);
-											}
-										}
-									: undefined
-							}
-							role={onChoiceSelect ? "button" : undefined}
-							tabIndex={onChoiceSelect ? 0 : undefined}
-							style={{ cursor: onChoiceSelect ? "pointer" : undefined }}
+							style={{
+								cursor: onChoiceSelect ? "pointer" : undefined,
+							}}
 						>
 							<SolvingQuizAnswer
 								value={answer.content || answer.value || answer.answer || ""}

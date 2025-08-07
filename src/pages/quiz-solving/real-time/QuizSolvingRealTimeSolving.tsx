@@ -64,10 +64,12 @@ const QuizSolvingRealTimeSolving = () => {
 				// 문제 화면 노출
 				setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
 				fetchQuestionInfo(questionId); // 문제 정보 가져오기
+				setIsSubmitAllowed(false); // 제출 비허용
 				break;
 			case QuestionStatusType.SOLVE_PERMISSION: // 답안 제출 허용
 				// 답안 제출 가능 여부 가능하도록 변경
-
+				console.log("답안 제출 허용");
+				setIsSubmitAllowed(true);
 				break;
 			case CommandType.QUALIFIER:
 				// 다음 단계 진출자 출력
@@ -123,6 +125,7 @@ const QuizSolvingRealTimeSolving = () => {
 						quizTitle={questionSetInfo?.title as string}
 						questionCount={questionSetInfo?.questionCount as number}
 						questionSetId={Number(questionSetId)}
+						isSubmitAllowed={isSubmitAllowed}
 					/>
 				) : (
 					<QuizSolvingRealTimeWaitView />
