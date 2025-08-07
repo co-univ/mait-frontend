@@ -5,7 +5,7 @@ export enum QuestionStatusType {
 }
 
 export enum CommandType {
-	QUALIFIER = "QUALIFIER",
+	ACTIVE_PARTICIPANTS = "ACTIVE_PARTICIPANTS",
 	WINNER = "WINNER",
 }
 

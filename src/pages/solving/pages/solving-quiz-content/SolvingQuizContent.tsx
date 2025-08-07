@@ -16,7 +16,7 @@ interface SolvingQuizContentProps {
 	questionInfo: QuestionApiResponse | null;
 	userAnswers: any;
 	onAnswersChange: (answers: any) => void;
-	isAnswered?: boolean;
+	disabled?: boolean;
 }
 
 //
@@ -27,7 +27,7 @@ const SolvingQuizContent = ({
 	questionInfo,
 	userAnswers,
 	onAnswersChange,
-	isAnswered = false,
+	disabled = false,
 }: SolvingQuizContentProps) => {
 	const type = questionInfo?.type;
 
@@ -49,7 +49,7 @@ const SolvingQuizContent = ({
 					questionInfo={questionInfo}
 					userAnswers={userAnswers}
 					onAnswersChange={onAnswersChange}
-					isAnswered={isAnswered}
+					isAnswered={disabled}
 				/>
 			)}
 			{type === QuestionType.MULTIPLE && (
@@ -57,7 +57,7 @@ const SolvingQuizContent = ({
 					questionInfo={questionInfo}
 					userAnswers={userAnswers}
 					onAnswersChange={onAnswersChange}
-					isAnswered={isAnswered}
+					isAnswered={disabled}
 				/>
 			)}
 			{type === QuestionType.FILL_BLANK && (
@@ -65,7 +65,7 @@ const SolvingQuizContent = ({
 					questionInfo={questionInfo}
 					userAnswers={userAnswers}
 					onAnswersChange={onAnswersChange}
-					isAnswered={isAnswered}
+					isAnswered={disabled}
 				/>
 			)}
 			{type === QuestionType.ORDERING && (
@@ -73,7 +73,7 @@ const SolvingQuizContent = ({
 					questionInfo={questionInfo}
 					userAnswers={userAnswers}
 					onAnswersChange={onAnswersChange}
-					isAnswered={isAnswered}
+					isAnswered={disabled}
 				/>
 			)}
 		</div>

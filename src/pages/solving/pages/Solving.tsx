@@ -18,6 +18,7 @@ interface SolvingQuizContentProps {
 	questionCount: number;
 	questionSetId: number;
 	isSubmitAllowed: boolean;
+	isFailed?: boolean;
 }
 
 //
@@ -30,17 +31,24 @@ const Solving = ({
 	questionCount,
 	questionSetId,
 	isSubmitAllowed,
+	isFailed = false,
 }: SolvingQuizContentProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 	const [isCorrect, setIsCorrect] = useState(true);
 	const [userAnswers, setUserAnswers] = useState<any>(null);
-	const [isAnswered, setIsAnswered] = useState(false);
+	const [isCorrected, setIsCorrected] = useState(false);
+	const [disabled, setDisabled] = useState(false);
 	const { submitAnswer, isSubmitting } = useAnswerSubmit();
 
-	// 문제가 바뀔 때 userAnswers와 isAnswered 초기화
+	// 최종 비활성화 상태: 정답을 맞췄거나 탈락했을 때
+	useEffect(() => {
+		setDisabled(isCorrected || isFailed);
+	}, [isCorrected, isFailed]);
+
+	// 문제가 바뀔 때 userAnswers와 isCorrected 초기화
 	useEffect(() => {
 		setUserAnswers(null);
-		setIsAnswered(false);
+		setIsCorrected(false);
 	}, [questionInfo?.id]);
 
 	// isSubmitAllowed 변경 시 로그
@@ -172,7 +180,7 @@ const Solving = ({
 				setShowCorrect(true);
 				// 정답을 맞췄을 때만 상호작용 비활성화
 				if (isCorrect) {
-					setIsAnswered(true);
+					setIsCorrected(true);
 				}
 			}
 		} catch (err) {
@@ -198,14 +206,14 @@ const Solving = ({
 				onSubmit={handleSubmitAnswer}
 				isSubmitting={isSubmitting}
 				isSubmitAllowed={isSubmitAllowed}
-				isAnswered={isAnswered}
+				disabled={disabled}
 			/>
 			<div className="h-size-height-5" />
 			<SolvingQuizContent
 				questionInfo={questionInfo}
 				userAnswers={userAnswers}
-				onAnswersChange={isAnswered ? () => {} : setUserAnswers}
-				isAnswered={isAnswered}
+				onAnswersChange={disabled ? () => {} : setUserAnswers}
+				disabled={disabled}
 			/>
 		</SolvingLayout>
 	);

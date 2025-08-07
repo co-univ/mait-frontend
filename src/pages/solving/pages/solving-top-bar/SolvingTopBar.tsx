@@ -13,7 +13,7 @@ interface SolvingTopBarProps {
 	onSubmit: () => void;
 	isSubmitting?: boolean;
 	isSubmitAllowed: boolean;
-	isAnswered: boolean;
+	disabled: boolean;
 }
 
 //
@@ -27,7 +27,7 @@ const SolvingTopBar = ({
 	onSubmit,
 	isSubmitting,
 	isSubmitAllowed,
-	isAnswered,
+	disabled,
 }: SolvingTopBarProps) => {
 	return (
 		<div className="sticky top-0 bg-alpha-white100">
@@ -44,14 +44,14 @@ const SolvingTopBar = ({
 				buttonIcon={
 					<ChevronRight
 						className={
-							isSubmitAllowed && !isAnswered
+							isSubmitAllowed && !disabled
 								? "stroke-primary-50"
 								: "stroke-color-gray-20"
 						}
 					/>
 				}
 				onSubmit={onSubmit}
-				disabled={isSubmitting || !isSubmitAllowed || isAnswered}
+				disabled={isSubmitting || !isSubmitAllowed || disabled}
 			/>
 		</div>
 	);

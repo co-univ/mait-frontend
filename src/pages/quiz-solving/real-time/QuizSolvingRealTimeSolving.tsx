@@ -1,5 +1,5 @@
 import * as StompJs from "@stomp/stompjs";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
@@ -7,6 +7,7 @@ import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import Solving from "src/pages/solving/pages";
 import SolvingQuizContent from "src/pages/solving/pages/solving-quiz-content";
 import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
+import QualifierView from "./QualifierView";
 import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
 
 //
@@ -19,6 +20,16 @@ const QuizSolvingRealTimeSolving = () => {
 	const [questionId, setQuestionId] = useState<number | null>(null); // 문제 id
 	const [questionInfo, setQuestionInfo] = useState<any>(null); // 문제 정보
 	const [isSubmitAllowed, setIsSubmitAllowed] = useState(false); // 답안 제출 가능 여부
+	const [showQualifierView, setShowQualifierView] = useState(false); // QUALIFIER 페이지 표시 여부
+	const [activeParticipants, setActiveParticipants] = useState<
+		Array<{
+			participantId: number;
+			userId: number;
+			participantName: string;
+		}>
+	>([]);
+	const [currentUserId] = useState(1); // 임시로 userId 1 설정 (나중에 실제 로그인 유저 정보로 교체)
+	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 
 	const location = useLocation();
 
@@ -54,34 +65,60 @@ const QuizSolvingRealTimeSolving = () => {
 	const handleWebSocketMessage = (msg: any) => {
 		const questionSetId = msg.questionSetId; // 문제 셋 id
 		const questionId = msg.questionId; // 문제 id
-		const statusType = msg.statusType; // 문제 풀이 상태
+		const statusType = msg?.statusType; // 문제 풀이 상태
+		const commandType = msg?.commandType; // 명령 타입
 
-		switch (statusType) {
-			case QuestionStatusType.NOT_OPEN: // 문제 풀이가 시작되지 않은 상태
-				// 대기 화면 노출
-				break;
-			case QuestionStatusType.ACCESS_PERMISSION: // 문제 접근 허용
-				// 문제 화면 노출
-				setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
-				fetchQuestionInfo(questionId); // 문제 정보 가져오기
-				setIsSubmitAllowed(false); // 제출 비허용
-				break;
-			case QuestionStatusType.SOLVE_PERMISSION: // 답안 제출 허용
-				setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
-				fetchQuestionInfo(questionId); // 문제 정보 가져오기
-				// 답안 제출 가능 여부 가능하도록 변경
-				console.log("답안 제출 허용 - isSubmitAllowed를 true로 설정");
-				setIsSubmitAllowed(true);
-				break;
-			case CommandType.QUALIFIER:
-				// 다음 단계 진출자 출력
+		if (commandType) {
+			switch (commandType) {
+				case CommandType.ACTIVE_PARTICIPANTS: {
+					{
+						// 다음 단계 진출자 목록 출력
+						const participants = msg.activeParticipants || [];
+						setActiveParticipants(participants);
+						setShowQualifierView(true);
 
-				break;
-			case CommandType.WINNER:
-				// 우승자 출력
-				break;
+						// activeParticipants 배열에 현재 유저가 있는지 확인
+						const isQualified = participants.some(
+							(participant: any) => participant.userId === currentUserId,
+						);
+						if (!isQualified) {
+							// 탈락자는 다음 문제부터 풀이 불가능
+							setIsFailed(true);
+						}
+						break;
+					}
+				}
+				case CommandType.WINNER:
+					// 우승자 출력
+					break;
+			}
+			return;
+		}
+
+		if (statusType) {
+			switch (statusType) {
+				case QuestionStatusType.NOT_OPEN: // 문제 풀이가 시작되지 않은 상태
+					// 대기 화면 노출
+					break;
+				case QuestionStatusType.ACCESS_PERMISSION: // 문제 접근 허용
+					// 문제 화면 노출
+					setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
+					fetchQuestionInfo(questionId); // 문제 정보 가져오기
+					setIsSubmitAllowed(false); // 제출 비허용
+					break;
+				case QuestionStatusType.SOLVE_PERMISSION: // 답안 제출 허용
+					setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
+					fetchQuestionInfo(questionId); // 문제 정보 가져오기
+					// 답안 제출 가능 여부 가능하도록 변경
+					setIsSubmitAllowed(true);
+					break;
+			}
 		}
 	};
+
+	useEffect(() => {
+		setShowQualifierView(false);
+	}, [questionId]);
 
 	//
 	useEffect(() => {
@@ -119,21 +156,30 @@ const QuizSolvingRealTimeSolving = () => {
 
 	return (
 		<div className="w-full">
-			<div className="w-full">
-				{questionId !== null ? (
-					<Solving
-						questionInfo={questionInfo}
-						quizTitle={questionSetInfo?.title as string}
-						questionCount={questionSetInfo?.questionCount as number}
-						questionSetId={Number(questionSetId)}
-						isSubmitAllowed={isSubmitAllowed}
-					/>
-				) : (
-					<QuizSolvingRealTimeWaitView />
-				)}
-			</div>
+			{showQualifierView && (
+				<QualifierView
+					activeParticipants={activeParticipants}
+					currentUserId={currentUserId}
+				/>
+			)}
+			{!showQualifierView && (
+				<div className="w-full">
+					{questionId !== null ? (
+						<Solving
+							questionInfo={questionInfo}
+							quizTitle={questionSetInfo?.title as string}
+							questionCount={questionSetInfo?.questionCount as number}
+							questionSetId={Number(questionSetId)}
+							isSubmitAllowed={isSubmitAllowed && !isFailed}
+							isFailed={isFailed}
+						/>
+					) : (
+						<QuizSolvingRealTimeWaitView />
+					)}
+				</div>
+			)}
 		</div>
-	)
+	);
 };
 
 export default QuizSolvingRealTimeSolving;
