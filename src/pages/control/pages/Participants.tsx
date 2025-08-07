@@ -17,7 +17,7 @@ const Participants = () => {
 					</p>
 					<Link
 						to="/control"
-						className="mt-3 inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+						className="mt-3 inline-flex items-center gap-2 rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
 					>
 						← 퀴즈 제어로 돌아가기
 					</Link>
@@ -36,7 +36,7 @@ const Participants = () => {
 				<div className="flex items-center gap-4">
 					<Link
 						to={`/control?questionSetId=${selectedQuestionSetId}`}
-						className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+						className="inline-flex items-center gap-2 rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
 					>
 						← 퀴즈 제어로 돌아가기
 					</Link>
@@ -70,7 +70,7 @@ const Participants = () => {
 							참가자 관리 안내
 						</h3>
 						<div className="mt-2 text-sm text-yellow-700">
-							<ul className="list-disc list-inside space-y-1">
+							<ul className="list-inside list-disc space-y-1">
 								<li>
 									참가자를 선택하여 다음 단계 진출자로 설정할 수 있습니다.
 								</li>
