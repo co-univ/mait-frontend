@@ -4,6 +4,7 @@ import React, { use, useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
+import useUser from "src/hooks/useUser";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import Solving from "src/pages/solving/pages";
 import SolvingNextStage from "src/pages/solving/pages/SolvingNextStage";
@@ -32,9 +33,9 @@ const QuizSolvingRealTimeSolving = () => {
 			participantName: string;
 		}>
 	>([]);
-	// const [currentUserId] = useState(1);
 
-	const currentUserId = localStorage.getItem("id");
+	const { user } = useUser();
+	const currentUserId = user?.id;
 
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import type { QuestionApiResponse } from "@/types";
 import { apiClient } from "../../../apis/solving.api";
+import useUser from "src/hooks/useUser";
 
 export const useAnswerSubmit = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { user } = useUser();
 
 	const submitAnswer = async (
 		questionSetId: number,
@@ -30,7 +32,7 @@ export const useAnswerSubmit = () => {
 			switch (questionType) {
 				case "SHORT":
 					submitData = {
-						userId: localStorage.getItem("id"), // 추후 실제 유저 ID로 변경
+						userId: user?.id || 0,
 						type: "SHORT",
 						submitAnswers: userAnswers
 							.filter(
@@ -42,14 +44,14 @@ export const useAnswerSubmit = () => {
 					break;
 				case "MULTIPLE":
 					submitData = {
-						userId: localStorage.getItem("id"), // 추후 실제 유저 ID로 변경
+						userId: user?.id || 0,
 						type: "MULTIPLE",
 						submitAnswers: Array.isArray(userAnswers) ? userAnswers : [], // 선택된 선택지 number 배열
 					};
 					break;
 				case "FILL_BLANK":
 					submitData = {
-						userId: localStorage.getItem("id"), // 추후 실제 유저 ID로 변경
+						userId: user?.id || 0,
 						type: "FILL_BLANK",
 						submitAnswers: userAnswers.map((answer: any) => ({
 							number: answer.number,
@@ -66,7 +68,7 @@ export const useAnswerSubmit = () => {
 						) ||
 						[];
 					submitData = {
-						userId: localStorage.getItem("id"), // 추후 실제 유저 ID로 변경
+						userId: user?.id || 0,
 						type: "ORDERING",
 						submitAnswers: orderingAnswers, // 정렬된 originOrder 배열
 					};

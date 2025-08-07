@@ -63,8 +63,8 @@ const QuestionCreation = ({ initialState }: QuestionCreationProps) => {
 		creationType: "MANUAL" as const,
 	});
 
-	// 임시로 teamId 1 사용 (나중에 실제 팀 정보로 대체)
-	const teamId = 1;
+	// env에서 teamId 가져오기
+	const teamId = Number(process.env.PUBLIC_TEAM_ID) || 1;
 
 	// 기존 문제 세트 목록 조회
 	const { data: questionSetsData, isLoading: isLoadingQuestionSets } =

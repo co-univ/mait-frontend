@@ -10,7 +10,8 @@ export const QuestionSetSelector: React.FC<QuestionSetSelectorProps> = ({
 	selectedQuestionSetId,
 	onSelectQuestionSet,
 }) => {
-	const { data: questionSetsData, isLoading, error } = useQuestionSets(1); // teamId = 1 고정
+	const teamId = Number(process.env.PUBLIC_TEAM_ID) || 1;
+	const { data: questionSetsData, isLoading, error } = useQuestionSets(teamId);
 
 	if (isLoading) {
 		return (
