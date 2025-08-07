@@ -10,29 +10,23 @@ import SolvingFullModalLayout, {
 //
 //
 
-type SolvingNextStageProps = Omit<SolvingFullModalLayoutProps, "children">;
+// type SolvingNextStageProps = Omit<SolvingFullModalLayoutProps, "children">;
+interface QualifierViewProps {
+	activeParticipants: Array<{
+		participantId: number;
+		userId: number;
+		participantName: string;
+	}>;
+	currentUserId: number;
+	open?: boolean;
+	onClose?: () => void;
+}
 
 //
 //
 //
 
-const SolvingNextStage = ({ open, onClose }: SolvingNextStageProps) => {
-	const next = [
-		{ id: 1, name: "won" },
-		{ id: 2, name: "gd" },
-		{ id: 3, name: "hochi" },
-		{ id: 4, name: "sang" },
-		// { id: 5, name: "sang" },
-		// { id: 6, name: "sang" },
-		// { id: 7, name: "sang" },
-		// { id: 8, name: "sang" },
-		// { id: 9, name: "sang" },
-		// { id: 10, name: "sang" },
-		// { id: 11, name: "sang" },
-		// { id: 12, name: "sang" },
-		// { id: 13, name: "sang" },
-	];
-
+const SolvingNextStage = ({ open, onClose, 	activeParticipants, currentUserId }: QualifierViewProps) => {
 	return (
 		<SolvingFullModalLayout open={open} onClose={onClose}>
 			<div className="flex justify-center w-full h-full px-[172px] pb-[84px]">
@@ -62,22 +56,22 @@ const SolvingNextStage = ({ open, onClose }: SolvingNextStageProps) => {
 						<div className="mb-[32px]">다음 진출자</div>
 						<div className="flex flex-1 justify-center items-start gap-8 w-full overflow-y-auto py-4">
 							<div className="flex flex-col gap-4">
-								{next
+								{activeParticipants
 									.filter((_, idx) => idx % 2 === 0)
 									.map((user) => (
-										<div key={user.id} className="flex items-center gap-2">
+										<div key={user.userId} className="flex items-center gap-2">
 											<Award size={40} />
-											<div>{user.name}</div>
+											<div>{user.participantName}</div>
 										</div>
 									))}
 							</div>
 							<div className="flex flex-col gap-4">
-								{next
+								{activeParticipants
 									.filter((_, idx) => idx % 2 === 1)
 									.map((user) => (
-										<div key={user.id} className="flex items-center gap-2">
+										<div key={user.userId} className="flex items-center gap-2">
 											<Award size={40} />
-											<div>{user.name}</div>
+											<div>{user.participantName}</div>
 										</div>
 									))}
 							</div>
