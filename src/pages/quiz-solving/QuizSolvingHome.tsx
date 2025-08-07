@@ -9,11 +9,13 @@ const QuizSolvingHome = () => {
 	const navigate = useNavigate();
 
 	/**
-	 * 
+	 *
 	 */
 	const handleStartButtonClick = () => {
-		navigate('/quiz-solving/7');
-	}
+		const questionId = process.env.PUBLIC_QUESTION_ID;
+
+		navigate(`/quiz-solving/${questionId}`);
+	};
 
 	return (
 		<div className="text-alpha-black100 typo-heading-xlarge">
