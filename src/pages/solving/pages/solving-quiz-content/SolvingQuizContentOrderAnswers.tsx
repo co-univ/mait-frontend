@@ -34,8 +34,8 @@ const SolvingQuizContentOrderAnswers = ({
 	useEffect(() => {
 		if (questionInfo?.options && questionInfo.id !== initializedRef.current) {
 			setOrderedOptions([...questionInfo.options]);
-			// 초기 순서를 userAnswers에도 설정
-			const initialOrder = questionInfo.options.map((option: Option) => option.id);
+			// 초기 순서를 userAnswers에도 설정 (originOrder 배열)
+			const initialOrder = questionInfo.options.map((option: Option) => option.originOrder);
 			onAnswersChange(initialOrder);
 			initializedRef.current = questionInfo.id;
 		}
@@ -43,9 +43,9 @@ const SolvingQuizContentOrderAnswers = ({
 
 	const handleOrderChange = (newOrder: Option[]) => {
 		setOrderedOptions(newOrder);
-		// userAnswers에 순서 변경된 옵션들의 ID 배열 저장
-		const orderedIds = newOrder.map(option => option.id);
-		onAnswersChange(orderedIds);
+		// userAnswers에 순서 변경된 옵션들의 originOrder 배열 저장
+		const orderedOriginOrders = newOrder.map(option => option.originOrder);
+		onAnswersChange(orderedOriginOrders);
 	};
 
 	return (

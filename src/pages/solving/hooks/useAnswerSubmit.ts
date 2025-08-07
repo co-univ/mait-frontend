@@ -61,12 +61,14 @@ export const useAnswerSubmit = () => {
 					// userAnswers가 없으면 초기 순서 사용
 					const orderingAnswers =
 						userAnswers ||
-						(questionInfo as any).options?.map((option: any) => option.id) ||
+						(questionInfo as any).options?.map(
+							(option: any) => option.originOrder,
+						) ||
 						[];
 					submitData = {
 						userId: 1, // 추후 실제 유저 ID로 변경
 						type: "ORDERING",
-						submitAnswers: orderingAnswers, // 정렬된 선택지 ID 배열
+						submitAnswers: orderingAnswers, // 정렬된 originOrder 배열
 					};
 					break;
 				}
