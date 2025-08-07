@@ -11,9 +11,9 @@ import { apiClient } from "./api";
  * 케시 무효화 및 업데이트 시 사용되는 케시 키 정의
  */
 export const QUESTION_SET_QUERY_KEYS = {
-  all: ["questionSets"] as const,
-  byTeam: (teamId: number) => ["questionSets", "team", teamId] as const,
-  detail: (id: number) => ["questionSets", id] as const,
+	all: ["questionSets"] as const,
+	byTeam: (teamId: number) => ["questionSets", "team", teamId] as const,
+	detail: (id: number) => ["questionSets", id] as const,
 };
 
 //
@@ -26,12 +26,12 @@ export const QUESTION_SET_QUERY_KEYS = {
  * @returns 문제 세트 목록 쿼리 객체
  */
 export const useQuestionSets = (teamId: number) => {
-  return useQuery({
-    queryKey: QUESTION_SET_QUERY_KEYS.byTeam(teamId),
-    queryFn: () => apiClient.getQuestionSets(teamId),
-    // enabled: !!teamId, // teamId가 있을 때만 쿼리 실행
-    enabled: teamId !== undefined && teamId !== null,
-  });
+	return useQuery({
+		queryKey: QUESTION_SET_QUERY_KEYS.byTeam(teamId),
+		queryFn: () => apiClient.getQuestionSets(teamId),
+		// enabled: !!teamId, // teamId가 있을 때만 쿼리 실행
+		enabled: teamId !== undefined && teamId !== null,
+	});
 };
 
 /**
@@ -40,27 +40,27 @@ export const useQuestionSets = (teamId: number) => {
  * @returns 문제 세트 생성 뮤테이션 객체
  */
 export const useCreateQuestionSet = () => {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: CreateQuestionSetApiRequest) =>
-      apiClient.createQuestionSet(data),
-    onSuccess: (data) => {
-      // 모든 관련 케시 무효화
-      queryClient.invalidateQueries({
-        queryKey: QUESTION_SET_QUERY_KEYS.all,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["questionSets", "team"],
-      });
-      if (data.data?.questionSetId) {
-        queryClient.setQueryData(
-          QUESTION_SET_QUERY_KEYS.detail(data.data.questionSetId),
-          data,
-        );
-      }
-    },
-  });
+	return useMutation({
+		mutationFn: (data: CreateQuestionSetApiRequest) =>
+			apiClient.createQuestionSet(data),
+		onSuccess: (data) => {
+			// 모든 관련 케시 무효화
+			queryClient.invalidateQueries({
+				queryKey: QUESTION_SET_QUERY_KEYS.all,
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["questionSets", "team"],
+			});
+			if (data.data?.questionSetId) {
+				queryClient.setQueryData(
+					QUESTION_SET_QUERY_KEYS.detail(data.data.questionSetId),
+					data,
+				);
+			}
+		},
+	});
 };
 
 /**
@@ -69,24 +69,24 @@ export const useCreateQuestionSet = () => {
  * @returns 문제 세트 업데이트 뮤테이션 객체
  */
 export const useUpdateQuestionSet = () => {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({
-      questionSetId,
-      data,
-    }: {
-      questionSetId: number;
-      data: CreateQuestionSetApiRequest;
-    }) => apiClient.updateQuestionSet(questionSetId, data),
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: QUESTION_SET_QUERY_KEYS.all,
-      });
-      queryClient.setQueryData(
-        QUESTION_SET_QUERY_KEYS.detail(variables.questionSetId),
-        data,
-      );
-    },
-  });
+	return useMutation({
+		mutationFn: ({
+			questionSetId,
+			data,
+		}: {
+			questionSetId: number;
+			data: CreateQuestionSetApiRequest;
+		}) => apiClient.updateQuestionSet(questionSetId, data),
+		onSuccess: (data, variables) => {
+			queryClient.invalidateQueries({
+				queryKey: QUESTION_SET_QUERY_KEYS.all,
+			});
+			queryClient.setQueryData(
+				QUESTION_SET_QUERY_KEYS.detail(variables.questionSetId),
+				data,
+			);
+		},
+	});
 };
