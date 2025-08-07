@@ -9,6 +9,7 @@ import SolvingQuizContent from "src/pages/solving/pages/solving-quiz-content";
 import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
 import QualifierView from "./QualifierView";
 import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
+import WinnerView from "./WinnerView";
 
 //
 //
@@ -30,6 +31,8 @@ const QuizSolvingRealTimeSolving = () => {
 	>([]);
 	const [currentUserId] = useState(1); // 임시로 userId 1 설정 (나중에 실제 로그인 유저 정보로 교체)
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
+	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
+	const [winner, setWinner] = useState<string | null>(null); // 우승자
 
 	const location = useLocation();
 
@@ -71,26 +74,28 @@ const QuizSolvingRealTimeSolving = () => {
 		if (commandType) {
 			switch (commandType) {
 				case CommandType.ACTIVE_PARTICIPANTS: {
-					{
-						// 다음 단계 진출자 목록 출력
-						const participants = msg.activeParticipants || [];
-						setActiveParticipants(participants);
-						setShowQualifierView(true);
+					// 다음 단계 진출자 목록 출력
+					const participants = msg.activeParticipants || [];
+					setActiveParticipants(participants);
+					setShowQualifierView(true);
 
-						// activeParticipants 배열에 현재 유저가 있는지 확인
-						const isQualified = participants.some(
-							(participant: any) => participant.userId === currentUserId,
-						);
-						if (!isQualified) {
-							// 탈락자는 다음 문제부터 풀이 불가능
-							setIsFailed(true);
-						}
-						break;
+					// activeParticipants 배열에 현재 유저가 있는지 확인
+					const isQualified = participants.some(
+						(participant: any) => participant.userId === currentUserId,
+					);
+					if (!isQualified) {
+						// 탈락자는 다음 문제부터 풀이 불가능
+						setIsFailed(true);
 					}
-				}
-				case CommandType.WINNER:
-					// 우승자 출력
 					break;
+				}
+				case CommandType.WINNER: {
+					// 우승자 출력
+					const winnerParticipants = msg.activeParticipants || [];
+					setActiveParticipants(winnerParticipants);
+					setShowWinner(true);
+					break;
+				}
 			}
 			return;
 		}
@@ -162,7 +167,13 @@ const QuizSolvingRealTimeSolving = () => {
 					currentUserId={currentUserId}
 				/>
 			)}
-			{!showQualifierView && (
+			{showWinner && (
+				<WinnerView
+					activeParticipants={activeParticipants}
+					currentUserId={currentUserId}
+				/>
+			)}
+			{!showQualifierView && !showWinner && (
 				<div className="w-full">
 					{questionId !== null ? (
 						<Solving
