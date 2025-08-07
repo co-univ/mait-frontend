@@ -1,6 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { notify } from "src/components/common/Toast";
+import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
 import type { QuestionApiResponse } from "@/types";
 import SolvingQuizCorrect from "../components/SolvingQuizCorrect";
 import { useAnswerSubmit } from "../hooks/useAnswerSubmit";
@@ -34,21 +35,30 @@ const Solving = ({
 	isFailed = false,
 }: SolvingQuizContentProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
-	const [isCorrect, setIsCorrect] = useState(true);
 	const [userAnswers, setUserAnswers] = useState<any>(null);
-	const [isCorrected, setIsCorrected] = useState(false);
-	const [disabled, setDisabled] = useState(false);
+
+	const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+	const [isAnswerDisabled, setIsAnswerDisabled] = useState(false);
+
 	const { submitAnswer, isSubmitting } = useAnswerSubmit();
+
+	const { isSubmitted, isCorrected, setIsSubmitted, setIsCorrected } =
+		useSolvingCorrectStore();
 
 	// 최종 비활성화 상태: 정답을 맞췄거나 탈락했을 때
 	useEffect(() => {
-		setDisabled(isCorrected || isFailed);
-	}, [isCorrected, isFailed]);
+		// When the user is elemenated or the submit is not allowed, disable the submit button
+		setIsSubmitDisabled(isFailed || !isSubmitAllowed);
+
+		// When the user is elemenated or the answer is corrected, disable the answer input
+		setIsAnswerDisabled(isFailed || isCorrected);
+	}, [isFailed, isSubmitAllowed, isCorrected]);
 
 	// 문제가 바뀔 때 userAnswers와 isCorrected 초기화
 	useEffect(() => {
 		setUserAnswers(null);
 		setIsCorrected(false);
+		setIsSubmitted(false);
 	}, [questionInfo?.id]);
 
 	// isSubmitAllowed 변경 시 로그
@@ -163,6 +173,15 @@ const Solving = ({
 			return;
 		}
 
+		if (isSubmitting) {
+			return;
+		}
+
+		if (isCorrected) {
+			notify.success("이미 정답을 맞췄습니다.");
+			return;
+		}
+
 		// 답안 검증
 		if (!validateAnswers()) {
 			return;
@@ -176,7 +195,9 @@ const Solving = ({
 			);
 			if (response?.data) {
 				const isCorrect = response.data.isCorrect || false;
-				setIsCorrect(isCorrect);
+
+				setIsSubmitted(true);
+				setIsCorrected(isCorrect);
 				setShowCorrect(true);
 				// 정답을 맞췄을 때만 상호작용 비활성화
 				if (isCorrect) {
@@ -187,13 +208,13 @@ const Solving = ({
 			console.error(err);
 		}
 	};
-
+	console.log("userAnswer", userAnswers);
 	return (
 		<SolvingLayout>
 			<AnimatePresence mode="wait">
 				{showCorrect && (
 					<SolvingQuizCorrect
-						correct={isCorrect}
+						correct={isCorrected}
 						show={showCorrect}
 						onAnimationComplete={handleAnimationComplete}
 					/>
@@ -204,16 +225,14 @@ const Solving = ({
 				quizTitle={quizTitle}
 				questionCount={questionCount as number}
 				onSubmit={handleSubmitAnswer}
-				isSubmitting={isSubmitting}
-				isSubmitAllowed={isSubmitAllowed}
-				disabled={disabled}
+				disabled={isSubmitDisabled}
 			/>
 			<div className="h-size-height-5" />
 			<SolvingQuizContent
 				questionInfo={questionInfo}
 				userAnswers={userAnswers}
-				onAnswersChange={disabled ? () => {} : setUserAnswers}
-				disabled={disabled}
+				onAnswersChange={isAnswerDisabled ? () => {} : setUserAnswers}
+				disabled={isAnswerDisabled}
 			/>
 		</SolvingLayout>
 	);
