@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      RSBUILD_WS_ENDPOINT: ${{ secrets.RSBUILD_WS_ENDPOINT }}
+      PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
 
     steps:
       - name: Checkout source code
