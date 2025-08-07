@@ -133,9 +133,9 @@ const SolvingQuizAnswer = ({
 	return (
 		<div
 			className={clsx(
-				"flex items-center w-full px-padding-12 py-padding-6 rounded-medium1 border",
+				"flex items-center w-full px-padding-12 py-padding-6 rounded-medium1 border box-border",
 				{
-					"bg-gray-5 border-transparent text-alpha-black100 typo-body-medium":
+					"bg-gray-5 border-gray-5 text-alpha-black100 typo-body-medium":
 						color === "gray",
 					"bg-primary-5 border-primary-50 text-primary-50 typo-heading-small":
 						color === "primary",
