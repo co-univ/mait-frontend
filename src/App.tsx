@@ -6,6 +6,7 @@ import AppLayout from "./components/common/AppLayout";
 import type { SIDEBAR_VARIANT } from "./components/common/SideBar";
 import Toast from "./components/common/Toast";
 import SolvingNextStage from "./pages/solving/pages/SolvingNextStage";
+import SolvingWinner from "./pages/solving/pages/SolvingWinner";
 
 //
 //
@@ -40,7 +41,7 @@ const App = () => {
 					},
 				)}
 			>
-				<SolvingNextStage open />
+				<SolvingWinner open />
 				<Outlet />
 			</main>
 		</div>
