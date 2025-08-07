@@ -115,8 +115,8 @@ const QuizSolvingRealTimeSolving = () => {
 	}, [questionSetId]);
 
 	return (
-		<div>
-			<div>
+		<div className="w-full">
+			<div className="w-full">
 				{questionId !== null ? (
 					<Solving
 						questionInfo={questionInfo}

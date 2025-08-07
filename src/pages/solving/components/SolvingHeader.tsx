@@ -22,8 +22,8 @@ const SolvingHeader = ({
 	return (
 		<div className="w-full h-size-height-11 flex flex-col justify-between">
 			<div className="flex gap-gap-5 items-center">
-				<PencilLine />
-				<span className="typo-heading-medium">{title}</span>
+				<PencilLine className="text-alpha-black100" />
+				<span className="typo-heading-medium text-alpha-black100">{title}</span>
 			</div>
 			<div className="w-full h-[10px] rounded-radius-max bg-gray-5 relative">
 				<div
