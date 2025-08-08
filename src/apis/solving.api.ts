@@ -1,5 +1,6 @@
 import type {
 	ApiResponseCreateQuestionSetApiResponse,
+	ApiResponseCurrentQuestionApiResponse,
 	ApiResponseListQuestionApiResponse,
 	ApiResponseListQuestionSetApiResponse,
 	ApiResponseQuestionAnswerSubmitApiResponse,
@@ -67,6 +68,17 @@ class ApiClient {
 		questionSetId: number,
 	): Promise<ApiResponseQuestionSetApiResponse> {
 		return this.request(`/api/v1/question-sets/${questionSetId}`);
+	}
+
+	/**
+	 * 실시간 진행 중인 문제 상태 조회
+	 * @param questionSetId - 문제가 속한 문제 셋의 ID
+	 * @returns 현재 문제 상태
+	 */
+	async getQuestionSetStatus(
+		questionSetId: number,
+	): Promise<ApiResponseCurrentQuestionApiResponse> {
+		return this.request(`/api/v1/question-sets/${questionSetId}/live-status/current-question`);
 	}
 
 	/**

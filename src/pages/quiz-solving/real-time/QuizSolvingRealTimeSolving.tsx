@@ -14,6 +14,17 @@ import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
 import QualifierView from "./QualifierView";
 import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
 import WinnerView from "./WinnerView";
+import { number } from "framer-motion";
+
+//
+//
+//
+
+interface CurrentQuestionStatus {
+	questionSetId: number;
+	questionId: number;
+	questionStatusType: QuestionStatusType;
+}
 
 //
 //
@@ -33,6 +44,8 @@ const QuizSolvingRealTimeSolving = () => {
 			participantName: string;
 		}>
 	>([]);
+	const [currentQuestionStatus, setCurrentQuestionStatus] =
+		useState<CurrentQuestionStatus | null>(null); // 현재 문제 상태
 
 	const { user } = useUser();
 	const currentUserId = user?.id;
@@ -74,17 +87,30 @@ const QuizSolvingRealTimeSolving = () => {
 		}
 	};
 
-	const handleWebSocketMessage = (msg: any) => {
-		const questionSetId = msg.questionSetId; // 문제 셋 id
-		const questionId = msg.questionId; // 문제 id
-		const statusType = msg?.statusType; // 문제 풀이 상태
-		const commandType = msg?.commandType; // 명령 타입
+	const fetchCurrentQuestionStatus = async () => {
+		try {
+			const res = await apiClient.getQuestionSetStatus(Number(questionSetId));
+			const { questionId, questionStatusType } = res.data ?? {};
+			setCurrentQuestionStatus({
+				questionSetId: res?.data?.questionSetId as number,
+				questionId: questionId as number,
+				questionStatusType: questionStatusType as QuestionStatusType,
+			});
 
+			if (questionId && questionStatusType) {
+				quizController(questionId, questionStatusType as QuestionStatusType);
+			}
+		} catch (err) {
+			console.log("Failed to fetch current question status", err);
+		}
+	};
+
+	const quizController = (questionId: number, statusType?: QuestionStatusType, commandType?: CommandType, activeParticipants?: any) => {
 		if (commandType) {
 			switch (commandType) {
 				case CommandType.ACTIVE_PARTICIPANTS: {
 					// 다음 단계 진출자 목록 출력
-					const participants = msg.activeParticipants || [];
+					const participants = activeParticipants || [];
 					setActiveParticipants(participants);
 					setShowQualifierView(true);
 
@@ -100,7 +126,7 @@ const QuizSolvingRealTimeSolving = () => {
 				}
 				case CommandType.WINNER: {
 					// 우승자 출력
-					const winnerParticipants = msg.activeParticipants || [];
+					const winnerParticipants = activeParticipants || [];
 					setActiveParticipants(winnerParticipants);
 					setShowWinner(true);
 					break;
@@ -121,18 +147,28 @@ const QuizSolvingRealTimeSolving = () => {
 					break;
 				case QuestionStatusType.ACCESS_PERMISSION: // 문제 접근 허용
 					// 문제 화면 노출
-					setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
-					fetchQuestionInfo(questionId); // 문제 정보 가져오기
+					setQuestionId(questionId as number); // 문제 id가 설정되며 문제 화면 노출되도록
+					fetchQuestionInfo(questionId as number); // 문제 정보 가져오기
 					setIsSubmitAllowed(false); // 제출 비허용
 					break;
 				case QuestionStatusType.SOLVE_PERMISSION: // 답안 제출 허용
-					setQuestionId(questionId); // 문제 id가 설정되며 문제 화면 노출되도록
-					fetchQuestionInfo(questionId); // 문제 정보 가져오기
+					setQuestionId(questionId as number); // 문제 id가 설정되며 문제 화면 노출되도록
+					fetchQuestionInfo(questionId as number); // 문제 정보 가져오기
 					// 답안 제출 가능 여부 가능하도록 변경
 					setIsSubmitAllowed(true);
 					break;
 			}
 		}
+	};
+
+	const handleWebSocketMessage = (msg: any) => {
+		// const questionSetId = msg.questionSetId; // 문제 셋 id
+		const questionId = msg.questionId; // 문제 id
+		const statusType = msg?.statusType; // 문제 풀이 상태
+		const commandType = msg?.commandType; // 명령 타입
+		const activeParticipants = msg?.activeParticipants; // 활동 참가자
+
+		quizController(questionId, statusType, commandType, activeParticipants);
 	};
 
 	useEffect(() => {
@@ -147,6 +183,8 @@ const QuizSolvingRealTimeSolving = () => {
 	useEffect(() => {
 		// 문제 셋 정보 가져오기
 		fetchQuestionSetInfo();
+		// 현재 문제 상태 가져와서 처리
+		fetchCurrentQuestionStatus();
 	}, [questionSetId]);
 
 	//
