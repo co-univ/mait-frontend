@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import useLoginModalOpenStore from "src/stores/useLoginModalOpenStore";
 import book from "../../assets/images/book.png";
 import cube from "../../assets/images/cube.png";
 
@@ -7,8 +8,10 @@ import cube from "../../assets/images/cube.png";
 //
 
 const Home = () => {
+	const { openLoginModal } = useLoginModalOpenStore();
+
 	return (
-		<div className="w-full h-full flex items-center justify-between">
+		<div className="w-full h-full flex items-center justify-between max-w-[1240px]">
 			<div className="fixed inset-0 h-screen w-screen bg-gradient-to-b from-color-alpha-white100 to-color-primary-5 -z-10" />
 
 			<div className="h-full flex flex-col gap-gap-14 justify-center">
@@ -28,7 +31,8 @@ const Home = () => {
 				<div>
 					<button
 						type="button"
-						className="p-padding-6 bg-color-primary-50 typo-body-medium text-color-alpha-white100 rounded-medium1"
+						className="py-padding-6 px-padding-8 bg-color-primary-50 typo-body-medium text-color-alpha-white100 rounded-medium1"
+						onClick={openLoginModal}
 					>
 						바로 시작하기
 					</button>
