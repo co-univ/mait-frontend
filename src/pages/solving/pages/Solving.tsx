@@ -61,11 +61,6 @@ const Solving = ({
 		setIsSubmitted(false);
 	}, [questionInfo?.id]);
 
-	// isSubmitAllowed 변경 시 로그
-	useEffect(() => {
-		console.log("Solving 컴포넌트 - isSubmitAllowed 상태:", isSubmitAllowed);
-	}, [isSubmitAllowed]);
-
 	const handleAnimationComplete = () => {
 		const hideTimer = setTimeout(() => {
 			setShowCorrect(false);
@@ -208,7 +203,7 @@ const Solving = ({
 			console.error(err);
 		}
 	};
-	console.log("userAnswer", userAnswers);
+
 	return (
 		<SolvingLayout>
 			<AnimatePresence mode="wait">

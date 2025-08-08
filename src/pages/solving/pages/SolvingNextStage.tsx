@@ -2,10 +2,7 @@ import { Award } from "lucide-react";
 import award_lower from "../../../assets/images/award-lower.svg";
 import award_upper from "../../../assets/images/award-upper.svg";
 import gold_bell from "../../../assets/images/gold-bell.png";
-import SolvingFullModalLayout, {
-	type SolvingFullModalLayoutProps,
-} from "../layouts/SolvingFullModalLayout";
-import { useEffect } from "react";
+import SolvingFullModalLayout from "../layouts/SolvingFullModalLayout";
 
 //
 //
@@ -18,27 +15,16 @@ interface QualifierViewProps {
 		userId: number;
 		participantName: string;
 	}>;
-	currentUserId: number;
 	open?: boolean;
-	onClose?: () => void;
 }
 
 //
 //
 //
 
-const SolvingNextStage = ({
-	activeParticipants,
-	currentUserId,
-	open,
-	onClose,
-}: QualifierViewProps) => {
-	useEffect(() => {
-		console.log("222activeParticipants", activeParticipants);
-	}, [activeParticipants]);
-	
+const SolvingNextStage = ({ activeParticipants, open }: QualifierViewProps) => {
 	return (
-		<SolvingFullModalLayout open={open} onClose={onClose}>
+		<SolvingFullModalLayout open={open}>
 			<div className="flex justify-center w-full h-full px-[172px] pb-[84px]">
 				<div className="flex flex-1 top-[5%] max-w-[1096px]">
 					<img

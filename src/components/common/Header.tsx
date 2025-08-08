@@ -57,6 +57,8 @@ const Header = ({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) => {
  *
  */
 const BrandMenu = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
+	const { user } = useUser();
+
 	return (
 		<div className="flex items-center gap-3">
 			<button
@@ -67,7 +69,7 @@ const BrandMenu = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
 			>
 				<img className="h-6 cursor-pointer" src={logo} alt="로고" />
 			</button>
-			<Menu className={ICON_BUTTON_STYLE} onClick={onMenuOpen} />
+			{user && <Menu className={ICON_BUTTON_STYLE} onClick={onMenuOpen} />}
 		</div>
 	);
 };
@@ -76,6 +78,10 @@ const BrandMenu = ({ onMenuOpen }: { onMenuOpen: () => void }) => {
  *
  */
 const HistoryController = () => {
+	const { user } = useUser();
+
+	if (!user) return null;
+
 	return (
 		<div className="flex items-center gap-3">
 			<ChevronLeft className="h-4 w-4 cursor-pointer text-color-gray-40" />

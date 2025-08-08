@@ -1,12 +1,14 @@
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 import * as StompJs from "@stomp/stompjs";
 import { useQuery } from "@tanstack/react-query";
 import { number } from "framer-motion";
-import React, { use, useCallback, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
+import SolvingBell from "src/pages/solving/components/SolvingBell";
 import Solving from "src/pages/solving/pages";
 import SolvingNextStage from "src/pages/solving/pages/SolvingNextStage";
 import SolvingWinner from "src/pages/solving/pages/SolvingWinner";
@@ -15,7 +17,6 @@ import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
 import QualifierView from "./QualifierView";
 import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
 import WinnerView from "./WinnerView";
-import SolvingBell from "src/pages/solving/components/SolvingBell";
 
 //
 //
@@ -48,6 +49,8 @@ const QuizSolvingRealTimeSolving = () => {
 	const [currentQuestionStatus, setCurrentQuestionStatus] =
 		useState<CurrentQuestionStatus | null>(null); // 현재 문제 상태
 
+	const userIdRef = useRef<number | null>(null);
+
 	const { user } = useUser();
 	const currentUserId = user?.id;
 
@@ -66,7 +69,6 @@ const QuizSolvingRealTimeSolving = () => {
 			const res = await apiClient.getQuestionSet(Number(questionSetId));
 			if (res.data) {
 				setQuestionSetInfo(res.data);
-				console.log(res.data);
 			}
 		} catch (err) {
 			console.error("Failed to fetch question set info", err);
@@ -81,7 +83,6 @@ const QuizSolvingRealTimeSolving = () => {
 			);
 			if (res.data) {
 				setQuestionInfo(res.data);
-				console.log(res.data);
 			}
 		} catch (err) {
 			console.error("Failed to fetch question info", err);
@@ -114,7 +115,10 @@ const QuizSolvingRealTimeSolving = () => {
 	) => {
 		// 탈락자는 어떤 경우에도 상호작용 불가 유지
 		if (isFailed) {
-			if (statusType === QuestionStatusType.ACCESS_PERMISSION || statusType === QuestionStatusType.SOLVE_PERMISSION) {
+			if (
+				statusType === QuestionStatusType.ACCESS_PERMISSION ||
+				statusType === QuestionStatusType.SOLVE_PERMISSION
+			) {
 				setQuestionId(questionId);
 				fetchQuestionInfo(questionId);
 				setIsSubmitAllowed(false); // 강제 비활성
@@ -132,10 +136,11 @@ const QuizSolvingRealTimeSolving = () => {
 
 					// activeParticipants 배열에 현재 유저가 있는지 확인
 					const isQualified = participants.some(
-						(participant: any) => participant.userId === currentUserId,
+						(participant: any) => participant.userId === userIdRef.current,
 					);
 					if (!isQualified) {
 						// 탈락자는 다음 문제부터 풀이 불가능
+						console.log("탈락!!!!");
 						setIsFailed(true);
 					}
 					break;
@@ -164,6 +169,7 @@ const QuizSolvingRealTimeSolving = () => {
 					break;
 				case QuestionStatusType.ACCESS_PERMISSION: // 문제 접근 허용
 					// 문제 화면 노출
+					setShowQualifierView(false); // 진출자 화면 제거
 					setQuestionId(questionId as number); // 문제 id가 설정되며 문제 화면 노출되도록
 					fetchQuestionInfo(questionId as number); // 문제 정보 가져오기
 					setIsSubmitAllowed(false); // 제출 비허용
@@ -189,12 +195,10 @@ const QuizSolvingRealTimeSolving = () => {
 	};
 
 	useEffect(() => {
-		console.log("111activeParticipants", activeParticipants);
-	}, [activeParticipants]);
-
-	useEffect(() => {
-		console.log("showWinner", showWinner);
-	}, [showWinner]);
+		if (user?.id) {
+			userIdRef.current = user.id;
+		}
+	}, [user]);
 
 	useEffect(() => {
 		setShowQualifierView(false);
@@ -239,16 +243,13 @@ const QuizSolvingRealTimeSolving = () => {
 	return (
 		<>
 			<SolvingNextStage
-				open={showQualifierView}
 				activeParticipants={activeParticipants}
-				currentUserId={currentUserId ?? 0}
-				onClose={() => setShowQualifierView(false)}
+				open={showQualifierView}
 			/>
 			<SolvingWinner
 				open={showWinner}
 				activeParticipants={activeParticipants}
 				currentUserId={currentUserId ?? 0}
-				onClose={() => setShowWinner(false)}
 			/>
 			<SolvingBell open={isSubmitAllowed} />
 			{!showQualifierView &&
