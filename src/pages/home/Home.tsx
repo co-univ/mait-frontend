@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import useUser from "src/hooks/useUser";
 import useLoginModalOpenStore from "src/stores/useLoginModalOpenStore";
 import book from "../../assets/images/book.png";
 import cube from "../../assets/images/cube.png";
@@ -9,6 +11,22 @@ import cube from "../../assets/images/cube.png";
 
 const Home = () => {
 	const { openLoginModal } = useLoginModalOpenStore();
+
+	const { user } = useUser();
+
+	const navigate = useNavigate();
+
+	/**
+	 * If the user is logged in, redirect to quiz-solving.
+	 * If not, show the login modal.
+	 */
+	const handleButtonClick = () => {
+		if (user) {
+			navigate(`/quiz-solving/${process.env.PUBLIC_QUESTION_ID}`);
+		} else {
+			openLoginModal();
+		}
+	};
 
 	return (
 		<div className="w-full h-full flex items-center justify-between max-w-[1240px]">
@@ -32,7 +50,7 @@ const Home = () => {
 					<button
 						type="button"
 						className="py-padding-6 px-padding-8 bg-color-primary-50 typo-body-medium text-color-alpha-white100 rounded-medium1"
-						onClick={openLoginModal}
+						onClick={handleButtonClick}
 					>
 						바로 시작하기
 					</button>
