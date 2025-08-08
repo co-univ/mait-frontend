@@ -1,4 +1,5 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
 import SolvingQuizAnswer, {
 	ANSWER_HEIGHT,
 	type SolvingQuizAnswerProps,
@@ -30,6 +31,8 @@ const SolvingAnswerLayout = ({
 	onOrderChange,
 	...solvingQuizAnswerProps
 }: SolvingAnswerLayoutProps) => {
+	const { isSubmitted, isCorrected } = useSolvingCorrectStore();
+
 	const handleDragEnd = (result: any) => {
 		if (!result.destination) return;
 
@@ -82,6 +85,25 @@ const SolvingAnswerLayout = ({
 		const answerWrapperClass = "flex flex-col gap-gap-11 w-full";
 
 		if (solvingQuizAnswerProps.draggable) {
+			const getOrderAnswerColor = (isDragging: boolean) => {
+				// 드래그 중일 때는 primary 색상
+				if (isDragging) {
+					return "primary";
+				}
+
+				// 제출 후 정답일 때
+				if (isSubmitted && isCorrected) {
+					return "success";
+				}
+
+				// 제출 후 오답일 때
+				if (isSubmitted && !isCorrected) {
+					return "point";
+				}
+
+				return "gray";
+			};
+
 			return (
 				<div className={answerWrapperClass}>
 					<DragDropContext onDragEnd={handleDragEnd}>
@@ -105,7 +127,7 @@ const SolvingAnswerLayout = ({
 													{...provided.dragHandleProps}
 												>
 													<SolvingQuizAnswer
-														color={snapshot.isDragging ? "primary" : "gray"}
+														color={getOrderAnswerColor(snapshot.isDragging)}
 														value={answer.content}
 														{...solvingQuizAnswerProps}
 													/>
@@ -125,14 +147,35 @@ const SolvingAnswerLayout = ({
 		return (
 			<div className={answerWrapperClass}>
 				{answers.map((answer, index) => {
-					const isSelected = selectedChoices?.includes(answer.number);
+					let isSelected = false;
+
+					if ("number" in answer) {
+						isSelected = selectedChoices?.includes(answer.number) ?? false;
+					} else {
+						isSelected = true;
+					}
+
+					const getColor = () => {
+						if (!isSubmitted && isSelected) {
+							return "primary";
+						}
+
+						if (isSubmitted && isCorrected && isSelected) {
+							return "success";
+						}
+
+						if (isSubmitted && !isCorrected && isSelected) {
+							return "point";
+						}
+
+						return "gray";
+					};
+
 					return (
 						<div
 							key={answer.number || answer.id}
 							onClick={
-								onChoiceSelect
-									? () => onChoiceSelect(answer.number)
-									: undefined
+								onChoiceSelect ? () => onChoiceSelect(answer.number) : undefined
 							}
 							style={{
 								cursor: onChoiceSelect ? "pointer" : undefined,
@@ -140,7 +183,7 @@ const SolvingAnswerLayout = ({
 						>
 							<SolvingQuizAnswer
 								value={answer.content || answer.value || answer.answer || ""}
-								color={isSelected ? "primary" : "gray"}
+								color={getColor()}
 								onChange={
 									onAnswerChange
 										? (value) => onAnswerChange(index, value)

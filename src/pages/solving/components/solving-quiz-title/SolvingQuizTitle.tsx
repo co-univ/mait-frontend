@@ -8,7 +8,8 @@ import SolvingQuizTitleBlankInput from "./SolvingQuizTitleBlankInput";
 interface SolvingQuizTitleProps {
 	title: string;
 	type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
-	answers?: string[];
+	questionInfo?: any;
+	userAnswers?: any;
 }
 
 //
@@ -18,7 +19,8 @@ interface SolvingQuizTitleProps {
 const SolvingQuizTitle = ({
 	title,
 	type,
-	answers = [],
+	questionInfo,
+	userAnswers,
 }: SolvingQuizTitleProps) => {
 	const lines = title.split("\n|\r");
 
@@ -54,8 +56,9 @@ const SolvingQuizTitle = ({
 					<SolvingQuizTitleBlankInput
 						key={`${lineIndex}-${blankIndex}`}
 						number={blankIndex + 1}
-						value={answers[blankIndex] || ""}
-						isActive={Boolean(answers[blankIndex])}
+						index={blankIndex}
+						questionInfo={questionInfo}
+						userAnswers={userAnswers}
 					/>,
 				);
 				blankIndex++;

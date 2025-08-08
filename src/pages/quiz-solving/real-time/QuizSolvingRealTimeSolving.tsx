@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
+import useUser from "src/hooks/useUser";
 import Solving from "src/pages/solving/pages";
 import SolvingNextStage from "src/pages/solving/pages/SolvingNextStage";
 import SolvingWinner from "src/pages/solving/pages/SolvingWinner";
@@ -32,9 +33,9 @@ const QuizSolvingRealTimeSolving = () => {
 			participantName: string;
 		}>
 	>([]);
-	// const [currentUserId] = useState(1);
 
-	const currentUserId = localStorage.getItem("id");
+	const { user } = useUser();
+	const currentUserId = user?.id;
 
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
@@ -177,7 +178,7 @@ const QuizSolvingRealTimeSolving = () => {
 	}, [questionSetId]);
 
 	return (
-		<div className="w-full">
+		<>
 			{showQualifierView && (
 				<SolvingNextStage
 					activeParticipants={activeParticipants}
@@ -190,23 +191,21 @@ const QuizSolvingRealTimeSolving = () => {
 					currentUserId={currentUserId}
 				/>
 			)}
-			{!showQualifierView && !showWinner && (
-				<div className="w-full">
-					{questionId !== null ? (
-						<Solving
-							questionInfo={questionInfo}
-							quizTitle={questionSetInfo?.title as string}
-							questionCount={questionSetInfo?.questionCount as number}
-							questionSetId={Number(questionSetId)}
-							isSubmitAllowed={isSubmitAllowed && !isFailed}
-							isFailed={isFailed}
-						/>
-					) : (
-						<QuizSolvingRealTimeWaitView />
-					)}
-				</div>
-			)}
-		</div>
+			{!showQualifierView &&
+				!showWinner &&
+				(questionId !== null ? (
+					<Solving
+						questionInfo={questionInfo}
+						quizTitle={questionSetInfo?.title as string}
+						questionCount={questionSetInfo?.questionCount as number}
+						questionSetId={Number(questionSetId)}
+						isSubmitAllowed={isSubmitAllowed && !isFailed}
+						isFailed={isFailed}
+					/>
+				) : (
+					<QuizSolvingRealTimeWaitView />
+				))}
+		</>
 	);
 };
 

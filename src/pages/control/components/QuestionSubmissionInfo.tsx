@@ -38,15 +38,15 @@ export const QuestionSubmissionInfo: React.FC<QuestionSubmissionInfoProps> = ({
 	return (
 		<div className="mt-4 border-t border-gray-200 pt-4">
 			{/* Header with refresh button */}
-			<div className="flex items-center justify-between mb-4">
+			<div className="mb-4 flex items-center justify-between">
 				<h4 className="text-sm font-semibold text-gray-800">제출 정보</h4>
 				<button
 					onClick={handleRefresh}
 					disabled={isLoading}
-					className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+					className="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
 				>
 					<svg
-						className={`w-3 h-3 ${isLoading ? "animate-spin" : ""}`}
+						className={`h-3 w-3 ${isLoading ? "animate-spin" : ""}`}
 						fill="none"
 						stroke="currentColor"
 						viewBox="0 0 24 24"
@@ -64,10 +64,10 @@ export const QuestionSubmissionInfo: React.FC<QuestionSubmissionInfoProps> = ({
 
 			{isLoading ? (
 				<div className="animate-pulse space-y-3">
-					<div className="h-4 bg-gray-200 rounded w-1/3"></div>
+					<div className="h-4 w-1/3 rounded bg-gray-200"></div>
 					<div className="space-y-2">
 						{[1, 2, 3].map((i) => (
-							<div key={i} className="h-3 bg-gray-200 rounded"></div>
+							<div key={i} className="h-3 rounded bg-gray-200"></div>
 						))}
 					</div>
 				</div>
@@ -75,8 +75,8 @@ export const QuestionSubmissionInfo: React.FC<QuestionSubmissionInfoProps> = ({
 				<div className="space-y-4">
 					{/* 득점자 정보 */}
 					{scorer ? (
-						<div className="bg-green-50 rounded-lg p-3 border border-green-200">
-							<h5 className="text-sm font-semibold text-green-800 mb-2">
+						<div className="rounded-lg border border-green-200 bg-green-50 p-3">
+							<h5 className="mb-2 text-sm font-semibold text-green-800">
 								🏆 득점자
 							</h5>
 							<div className="flex items-center gap-3">
@@ -89,14 +89,14 @@ export const QuestionSubmissionInfo: React.FC<QuestionSubmissionInfoProps> = ({
 							</div>
 						</div>
 					) : (
-						<div className="rounded-lg p-3 border border-gray-200">
+						<div className="rounded-lg border border-gray-200 p-3">
 							<p className="text-sm text-gray-600">아직 정답자가 없습니다.</p>
 						</div>
 					)}
 
 					{/* 제출 기록 */}
 					<div>
-						<h5 className="text-sm font-semibold text-gray-800 mb-3">
+						<h5 className="mb-3 text-sm font-semibold text-gray-800">
 							📝 제출 기록 ({submitRecords.length}개)
 						</h5>
 
@@ -105,15 +105,15 @@ export const QuestionSubmissionInfo: React.FC<QuestionSubmissionInfoProps> = ({
 								{submitRecords.map((record) => (
 									<div
 										key={record.id}
-										className={`flex items-center justify-between p-2 rounded border ${
+										className={`flex items-center justify-between rounded border p-2 ${
 											record.isCorrect
-												? "bg-green-50 border-green-200"
-												: "bg-red-50 border-red-200"
+												? "border-green-200 bg-green-50"
+												: "border-red-200 bg-red-50"
 										}`}
 									>
 										<div className="flex items-center gap-3">
 											<span
-												className={`w-2 h-2 rounded-full ${
+												className={`h-2 w-2 rounded-full ${
 													record.isCorrect ? "bg-green-500" : "bg-red-500"
 												}`}
 											/>
@@ -140,7 +140,7 @@ export const QuestionSubmissionInfo: React.FC<QuestionSubmissionInfoProps> = ({
 								))}
 							</div>
 						) : (
-							<div className="text-center py-6 rounded-lg border border-gray-200">
+							<div className="rounded-lg border border-gray-200 py-6 text-center">
 								<p className="text-sm text-gray-500">
 									아직 제출된 답안이 없습니다.
 								</p>

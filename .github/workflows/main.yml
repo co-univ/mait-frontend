@@ -10,6 +10,8 @@ jobs:
     env:
       PUBLIC_WS_ENDPOINT: ${{ secrets.PUBLIC_WS_ENDPOINT }}
       PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
+      PUBLIC_QUESTION_ID: ${{ secrets.PUBLIC_QUESTION_ID }}
+      PUBLIC_TEAM_ID: ${{ secrets.PUBLIC_TEAM_ID }}
 
     steps:
       - name: Checkout source code

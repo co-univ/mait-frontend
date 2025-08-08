@@ -17,7 +17,7 @@ export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 	questionSetId,
 }) => {
 	const [showWinnerModal, setShowWinnerModal] = useState(false);
-	
+
 	const { data: liveStatusData, isLoading } = useLiveStatus(questionSetId);
 	const { data: rankData } = useCorrectAnswerRank(questionSetId);
 	const startLiveMutation = useStartLiveQuestionSet();
@@ -55,33 +55,38 @@ export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 
 	const handleSendWinner = () => {
 		const activeParticipants = rankData?.data?.activeParticipants || [];
-		const winnerUserIds = activeParticipants.map(participant => participant.participantInfos?.userId).filter((id): id is number => id !== undefined);
-		
+		const winnerUserIds = activeParticipants
+			.map((participant) => participant.participantInfos?.userId)
+			.filter((id): id is number => id !== undefined);
+
 		if (winnerUserIds.length === 0) {
 			alert("우승자로 설정할 참가자가 없습니다.");
 			return;
 		}
 
-		sendWinnerMutation.mutate({
-			questionSetId,
-			data: { winnerUserIds }
-		}, {
-			onSuccess: () => {
-				alert(`${winnerUserIds.length}명의 우승자가 전송되었습니다!`);
+		sendWinnerMutation.mutate(
+			{
+				questionSetId,
+				data: { winnerUserIds },
 			},
-			onError: (error) => {
-				console.error("Send winner error:", error);
-				alert("우승자 전송에 실패했습니다.");
+			{
+				onSuccess: () => {
+					alert(`${winnerUserIds.length}명의 우승자가 전송되었습니다!`);
+				},
+				onError: (error) => {
+					console.error("Send winner error:", error);
+					alert("우승자 전송에 실패했습니다.");
+				},
 			},
-		});
+		);
 	};
 
 	if (isLoading) {
 		return (
 			<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
 				<div className="animate-pulse">
-					<div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
-					<div className="h-10 bg-gray-200 rounded w-32"></div>
+					<div className="mb-4 h-6 w-1/4 rounded bg-gray-200"></div>
+					<div className="h-10 w-32 rounded bg-gray-200"></div>
 				</div>
 			</div>
 		);
@@ -89,7 +94,7 @@ export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 
 	return (
 		<div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-			<div className="flex items-center justify-between mb-4">
+			<div className="mb-4 flex items-center justify-between">
 				<div>
 					<h3 className="text-lg font-semibold text-gray-900">퀴즈셋 제어</h3>
 					<div className="mt-2 flex items-center gap-2">
@@ -116,7 +121,7 @@ export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 						className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
 							isBeforeLive && !startLiveMutation.isPending
 								? "bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-								: "bg-gray-300 text-gray-500 cursor-not-allowed"
+								: "cursor-not-allowed bg-gray-300 text-gray-500"
 						}`}
 					>
 						{startLiveMutation.isPending ? "시작 중..." : "퀴즈 시작"}
@@ -129,7 +134,7 @@ export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 						className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
 							isLive && !endLiveMutation.isPending
 								? "bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-								: "bg-gray-300 text-gray-500 cursor-not-allowed"
+								: "cursor-not-allowed bg-gray-300 text-gray-500"
 						}`}
 					>
 						{endLiveMutation.isPending ? "종료 중..." : "퀴즈 종료"}
@@ -144,18 +149,22 @@ export const QuizSetControl: React.FC<QuizSetControlProps> = ({
 					<div className="flex gap-3">
 						<Link
 							to={`/control/${questionSetId}/participants`}
-							className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
+							className="inline-flex items-center gap-2 rounded-md bg-purple-100 px-3 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
 						>
 							👥 참가자 관리
 						</Link>
 						<button
 							type="button"
 							onClick={handleSendWinner}
-							disabled={sendWinnerMutation.isPending || !rankData?.data?.activeParticipants?.length}
+							disabled={
+								sendWinnerMutation.isPending ||
+								!rankData?.data?.activeParticipants?.length
+							}
 							className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-								!sendWinnerMutation.isPending && rankData?.data?.activeParticipants?.length
+								!sendWinnerMutation.isPending &&
+								rankData?.data?.activeParticipants?.length
 									? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
-									: "bg-gray-100 text-gray-500 cursor-not-allowed"
+									: "cursor-not-allowed bg-gray-100 text-gray-500"
 							}`}
 						>
 							🏆 {sendWinnerMutation.isPending ? "전송 중..." : "우승자 보내기"}

@@ -27,7 +27,6 @@ if (rootEl) {
 			<QueryClientProvider client={queryClient}>
 				<RouterProvider router={router} />
 			</QueryClientProvider>
-			,
 		</React.StrictMode>,
 	);
 }

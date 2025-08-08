@@ -44,7 +44,7 @@ const MultipleQuestionForm = ({
 		const newChoice: MultipleChoiceDto = {
 			number: data.choices.length + 1,
 			content: "",
-			correct: false,
+			isCorrect: false,
 		};
 		updateField("choices", [...data.choices, newChoice]);
 	};
@@ -65,7 +65,7 @@ const MultipleQuestionForm = ({
 
 	const toggleCorrectAnswer = (index: number) => {
 		const updatedChoices = data.choices.map((choice, i) =>
-			i === index ? { ...choice, correct: !choice.correct } : choice,
+			i === index ? { ...choice, isCorrect: !choice.isCorrect } : choice,
 		);
 		updateField("choices", updatedChoices);
 	};
@@ -122,7 +122,7 @@ const MultipleQuestionForm = ({
 								<div className="flex items-center gap-2">
 									<input
 										type="checkbox"
-										checked={choice.correct || false}
+										checked={choice.isCorrect || false}
 										onChange={() => toggleCorrectAnswer(index)}
 										className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 									/>

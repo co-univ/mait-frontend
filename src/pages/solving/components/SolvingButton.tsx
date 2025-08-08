@@ -19,6 +19,7 @@ const SolvingButton = ({
 	icon,
 	onClick,
 	disabled,
+	color,
 }: SolvingButtonProps) => {
 	return (
 		<SolvingBadege
@@ -28,6 +29,7 @@ const SolvingButton = ({
 			as="button"
 			onClick={onClick}
 			disabled={disabled}
+			color={color}
 		/>
 	);
 };
