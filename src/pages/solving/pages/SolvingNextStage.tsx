@@ -5,6 +5,7 @@ import gold_bell from "../../../assets/images/gold-bell.png";
 import SolvingFullModalLayout, {
 	type SolvingFullModalLayoutProps,
 } from "../layouts/SolvingFullModalLayout";
+import { useEffect } from "react";
 
 //
 //
@@ -27,11 +28,15 @@ interface QualifierViewProps {
 //
 
 const SolvingNextStage = ({
-	open,
-	onClose,
 	activeParticipants,
 	currentUserId,
+	open,
+	onClose,
 }: QualifierViewProps) => {
+	useEffect(() => {
+		console.log("222activeParticipants", activeParticipants);
+	}, [activeParticipants]);
+	
 	return (
 		<SolvingFullModalLayout open={open} onClose={onClose}>
 			<div className="flex justify-center w-full h-full px-[172px] pb-[84px]">

@@ -1,5 +1,6 @@
 import * as StompJs from "@stomp/stompjs";
 import { useQuery } from "@tanstack/react-query";
+import { number } from "framer-motion";
 import React, { use, useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
@@ -14,7 +15,6 @@ import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
 import QualifierView from "./QualifierView";
 import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
 import WinnerView from "./WinnerView";
-import { number } from "framer-motion";
 
 //
 //
@@ -105,7 +105,12 @@ const QuizSolvingRealTimeSolving = () => {
 		}
 	};
 
-	const quizController = (questionId: number, statusType?: QuestionStatusType, commandType?: CommandType, activeParticipants?: any) => {
+	const quizController = (
+		questionId: number,
+		statusType?: QuestionStatusType,
+		commandType?: CommandType,
+		activeParticipants?: any,
+	) => {
 		if (commandType) {
 			switch (commandType) {
 				case CommandType.ACTIVE_PARTICIPANTS: {
@@ -172,6 +177,10 @@ const QuizSolvingRealTimeSolving = () => {
 	};
 
 	useEffect(() => {
+		console.log("111activeParticipants", activeParticipants);
+	}, [activeParticipants]);
+
+	useEffect(() => {
 		console.log("showWinner", showWinner);
 	}, [showWinner]);
 
@@ -217,18 +226,18 @@ const QuizSolvingRealTimeSolving = () => {
 
 	return (
 		<>
-			{showQualifierView && (
-				<SolvingNextStage
-					activeParticipants={activeParticipants}
-					currentUserId={currentUserId}
-				/>
-			)}
-			{showWinner && (
-				<SolvingWinner
-					activeParticipants={activeParticipants}
-					currentUserId={currentUserId}
-				/>
-			)}
+			<SolvingNextStage
+				open={showQualifierView}
+				activeParticipants={activeParticipants}
+				currentUserId={currentUserId ?? 0}
+				onClose={() => setShowQualifierView(false)}
+			/>
+			<SolvingWinner
+				open={showWinner}
+				activeParticipants={activeParticipants}
+				currentUserId={currentUserId ?? 0}
+				onClose={() => setShowWinner(false)}
+			/>
 			{!showQualifierView &&
 				!showWinner &&
 				(questionId !== null ? (
