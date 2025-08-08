@@ -111,6 +111,16 @@ const QuizSolvingRealTimeSolving = () => {
 		commandType?: CommandType,
 		activeParticipants?: any,
 	) => {
+		// 탈락자는 어떤 경우에도 상호작용 불가 유지
+		if (isFailed) {
+			if (statusType === QuestionStatusType.ACCESS_PERMISSION || statusType === QuestionStatusType.SOLVE_PERMISSION) {
+				setQuestionId(questionId);
+				fetchQuestionInfo(questionId);
+				setIsSubmitAllowed(false); // 강제 비활성
+			}
+			return;
+		}
+
 		if (commandType) {
 			switch (commandType) {
 				case CommandType.ACTIVE_PARTICIPANTS: {
@@ -139,6 +149,7 @@ const QuizSolvingRealTimeSolving = () => {
 				case CommandType.LIVE_END: {
 					navigate("/quiz-solving");
 					setShowWinner(false);
+					setIsFailed(false);
 					break;
 				}
 			}
