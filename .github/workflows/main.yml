@@ -42,6 +42,8 @@ jobs:
         run: |
           echo "PUBLIC_WS_ENDPOINT=${PUBLIC_WS_ENDPOINT}" > .env
           echo "PUBLIC_BASE_URL=${PUBLIC_BASE_URL}" >> .env
+          echo "PUBLIC_QUESTION_ID=${PUBLIC_QUESTION_ID}" >> .env
+          echo "PUBLIC_TEAM_ID=${PUBLIC_TEAM_ID}" >> .env
 
       - name: Build project
         run: pnpm build
