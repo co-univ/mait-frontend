@@ -51,6 +51,8 @@ interface SideBarProps {
 const SideBar = ({ isSideBarOpen, variant = "default" }: SideBarProps) => {
 	const { user } = useUser();
 
+	if (!user) return null;
+
 	return (
 		<div
 			className={clsx(
