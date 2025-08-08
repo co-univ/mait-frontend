@@ -34,7 +34,7 @@ const DropdownCollapse = ({
 
 	return (
 		<button
-			className="flex w-full items-center gap-[10px] rounded-md p-padding-6 hover:bg-primary-5 active:bg-alpha-white100"
+			className="flex w-full items-center justify-between gap-[10px] rounded-md p-padding-6 hover:bg-primary-5 active:bg-alpha-white100"
 			type="button"
 			onClick={handleButtonClick}
 		>

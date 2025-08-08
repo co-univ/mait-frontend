@@ -31,8 +31,10 @@ const SideBarMenuItem = ({
 	 *
 	 */
 	const handleMenuClick = () => {
-		onSelect();
-		navigate(path);
+		if (path === "/quiz-solving") {
+			onSelect();
+			navigate(path);
+		}
 	};
 
 	return (
