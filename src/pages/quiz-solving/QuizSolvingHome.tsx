@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 //
@@ -9,7 +10,9 @@ const QuizSolvingHome = () => {
 
 	const questionId = process.env.PUBLIC_QUESTION_ID;
 
-	navigate(`/quiz-solving/${questionId}`);
+	useEffect(() => {
+		navigate(`/quiz-solving/${questionId}`);
+	}, []);
 
 	return null;
 };

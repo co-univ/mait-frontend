@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import useUser from "src/hooks/useUser";
 import DropdownCollapse from "./DropdownCollapse";
 import DropdownList from "./DropdownList";
 import DropdownSelectBox from "./DropdownSelectBox";
@@ -46,6 +47,8 @@ const Dropdown = ({
 	const [isOpen, setIsOpen] = useState(false);
 	const [dropdownHeight, setDropdownHeight] = useState(0);
 
+	const { user } = useUser();
+
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	/**
@@ -87,9 +90,13 @@ const Dropdown = ({
 	}, [isOpen]);
 
 	return (
-		<div className="relative w-full">
+		<div className="relative w-full flex">
 			{renderButton()}
-			<DropdownList isOpen={isOpen} group={group} contents={contents} />
+			<DropdownList
+				isOpen={isOpen && !!user}
+				group={group}
+				contents={contents}
+			/>
 		</div>
 	);
 };

@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { ChevronsLeft, NotebookPen } from "lucide-react";
 import type React from "react";
+import useUser from "src/hooks/useUser";
 import logo from "../../assets/logo.png";
 import Dropdown, { type IconContent } from "./Dropdown";
 import SideBarMenuList from "./SideBarMenuList";
@@ -48,6 +49,8 @@ interface SideBarProps {
 //
 
 const SideBar = ({ isSideBarOpen, variant = "default" }: SideBarProps) => {
+	const { user } = useUser();
+
 	return (
 		<div
 			className={clsx(
@@ -68,8 +71,8 @@ const SideBar = ({ isSideBarOpen, variant = "default" }: SideBarProps) => {
 					<Dropdown
 						size="large"
 						buttonType="collapse"
-						buttonText="코테이토 11기 교육팀"
-						group="전민재의 MAIT"
+						buttonText={user ? "코테이토 11기 교육팀" : "MAIT의 그룹"}
+						group={user ? `${user?.name}의 MAIT` : ""}
 						contents={TEAM_SPACES}
 					/>
 				</div>
