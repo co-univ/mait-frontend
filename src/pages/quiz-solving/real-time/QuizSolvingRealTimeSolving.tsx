@@ -178,7 +178,7 @@ const QuizSolvingRealTimeSolving = () => {
 	}, [questionSetId]);
 
 	return (
-		<div className="w-full">
+		<>
 			{showQualifierView && (
 				<SolvingNextStage
 					activeParticipants={activeParticipants}
@@ -191,23 +191,21 @@ const QuizSolvingRealTimeSolving = () => {
 					currentUserId={currentUserId}
 				/>
 			)}
-			{!showQualifierView && !showWinner && (
-				<div className="w-full">
-					{questionId !== null ? (
-						<Solving
-							questionInfo={questionInfo}
-							quizTitle={questionSetInfo?.title as string}
-							questionCount={questionSetInfo?.questionCount as number}
-							questionSetId={Number(questionSetId)}
-							isSubmitAllowed={isSubmitAllowed && !isFailed}
-							isFailed={isFailed}
-						/>
-					) : (
-						<QuizSolvingRealTimeWaitView />
-					)}
-				</div>
-			)}
-		</div>
+			{!showQualifierView &&
+				!showWinner &&
+				(questionId !== null ? (
+					<Solving
+						questionInfo={questionInfo}
+						quizTitle={questionSetInfo?.title as string}
+						questionCount={questionSetInfo?.questionCount as number}
+						questionSetId={Number(questionSetId)}
+						isSubmitAllowed={isSubmitAllowed && !isFailed}
+						isFailed={isFailed}
+					/>
+				) : (
+					<QuizSolvingRealTimeWaitView />
+				))}
+		</>
 	);
 };
 

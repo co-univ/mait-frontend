@@ -43,7 +43,7 @@ const App = () => {
 	}, [location.pathname]);
 
 	return (
-		<div className="app-container">
+		<div className="w-screen h-screen flex">
 			<Toast />
 			<AppLayout
 				isSideBarOpen={isSideBarOpen}
