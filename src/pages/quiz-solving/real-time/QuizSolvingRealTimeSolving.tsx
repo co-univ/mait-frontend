@@ -69,7 +69,6 @@ const QuizSolvingRealTimeSolving = () => {
 			const res = await apiClient.getQuestionSet(Number(questionSetId));
 			if (res.data) {
 				setQuestionSetInfo(res.data);
-				console.log(res.data);
 			}
 		} catch (err) {
 			console.error("Failed to fetch question set info", err);
@@ -84,7 +83,6 @@ const QuizSolvingRealTimeSolving = () => {
 			);
 			if (res.data) {
 				setQuestionInfo(res.data);
-				console.log(res.data);
 			}
 		} catch (err) {
 			console.error("Failed to fetch question info", err);
@@ -127,7 +125,7 @@ const QuizSolvingRealTimeSolving = () => {
 			}
 			return;
 		}
-		console.log("진출자들: ", activeParticipants);
+
 		if (commandType) {
 			switch (commandType) {
 				case CommandType.ACTIVE_PARTICIPANTS: {

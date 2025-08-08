@@ -31,11 +31,6 @@ const SolvingQuizContent = ({
 }: SolvingQuizContentProps) => {
 	const type = questionInfo?.type;
 
-	useEffect(() => {
-		console.log("d", questionInfo);
-		console.log("type", questionInfo?.type);
-	}, [questionInfo]);
-
 	return (
 		<div className="flex flex-col w-full flex-1">
 			<SolvingQuizTitle
