@@ -15,6 +15,7 @@ import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
 import QualifierView from "./QualifierView";
 import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
 import WinnerView from "./WinnerView";
+import SolvingBell from "src/pages/solving/components/SolvingBell";
 
 //
 //
@@ -249,6 +250,7 @@ const QuizSolvingRealTimeSolving = () => {
 				currentUserId={currentUserId ?? 0}
 				onClose={() => setShowWinner(false)}
 			/>
+			<SolvingBell open={isSubmitAllowed} />
 			{!showQualifierView &&
 				!showWinner &&
 				(questionId !== null ? (
