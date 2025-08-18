@@ -1,52 +1,3 @@
-## PR 제목 규칙 (PR Title Convention)
-
-[타입][티켓 번호] 작업 내용 형식으로 작성해주세요.
-
-**예시 (Examples):**
-
-[FEAT][EDU-123] Implement login feature
-
-[FIX][EDU-456] Resolve header ui in mobile size
-
-<br>
-
-## 🤷‍♂️ 어떤 종류의 PR인가요? (What's the PR about?)
-해당하는 모든 항목에 x로 체크해주세요.
-
-[ ] 🆕 새로운 기능 (A new feature)
-
-[ ] ✨ 기능 개선 (Feature enhancement)
-
-[ ] 🐛 버그 수정 (A bug fix)
-
-[ ] ♻️ 리팩토링 (Code refactoring)
-
-[ ] 🎨 스타일 및 UI 수정 (Styling and UI adjustments)
-
-[ ] 🏗️ 빌드 및 환경설정 관련 (Build and configuration related)
-
-[ ] 📝 문서 업데이트 (Documentation update)
-
-[ ] 🧪 테스트 코드 추가/수정 (Adding or updating tests)
-
-<br>
-
-## 📝 PR에 대한 간략한 설명 (A brief description of the PR)
-이 PR이 해결하려는 문제나 추가하려는 기능에 대해 간단히 설명해주세요.
-
-(여기에 내용을 작성하세요)
-
-<br>
-
-## 📌 관련 JIRA 티켓 (Related Jira Ticket)
-관련된 JIRA 티켓이 있다면 티켓 번호를 링크와 함께 적어주세요.
-
-예: [EDU-123](https://youthing.atlassian.net/jira/software/projects/EDU/summary)
-
-[티켓 번호](Jira 티켓 링크)
-
-<br>
-
 ## ✨ 주요 변경 사항 (Key changes)
 변경 전(AS-IS)과 변경 후(TO-BE)를 명확하게 비교하여 설명해주세요.
 
@@ -102,13 +53,9 @@ UI 변경 사항이 있는 경우, 변경 전후를 비교할 수 있는 스크�
 ## 🤚 셀프 리뷰 (Self-review)
 PR을 올리기 전, 스스로 확인한 사항들을 체크해주세요.
 
-[ ] 브랜치명을 컨벤션에 맞게 작성했나요? (예: feature/PROJ-123-login, fix/PROJ-456-header-bug)
+[ ] 브랜치명 또는 PR 제목을 컨벤션에 맞게 작성했나요? (예: feature/EDU-123-implement-login, [feature][EDU-123] Implement Login Page)
 
 [ ] console.log, debugger 등 불필요한 코드를 제거했나요?
-
-[ ] 스스로 코드 리뷰를 진행했나요?
-
-[ ] 충돌 없이 main 또는 develop 브랜치에 병합할 수 있나요?
 
 [ ] **(Merge 후)** 작업 브랜치를 삭제할 예정인가요? (로컬 및 원격)
 
