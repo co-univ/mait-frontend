@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 //
 //
 
-const QuizSolvingHome = () => {
+const Solving = () => {
 	const navigate = useNavigate();
 
-	const questionId = process.env.PUBLIC_QUESTION_ID;
+	const questionId = 7;
 
 	useEffect(() => {
 		navigate(`/quiz-solving/${questionId}`);
@@ -17,4 +17,4 @@ const QuizSolvingHome = () => {
 	return null;
 };
 
-export default QuizSolvingHome;
+export default Solving;

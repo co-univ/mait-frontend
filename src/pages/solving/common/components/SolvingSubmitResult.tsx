@@ -1,13 +1,13 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import quizSuccess from "../../../assets/images/quis-success.png";
-import quizFail from "../../../assets/images/quiz-fail.png";
+import quizCorrect from "src/assets/images/quiz-correct.png";
+import quizIncorrect from "src/assets/images/quiz-incorrect.png";
 
 //
 //
 //
 
-interface SolvingQuizCorrectProps {
+interface SolvingSubmitResultProps {
 	correct: boolean;
 	show?: boolean;
 	onAnimationComplete?: () => void;
@@ -17,11 +17,11 @@ interface SolvingQuizCorrectProps {
 //
 //
 
-const SolvingQuizCorrect = ({
+const SolvingSubmitResult = ({
 	correct,
 	show = true,
 	onAnimationComplete,
-}: SolvingQuizCorrectProps) => {
+}: SolvingSubmitResultProps) => {
 	if (!show) {
 		return null;
 	}
@@ -42,7 +42,7 @@ const SolvingQuizCorrect = ({
 			className="absolute top-20 left-1/2 transform -translate-x-1/2 flex flex-col items-center justify-center z-50 pointer-events-none"
 		>
 			<motion.img
-				src={correct ? quizSuccess : quizFail}
+				src={correct ? quizCorrect  : quizIncorrect}
 				alt={correct ? "Quiz Success" : "Quiz Fail"}
 				className="h-[95px] aspect-square"
 				initial={{ scale: 0, rotate: -180 }}
@@ -74,4 +74,4 @@ const SolvingQuizCorrect = ({
 	);
 };
 
-export default SolvingQuizCorrect;
+export default SolvingSubmitResult;

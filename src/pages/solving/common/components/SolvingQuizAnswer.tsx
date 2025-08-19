@@ -8,6 +8,10 @@ import { useEffect, useRef, useState } from "react";
 
 export const ANSWER_HEIGHT = 94;
 
+//
+//
+//
+
 export interface SolvingQuizAnswerProps {
 	readonly?: boolean;
 	draggable?: boolean;

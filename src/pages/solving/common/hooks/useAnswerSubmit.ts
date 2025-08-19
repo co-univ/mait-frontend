@@ -1,7 +1,8 @@
 import { useState } from "react";
 import useUser from "src/hooks/useUser";
 import type { QuestionApiResponse } from "@/types";
-import { apiClient } from "../../../apis/solving.api";
+import { apiClient } from "src/apis/solving.api";
+
 
 export const useAnswerSubmit = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);

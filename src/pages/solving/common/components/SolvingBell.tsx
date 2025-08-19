@@ -1,5 +1,5 @@
 import Lottie from "react-lottie";
-import bell from "src/assets/lotties/solving_bell.json";
+import bell from "src/assets/lotties/solving-bell.json";
 
 //
 //

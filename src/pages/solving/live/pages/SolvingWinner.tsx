@@ -1,7 +1,7 @@
 import { Award, PartyPopper } from "lucide-react";
-import gold_bell from "../../../assets/images/gold-bell.png";
-import winner_print from "../../../assets/images/winner-print.png";
-import winner_stamp from "../../../assets/images/winner-stamp.png";
+import gold_bell from "src/assets/images/gold-bell.png";
+import winner_print from "src/assets/images/winner-print.png";
+import winner_stamp from "src/assets/images/winner-stamp.png";
 import SolvingFullModalLayout, {
 	type SolvingFullModalLayoutProps,
 } from "../layouts/SolvingFullModalLayout";

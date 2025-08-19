@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import SolvingQuizTitleBlankInput from "./SolvingQuizTitleBlankInput";
+import SolvingQuizTitleBlankInput from "./SolvingProblemTitleBlankInput";
 
 //
 //

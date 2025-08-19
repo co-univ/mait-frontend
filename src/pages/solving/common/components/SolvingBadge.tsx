@@ -6,7 +6,7 @@ import type { JSX } from "react";
 //
 //
 
-export interface SolvingBadegeProps {
+export interface SolvingBadgeProps {
 	lable: string;
 	direction?: "row" | "row-reverse";
 	icon: React.ReactNode;
@@ -20,7 +20,7 @@ export interface SolvingBadegeProps {
 //
 //
 
-const SolvingBadege = ({
+const SolvingBadge = ({
 	lable,
 	direction = "row",
 	icon,
@@ -28,7 +28,7 @@ const SolvingBadege = ({
 	onClick,
 	color = "primary",
 	disabled = false,
-}: SolvingBadegeProps) => {
+}: SolvingBadgeProps) => {
 	const flexDirection =
 		direction === "row-reverse" ? "flex-row-reverse" : "flex-row";
 
@@ -61,4 +61,4 @@ const SolvingBadege = ({
 	);
 };
 
-export default SolvingBadege;
+export default SolvingBadge;

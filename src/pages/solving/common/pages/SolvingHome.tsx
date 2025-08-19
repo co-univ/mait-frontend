@@ -1,6 +1,10 @@
 import React from "react";
 
-const QuizSolving = () => {
+//
+//
+//
+
+const SolvingHome = () => {
 	return (
 		<div className="text-alpha-black100 typo-heading-xlarge">
 			문제 풀기 페이지입니다. 문제 풀기 페이지입니다.
@@ -8,4 +12,4 @@ const QuizSolving = () => {
 	);
 };
 
-export default QuizSolving;
+export default SolvingHome;

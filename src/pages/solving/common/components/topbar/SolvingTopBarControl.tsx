@@ -1,7 +1,7 @@
 import type React from "react";
+import SolvingBadge from "src/pages/solving/common/components/SolvingBadge";
 import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
-import SolvingBadege from "../../components/SolvingBadege";
-import SolvingButton from "../../components/SolvingButton";
+import SolvingButton from "../SolvingButton";
 
 //
 //
@@ -47,7 +47,7 @@ const SolvingTopBarControl = ({
 
 	return (
 		<div className="flex justify-between w-full">
-			<SolvingBadege lable={badgeLabel} icon={badgeIcon} color={getColor()} />
+			<SolvingBadge lable={badgeLabel} icon={badgeIcon} color={getColor()} />
 			<SolvingButton
 				lable={buttonLabel}
 				icon={buttonIcon}

@@ -1,11 +1,11 @@
-import type { SolvingBadegeProps } from "./SolvingBadege";
-import SolvingBadege from "./SolvingBadege";
+import type { SolvingBadgeProps } from "src/pages/solving/common/components/SolvingBadge";
+import SolvingBadge from "src/pages/solving/common/components/SolvingBadge";
 
 //
 //
 //
 
-interface SolvingButtonProps extends SolvingBadegeProps {
+interface SolvingButtonProps extends SolvingBadgeProps {
 	onClick?: () => void;
 }
 
@@ -22,7 +22,7 @@ const SolvingButton = ({
 	color,
 }: SolvingButtonProps) => {
 	return (
-		<SolvingBadege
+		<SolvingBadge
 			lable={lable}
 			direction={direction}
 			icon={icon}

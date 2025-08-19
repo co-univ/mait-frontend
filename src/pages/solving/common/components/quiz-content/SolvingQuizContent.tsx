@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { QuestionType } from "src/enums/solving.enum";
 import type { QuestionApiResponse } from "@/types";
-import SolvingQuizImage from "../../components/SolvingQuizImage";
-import SolvingQuizTitle from "../../components/solving-quiz-title";
+import SolvingQuizImage from "../../../solving/common/components/SolvingProblemImage";
+
 import SolvingQuizContentBlankAnswer from "./SolvingQuizContentBlankAnswer";
 import SolvingQuizContentMultipleAnswers from "./SolvingQuizContentMultipleAnswers";
 import SolvingQuizContentOrderAnswers from "./SolvingQuizContentOrderAnswers";
 import SolvingQuizContentShortAnswer from "./SolvingQuizContentShortAnswer";
+import SolvingQuestionTitle from "src/pages/solving/common/components/quiz-title";
 
 //
 //
@@ -33,7 +34,7 @@ const SolvingQuizContent = ({
 
 	return (
 		<div className="flex flex-col w-full flex-1">
-			<SolvingQuizTitle
+			<SolvingQuestionTitle
 				title={questionInfo?.content || ""}
 				type={type as QuestionType}
 				questionInfo={questionInfo}

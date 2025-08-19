@@ -1,5 +1,5 @@
 import { ChevronRight, Puzzle } from "lucide-react";
-import SolvingHeader from "../../components/SolvingHeader";
+import SolvingHeader from "../SolvingHeader";
 import SolvingTopBarControl from "./SolvingTopBarControl";
 
 //

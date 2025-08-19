@@ -1,22 +1,17 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 import * as StompJs from "@stomp/stompjs";
-import { useQuery } from "@tanstack/react-query";
-import { number } from "framer-motion";
-import React, { use, useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
-import SolvingBell from "src/pages/solving/components/SolvingBell";
-import Solving from "src/pages/solving/pages";
-import SolvingNextStage from "src/pages/solving/pages/SolvingNextStage";
-import SolvingWinner from "src/pages/solving/pages/SolvingWinner";
-import SolvingQuizContent from "src/pages/solving/pages/solving-quiz-content";
+import SolvingBell from "src/pages/solving/common/components/SolvingBell";
+import SolvingNextStage from "src/pages/solving/live/pages/SolvingNextStage";
+import SolvingWinner from "src/pages/solving/live/pages/SolvingWinner";
 import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
-import QualifierView from "./QualifierView";
-import QuizSolvingRealTimeWaitView from "./QuizSolvingRealTimeWaitView";
-import WinnerView from "./WinnerView";
+import SolvingQuiz from "../../common/components/SolvingQuiz";
+import QuizSolvingRealTimeWaitView from "./SolvingLiveWaiting";
 
 //
 //
@@ -32,7 +27,7 @@ interface CurrentQuestionStatus {
 //
 //
 
-const QuizSolvingRealTimeSolving = () => {
+const SolvingLiveSolving = () => {
 	const [questionSetInfo, setQuestionSetInfo] =
 		useState<QuestionSetApiResponse | null>(null); // 문제 셋 정보
 	const [questionId, setQuestionId] = useState<number | null>(null); // 문제 id
@@ -255,7 +250,7 @@ const QuizSolvingRealTimeSolving = () => {
 			{!showQualifierView &&
 				!showWinner &&
 				(questionId !== null ? (
-					<Solving
+					<SolvingQuiz
 						questionInfo={questionInfo}
 						quizTitle={questionSetInfo?.title as string}
 						questionCount={questionSetInfo?.questionCount as number}
@@ -270,4 +265,4 @@ const QuizSolvingRealTimeSolving = () => {
 	);
 };
 
-export default QuizSolvingRealTimeSolving;
+export default SolvingLiveSolving;
