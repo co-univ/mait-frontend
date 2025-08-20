@@ -15,7 +15,16 @@
 		"allowImportingTsExtensions": true,
 		"baseUrl": ".",
 		"paths": {
-			"@/types": ["./types/index"]
+			"@/*": ["./src/*"],
+			"@/types": ["./types/index"],
+			"@/components/*": ["./src/components/*"],
+			"@/pages/*": ["./src/pages/*"],
+			"@/hooks/*": ["./src/hooks/*"],
+			"@/layouts/*": ["./src/layouts/*"],
+			"@/stores/*": ["./src/stores/*"],
+			"@/utils/*": ["./src/utils/*"],
+			"@/apis/*": ["./src/apis/*"],
+			"@/assets/*": ["./src/assets/*"]
 		},
 
 		/* type checking */

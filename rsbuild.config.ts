@@ -6,6 +6,19 @@ import tailwindcss from "tailwindcss";
 
 export default defineConfig({
 	plugins: [pluginReact()],
+	source: {
+		alias: {
+			"@": "./src",
+			"@/components": "./src/components",
+			"@/pages": "./src/pages",
+			"@/hooks": "./src/hooks",
+			"@/layouts": "./src/layouts",
+			"@/stores": "./src/stores",
+			"@/utils": "./src/utils",
+			"@/apis": "./src/apis",
+			"@/assets": "./src/assets",
+		},
+	},
 	tools: {
 		postcss: {
 			postcssOptions: {
