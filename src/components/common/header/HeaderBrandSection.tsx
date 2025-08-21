@@ -1,13 +1,15 @@
 import { Menu } from "lucide-react";
 import mait_logo from "@/assets/images/mait-logo.svg";
 import useUser from "@/hooks/useUser";
-import HeaderBrandSectoinNavigator from "./HeaderBrandSectoinNavigator";
+import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
+import HeaderBrandSectionNavigator from "./HeaderBrandSectionNavigator";
 
 //
 //
 //
 
 const HeaderBrandSection = () => {
+	const { toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
 
 	return (
@@ -28,9 +30,11 @@ const HeaderBrandSection = () => {
 			{user && (
 				<div className="flex items-center">
 					<div className="w-20" />
-					<Menu />
+					<button type="button" onClick={toggleSidebarOpen}>
+						<Menu />
+					</button>
 					<div className="w-32" />
-					<HeaderBrandSectoinNavigator />
+					<HeaderBrandSectionNavigator />
 				</div>
 			)}
 		</div>

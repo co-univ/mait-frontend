@@ -1,7 +1,9 @@
 import clsx from "clsx";
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { LARGE_WIDTH_PATHS } from "@/app.constnats";
+import { LARGE_WIDTH_PATHS, SIDEBAR_WIDTH } from "@/app.constnats";
+import useUser from "@/hooks/useUser";
+import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import SidebarItem from "./SidebarItem";
 
 //
@@ -24,19 +26,30 @@ const NAVIGATION_ITEMS = [
 //
 
 const SideBar = () => {
+	const { isSidebarOpen } = useSidebarOpenStore();
+	const { user } = useUser();
+
 	const sidebarVariant: "default" | "elevation" = LARGE_WIDTH_PATHS.includes(
 		location.pathname,
 	)
 		? "elevation"
 		: "default";
 
+	const isSidebarOpenWithUser = isSidebarOpen && user;
+
 	return (
 		<nav
-			className={clsx("flex flex-col p-padding-12 bg-color-alpha-white100", {
-				"h-full shadow-xl": sidebarVariant === "default",
-				"absolute top-0 left-0 h-[80%] shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
-					sidebarVariant === "elevation",
-			})}
+			className={clsx(
+				"flex flex-col items-center py-padding-12 bg-color-alpha-white100 transition-all duration-300 transition-ease-out overflow-hidden",
+				{
+					"h-full shadow-xl": sidebarVariant === "default",
+					"absolute top-0 left-0 h-[80%] shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
+						sidebarVariant === "elevation",
+				},
+			)}
+			style={{
+				width: isSidebarOpenWithUser ? SIDEBAR_WIDTH : "0",
+			}}
 		>
 			<SidebarItem>
 				<div>코테이토 11기 교육팀</div>
