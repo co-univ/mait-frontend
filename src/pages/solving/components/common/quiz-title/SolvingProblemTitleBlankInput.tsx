@@ -28,7 +28,7 @@ const SolvingQuizTitleBlankInput = ({
 	const blankNumbers = questionInfo?.answers
 		? Array.from(
 				new Set(questionInfo.answers.map((answer: any) => answer.number)),
-			).sort((a, b) => a - b)
+			).sort((a: any, b: any) => a - b)
 		: [];
 
 	// 해당 index의 빈칸 번호 찾기
