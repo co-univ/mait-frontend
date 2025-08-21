@@ -7,11 +7,11 @@ import { apiClient } from "src/apis/solving.api";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
 import SolvingBell from "src/pages/solving/components/common/SolvingBell";
-import SolvingNextStage from "src/pages/solving/pages/live/SolvingNextStage";
-import SolvingWinner from "src/pages/solving/pages/live/SolvingWinner";
 import type { QuestionSetApiResponse } from "@/types";
 import SolvingQuiz from "../../components/common/SolvingQuiz";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
+import SolvingLiveNextStage from "src/pages/solving/pages/live/SolvingLiveNextStage";
+import SolvingLiveWinner from "src/pages/solving/pages/live/SolvingLiveWinner";
 
 //
 //
@@ -237,11 +237,11 @@ const SolvingLiveSolving = () => {
 
 	return (
 		<>
-			<SolvingNextStage
+			<SolvingLiveNextStage
 				activeParticipants={activeParticipants}
 				open={showQualifierView}
 			/>
-			<SolvingWinner
+			<SolvingLiveWinner
 				open={showWinner}
 				activeParticipants={activeParticipants}
 				currentUserId={currentUserId ?? 0}

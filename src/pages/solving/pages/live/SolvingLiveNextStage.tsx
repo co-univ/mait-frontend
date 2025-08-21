@@ -9,7 +9,7 @@ import SolvingFullModalLayout from "../../layouts/live/SolvingFullModalLayout";
 //
 
 // type SolvingNextStageProps = Omit<SolvingFullModalLayoutProps, "children">;
-interface QualifierViewProps {
+interface SolvingLiveNextStageProps {
 	activeParticipants: Array<{
 		participantId: number;
 		userId: number;
@@ -22,7 +22,7 @@ interface QualifierViewProps {
 //
 //
 
-const SolvingNextStage = ({ activeParticipants, open }: QualifierViewProps) => {
+const SolvingLiveNextStage = ({ activeParticipants, open }: SolvingLiveNextStageProps) => {
 	return (
 		<SolvingFullModalLayout open={open}>
 			<div className="flex justify-center w-full h-full px-[172px] pb-[84px]">
@@ -79,4 +79,4 @@ const SolvingNextStage = ({ activeParticipants, open }: QualifierViewProps) => {
 	);
 };
 
-export default SolvingNextStage;
+export default SolvingLiveNextStage;

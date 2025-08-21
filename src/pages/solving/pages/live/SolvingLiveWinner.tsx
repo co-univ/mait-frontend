@@ -11,7 +11,7 @@ import SolvingFullModalLayout, {
 //
 
 // type SolvingWinnerProps = Omit<SolvingFullModalLayoutProps, "children">;
-interface SolvingWinnerProps {
+interface SolvingLiveWinnerProps {
 	activeParticipants: Array<{
 		participantId: number;
 		userId: number;
@@ -25,12 +25,12 @@ interface SolvingWinnerProps {
 //
 //
 
-const SolvingWinner = ({
+const SolvingLiveWinner = ({
 	activeParticipants,
 	currentUserId,
 	open,
 	onClose,
-}: SolvingWinnerProps) => {
+}: SolvingLiveWinnerProps) => {
 	return (
 		<SolvingFullModalLayout open={open} onClose={onClose}>
 			<div className="flex items-center justify-center flex-col w-full h-full">
@@ -87,4 +87,4 @@ const SolvingWinner = ({
 	);
 };
 
-export default SolvingWinner;
+export default SolvingLiveWinner;
