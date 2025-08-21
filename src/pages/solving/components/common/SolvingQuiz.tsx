@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { notify } from "src/components/common/Toast";
