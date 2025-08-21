@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import LoginModal from "@/components/auth/LoginModal";
 import AppLayout from "@/layouts/AppLayout";
-import type { SIDEBAR_VARIANT } from "./components/common/SideBar";
+import type { SIDEBAR_VARIANT } from "./components/common/sidebar/SideBar";
 import Toast from "./components/common/Toast";
 import useLoginModalOpenStore from "./stores/useLoginModalOpenStore";
 
