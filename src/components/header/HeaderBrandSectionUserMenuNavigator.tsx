@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 //
 //
 
-const HeaderBrandSectionNavigator = () => {
+const HeaderBrandSectionUserMenuNavigator = () => {
 	return (
 		<div className="flex items-center gap-3">
 			<ChevronLeft className="h-4 w-4 cursor-pointer text-color-gray-40" />
@@ -13,4 +13,4 @@ const HeaderBrandSectionNavigator = () => {
 	);
 };
 
-export default HeaderBrandSectionNavigator;
+export default HeaderBrandSectionUserMenuNavigator;
