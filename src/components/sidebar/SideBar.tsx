@@ -65,17 +65,22 @@ const SideBar = () => {
 
 			<div className="h-size-height-1" />
 
-			{NAVIGATION_ITEMS.map((item) => (
-				<SidebarItem
-					key={item.path}
-					className="text-color-gray-30 hover:bg-primary-5 hover:text-color-primary-50 hover:typo-heading-xsmall"
-				>
-					<Link to={item.path} className="flex items-center gap-gap-5">
-						{item.icon}
-						<span>{item.label}</span>
-					</Link>
-				</SidebarItem>
-			))}
+			<div className="flex flex-col gap-gap-5">
+				{NAVIGATION_ITEMS.map((item) => (
+					<SidebarItem
+						key={item.path}
+						className={clsx("text-color-gray-30", {
+							"text-color-primary-50 typo-heading-xsmall bg-primary-5":
+								hasFirstValidPath([item.path], location.pathname),
+						})}
+					>
+						<Link to={item.path} className="flex items-center gap-gap-5">
+							{item.icon}
+							<span>{item.label}</span>
+						</Link>
+					</SidebarItem>
+				))}
+			</div>
 		</nav>
 	);
 };
