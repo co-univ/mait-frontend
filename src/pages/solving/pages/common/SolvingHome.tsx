@@ -1,9 +1,3 @@
-import React from "react";
-
-//
-//
-//
-
 const SolvingHome = () => {
 	return (
 		<div className="text-alpha-black100 typo-heading-xlarge">

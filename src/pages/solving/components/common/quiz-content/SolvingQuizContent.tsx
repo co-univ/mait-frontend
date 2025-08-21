@@ -1,8 +1,6 @@
-import { useEffect } from "react";
 import { QuestionType } from "src/enums/solving.enum";
 import SolvingQuestionTitle from "src/pages/solving/components/common/quiz-title";
 import type { QuestionApiResponse } from "@/types";
-import SolvingQuizImage from "../../../solving/common/components/SolvingProblemImage";
 import SolvingQuizContentBlankAnswer from "./SolvingQuizContentBlankAnswer";
 import SolvingQuizContentMultipleAnswers from "./SolvingQuizContentMultipleAnswers";
 import SolvingQuizContentOrderAnswers from "./SolvingQuizContentOrderAnswers";

@@ -1,9 +1,3 @@
-import React from "react";
-
-//
-//
-//
-
 const SolvingLiveWaiting = () => {
 	return (
 		<div className="bg-gradient-to-b from-alpha-white100 to-primary-5 flex justify-center items-center w-screen h-screen fixed top-0 left-0">

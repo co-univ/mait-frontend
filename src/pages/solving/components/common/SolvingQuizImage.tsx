@@ -1,9 +1,3 @@
-import React from "react";
-
-//
-//
-//
-
 interface SolvingQuizImageProps {
 	src: string;
 }

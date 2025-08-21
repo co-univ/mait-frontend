@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 import * as StompJs from "@stomp/stompjs";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
@@ -9,7 +9,7 @@ import useUser from "src/hooks/useUser";
 import SolvingBell from "src/pages/solving/components/common/SolvingBell";
 import SolvingNextStage from "src/pages/solving/pages/live/SolvingNextStage";
 import SolvingWinner from "src/pages/solving/pages/live/SolvingWinner";
-import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
+import type { QuestionSetApiResponse } from "@/types";
 import SolvingQuiz from "../../components/common/SolvingQuiz";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
 
