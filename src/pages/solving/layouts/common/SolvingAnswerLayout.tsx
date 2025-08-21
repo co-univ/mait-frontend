@@ -3,7 +3,7 @@ import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
 import SolvingQuizAnswer, {
 	ANSWER_HEIGHT,
 	type SolvingQuizAnswerProps,
-} from "../components/SolvingQuizAnswer";
+} from "../../components/common/SolvingQuizAnswer";
 
 //
 //

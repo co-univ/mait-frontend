@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
+import SolvingAnswerLayout from "../../../layouts/common/SolvingAnswerLayout";
 
 //
 //

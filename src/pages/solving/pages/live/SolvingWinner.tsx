@@ -4,7 +4,7 @@ import winner_print from "src/assets/images/winner-print.png";
 import winner_stamp from "src/assets/images/winner-stamp.png";
 import SolvingFullModalLayout, {
 	type SolvingFullModalLayoutProps,
-} from "../layouts/SolvingFullModalLayout";
+} from "../../layouts/live/SolvingFullModalLayout";
 
 //
 //

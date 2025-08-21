@@ -2,7 +2,7 @@ import { Award } from "lucide-react";
 import award_lower from "src/assets/images/award-lower.svg";
 import award_upper from "src/assets/images/award-upper.svg";
 import gold_bell from "src/assets/images/gold-bell.png";
-import SolvingFullModalLayout from "../layouts/SolvingFullModalLayout";
+import SolvingFullModalLayout from "../../layouts/live/SolvingFullModalLayout";
 
 //
 //

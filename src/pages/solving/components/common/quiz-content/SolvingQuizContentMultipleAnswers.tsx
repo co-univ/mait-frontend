@@ -1,4 +1,5 @@
-import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
+import SolvingAnswerLayout from "../../../layouts/common/SolvingAnswerLayout";
+
 //
 //
 //

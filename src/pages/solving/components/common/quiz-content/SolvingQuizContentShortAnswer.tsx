@@ -1,35 +1,29 @@
-import SolvingAnswerLayout from "../../layouts/SolvingAnswerLayout";
+import type { QuestionApiResponse } from "@/types";
+import SolvingAnswerLayout from "../../../layouts/common/SolvingAnswerLayout";
 
 //
 //
 //
 
-interface SolvingQuizContentBlankAnswerProps {
+interface SolvingQuizContentShortAnswerProps {
 	questionInfo: any | null;
 	userAnswers: any;
 	onAnswersChange: (answers: any) => void;
 	isAnswered?: boolean;
 }
 
-interface Answer {
-	id: number;
-	answer: string;
-	isMain: boolean;
-	number: number;
-}
-
 //
 //
 //
 
-const SolvingQuizContentBlankAnswer = ({
+const SolvingQuizContentShortAnswer = ({
 	questionInfo,
 	userAnswers,
 	onAnswersChange,
 	isAnswered = false,
-}: SolvingQuizContentBlankAnswerProps) => {
-	// number를 기준으로 그룹화하여 빈칸 개수 파악
-	const blankGroups = questionInfo.answers.reduce(
+}: SolvingQuizContentShortAnswerProps) => {
+	// number를 기준으로 그룹화하여 답안 개수 파악
+	const answerGroups = questionInfo.answers.reduce(
 		(groups: any, answer: any) => {
 			const number = answer.number;
 			if (!groups[number]) {
@@ -41,8 +35,8 @@ const SolvingQuizContentBlankAnswer = ({
 		{},
 	);
 
-	// 빈칸 개수만큼의 답안 배열 생성
-	const blankAnswers = Object.keys(blankGroups).map((number) => ({
+	// 답안 개수만큼의 입력 필드 생성
+	const shortAnswers = Object.keys(answerGroups).map((number) => ({
 		number: parseInt(number),
 		value:
 			(userAnswers &&
@@ -53,16 +47,16 @@ const SolvingQuizContentBlankAnswer = ({
 
 	const handleAnswerChange = (index: number, value: string) => {
 		const newAnswers = [...(userAnswers || [])];
-		const blankNumber = parseInt(Object.keys(blankGroups)[index]);
+		const answerNumber = parseInt(Object.keys(answerGroups)[index]);
 
 		// 기존 답안이 있으면 업데이트, 없으면 새로 추가
 		const existingIndex = newAnswers.findIndex(
-			(ans: any) => ans.number === blankNumber,
+			(ans: any) => ans.number === answerNumber,
 		);
 		if (existingIndex >= 0) {
-			newAnswers[existingIndex] = { number: blankNumber, answer: value };
+			newAnswers[existingIndex] = { number: answerNumber, answer: value };
 		} else {
-			newAnswers.push({ number: blankNumber, answer: value });
+			newAnswers.push({ number: answerNumber, answer: value });
 		}
 
 		onAnswersChange(newAnswers);
@@ -71,15 +65,14 @@ const SolvingQuizContentBlankAnswer = ({
 	return (
 		<SolvingAnswerLayout
 			readonly={isAnswered}
-			answers={blankAnswers}
-			prefix="number"
-			placeholder="빈칸에 들어갈 답안을 입력하세요."
+			answers={shortAnswers}
+			placeholder="답변을 입력하세요."
 			onAnswerChange={isAnswered ? undefined : handleAnswerChange}
 			selectedChoices={userAnswers
-				?.filter((ans: { answer: string | any[] }) => ans.answer?.length > 0)
+				?.filter((ans: { answer: string | any[] }) => ans.answer.length > 0)
 				.map((ans: { number: number }) => ans.number)}
 		/>
 	);
 };
 
-export default SolvingQuizContentBlankAnswer;
+export default SolvingQuizContentShortAnswer;

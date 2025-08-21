@@ -6,12 +6,12 @@ import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
-import SolvingBell from "src/pages/solving/common/components/SolvingBell";
-import SolvingNextStage from "src/pages/solving/live/pages/SolvingNextStage";
-import SolvingWinner from "src/pages/solving/live/pages/SolvingWinner";
+import SolvingBell from "src/pages/solving/components/common/SolvingBell";
+import SolvingNextStage from "src/pages/solving/pages/live/SolvingNextStage";
+import SolvingWinner from "src/pages/solving/pages/live/SolvingWinner";
 import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
-import SolvingQuiz from "../../common/components/SolvingQuiz";
-import QuizSolvingRealTimeWaitView from "./SolvingLiveWaiting";
+import SolvingQuiz from "../../components/common/SolvingQuiz";
+import QuizSolvingRealTimeWaitView from "../../live/pages/SolvingLiveWaiting";
 
 //
 //

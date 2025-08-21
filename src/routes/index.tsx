@@ -4,8 +4,8 @@ import { QuestionCreation } from "src/pages/creation";
 import App from "../App";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Home from "../pages/home/Home";
-import QuizSolvingHome from "../pages/solving/common/pages/Solving";
-import QuizSolvingRealTimeSolving from "../pages/solving/live/pages/SolvingLiveSolving";
+import QuizSolvingHome from "../pages/solving/pages/common/Solving";
+import QuizSolvingRealTimeSolving from "../pages/solving/pages/live/SolvingLiveSolving";
 import TeamManagement from "../pages/team-management/TeamManagement";
 
 //

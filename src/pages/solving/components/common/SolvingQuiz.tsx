@@ -1,14 +1,13 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { notify } from "src/components/common/Toast";
-import { useAnswerSubmit } from "src/pages/solving/common/hooks/useAnswerSubmit";
+import { useAnswerSubmit } from "src/pages/solving/hooks/common/useAnswerSubmit";
 import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
 import type { QuestionApiResponse } from "@/types";
-import SolvingLayout from "../layouts/SolvingLayout";
-import SolvingQuizCorrect from "./SolvingSubmitResult";
-
-import SolvingTopBar from "./topbar";
+import SolvingLayout from "../../layouts/common/SolvingLayout";
 import SolvingQuizContent from "./quiz-content";
+import SolvingQuizCorrect from "./SolvingSubmitResult";
+import SolvingTopBar from "./topbar";
 
 //
 //
