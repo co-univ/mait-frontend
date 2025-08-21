@@ -1,7 +1,11 @@
 import clsx from "clsx";
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { LARGE_WIDTH_PATHS, SIDEBAR_WIDTH } from "@/app.constnats";
+import {
+	SIDEBAR_TRANSITION,
+	SIDEBAR_WIDTH,
+	SMALL_PAGE_MARGIN_PATHS,
+} from "@/app.constnats";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import SidebarItem from "./SidebarItem";
@@ -29,11 +33,10 @@ const SideBar = () => {
 	const { isSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
 
-	const sidebarVariant: "default" | "elevation" = LARGE_WIDTH_PATHS.includes(
-		location.pathname,
-	)
-		? "elevation"
-		: "default";
+	const sidebarVariant: "default" | "elevation" =
+		SMALL_PAGE_MARGIN_PATHS.includes(location.pathname)
+			? "elevation"
+			: "default";
 
 	const isSidebarOpenWithUser = isSidebarOpen && user;
 
@@ -46,6 +49,7 @@ const SideBar = () => {
 					"absolute top-0 left-0 h-[80%] shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
 						sidebarVariant === "elevation",
 				},
+				SIDEBAR_TRANSITION,
 			)}
 			style={{
 				width: isSidebarOpenWithUser ? SIDEBAR_WIDTH : "0",
