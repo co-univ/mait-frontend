@@ -11,7 +11,7 @@ import SolvingNextStage from "src/pages/solving/pages/live/SolvingNextStage";
 import SolvingWinner from "src/pages/solving/pages/live/SolvingWinner";
 import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
 import SolvingQuiz from "../../components/common/SolvingQuiz";
-import QuizSolvingRealTimeWaitView from "../../live/pages/SolvingLiveWaiting";
+import SolvingLiveWaiting from "./SolvingLiveWaiting";
 
 //
 //
@@ -259,7 +259,7 @@ const SolvingLiveSolving = () => {
 						isFailed={isFailed}
 					/>
 				) : (
-					<QuizSolvingRealTimeWaitView />
+					<SolvingLiveWaiting />
 				))}
 		</>
 	);
