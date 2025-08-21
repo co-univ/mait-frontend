@@ -42,7 +42,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 	};
 
 	return (
-		<div className="w-screen h-screen">
+		<div className="min-w-screen min-h-screen">
 			<Header />
 			<div className="relative flex w-full h-full">
 				<Sidebar />

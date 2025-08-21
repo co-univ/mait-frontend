@@ -22,7 +22,7 @@ const Home = () => {
 	 */
 	const handleButtonClick = () => {
 		if (user) {
-			navigate(`/quiz-solving/${process.env.PUBLIC_QUESTION_ID}`);
+			navigate(`/solving/${process.env.PUBLIC_QUESTION_ID}`);
 		} else {
 			openLoginModal();
 		}
