@@ -1,7 +1,7 @@
 import type React from "react";
 import SolvingBadge from "src/pages/solving/components/common/SolvingBadge";
 import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
-import SolvingButton from "../../../common/components/SolvingButton";
+import SolvingButton from "../SolvingButton";
 
 //
 //
