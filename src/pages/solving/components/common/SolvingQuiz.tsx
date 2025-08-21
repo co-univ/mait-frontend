@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { notify } from "src/components/common/Toast";
 import { useAnswerSubmit } from "src/pages/solving/hooks/common/useAnswerSubmit";
 import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
+import { notify } from "@/components/Toast";
 import type { QuestionApiResponse } from "@/types";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import SolvingQuizContent from "./quiz-content";

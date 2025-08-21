@@ -1,5 +1,5 @@
 import React from "react";
-import { notify } from "../../components/common/Toast";
+import { notify } from "../../components/Toast";
 
 const Dashboard = () => {
 	return (
