@@ -1,14 +1,16 @@
 import clsx from "clsx";
 import type React from "react";
+import { useLocation } from "react-router-dom";
 import {
 	LARGE_PAGE_MARGIN,
 	SMALL_PAGE_MARGIN,
 	SMALL_PAGE_MARGIN_PATHS,
-} from "@/app.constnats";
+} from "@/app.constants";
 import Header from "@/components/header/Header";
 import Sidebar from "@/components/sidebar/SideBar";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
-import { SIDEBAR_TRANSITION } from "../app.constnats";
+import { hasFirstValidPath } from "@/utils/path";
+import { SIDEBAR_TRANSITION } from "../app.constants";
 
 //
 //
@@ -23,10 +25,12 @@ interface AppLayoutProps {
 //
 
 const AppLayout = ({ children }: AppLayoutProps) => {
+	const location = useLocation();
 	const { isSidebarOpen } = useSidebarOpenStore();
 
 	const getPageMargin = () => {
-		const isSmallMarginPage = SMALL_PAGE_MARGIN_PATHS.includes(
+		const isSmallMarginPage = hasFirstValidPath(
+			SMALL_PAGE_MARGIN_PATHS,
 			location.pathname,
 		);
 

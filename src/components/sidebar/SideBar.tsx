@@ -1,13 +1,14 @@
 import clsx from "clsx";
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
 	SIDEBAR_TRANSITION,
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN_PATHS,
-} from "@/app.constnats";
+} from "@/app.constants";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
+import { hasFirstValidPath } from "@/utils/path";
 import SidebarItem from "./SidebarItem";
 
 //
@@ -32,11 +33,14 @@ const NAVIGATION_ITEMS = [
 const SideBar = () => {
 	const { isSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
+	const location = useLocation();
 
-	const sidebarVariant: "default" | "elevation" =
-		SMALL_PAGE_MARGIN_PATHS.includes(location.pathname)
-			? "elevation"
-			: "default";
+	const sidebarVariant: "default" | "elevation" = hasFirstValidPath(
+		SMALL_PAGE_MARGIN_PATHS,
+		location.pathname,
+	)
+		? "elevation"
+		: "default";
 
 	const isSidebarOpenWithUser = isSidebarOpen && user;
 
