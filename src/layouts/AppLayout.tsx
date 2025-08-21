@@ -1,6 +1,6 @@
 import type React from "react";
 import Header from "@/components/common/header/Header";
-import Sidebar from "@/components/common/SideBar";
+import Sidebar from "@/components/common/sidebar/SideBar";
 
 //
 //
@@ -19,9 +19,9 @@ interface AppLayoutProps {
 
 const AppLayout = ({ children }: AppLayoutProps) => {
 	return (
-		<div className="w-full h-full">
+		<div className="w-screen h-screen">
 			<Header />
-			<div className="flex flex-1">
+			<div className="flex w-full h-full">
 				<Sidebar />
 				<main
 					className="flex-1"
