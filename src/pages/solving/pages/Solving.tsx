@@ -1,7 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { notify } from "src/components/common/Toast";
 import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
+import { notify } from "@/components/Toast";
 import type { QuestionApiResponse } from "@/types";
 import SolvingQuizCorrect from "../components/SolvingQuizCorrect";
 import { useAnswerSubmit } from "../hooks/useAnswerSubmit";
