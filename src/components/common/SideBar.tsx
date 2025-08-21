@@ -39,24 +39,18 @@ const TEAM_SPACES: IconContent[] = [
 
 export type SIDEBAR_VARIANT = "default" | "overlay";
 
-interface SideBarProps {
-	isSideBarOpen: boolean;
-	variant?: SIDEBAR_VARIANT;
-}
-
 //
 //
 //
 
-const SideBar = ({ isSideBarOpen, variant = "default" }: SideBarProps) => {
-	const { user } = useUser();
-
-	if (!user) return null;
+const SideBar = () => {
+	const variant: SIDEBAR_VARIANT = "default"; // This can be set based on props or context
+	const isSideBarOpen = true; // This can be set based on props or context
 
 	return (
 		<div
 			className={clsx(
-				"fixed left-0 top-[6rem] w-[17.5rem] bg-alpha-white100 p-5 shadow-xxl transition-all duration-300 ease-in-out",
+				"sticky left-0 w-[17.5rem] bg-alpha-white100 p-5 shadow-xxl transition-all duration-300 ease-in-out",
 				{
 					"translate-x-0": isSideBarOpen,
 					"-translate-x-full": !isSideBarOpen,
@@ -73,8 +67,8 @@ const SideBar = ({ isSideBarOpen, variant = "default" }: SideBarProps) => {
 					<Dropdown
 						size="large"
 						buttonType="collapse"
-						buttonText={user ? "코테이토 11기 교육팀" : "MAIT의 그룹"}
-						group={user ? `${user?.name}의 MAIT` : ""}
+						buttonText={"MAIT의 그룹"}
+						group={""}
 						contents={TEAM_SPACES}
 					/>
 				</div>

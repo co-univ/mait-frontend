@@ -22,25 +22,16 @@ const ICON_BUTTON_STYLE = "h-4 w-4 cursor-pointer text-alpha-black100";
 //
 //
 
-interface HeaderProps {
-	isSideBarOpen: boolean;
-	setIsSideBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-//
-//
-//
-
-const Header = ({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) => {
+const Header = () => {
 	/**
 	 *
 	 */
 	const handleMenuButtonClick = () => {
-		setIsSideBarOpen(!isSideBarOpen);
+		// setIsSideBarOpen(!isSideBarOpen);
 	};
 
 	return (
-		<div className="fixed left-0 top-0 z-10 flex h-24 w-full place-content-between items-center bg-color-alpha-white100 p-8">
+		<div className="sticky top-0 z-10 flex h-size-height-14 w-full justify-between items-center bg-color-alpha-white100 p-8">
 			<div className="flex items-center gap-5">
 				<BrandMenu onMenuOpen={handleMenuButtonClick} />
 				<HistoryController />
