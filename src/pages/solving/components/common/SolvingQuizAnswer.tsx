@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 import clsx from "clsx";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";

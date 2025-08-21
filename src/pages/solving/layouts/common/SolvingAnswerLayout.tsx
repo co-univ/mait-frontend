@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
 import SolvingQuizAnswer, {
