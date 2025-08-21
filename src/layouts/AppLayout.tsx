@@ -1,5 +1,5 @@
 import type React from "react";
-import Header from "@/components/common/Header";
+import Header from "@/components/common/header/Header";
 import Sidebar from "@/components/common/SideBar";
 
 //

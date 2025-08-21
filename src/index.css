@@ -6,10 +6,6 @@
 	body {
 		@apply text-color-alpha-black100
 	}
-
-	svg {
-		@apply text-color-alpha-black100
-	}
 }
 
 /* Pretendard */

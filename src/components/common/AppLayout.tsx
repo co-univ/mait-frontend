@@ -1,5 +1,5 @@
 import type React from "react";
-import Header from "./Header";
+import Header from "./header/Header";
 import SideBar, { type SIDEBAR_VARIANT } from "./SideBar";
 
 //
