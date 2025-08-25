@@ -3,7 +3,7 @@ import App from "@/App";
 import { controlRoutes } from "@/pages/control";
 import { homeRoutes } from "@/pages/home";
 import { creationRoutes } from "./pages/creation/creation.routes";
-import { solvingRoutes } from "./pages/quiz-solving/solving.routes";
+import { solvingRoutes } from "./pages/solving/solving.routes";
 
 const router = createBrowserRouter([
 	{
