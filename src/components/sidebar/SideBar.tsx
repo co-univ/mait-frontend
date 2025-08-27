@@ -47,7 +47,7 @@ const SideBar = () => {
 	return (
 		<nav
 			className={clsx(
-				"sticky top-0 flex flex-col items-center py-padding-12 bg-color-alpha-white100 transition-all duration-300 transition-ease-out overflow-hidden",
+				"flex flex-col items-center py-padding-12 bg-color-alpha-white100 flex-grow-0 transition-all duration-300 transition-ease-out overflow-hidden",
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",
 					"absolute top-0 left-0 h-[80%] shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
