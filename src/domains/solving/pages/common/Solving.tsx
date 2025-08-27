@@ -12,7 +12,7 @@ const Solving = () => {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		navigate(`/quiz-solving/${questionId}`);
+		navigate(`/solving/${questionId}`);
 	}, []);
 
 	return null;

@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { apiClient } from "src/apis/solving.api";
+import SolvingBell from "src/domain/solving/components/common/SolvingBell";
+import SolvingLiveNextStage from "src/domain/solving/pages/live/SolvingLiveNextStage";
+import SolvingLiveWinner from "src/domain/solving/pages/live/SolvingLiveWinner";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
-import SolvingBell from "src/pages/solving/components/common/SolvingBell";
 import type { QuestionSetApiResponse } from "@/types";
 import SolvingQuiz from "../../components/common/SolvingQuiz";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
-import SolvingLiveNextStage from "src/pages/solving/pages/live/SolvingLiveNextStage";
-import SolvingLiveWinner from "src/pages/solving/pages/live/SolvingLiveWinner";
 
 //
 //
@@ -148,7 +148,7 @@ const SolvingLiveSolving = () => {
 					break;
 				}
 				case CommandType.LIVE_END: {
-					navigate("/quiz-solving");
+					navigate("/solving");
 					setShowWinner(false);
 					setIsFailed(false);
 					break;
