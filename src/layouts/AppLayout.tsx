@@ -42,15 +42,12 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 	};
 
 	return (
-		<div className="min-w-screen min-h-screen">
+		<div className="flex flex-col min-w-screen min-h-screen">
 			<Header />
-			<div className="relative flex w-full h-full">
+			<div className="relative flex flex-1">
 				<Sidebar />
 				<main
-					className={clsx(
-						"flex w-full h-full justify-center",
-						SIDEBAR_TRANSITION,
-					)}
+					className={clsx("flex-1", SIDEBAR_TRANSITION)}
 					style={{
 						margin: `0 ${getPageMargin()}px`,
 					}}
