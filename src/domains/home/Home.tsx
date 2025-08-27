@@ -29,7 +29,7 @@ const Home = () => {
 	};
 
 	return (
-		<div className="w-full h-full flex items-center justify-between max-w-[1240px]">
+		<div className="w-full h-full flex items-center justify-between">
 			<div className="fixed inset-0 h-screen w-screen bg-gradient-to-b from-color-alpha-white100 to-color-primary-5 -z-10" />
 
 			<div className="h-full flex flex-col gap-gap-14 justify-center">

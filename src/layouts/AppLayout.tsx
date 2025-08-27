@@ -47,7 +47,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			<div className="relative flex flex-1">
 				<Sidebar />
 				<main
-					className={clsx("flex justify-center", SIDEBAR_TRANSITION)}
+					className={clsx("flex-1", SIDEBAR_TRANSITION)}
 					style={{
 						margin: `0 ${getPageMargin()}px`,
 					}}
