@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
+	HEADER_HEIGHT,
 	SIDEBAR_TRANSITION,
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN_PATHS,
@@ -47,7 +48,7 @@ const SideBar = () => {
 	return (
 		<nav
 			className={clsx(
-				"flex flex-col items-center py-padding-12 bg-color-alpha-white100 flex-grow-0 transition-all duration-300 transition-ease-out overflow-hidden",
+				"sticky flex flex-col items-center py-padding-12 bg-color-alpha-white100 flex-grow-0 transition-all duration-300 transition-ease-out overflow-hidden",
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",
 					"absolute top-0 left-0 h-[80%] shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
@@ -57,6 +58,8 @@ const SideBar = () => {
 			)}
 			style={{
 				width: isSidebarOpenWithUser ? SIDEBAR_WIDTH : "0",
+				height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+				top: HEADER_HEIGHT,
 			}}
 		>
 			<SidebarItem>
