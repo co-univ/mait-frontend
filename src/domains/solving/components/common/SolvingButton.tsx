@@ -1,5 +1,5 @@
-import type { SolvingBadgeProps } from "src/domain/solving/components/common/SolvingBadge";
-import SolvingBadge from "src/domain/solving/components/common/SolvingBadge";
+import type { SolvingBadgeProps } from "src/domains/solving/components/common/SolvingBadge";
+import SolvingBadge from "src/domains/solving/components/common/SolvingBadge";
 
 //
 //

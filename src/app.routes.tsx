@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
-import { controlRoutes } from "@/domain/control";
-import { creationRoutes } from "@/domain/creation/creation.routes";
-import { homeRoutes } from "@/domain/home";
-import { solvingRoutes } from "@/domain/solving/solving.routes";
+import { controlRoutes } from "@/domains/control";
+import { creationRoutes } from "@/domains/creation/creation.routes";
+import { homeRoutes } from "@/domains/home";
+import { solvingRoutes } from "@/domains/solving/solving.routes";
 
 const router = createBrowserRouter([
 	{

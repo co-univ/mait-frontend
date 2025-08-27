@@ -1,5 +1,5 @@
 import { QuestionType } from "src/enums/solving.enum";
-import SolvingQuestionTitle from "src/domain/solving/components/common/quiz-title";
+import SolvingQuestionTitle from "src/domains/solving/components/common/quiz-title";
 import type { QuestionApiResponse } from "@/types";
 import SolvingQuizContentBlankAnswer from "./SolvingQuizContentBlankAnswer";
 import SolvingQuizContentMultipleAnswers from "./SolvingQuizContentMultipleAnswers";

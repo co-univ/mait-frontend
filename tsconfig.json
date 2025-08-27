@@ -18,7 +18,7 @@
 			"@/*": ["./src/*"],
 			"@/types": ["./types/index"],
 			"@/components/*": ["./src/components/*"],
-			"@/domain/*": ["./src/domain/*"],
+			"@/domains/*": ["./src/domains/*"],
 			"@/hooks/*": ["./src/hooks/*"],
 			"@/layouts/*": ["./src/layouts/*"],
 			"@/stores/*": ["./src/stores/*"],
