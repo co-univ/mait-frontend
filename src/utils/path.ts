@@ -8,5 +8,5 @@ export const hasFirstValidPath = (
 	candidates: string[],
 	currentPath: string,
 ) => {
-	return candidates.some((path) => path === currentPath.split("/")[1] || "");
+	return candidates.some((path) => currentPath.includes(path));
 };
