@@ -61,9 +61,9 @@ const SideBar = () => {
 	};
 
 	return (
-		<nav
+		<aside
 			className={clsx(
-				"sticky flex flex-col items-center py-padding-12 bg-color-alpha-white100 flex-grow-0 transition-all duration-300 transition-ease-out overflow-hidden",
+				"sticky py-padding-12 bg-color-alpha-white100 flex-grow-0 transition-all duration-300 transition-ease-out overflow-hidden",
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",
 					"fixed left-0 shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
@@ -77,29 +77,31 @@ const SideBar = () => {
 				top: HEADER_HEIGHT,
 			}}
 		>
-			<SidebarItem>
-				<div>코테이토 11기 교육팀</div>
-			</SidebarItem>
+			<nav className="flex flex-col items-center">
+				<SidebarItem>
+					<div>코테이토 11기 교육팀</div>
+				</SidebarItem>
 
-			<div className="h-size-height-1" />
+				<div className="h-size-height-1" />
 
-			<div className="flex flex-col gap-gap-5">
-				{NAVIGATION_ITEMS.map((item) => (
-					<SidebarItem
-						key={item.path}
-						className={clsx("text-color-gray-30", {
-							"text-color-primary-50 typo-heading-xsmall bg-primary-5":
-								hasFirstValidPath([item.path], location.pathname),
-						})}
-					>
-						<Link to={item.path} className="flex items-center gap-gap-5">
-							{item.icon}
-							<span>{item.label}</span>
-						</Link>
-					</SidebarItem>
-				))}
-			</div>
-		</nav>
+				<div className="flex flex-col gap-gap-5">
+					{NAVIGATION_ITEMS.map((item) => (
+						<SidebarItem
+							key={item.path}
+							className={clsx("text-color-gray-30", {
+								"text-color-primary-50 typo-heading-xsmall bg-primary-5":
+									hasFirstValidPath([item.path], location.pathname),
+							})}
+						>
+							<Link to={item.path} className="flex items-center gap-gap-5">
+								{item.icon}
+								<span>{item.label}</span>
+							</Link>
+						</SidebarItem>
+					))}
+				</div>
+			</nav>
+		</aside>
 	);
 };
 
