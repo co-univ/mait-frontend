@@ -45,20 +45,35 @@ const SideBar = () => {
 
 	const isSidebarOpenWithUser = isSidebarOpen && user;
 
+	/**
+	 *
+	 */
+	const getSidebarHeight = () => {
+		if (sidebarVariant === "default") {
+			return `calc(100vh - ${HEADER_HEIGHT}px)`;
+		}
+
+		if (sidebarVariant === "elevation") {
+			return "80vh";
+		}
+
+		return "100%";
+	};
+
 	return (
 		<nav
 			className={clsx(
 				"sticky flex flex-col items-center py-padding-12 bg-color-alpha-white100 flex-grow-0 transition-all duration-300 transition-ease-out overflow-hidden",
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",
-					"absolute top-0 left-0 h-[80%] shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
+					"fixed left-0 shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
 						sidebarVariant === "elevation",
 				},
 				SIDEBAR_TRANSITION,
 			)}
 			style={{
 				width: isSidebarOpenWithUser ? SIDEBAR_WIDTH : "0",
-				height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+				height: getSidebarHeight(),
 				top: HEADER_HEIGHT,
 			}}
 		>
