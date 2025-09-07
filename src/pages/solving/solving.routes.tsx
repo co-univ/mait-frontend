@@ -1,5 +1,6 @@
 import { SolvingHome } from "./pages/common";
 import Solving from "./pages/common/Solving";
+import SolvingLiveSolving from "./pages/live/SolvingLiveSolving";
 
 export const solvingRoutes = [
 	{
@@ -8,6 +9,6 @@ export const solvingRoutes = [
 	},
 	{
 		path: "/quiz-solving/:id",
-		element: <Solving />,
+		element: <SolvingLiveSolving />,
 	},
 ];
