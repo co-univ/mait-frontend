@@ -6,7 +6,7 @@ import tailwindcss from "tailwindcss";
 
 export default defineConfig({
 	plugins: [pluginReact()],
-	source: {
+	resolve: {
 		alias: {
 			"@": "./src",
 			"@/components": "./src/components",
