@@ -14,7 +14,7 @@
 		"format:tailwind": "prettier --plugin=prettier-plugin-tailwindcss --write \"src/**/*.{js,ts,jsx,tsx}\"",
 		"check": "biome check --write",
 		"reporter": "biome check --reporter=summary",
-		"generate:types": "node tools/generate-types.js"
+		"generate:types": "pnpm dlx dotenv-cli -- sh -c 'openapi-typescript $PUBLIC_API_DOCS_URL -o src/lib/types/api.d.ts'"
 	},
 	"dependencies": {
 		"@hello-pangea/dnd": "^18.0.1",
@@ -28,6 +28,8 @@
 		"install": "^0.13.0",
 		"lodash.merge": "^4.6.2",
 		"lucide-react": "^0.525.0",
+		"openapi-fetch": "^0.14.0",
+		"openapi-react-query": "^0.5.0",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-lottie": "^1.2.10",
@@ -38,7 +40,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.0.5",
-		"@openapitools/openapi-generator-cli": "^2.21.4",
 		"@rsbuild/core": "^1.3.22",
 		"@rsbuild/plugin-react": "^1.3.2",
 		"@types/node": "^24.0.7",
@@ -47,7 +48,7 @@
 		"@types/react-lottie": "^1.2.10",
 		"autoprefixer": "^10.4.21",
 		"dotenv": "^17.2.1",
-		"openapi-typescript": "^7.8.0",
+		"openapi-typescript": "^7.9.1",
 		"postcss": "^8.5.6",
 		"postcss-loader": "^8.1.1",
 		"prettier": "^3.6.2",

@@ -17,6 +17,7 @@ export default defineConfig({
 			"@/utils": "./src/utils",
 			"@/apis": "./src/apis",
 			"@/assets": "./src/assets",
+			"@/libs": "./src/libs",
 		},
 	},
 	tools: {
