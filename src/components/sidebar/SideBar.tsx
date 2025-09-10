@@ -54,7 +54,7 @@ const SideBar = () => {
 		}
 
 		if (sidebarVariant === "elevation") {
-			return "80vh";
+			return `calc(100vh - ${HEADER_HEIGHT}px - ${96}px)`;
 		}
 
 		return "100%";
