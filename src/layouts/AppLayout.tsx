@@ -8,6 +8,7 @@ import {
 } from "@/app.constants";
 import Header from "@/components/header/Header";
 import Sidebar from "@/components/sidebar/SideBar";
+import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasFirstValidPath } from "@/utils/path";
 import { SIDEBAR_TRANSITION } from "../app.constants";
@@ -27,6 +28,7 @@ interface AppLayoutProps {
 const AppLayout = ({ children }: AppLayoutProps) => {
 	const location = useLocation();
 	const { isSidebarOpen } = useSidebarOpenStore();
+	const { user } = useUser();
 
 	const getPageMargin = () => {
 		const isSmallMarginPage = hasFirstValidPath(
@@ -34,7 +36,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			location.pathname,
 		);
 
-		if (isSidebarOpen || isSmallMarginPage) {
+		if ((isSidebarOpen && user) || isSmallMarginPage) {
 			return SMALL_PAGE_MARGIN;
 		}
 
