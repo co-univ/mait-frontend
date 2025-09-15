@@ -63,13 +63,13 @@ const SideBar = () => {
 	return (
 		<aside
 			className={clsx(
-				"sticky py-padding-12 bg-color-alpha-white100 flex-grow-0 transition-all duration-300 transition-ease-out overflow-hidden",
+				"py-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed",
+				SIDEBAR_TRANSITION,
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",
-					"fixed left-0 shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
+					"left-0 shadow-xxl border border-color-gray-10 rounded-r-radius-large1 rounded-bl-radius-large1":
 						sidebarVariant === "elevation",
 				},
-				SIDEBAR_TRANSITION,
 			)}
 			style={{
 				width: isSidebarOpenWithUser ? SIDEBAR_WIDTH : "0",
