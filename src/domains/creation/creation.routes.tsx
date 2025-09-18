@@ -1,8 +1,9 @@
-import { QuestionCreation } from "./pages";
+import type { RouteObject } from "react-router-dom";
+import Creation from "./pages/Creation";
 
-export const creationRoutes = [
+export const creationRoutes: RouteObject[] = [
 	{
 		path: "/creation",
-		element: <QuestionCreation />,
+		element: <Creation />,
 	},
 ];
