@@ -2,12 +2,15 @@ import clsx from "clsx";
 import type React from "react";
 import { useLocation } from "react-router-dom";
 import {
+	HEADER_HEIGHT,
 	LARGE_PAGE_MARGIN,
+	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN,
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
 import Header from "@/components/header/Header";
 import Sidebar from "@/components/sidebar/SideBar";
+import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasFirstValidPath } from "@/utils/path";
 import { SIDEBAR_TRANSITION } from "../app.constants";
@@ -27,18 +30,39 @@ interface AppLayoutProps {
 const AppLayout = ({ children }: AppLayoutProps) => {
 	const location = useLocation();
 	const { isSidebarOpen } = useSidebarOpenStore();
+	const { user } = useUser();
 
+	/**
+	 *
+	 */
 	const getPageMargin = () => {
+		const ret = {
+			top: HEADER_HEIGHT,
+			bottom: 0,
+			left: 0,
+			right: 0,
+		};
+
 		const isSmallMarginPage = hasFirstValidPath(
 			SMALL_PAGE_MARGIN_PATHS,
 			location.pathname,
 		);
 
-		if (isSidebarOpen || isSmallMarginPage) {
-			return SMALL_PAGE_MARGIN;
+		const isSidebarOpenWithUser = user && isSidebarOpen;
+
+		if (isSidebarOpenWithUser && !isSmallMarginPage) {
+			ret.left += SIDEBAR_WIDTH;
 		}
 
-		return LARGE_PAGE_MARGIN;
+		if (isSidebarOpenWithUser || isSmallMarginPage) {
+			ret.left += SMALL_PAGE_MARGIN;
+			ret.right += SMALL_PAGE_MARGIN;
+		} else {
+			ret.left += LARGE_PAGE_MARGIN;
+			ret.right += LARGE_PAGE_MARGIN;
+		}
+
+		return `${ret.top}px ${ret.right}px ${ret.bottom}px ${ret.left}px`;
 	};
 
 	return (
@@ -49,7 +73,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 				<main
 					className={clsx("flex-1", SIDEBAR_TRANSITION)}
 					style={{
-						margin: `0 ${getPageMargin()}px`,
+						margin: getPageMargin(),
 					}}
 				>
 					{children}
