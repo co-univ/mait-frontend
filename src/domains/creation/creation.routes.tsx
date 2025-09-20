@@ -1,5 +1,5 @@
 import type { RouteObject } from "react-router-dom";
-import Creation from "./pages/Creation";
+import Creation from "@/domains/creation/pages/common/Creation";
 
 export const creationRoutes: RouteObject[] = [
 	{
