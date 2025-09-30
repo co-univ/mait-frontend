@@ -8,12 +8,10 @@ import type { QuestionSetApiResponse } from "@/libs/types";
 interface UseQuestionSetsProps {
   teamId: number;
   mode: string;
-  targetQuestionSetId?: number;
 }
 
 interface UseQuestionSetsReturn {
   questionSets: QuestionSetApiResponse[];
-  targetQuestionSet?: QuestionSetApiResponse;
   isLoading: boolean;
   error: Error | null;
 }
@@ -28,7 +26,7 @@ enum MODE_MAP {
 //
 //
 
-const useQuestionSets = ({ teamId, mode, targetQuestionSetId }: UseQuestionSetsProps): UseQuestionSetsReturn => {
+const useQuestionSets = ({ teamId, mode }: UseQuestionSetsProps): UseQuestionSetsReturn => {
 	const { data, isPending, error } = apiHooks.useQuery("get", "/api/v1/question-sets", {
 		params: {
 			query: {
@@ -39,11 +37,9 @@ const useQuestionSets = ({ teamId, mode, targetQuestionSetId }: UseQuestionSetsP
 	});
 
 	const questionSets = data?.data || [];
-  const targetQuestionSet = questionSets.find((qs) => qs.id === targetQuestionSetId);
 
 	return {
 		questionSets,
-		targetQuestionSet,
 		isLoading: isPending,
     error,
 	};

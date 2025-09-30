@@ -9,7 +9,7 @@ const QuestionSetsRedirect = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		navigate("/question-sets/team/1?mode=making");
+		navigate("/question-sets/team/1?mode=making", { replace: true });
 	}, [navigate]);
 
 	return null;
