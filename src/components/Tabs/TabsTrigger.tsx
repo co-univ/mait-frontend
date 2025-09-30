@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type { ReactNode } from "react";
-import { useTabsContext } from "./TabsContext";
+import { useTabsContext } from "@/components/tabs/TabsContext";
 
 //
 //

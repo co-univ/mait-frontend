@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { TabsContext } from "./TabsContext";
+import { TabsContext } from "@/components/tabs/TabsContext";
 
 //
 //

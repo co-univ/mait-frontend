@@ -1,5 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { Tabs } from "@/components/Tabs";
+import { Tabs } from "@/components/tabs";
 import QuestionSetsCard from "@/domains/question-sets/components/common/QuestionSetsCard";
 import QuestionSetsContentHeader from "@/domains/question-sets/components/common/QuestionSetsContentHeader";
 import QuestionSetsTabs from "@/domains/question-sets/components/common/QuestionSetsTabs";
@@ -21,7 +21,7 @@ const QuestionSets = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "making";
 
-	const { questionSets, isLoading, error } = useQuestionSets({ teamId, mode });
+	const { questionSets } = useQuestionSets({ teamId, mode });
 
 
 	/**

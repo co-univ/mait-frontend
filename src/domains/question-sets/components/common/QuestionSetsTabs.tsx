@@ -1,5 +1,5 @@
 import { CalendarClock, CalendarPlus, ListTodo } from "lucide-react";
-import { Tabs } from "@/components/Tabs";
+import { Tabs } from "@/components/tabs";
 
 //
 //
