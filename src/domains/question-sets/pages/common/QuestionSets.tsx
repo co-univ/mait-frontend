@@ -11,11 +11,6 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 //
 
 
-
-//
-//
-//
-
 const QuestionSets = () => {
 	const teamId = Number(useParams().teamId);
 	const [searchParams, setSearchParams] = useSearchParams();

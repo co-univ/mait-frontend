@@ -10,7 +10,7 @@ interface CreationLayoutProps {
 
 const CreationLayout = ({ children }: CreationLayoutProps) => {
 	return (
-		<div className="pt-padding-12 flex h-full w-full justify-center gap-[106px]">
+		<div className="py-padding-12 flex h-full w-full justify-center gap-[106px]">
 			{children}
 		</div>
 	);
