@@ -3,18 +3,17 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
-import router from "@/app.routes";
+import router from "@/App.routes";
 
-// TanStack Query 클라이언트 생성
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			retry: 1,
 			retryDelay: 1000,
-			staleTime: 5 * 60 * 1000, // 5분
+			staleTime: 5 * 60 * 1000,
 		},
 		mutations: {
-			retry: 0, // mutation 재시도 비활성화
+			retry: 0,
 		},
 	},
 });
