@@ -4,17 +4,13 @@ import QuestionSetsCard from "@/domains/question-sets/components/common/Question
 import QuestionSetsContentHeader from "@/domains/question-sets/components/common/QuestionSetsContentHeader";
 import QuestionSetsTabs from "@/domains/question-sets/components/common/QuestionSetsTabs";
 import QuestionSetsLayout from "@/domains/question-sets/layouts/common/QuestionSetsLayout";
-import { apiHooks } from "@/libs/api";
+import useQuestionSets from "@/hooks/useQuestionSets";
 
 //
 //
 //
 
-enum MODE_MAP {
-	making = "MAKING",
-	review = "REVIEW",
-	"live-time" = "LIVE_TIME",
-}
+
 
 //
 //
@@ -25,18 +21,8 @@ const QuestionSets = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "making";
 
-	const { data } = apiHooks.useQuery("get", "/api/v1/question-sets", {
-		params: {
-			query: {
-				teamId: teamId,
-				mode: MODE_MAP[mode as keyof typeof MODE_MAP],
-			},
-		},
-	});
+	const { questionSets, isLoading, error } = useQuestionSets({ teamId, mode });
 
-	const questionSets = data?.data || [];
-
-	console.log("questionSets", questionSets);
 
 	/**
 	 *
