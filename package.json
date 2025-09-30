@@ -14,7 +14,7 @@
 		"format:tailwind": "prettier --plugin=prettier-plugin-tailwindcss --write \"src/**/*.{js,ts,jsx,tsx}\"",
 		"check": "biome check --write",
 		"reporter": "biome check --reporter=summary",
-		"generate:types": "pnpm dlx dotenv-cli -- sh -c 'openapi-typescript $PUBLIC_API_DOCS_URL -o src/lib/types/api.d.ts'"
+		"generate:types": "pnpm dlx dotenv-cli -- sh -c 'openapi-typescript $PUBLIC_API_DOCS_URL -o src/libs/types/api.d.ts' && node tools/generate-types-index.js"
 	},
 	"dependencies": {
 		"@hello-pangea/dnd": "^18.0.1",
