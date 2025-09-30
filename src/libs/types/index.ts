@@ -1,0 +1,78 @@
+/**
+ * Auto-generated type exports from api.d.ts
+ * Do not edit manually - run 'pnpm generate:types' to regenerate
+ */
+
+import type { components } from "./api.d.ts";
+
+export type ApiResponseCreateQuestionSetApiResponse = components["schemas"]["ApiResponseCreateQuestionSetApiResponse"];
+export type ApiResponseCurrentQuestionApiResponse = components["schemas"]["ApiResponseCurrentQuestionApiResponse"];
+export type ApiResponseListParticipantInfoResponse = components["schemas"]["ApiResponseListParticipantInfoResponse"];
+export type ApiResponseListQuestionAnswerSubmitRecordApiResponse = components["schemas"]["ApiResponseListQuestionAnswerSubmitRecordApiResponse"];
+export type ApiResponseListQuestionApiResponse = components["schemas"]["ApiResponseListQuestionApiResponse"];
+export type ApiResponseListQuestionSetApiResponse = components["schemas"]["ApiResponseListQuestionSetApiResponse"];
+export type ApiResponseParticipantsCorrectAnswerRankResponse = components["schemas"]["ApiResponseParticipantsCorrectAnswerRankResponse"];
+export type ApiResponseQuestionAnswerSubmitApiResponse = components["schemas"]["ApiResponseQuestionAnswerSubmitApiResponse"];
+export type ApiResponseQuestionApiResponse = components["schemas"]["ApiResponseQuestionApiResponse"];
+export type ApiResponseQuestionScorerApiResponse = components["schemas"]["ApiResponseQuestionScorerApiResponse"];
+export type ApiResponseQuestionSetApiResponse = components["schemas"]["ApiResponseQuestionSetApiResponse"];
+export type ApiResponseQuestionSetLiveStatusResponse = components["schemas"]["ApiResponseQuestionSetLiveStatusResponse"];
+export type ApiResponseString = components["schemas"]["ApiResponseString"];
+export type ApiResponseUserInfoApiResponse = components["schemas"]["ApiResponseUserInfoApiResponse"];
+export type ApiResponseVoid = components["schemas"]["ApiResponseVoid"];
+export type CreateDefaultQuestionApiRequest = components["schemas"]["CreateDefaultQuestionApiRequest"];
+export type CreateFillBlankQuestionApiRequest = components["schemas"]["CreateFillBlankQuestionApiRequest"];
+export type CreateMultipleQuestionApiRequest = components["schemas"]["CreateMultipleQuestionApiRequest"];
+export type CreateOrderingQuestionApiRequest = components["schemas"]["CreateOrderingQuestionApiRequest"];
+export type CreateQuestionApiRequest = components["schemas"]["CreateQuestionApiRequest"];
+export type CreateQuestionSetApiRequest = components["schemas"]["CreateQuestionSetApiRequest"];
+export type CreateQuestionSetApiResponse = components["schemas"]["CreateQuestionSetApiResponse"];
+export type CreateShortQuestionApiRequest = components["schemas"]["CreateShortQuestionApiRequest"];
+export type CreateTeamApiRequest = components["schemas"]["CreateTeamApiRequest"];
+export type CurrentQuestionApiResponse = components["schemas"]["CurrentQuestionApiResponse"];
+export type DeliveryMode = components["schemas"]["DeliveryMode"];
+export type FillBlankAnswerApiResponse = components["schemas"]["FillBlankAnswerApiResponse"];
+export type FillBlankAnswerDto = components["schemas"]["FillBlankAnswerDto"];
+export type FillBlankQuestionApiResponse = components["schemas"]["FillBlankQuestionApiResponse"];
+export type FillBlankQuestionSubmitApiRequest = components["schemas"]["FillBlankQuestionSubmitApiRequest"];
+export type FillBlankSubmitAnswer = components["schemas"]["FillBlankSubmitAnswer"];
+export type LoginApiRequest = components["schemas"]["LoginApiRequest"];
+export type MultipleChoiceApiResponse = components["schemas"]["MultipleChoiceApiResponse"];
+export type MultipleChoiceDto = components["schemas"]["MultipleChoiceDto"];
+export type MultipleQuestionApiResponse = components["schemas"]["MultipleQuestionApiResponse"];
+export type MultipleQuestionSubmitApiRequest = components["schemas"]["MultipleQuestionSubmitApiRequest"];
+export type OrderingOptionApiResponse = components["schemas"]["OrderingOptionApiResponse"];
+export type OrderingQuestionApiResponse = components["schemas"]["OrderingQuestionApiResponse"];
+export type OrderingQuestionOptionDto = components["schemas"]["OrderingQuestionOptionDto"];
+export type OrderingQuestionSubmitApiRequest = components["schemas"]["OrderingQuestionSubmitApiRequest"];
+export type ParticipantCorrectAnswerResponse = components["schemas"]["ParticipantCorrectAnswerResponse"];
+export type ParticipantInfoResponse = components["schemas"]["ParticipantInfoResponse"];
+export type ParticipantsCorrectAnswerRankResponse = components["schemas"]["ParticipantsCorrectAnswerRankResponse"];
+export type QuestionAnswerSubmitApiRequest = components["schemas"]["QuestionAnswerSubmitApiRequest"];
+export type QuestionAnswerSubmitApiResponse = components["schemas"]["QuestionAnswerSubmitApiResponse"];
+export type QuestionAnswerSubmitRecordApiResponse = components["schemas"]["QuestionAnswerSubmitRecordApiResponse"];
+export type QuestionApiResponse = components["schemas"]["QuestionApiResponse"];
+export type QuestionScorerApiResponse = components["schemas"]["QuestionScorerApiResponse"];
+export type QuestionSetApiResponse = components["schemas"]["QuestionSetApiResponse"];
+export type QuestionSetCreationType = components["schemas"]["QuestionSetCreationType"];
+export type QuestionSetLiveStatusResponse = components["schemas"]["QuestionSetLiveStatusResponse"];
+export type QuestionSetVisibility = components["schemas"]["QuestionSetVisibility"];
+export type QuestionType = components["schemas"]["QuestionType"];
+export type SendWinnerRequest = components["schemas"]["SendWinnerRequest"];
+export type ShortAnswerApiResponse = components["schemas"]["ShortAnswerApiResponse"];
+export type ShortAnswerDto = components["schemas"]["ShortAnswerDto"];
+export type ShortQuestionApiResponse = components["schemas"]["ShortQuestionApiResponse"];
+export type ShortQuestionSubmitApiRequest = components["schemas"]["ShortQuestionSubmitApiRequest"];
+export type SubmitAnswerDtoFillBlankSubmitAnswer = components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"];
+export type SubmitAnswerDtoLong = components["schemas"]["SubmitAnswerDtoLong"];
+export type SubmitAnswerDtoObject = components["schemas"]["SubmitAnswerDtoObject"];
+export type SubmitAnswerDtoString = components["schemas"]["SubmitAnswerDtoString"];
+export type UpdateActiveParticipantsRequest = components["schemas"]["UpdateActiveParticipantsRequest"];
+export type UpdateFillBlankQuestionApiRequest = components["schemas"]["UpdateFillBlankQuestionApiRequest"];
+export type UpdateMultipleQuestionApiRequest = components["schemas"]["UpdateMultipleQuestionApiRequest"];
+export type UpdateOrderingQuestionApiRequest = components["schemas"]["UpdateOrderingQuestionApiRequest"];
+export type UpdateQuestionApiRequest = components["schemas"]["UpdateQuestionApiRequest"];
+export type UpdateQuestionSetApiRequest = components["schemas"]["UpdateQuestionSetApiRequest"];
+export type UpdateQuestionSetFieldApiRequest = components["schemas"]["UpdateQuestionSetFieldApiRequest"];
+export type UpdateShortQuestionApiRequest = components["schemas"]["UpdateShortQuestionApiRequest"];
+export type UserInfoApiResponse = components["schemas"]["UserInfoApiResponse"];
