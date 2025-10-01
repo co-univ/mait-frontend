@@ -29,11 +29,10 @@ const CreationQuestionMain = () => {
 		switch (question?.type as QuestionApiResponse["type"]) {
 			case "MULTIPLE":
 				return <CreationQuestionAnswerMultiple />;
+			case "SHORT":
+				return <CreationQuestionAnswerShort />;
 			default:
 				return null;
-			// 	return <CreationQuestionAnswerMultiple />;
-			// case "SHORT":
-			// 	return <CreationQuestionAnswerShort />;
 			// case "ORDERING":
 			// 	return <CreationQuestionAnswerOrdering />;
 			// default:
@@ -66,9 +65,6 @@ const CreationQuestionMain = () => {
 				}}
 			/>
 			{renderQuestionAnswer()}
-			{/* <CreationQuestionAnswerMultiple /> */}
-			{/* <CreationQuestionAnswerShort /> */}
-			{/* <CreationQuestionAnswerOrdering /> */}
 		</div>
 	);
 };

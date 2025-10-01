@@ -9,11 +9,11 @@ import type {
 //
 //
 
-interface UseQuestionMultipleAnswerProps {
+interface UseQuestionMultipleProps {
 	questionId: number;
 }
 
-interface UseQuestionMultipleAnswerReturn {
+interface UseQuestionMultipleReturn {
 	question: MultipleQuestionApiResponse | undefined;
 	handleChoiceCorrect: (choiceId: number, isCorrect: boolean) => void;
 	handleChoiceContentChange: (choiceId: number, content: string) => void;
@@ -27,7 +27,7 @@ interface UseQuestionMultipleAnswerReturn {
 
 const useCreationQuestionMultiple = ({
 	questionId,
-}: UseQuestionMultipleAnswerProps): UseQuestionMultipleAnswerReturn => {
+}: UseQuestionMultipleProps): UseQuestionMultipleReturn => {
 	const { questions, editQuestion } = useCreationQuestionsStore();
 
 	const question = questions.find((q) => q.id === questionId) as
