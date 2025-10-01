@@ -38,6 +38,7 @@ const useUser = () => {
 		},
 		enabled: !!token,
 		staleTime: 1000 * 60 * 60,
+		retry: 0,
 	});
 
 	return {

@@ -16,8 +16,10 @@ const CreationQuestion = () => {
 	/**
 	 *
 	 */
-	const handleQuestionNavigationClick = (questionId: number) => {
-		navigate(`/creation/question-set/${questionSetId}/question/${questionId}`);
+	const handleQuestionNavigationClick = (newQuestionId: number) => {
+		navigate(
+			`/creation/question-set/${questionSetId}/question/${newQuestionId}`,
+		);
 	};
 
 	return (

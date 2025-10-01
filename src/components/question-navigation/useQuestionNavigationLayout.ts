@@ -72,7 +72,7 @@ const useQuestionNavigationLayout = ({
 			const clientSize = isVertical
 				? containerRef.current.clientHeight
 				: containerRef.current.clientWidth;
-			console.log("clientSize", clientSize, window.innerHeight);
+
 			const availableSize =
 				clientSize -
 				CONTROL_BUTTON_COUNT * BUTTON_SIZE -

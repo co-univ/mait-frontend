@@ -55,10 +55,10 @@ const AdjustableTextarea = ({
 
 	//
 	//
-	// biome-ignore lint/correctness/useExhaustiveDependencies: effect occur only on mount
+	// biome-ignore lint/correctness/useExhaustiveDependencies: textarea height should be adjusted only when value changes
 	useEffect(() => {
 		adjustHeight();
-	}, []);
+	}, [props.value]);
 
 	return (
 		<textarea
