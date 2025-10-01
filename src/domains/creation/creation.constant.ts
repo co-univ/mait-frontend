@@ -19,7 +19,7 @@ export type QuestionResponseTypeWithIsEditing = QuestionResponseType & {
 	isEditing: boolean;
 };
 
-export type UpdateQuestionRequestType =
+export type QuestionUpdateType =
 	| UpdateMultipleQuestionApiRequest
 	| UpdateShortQuestionApiRequest
 	| UpdateOrderingQuestionApiRequest

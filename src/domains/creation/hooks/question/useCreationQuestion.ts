@@ -1,17 +1,15 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import type { QuestionResponseType } from "@/domains/creation/creation.constant";
+import type {
+	QuestionResponseType,
+	QuestionUpdateType,
+} from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import { apiHooks } from "@/libs/api";
-import type {
-	UpdateMultipleQuestionApiRequest,
-	UpdateShortQuestionApiRequest,
-} from "@/libs/types";
 
 //
 //
 //
-type qt = UpdateMultipleQuestionApiRequest | UpdateShortQuestionApiRequest;
 
 interface UseQuestionProps {
 	questionSetId: number;
@@ -83,7 +81,7 @@ const useCreationQuestion = ({
 					questionId: targetQuestion.id,
 				},
 			},
-			body: targetQuestion as unknown as qt,
+			body: targetQuestion as unknown as QuestionUpdateType,
 		});
 	};
 
