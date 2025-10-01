@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { ChevronsLeft, Plus } from "lucide-react";
+import { useCreationQuestions } from "@/domains/creation/hooks/question";
 import { BUTTON_SIZE, GAP } from "./constants";
 import QuestionNavigationList from "./QuestionNavigationList";
 import useQuestionNavigationLayout from "./useQuestionNavigationLayout";
-import { useQuestions } from "@/hooks/question";
 
 //
 //
@@ -34,7 +34,7 @@ const QuestionNavigation = ({
 	onQuestionClick,
 	onQuestionDelete,
 }: QuestionNavigationProps) => {
-	const { questions } = useQuestions({ questionSetId });
+	const { questions } = useCreationQuestions({ questionSetId });
 
 	const {
 		containerRef,
@@ -95,9 +95,9 @@ const QuestionNavigation = ({
 	return (
 		<div
 			ref={containerRef}
-			className={clsx("flex items-center justify-center h-full", {
-				"flex-col": isVertical,
-				"flex-row": !isVertical,
+			className={clsx("flex items-center h-full", {
+				"flex-col justify-start": isVertical,
+				"flex-row justify-center": !isVertical,
 			})}
 			style={{
 				gap: `${GAP}px`,
