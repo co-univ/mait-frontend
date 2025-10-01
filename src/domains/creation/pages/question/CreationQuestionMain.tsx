@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import Badge from "@/components/Badge";
 import FileInput from "@/components/FileInput";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
-import useQuestion from "@/hooks/question/useQuestion";
+import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
+import type { QuestionApiResponse } from "@/libs/types";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
 import CreationQuestionAnswerOrdering from "./answer/CreationQuestionAnswerOrdering";
 import CreationQuestionAnswerShort from "./answer/CreationQuestionAnswerShort";
@@ -16,7 +17,29 @@ const CreationQuestionMain = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { question } = useQuestion({ questionSetId, questionId });
+	const { question, handleContentChange } = useCreationQuestion({
+		questionSetId,
+		questionId,
+	});
+
+	/**
+	 *
+	 */
+	const renderQuestionAnswer = () => {
+		switch (question?.type as QuestionApiResponse["type"]) {
+			case "MULTIPLE":
+				return <CreationQuestionAnswerMultiple />;
+			default:
+				return null;
+			// 	return <CreationQuestionAnswerMultiple />;
+			// case "SHORT":
+			// 	return <CreationQuestionAnswerShort />;
+			// case "ORDERING":
+			// 	return <CreationQuestionAnswerOrdering />;
+			// default:
+			// 	return null;
+		}
+	};
 
 	return (
 		<div className="flex flex-1 flex-col gap-gap-11">
@@ -31,7 +54,7 @@ const CreationQuestionMain = () => {
 			<div className="flex w-full">
 				<CreationQuestionContent
 					value={question?.content || ""}
-					onChange={() => {}}
+					onChange={handleContentChange}
 				/>
 			</div>
 
@@ -42,8 +65,8 @@ const CreationQuestionMain = () => {
 					alert("축하합니다! 당신은 따봉 퀴리릭을 발견하셨습니다.");
 				}}
 			/>
-
-			<CreationQuestionAnswerMultiple />
+			{renderQuestionAnswer()}
+			{/* <CreationQuestionAnswerMultiple /> */}
 			{/* <CreationQuestionAnswerShort /> */}
 			{/* <CreationQuestionAnswerOrdering /> */}
 		</div>
