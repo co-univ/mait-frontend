@@ -49,6 +49,7 @@ const CreationQuestionShort = () => {
 					icon={<Plus />}
 					item={<span className="typo-body-medium">답안추가</span>}
 					onClick={handleMainAnswerAdd}
+					className="bg-color-gray-5 border-none"
 				/>
 			</div>
 		</div>

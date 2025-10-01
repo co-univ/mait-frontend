@@ -65,7 +65,12 @@ const CreationQuestionMultiple = () => {
 			<div className="flex flex-col gap-gap-11">{renderChoices()}</div>
 
 			<div className="self-center">
-				<Button icon={<Plus />} item="답안추가" onClick={handleChoiceAdd} />
+				<Button
+					icon={<Plus />}
+					item="답안추가"
+					onClick={handleChoiceAdd}
+					className="bg-color-gray-5 border-none"
+				/>
 			</div>
 		</div>
 	);
