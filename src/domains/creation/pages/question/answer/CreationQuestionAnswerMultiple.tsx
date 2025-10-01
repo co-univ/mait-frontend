@@ -16,8 +16,8 @@ const CreationQuestionMultiple = () => {
 		question,
 		handleChoiceCorrect,
 		handleChoiceContentChange,
-		handleAddChoice,
-		handleDeleteChoice,
+		handleChoiceAdd,
+		handleChoiceDelete,
 	} = useCreationQuestionMultiple({
 		questionId,
 	});
@@ -45,7 +45,7 @@ const CreationQuestionMultiple = () => {
 			 *
 			 */
 			const handleDelete = () => {
-				handleDeleteChoice(choice.id);
+				handleChoiceDelete(choice.id);
 			};
 
 			return (
@@ -65,7 +65,7 @@ const CreationQuestionMultiple = () => {
 			<div className="flex flex-col gap-gap-11">{renderChoices()}</div>
 
 			<div className="self-center">
-				<Button icon={<Plus />} item="답안추가" onClick={handleAddChoice} />
+				<Button icon={<Plus />} item="답안추가" onClick={handleChoiceAdd} />
 			</div>
 		</div>
 	);

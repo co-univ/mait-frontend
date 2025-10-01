@@ -31,12 +31,10 @@ const CreationQuestionMain = () => {
 				return <CreationQuestionAnswerMultiple />;
 			case "SHORT":
 				return <CreationQuestionAnswerShort />;
+			case "ORDERING":
+				return <CreationQuestionAnswerOrdering />;
 			default:
 				return null;
-			// case "ORDERING":
-			// 	return <CreationQuestionAnswerOrdering />;
-			// default:
-			// 	return null;
 		}
 	};
 
@@ -64,6 +62,7 @@ const CreationQuestionMain = () => {
 					alert("축하합니다! 당신은 따봉 퀴리릭을 발견하셨습니다.");
 				}}
 			/>
+
 			{renderQuestionAnswer()}
 		</div>
 	);

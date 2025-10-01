@@ -1,15 +1,37 @@
+import type { DropResult } from "@hello-pangea/dnd";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import type { OrderingOptionApiResponse } from "@/libs/types";
 
 //
 //
 //
 
-const CreationQuestionOrderingDragDrop = () => {
+interface CreationQuestionOrderingDragDropProps {
+	answerOrderOptions: OrderingOptionApiResponse[];
+	onAnswerOrderChange: (reorderedOptions: OrderingOptionApiResponse[]) => void;
+}
+
+//
+//
+//
+
+const CreationQuestionOrderingDragDrop = ({
+	answerOrderOptions,
+	onAnswerOrderChange,
+}: CreationQuestionOrderingDragDropProps) => {
 	/**
 	 *
 	 */
-	const handleDragEnd = () => {
-		// TODO: 구현 예정
+	const handleDragEnd = (result: DropResult) => {
+		if (!result.destination) {
+			return;
+		}
+
+		const items = Array.from(answerOrderOptions);
+		const [reorderedItem] = items.splice(result.source.index, 1);
+		items.splice(result.destination.index, 0, reorderedItem);
+
+		onAnswerOrderChange(items);
 	};
 
 	return (
@@ -21,30 +43,24 @@ const CreationQuestionOrderingDragDrop = () => {
 						ref={provided.innerRef}
 						{...provided.droppableProps}
 					>
-						<Draggable draggableId="item-a" index={0}>
-							{(provided) => (
-								<div
-									className="flex flex-1 justify-center items-center h-size-height-11 bg-color-primary-5 border border-color-primary-50 rounded-medium1 typo-heading-small text-color-primary-50"
-									ref={provided.innerRef}
-									{...provided.draggableProps}
-									{...provided.dragHandleProps}
-								>
-									A
-								</div>
-							)}
-						</Draggable>
-						<Draggable draggableId="item-b" index={1}>
-							{(provided) => (
-								<div
-									className="flex flex-1 justify-center items-center h-size-height-11 bg-color-primary-5 border border-color-primary-50 rounded-medium1 typo-heading-small text-color-primary-50"
-									ref={provided.innerRef}
-									{...provided.draggableProps}
-									{...provided.dragHandleProps}
-								>
-									B
-								</div>
-							)}
-						</Draggable>
+						{answerOrderOptions.map((option, index) => (
+							<Draggable
+								key={option.id}
+								draggableId={`option-${option.id}`}
+								index={index}
+							>
+								{(provided) => (
+									<div
+										className="flex flex-1 justify-center items-center h-size-height-11 bg-color-primary-5 border border-color-primary-50 rounded-medium1 typo-heading-small text-color-primary-50"
+										ref={provided.innerRef}
+										{...provided.draggableProps}
+										{...provided.dragHandleProps}
+									>
+										{String.fromCharCode(64 + option.originOrder)}
+									</div>
+								)}
+							</Draggable>
+						))}
 
 						{provided.placeholder}
 					</div>

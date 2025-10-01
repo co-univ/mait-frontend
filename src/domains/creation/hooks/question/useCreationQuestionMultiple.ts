@@ -14,11 +14,11 @@ interface UseQuestionMultipleProps {
 }
 
 interface UseQuestionMultipleReturn {
-	question: MultipleQuestionApiResponse | undefined;
+	question?: MultipleQuestionApiResponse;
 	handleChoiceCorrect: (choiceId: number, isCorrect: boolean) => void;
 	handleChoiceContentChange: (choiceId: number, content: string) => void;
-	handleAddChoice: () => void;
-	handleDeleteChoice: (choiceId: number) => void;
+	handleChoiceAdd: () => void;
+	handleChoiceDelete: (choiceId: number) => void;
 }
 
 //
@@ -65,7 +65,7 @@ const useCreationQuestionMultiple = ({
 	/**
 	 *
 	 */
-	const handleAddChoice = () => {
+	const handleChoiceAdd = () => {
 		const newChoice: MultipleChoiceDto = {
 			id: Date.now(),
 			number: question ? question.choices.length + 1 : 1,
@@ -86,7 +86,7 @@ const useCreationQuestionMultiple = ({
 	/**
 	 *
 	 */
-	const handleDeleteChoice = (choiceId: number) => {
+	const handleChoiceDelete = (choiceId: number) => {
 		const updatedChoices = question?.choices
 			.filter((choice) => choice.id !== choiceId)
 			.map((choice, index) => ({
@@ -104,8 +104,8 @@ const useCreationQuestionMultiple = ({
 		question,
 		handleChoiceCorrect,
 		handleChoiceContentChange,
-		handleAddChoice,
-		handleDeleteChoice,
+		handleChoiceAdd,
+		handleChoiceDelete,
 	};
 };
 

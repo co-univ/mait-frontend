@@ -6,6 +6,7 @@ import type {
 	QuestionApiResponse,
 	ShortQuestionApiResponse,
 	UpdateMultipleQuestionApiRequest,
+	UpdateOrderingQuestionApiRequest,
 	UpdateShortQuestionApiRequest,
 } from "@/libs/types";
 
@@ -36,6 +37,9 @@ const creationQuestionResponseToUpdate = (
 				})),
 			} as UpdateShortQuestionApiRequest;
 		}
+
+		case "ORDERING":
+			return updateQuestion as UpdateOrderingQuestionApiRequest;
 	}
 
 	return updateQuestion;

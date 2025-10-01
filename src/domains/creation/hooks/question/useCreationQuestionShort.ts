@@ -14,7 +14,7 @@ interface UseQuestionShortProps {
 }
 
 interface UseQuestionShortReturn {
-	question: ShortQuestionApiResponse | undefined;
+	question?: ShortQuestionApiResponse;
 	groupedAnswers: ShortAnswerApiResponse[][];
 	handleAnswerChange: (answerId: number, newAnswer: string) => void;
 	handleMainAnswerAdd: () => void;
