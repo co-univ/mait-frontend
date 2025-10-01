@@ -1,10 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import type {
-	QuestionResponseType,
-	QuestionUpdateType,
-} from "@/domains/creation/creation.constant";
+import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
+import creationQuestionResponseToUpdate from "@/domains/creation/utils/question/creation-question-response-to-update";
 import { apiHooks } from "@/libs/api";
 
 //
@@ -81,7 +79,7 @@ const useCreationQuestion = ({
 					questionId: targetQuestion.id,
 				},
 			},
-			body: targetQuestion as unknown as QuestionUpdateType,
+			body: creationQuestionResponseToUpdate(targetQuestion),
 		});
 	};
 
