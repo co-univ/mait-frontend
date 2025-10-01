@@ -5,7 +5,7 @@ import DeleteCheckBox from "@/components/DeleteCheckBox";
 //
 //
 
-const CreationQuestionOrderingAnswer = () => {
+const CreationQuestionAnswerOrderingBox = () => {
 	return (
 		<div className="flex gap-gap-9 items-center">
 			<span className="typo-heading-small">A</span>
@@ -22,4 +22,4 @@ const CreationQuestionOrderingAnswer = () => {
 	);
 };
 
-export default CreationQuestionOrderingAnswer;
+export default CreationQuestionAnswerOrderingBox;

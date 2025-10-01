@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import Button from "@/components/Button";
-import CreationQuestionShortAnswer from "@/domains/creation/components/question/CreationQuestionShortAnswer";
+import CreationQuestionAnswerShortBox from "@/domains/creation/components/question/answer/CreationQuestionAnswerShortBox";
 
 //
 //
@@ -10,7 +10,7 @@ const CreationQuestionShort = () => {
 	return (
 		<div className="flex flex-col gap-gap-11">
 			<div className="flex flex-col gap-gap-11">
-				<CreationQuestionShortAnswer />
+				<CreationQuestionAnswerShortBox />
 			</div>
 
 			<div className="self-center">

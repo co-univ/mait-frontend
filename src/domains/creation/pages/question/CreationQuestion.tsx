@@ -1,40 +1,36 @@
-import { Puzzle } from "lucide-react";
-import Badge from "@/components/Badge";
-import FileInput from "@/components/FileInput";
-import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
-import CreationQuestionMultiple from "./CreationQuestionMultiple";
-import CreationQuestionOrdering from "./CreationQuestionOrdering";
-import CreationQuestionShort from "./CreationQuestionShort";
+import { useNavigate, useParams } from "react-router-dom";
+import QuestionNavigation from "@/components/question-navigation";
+import CreationLayout from "@/domains/creation/layouts/common/CreationLayout";
+import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
 
 //
 //
 //
 
 const CreationQuestion = () => {
+	const navigate = useNavigate();
+
+	const questionSetId = Number(useParams().questionSetId);
+	const questionId = Number(useParams().questionId);
+
+	/**
+	 *
+	 */
+	const handleQuestionNavigationClick = (questionId: number) => {
+		navigate(`/creation/question-set/${questionSetId}/question/${questionId}`);
+	};
+
 	return (
-		<div className="flex flex-1 flex-col gap-gap-11">
-			<Badge
-				icon={<Puzzle />}
-				item={<span className="typo-heading-xsmall">Q1</span>}
-				className="text-color-primary-50 !bg-color-primary-5 self-start"
+		<CreationLayout>
+			<QuestionNavigation
+				canDelete
+				questionSetId={questionSetId}
+				activeQuestionId={questionId}
+				onQuestionClick={handleQuestionNavigationClick}
 			/>
-
-			<div className="flex w-full">
-				<CreationQuestionContent />
-			</div>
-
-			<FileInput
-				text="이미지 추가"
-				file={null}
-				onChange={() => {
-					alert("축하합니다! 당신은 따봉 퀴리릭을 발견하셨습니다.");
-				}}
-			/>
-
-			{/* <CreationQuestionMultiple /> */}
-			{/* <CreationQuestionShort /> */}
-			<CreationQuestionOrdering />
-		</div>
+			<CreationQuestionMain />
+			<div className="w-[268px] h-full bg-black"></div>
+		</CreationLayout>
 	);
 };
 

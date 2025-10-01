@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { ChevronsLeft, Plus } from "lucide-react";
-import useQuestions from "@/hooks/useQuestions";
 import { BUTTON_SIZE, GAP } from "./constants";
 import QuestionNavigationList from "./QuestionNavigationList";
 import useQuestionNavigationLayout from "./useQuestionNavigationLayout";
+import { useQuestions } from "@/hooks/question";
 
 //
 //

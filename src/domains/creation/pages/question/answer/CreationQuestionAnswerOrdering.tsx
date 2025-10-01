@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import Button from "@/components/Button";
-import CreationQuestionOrderingAnswer from "@/domains/creation/components/question/CreationQuestionOrderingAnswer";
-import CreationQuestionOrderingDragDrop from "@/domains/creation/pages/question/CreationQuestionOrderingDragDrop";
+import CreationQuestionAnswerOrderingBox from "@/domains/creation/components/question/answer/CreationQuestionAnswerOrderingBox";
+import CreationQuestionOrderingDragDrop from "./CreationQuestionAnswerOrderingDragDrop";
 
 //
 //
@@ -13,8 +13,8 @@ const CreationQuestionOrdering = () => {
 			<span className="typo-body-large">보기</span>
 
 			<div className="flex flex-col gap-gap-11">
-				<CreationQuestionOrderingAnswer />
-				<CreationQuestionOrderingAnswer />
+				<CreationQuestionAnswerOrderingBox />
+				<CreationQuestionAnswerOrderingBox />
 			</div>
 
 			<div className="self-center">

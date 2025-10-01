@@ -5,7 +5,7 @@ import DeleteCheckBox from "@/components/DeleteCheckBox";
 //
 //
 
-const CreatoinQuestionSubstituteAnswer = () => {
+const CreationQuestionAnswerSubstituteBox = () => {
 	return (
 		<div className="flex gap-gap-9 bg-color-gray-10 rounded-medium1 p-padding-6">
 			<AdjustableTextarea
@@ -17,4 +17,4 @@ const CreatoinQuestionSubstituteAnswer = () => {
 	);
 };
 
-export default CreatoinQuestionSubstituteAnswer;
+export default CreationQuestionAnswerSubstituteBox;
