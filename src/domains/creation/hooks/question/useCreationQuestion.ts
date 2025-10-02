@@ -2,8 +2,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
+import CreationQuestionConvertQuestionType from "@/domains/creation/utils/question/creation-question-convert-question-type";
 import creationQuestionResponseToUpdate from "@/domains/creation/utils/question/creation-question-response-to-update";
 import { apiHooks } from "@/libs/api";
+import type { QuestionType } from "@/libs/types";
 
 //
 //
@@ -17,6 +19,7 @@ interface UseQuestionProps {
 interface UseQuestionReturn {
 	question?: QuestionResponseType;
 	handleContentChange: (content: string) => void;
+	handleTypeChange: (type: QuestionType) => void;
 	updateQuestion: () => void;
 	isUpdating: boolean;
 }
@@ -64,6 +67,20 @@ const useCreationQuestion = ({
 	/**
 	 *
 	 */
+	const handleTypeChange = (type: QuestionType) => {
+		if (question) {
+			const convertedQuestion = CreationQuestionConvertQuestionType(
+				question,
+				type,
+			);
+
+			editQuestion(convertedQuestion);
+		}
+	};
+
+	/**
+	 *
+	 */
 	const updateQuestion = () => {
 		const currentQuestions = useCreationQuestionsStore.getState().questions;
 		const targetQuestion = currentQuestions.find((q) => q.id === questionId);
@@ -95,6 +112,7 @@ const useCreationQuestion = ({
 	return {
 		question,
 		handleContentChange,
+		handleTypeChange,
 		updateQuestion,
 		isUpdating,
 	};

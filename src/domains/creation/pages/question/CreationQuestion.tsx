@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import QuestionNavigation from "@/components/question-navigation";
 import CreationLayout from "@/domains/creation/layouts/common/CreationLayout";
+import CreationQuestionAdditional from "@/domains/creation/pages/question/additional/CreationQuestionAdditional";
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
 
 //
@@ -30,8 +31,10 @@ const CreationQuestion = () => {
 				activeQuestionId={questionId}
 				onQuestionClick={handleQuestionNavigationClick}
 			/>
+
 			<CreationQuestionMain />
-			<div className="w-[268px] h-full bg-black"></div>
+
+			<CreationQuestionAdditional />
 		</CreationLayout>
 	);
 };

@@ -1,5 +1,6 @@
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
+import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
 	ShortAnswerApiResponse,
 	ShortQuestionApiResponse,
@@ -68,7 +69,7 @@ const useCreationQuestionShort = ({
 	const handleMainAnswerAdd = () => {
 		if (question) {
 			const newAnswer: ShortAnswerApiResponse = {
-				id: Date.now(),
+				id: CreationQuestionGenerateId(),
 				answer: "",
 				isMain: true,
 				number: groupedAnswers.length + 1,
@@ -91,7 +92,7 @@ const useCreationQuestionShort = ({
 	const handleSubAnswerAdd = (number: number) => {
 		if (question) {
 			const newAnswer: ShortAnswerApiResponse = {
-				id: Date.now(),
+				id: CreationQuestionGenerateId(),
 				answer: "",
 				isMain: false,
 				number,

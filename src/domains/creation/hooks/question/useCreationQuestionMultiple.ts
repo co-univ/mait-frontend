@@ -1,5 +1,6 @@
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
+import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
 	MultipleChoiceDto,
 	MultipleQuestionApiResponse,
@@ -67,7 +68,7 @@ const useCreationQuestionMultiple = ({
 	 */
 	const handleChoiceAdd = () => {
 		const newChoice: MultipleChoiceDto = {
-			id: Date.now(),
+			id: CreationQuestionGenerateId(),
 			number: question ? question.choices.length + 1 : 1,
 			content: "",
 			isCorrect: false,

@@ -3,7 +3,7 @@ import type {
 	QuestionUpdateType,
 } from "@/domains/creation/creation.constant";
 import type {
-	QuestionApiResponse,
+	QuestionType,
 	ShortQuestionApiResponse,
 	UpdateMultipleQuestionApiRequest,
 	UpdateOrderingQuestionApiRequest,
@@ -20,7 +20,7 @@ const creationQuestionResponseToUpdate = (
 	const updateQuestion: QuestionUpdateType =
 		question as unknown as QuestionUpdateType;
 
-	switch (question.type as QuestionApiResponse["type"]) {
+	switch (question.type as QuestionType) {
 		case "MULTIPLE":
 			return updateQuestion as UpdateMultipleQuestionApiRequest;
 

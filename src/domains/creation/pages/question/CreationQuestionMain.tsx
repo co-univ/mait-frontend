@@ -4,7 +4,7 @@ import Badge from "@/components/Badge";
 import FileInput from "@/components/FileInput";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
 import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
-import type { QuestionApiResponse } from "@/libs/types";
+import type { QuestionType } from "@/libs/types";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
 import CreationQuestionAnswerOrdering from "./answer/CreationQuestionAnswerOrdering";
 import CreationQuestionAnswerShort from "./answer/CreationQuestionAnswerShort";
@@ -26,7 +26,7 @@ const CreationQuestionMain = () => {
 	 *
 	 */
 	const renderQuestionAnswer = () => {
-		switch (question?.type as QuestionApiResponse["type"]) {
+		switch (question?.type as QuestionType) {
 			case "MULTIPLE":
 				return <CreationQuestionAnswerMultiple />;
 			case "SHORT":
