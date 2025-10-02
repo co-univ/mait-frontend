@@ -1,7 +1,3 @@
-//
-//
-//
-
 /**
  * Generate a temporary ID for creation entities
  * Combines timestamp with random number to reduce collision probability

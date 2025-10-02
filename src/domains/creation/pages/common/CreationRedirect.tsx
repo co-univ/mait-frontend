@@ -12,6 +12,8 @@ const CreationRedirect = () => {
 
 	const { questions } = useCreationQuestions({ questionSetId });
 
+	//
+	//
 	// biome-ignore lint/correctness/useExhaustiveDependencies: navigate function is stable
 	useEffect(() => {
 		if (questions) {
