@@ -17,14 +17,14 @@ import SidebarItem from "./SidebarItem";
 //
 
 const NAVIGATION_ITEMS = [
-	{ icon: <SquarePen />, label: "문제 관리", path: "/management" },
+	{ icon: <SquarePen />, label: "문제 관리", path: "/question-sets" },
 	{ icon: <Puzzle />, label: "문제 풀기", path: "/solving" },
 	{
 		icon: <LayoutDashboard />,
 		label: "풀이 결과 대시보드",
 		path: "/dashboard",
 	},
-	{ icon: <Users />, label: "팀 관리", path: "/team" },
+	{ icon: <Users />, label: "팀 관리", path: "/team-manage" },
 ];
 
 //
@@ -63,7 +63,7 @@ const SideBar = () => {
 	return (
 		<aside
 			className={clsx(
-				"py-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed",
+				"py-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed z-50",
 				SIDEBAR_TRANSITION,
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",

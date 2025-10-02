@@ -1,8 +1,14 @@
-import { QuestionCreation } from "./pages";
+import type { RouteObject } from "react-router-dom";
+import CreationRedirect from "@/domains/creation/pages/common/CreationRedirect";
+import CreationQuestion from "@/domains/creation/pages/question/CreationQuestion";
 
-export const creationRoutes = [
+export const creationRoutes: RouteObject[] = [
 	{
-		path: "/creation",
-		element: <QuestionCreation />,
+		path: "/creation/question-set/:questionSetId/question/:questionId",
+		element: <CreationQuestion />,
+	},
+	{
+		path: "/creation/question-set/:questionSetId",
+		element: <CreationRedirect />,
 	},
 ];
