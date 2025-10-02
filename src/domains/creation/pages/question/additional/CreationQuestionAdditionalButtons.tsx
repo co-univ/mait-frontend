@@ -1,16 +1,27 @@
 import { Check, Save } from "lucide-react";
+import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
+import { useCreationQuestion } from "@/domains/creation/hooks/question";
 
 //
 //
 //
 
 const CreationQuestionAdditionalButtons = () => {
+	const questionSetId = Number(useParams().questionSetId);
+	const questionId = Number(useParams().questionId);
+
+	const { updateQuestion } = useCreationQuestion({
+		questionSetId,
+		questionId,
+	});
+
 	return (
 		<div className="flex justify-end gap-gap-5">
 			<Button
 				icon={<Save />}
 				item="임시저장"
+				onClick={updateQuestion}
 				className="bg-color-gray-5 border-none"
 			/>
 			<Button

@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { notify } from "@/components/Toast";
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import CreationQuestionConvertQuestionType from "@/domains/creation/utils/question/creation-question-convert-question-type";
@@ -40,7 +41,9 @@ const useCreationQuestion = ({
 		"put",
 		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
 		{
-			onSuccess: () => {
+			onSuccess: (response) => {
+				notify.success(`${response.data?.number}번 문제가 저장되었습니다.`);
+
 				queryClient.invalidateQueries({
 					queryKey: apiHooks.queryOptions(
 						"get",
@@ -50,6 +53,10 @@ const useCreationQuestion = ({
 						},
 					).queryKey,
 				});
+			},
+
+			onError: () => {
+				notify.error("문제 저장에 실패했습니다. 다시 시도해주세요.");
 			},
 		},
 	);
