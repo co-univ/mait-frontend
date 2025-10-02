@@ -490,17 +490,17 @@ export interface components {
         };
         UpdateFillBlankQuestionApiRequest: {
             type: "UpdateFillBlankQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number" | "type">, "type"> & {
+        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number">, "type"> & {
             fillBlankAnswers: components["schemas"]["FillBlankAnswerDto"][];
         });
         UpdateMultipleQuestionApiRequest: {
             type: "UpdateMultipleQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number" | "type">, "type"> & {
+        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number">, "type"> & {
             choices: components["schemas"]["MultipleChoiceDto"][];
         });
         UpdateOrderingQuestionApiRequest: {
             type: "UpdateOrderingQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number" | "type">, "type"> & {
+        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number">, "type"> & {
             options: components["schemas"]["OrderingQuestionOptionDto"][];
         });
         UpdateQuestionApiRequest: {
@@ -517,7 +517,7 @@ export interface components {
         };
         UpdateShortQuestionApiRequest: {
             type: "UpdateShortQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number" | "type">, "type"> & {
+        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number">, "type"> & {
             shortAnswers: components["schemas"]["ShortAnswerDto"][];
         });
         ApiResponseQuestionApiResponse: {
