@@ -1,3 +1,4 @@
+import { notify } from "@/components/Toast";
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
@@ -67,6 +68,12 @@ const useCreationQuestionShort = ({
 	 *
 	 */
 	const handleMainAnswerAdd = () => {
+		if (groupedAnswers.length === 5) {
+			notify.error("주관식 답안은 최대 5개까지 추가할 수 있습니다.");
+
+			return;
+		}
+
 		if (question) {
 			const newAnswer: ShortAnswerApiResponse = {
 				id: CreationQuestionGenerateId(),
@@ -90,6 +97,14 @@ const useCreationQuestionShort = ({
 	 *
 	 */
 	const handleSubAnswerAdd = (number: number) => {
+		const groupedAnswer = groupedAnswers[number - 1];
+
+		if (groupedAnswer && groupedAnswer.length === 6) {
+			notify.error("인정 답안은 최대 5개까지 추가할 수 있습니다.");
+
+			return;
+		}
+
 		if (question) {
 			const newAnswer: ShortAnswerApiResponse = {
 				id: CreationQuestionGenerateId(),
@@ -113,6 +128,12 @@ const useCreationQuestionShort = ({
 	 *
 	 */
 	const handleMainAnswerDelete = (number: number) => {
+		if (groupedAnswers.length === 1) {
+			notify.error("주관식 답안은 한개 이상 있어야 합니다.");
+
+			return;
+		}
+
 		if (question) {
 			const updatedAnswers = (question.answers || [])
 				.filter((answer) => answer.number !== number)

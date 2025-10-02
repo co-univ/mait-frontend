@@ -1,3 +1,4 @@
+import { notify } from "@/components/Toast";
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
@@ -67,6 +68,12 @@ const useCreationQuestionMultiple = ({
 	 *
 	 */
 	const handleChoiceAdd = () => {
+		if (question?.choices.length === 8) {
+			notify.error("객관식 선지는 최대 8개까지 추가할 수 있습니다.");
+
+			return;
+		}
+
 		const newChoice: MultipleChoiceDto = {
 			id: CreationQuestionGenerateId(),
 			number: question ? question.choices.length + 1 : 1,
@@ -88,6 +95,12 @@ const useCreationQuestionMultiple = ({
 	 *
 	 */
 	const handleChoiceDelete = (choiceId: number) => {
+		if (question?.choices.length === 2) {
+			notify.error("객관식 선지는 두개 이상 있어야 합니다.");
+
+			return;
+		}
+
 		const updatedChoices = question?.choices
 			.filter((choice) => choice.id !== choiceId)
 			.map((choice, index) => ({

@@ -1,3 +1,4 @@
+import { notify } from "@/components/Toast";
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
@@ -83,6 +84,12 @@ const useCreationQuestionOrdering = ({
 	 *
 	 */
 	const handleOptionAdd = () => {
+		if (options.length === 6) {
+			notify.error("순서 정답은 최대 6개까지 추가할 수 있습니다.");
+
+			return;
+		}
+
 		const newOption: OrderingOptionApiResponse = {
 			id: CreationQuestionGenerateId(),
 			content: "",
@@ -102,6 +109,12 @@ const useCreationQuestionOrdering = ({
 	 *
 	 */
 	const handleOptionDelete = (optionId: number) => {
+		if (options.length === 2) {
+			notify.error("순서 정답은 두개 이상 있어야 합니다.");
+
+			return;
+		}
+
 		const updatedOptions = question?.options
 			.filter((option) => option.id !== optionId)
 			.map((option, index) => ({

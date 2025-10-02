@@ -82,6 +82,12 @@ const CreationQuestionConvertQuestionType = (
 						originOrder: 2,
 						answerOrder: 2,
 					},
+					{
+						id: CreationQuestionGenerateId(),
+						content: "",
+						originOrder: 3,
+						answerOrder: 3,
+					},
 				] as OrderingOptionApiResponse[],
 			} as unknown as OrderingQuestionApiResponse;
 
