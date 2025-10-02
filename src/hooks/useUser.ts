@@ -18,23 +18,15 @@ const useUser = () => {
 		isError,
 	} = useQuery<ApiResponseUserInfoApiResponse>({
 		queryKey: ["/api/v1/users/me"],
-		queryFn: async () => {
-			const res = await fetch(
-				`${process.env.PUBLIC_BASE_URL}/api/v1/users/me`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `${localStorage.getItem("token")}`,
-					},
+		queryFn: () => {
+			return {
+				data: {
+					id: 1,
+					username: "mock",
+					email: "mock@example.com",
+					nickname: "mock",
 				},
-			);
-
-			if (!res.ok) {
-				throw new Error("Failed to fetch user data");
-			}
-
-			return res.json();
+			};
 		},
 		enabled: !!token,
 		staleTime: 1000 * 60 * 60,

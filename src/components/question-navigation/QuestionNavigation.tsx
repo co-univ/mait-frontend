@@ -15,7 +15,8 @@ interface QuestionNavigationProps {
 	activeQuestionId: number;
 	orientation?: "vertical" | "horizontal";
 	onQuestionClick: (questionId: number) => void;
-	onQuestionDelete?: (questionId: number) => void;
+	onQuestionAdd: () => void;
+	onQuestionDelete: (questionId: number) => void;
 }
 
 //
@@ -32,6 +33,7 @@ const QuestionNavigation = ({
 	activeQuestionId,
 	orientation = "vertical",
 	onQuestionClick,
+	onQuestionAdd,
 	onQuestionDelete,
 }: QuestionNavigationProps) => {
 	const { questions } = useCreationQuestions({ questionSetId });
@@ -118,13 +120,14 @@ const QuestionNavigation = ({
 
 			<button
 				type="button"
+				onClick={onQuestionAdd}
 				className="flex items-center justify-center rounded-medium1 hover:bg-color-gray-5"
 				style={{
 					width: BUTTON_SIZE,
 					height: BUTTON_SIZE,
 				}}
 			>
-				<Plus className={isVertical ? "rotate-90" : ""} />
+				<Plus />
 			</button>
 
 			{renderDirectionButton("down")}

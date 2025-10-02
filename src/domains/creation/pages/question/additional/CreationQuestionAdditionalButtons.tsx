@@ -11,7 +11,7 @@ const CreationQuestionAdditionalButtons = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { updateQuestion } = useCreationQuestion({
+	const { handleUpdateQuestion } = useCreationQuestion({
 		questionSetId,
 		questionId,
 	});
@@ -21,7 +21,7 @@ const CreationQuestionAdditionalButtons = () => {
 			<Button
 				icon={<Save />}
 				item="임시저장"
-				onClick={updateQuestion}
+				onClick={handleUpdateQuestion}
 				className="bg-color-gray-5 border-none"
 			/>
 			<Button
