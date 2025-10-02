@@ -19,6 +19,7 @@ interface UseQuestionProps {
 interface UseQuestionReturn {
 	question?: QuestionResponseType;
 	handleContentChange: (content: string) => void;
+	handleExplanationChange: (explanation: string) => void;
 	handleTypeChange: (type: QuestionType) => void;
 	updateQuestion: () => void;
 	isUpdating: boolean;
@@ -61,6 +62,15 @@ const useCreationQuestion = ({
 	const handleContentChange = (content: string) => {
 		if (question) {
 			editQuestion({ ...question, content });
+		}
+	};
+
+	/**
+	 *
+	 */
+	const handleExplanationChange = (explanation: string) => {
+		if (question) {
+			editQuestion({ ...question, explanation });
 		}
 	};
 
@@ -112,6 +122,7 @@ const useCreationQuestion = ({
 	return {
 		question,
 		handleContentChange,
+		handleExplanationChange,
 		handleTypeChange,
 		updateQuestion,
 		isUpdating,

@@ -12,7 +12,7 @@ const CreationQuestionAdditionalFields = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { question } = useCreationQuestion({
+	const { question, handleExplanationChange } = useCreationQuestion({
 		questionSetId,
 		questionId,
 	});
@@ -42,7 +42,8 @@ const CreationQuestionAdditionalFields = () => {
 
 				<div className="bg-color-primary-5 h-[196px] py-padding-10 px-padding-11 border border-color-primary-50 rounded-medium1">
 					<textarea
-						value="asdf"
+						value={question?.explanation || ""}
+						onChange={(e) => handleExplanationChange(e.target.value)}
 						className="bg-inherit w-full h-full resize-none focus-visible:outline-none typo-body-small text-color-gray-40"
 					/>
 				</div>
