@@ -2,26 +2,30 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { apiClient } from "src/apis/solving.api";
-import { QuestionStatusType } from "src/enums/solving.enum";
+import type { QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
 import SolvingBell from "src/pages/solving/components/common/SolvingBell";
-import type { QuestionSetApiResponse } from "@/types";
-import SolvingQuiz from "../../components/common/SolvingQuiz";
-import SolvingLiveWaiting from "./SolvingLiveWaiting";
 import SolvingLiveNextStage from "src/pages/solving/pages/live/SolvingLiveNextStage";
 import SolvingLiveWinner from "src/pages/solving/pages/live/SolvingLiveWinner";
+import type { QuestionApiResponse, QuestionSetApiResponse } from "@/types";
+import SolvingQuiz from "../../components/common/SolvingQuiz";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
 import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
+import SolvingLiveWaiting from "./SolvingLiveWaiting";
 
+//
+//
+//
 
 const SolvingLiveSolving = () => {
-	const [questionSetInfo, setQuestionSetInfo] = useState<QuestionSetApiResponse | null>(null);
-
-	const { user } = useUser();
-	const currentUserId = user?.id;
+	const [questionSetInfo, setQuestionSetInfo] =
+		useState<QuestionSetApiResponse | null>(null);
 
 	const location = useLocation();
 	const questionSetId = location.pathname.split("/").pop();
+
+	const { user } = useUser();
+	const currentUserId = user?.id;
 
 	const {
 		questionId,
@@ -29,7 +33,6 @@ const SolvingLiveSolving = () => {
 		isSubmitAllowed,
 		showQualifierView,
 		activeParticipants,
-		currentQuestionStatus,
 		isFailed,
 		showWinner,
 		userIdRef,
@@ -38,6 +41,10 @@ const SolvingLiveSolving = () => {
 		setShowQualifierView,
 	} = useSolvingLiveQuizController(questionSetId);
 
+	/**
+	 * WebSocket message handler
+	 * @param msg - WebSocket message
+	 */
 	const handleWebSocketMessage = (msg: any) => {
 		const questionId = msg.questionId;
 		const statusType = msg?.statusType;
@@ -52,9 +59,13 @@ const SolvingLiveSolving = () => {
 		onMessage: handleWebSocketMessage,
 	});
 
+	/**
+	 * 문제셋 정보 가져오기
+	 */
 	const fetchQuestionSetInfo = async () => {
 		try {
 			const res = await apiClient.getQuestionSet(Number(questionSetId));
+
 			if (res.data) {
 				setQuestionSetInfo(res.data);
 			}
@@ -63,11 +74,15 @@ const SolvingLiveSolving = () => {
 		}
 	};
 
-
+	/**
+	 * 현재 문제 상태 가져와서 처리
+	 */
 	const fetchCurrentQuestionStatus = async () => {
 		try {
 			const res = await apiClient.getQuestionSetStatus(Number(questionSetId));
+
 			const { questionId, questionStatusType } = res.data ?? {};
+
 			setCurrentQuestionStatus({
 				questionSetId: res?.data?.questionSetId as number,
 				questionId: questionId as number,
@@ -82,25 +97,27 @@ const SolvingLiveSolving = () => {
 		}
 	};
 
-
+	//
 	useEffect(() => {
 		if (user?.id) {
 			userIdRef.current = user.id;
 		}
 	}, [user]);
 
+	//
 	useEffect(() => {
 		setShowQualifierView(false);
 	}, [questionId]);
 
 	//
 	useEffect(() => {
-		// 문제 셋 정보 가져오기
 		fetchQuestionSetInfo();
-		// 현재 문제 상태 가져와서 처리
 		fetchCurrentQuestionStatus();
 	}, [questionSetId]);
 
+	if (questionId === null) {
+		return <SolvingLiveWaiting />;
+	}
 
 	return (
 		<>
@@ -114,20 +131,16 @@ const SolvingLiveSolving = () => {
 				currentUserId={currentUserId ?? 0}
 			/>
 			<SolvingBell open={isSubmitAllowed} />
-			{!showQualifierView &&
-				!showWinner &&
-				(questionId !== null ? (
-					<SolvingQuiz
-						questionInfo={questionInfo}
-						quizTitle={questionSetInfo?.title as string}
-						questionCount={questionSetInfo?.questionCount as number}
-						questionSetId={Number(questionSetId)}
-						isSubmitAllowed={isSubmitAllowed && !isFailed}
-						isFailed={isFailed}
-					/>
-				) : (
-					<SolvingLiveWaiting />
-				))}
+			<SolvingQuiz
+				questionInfo={questionInfo as QuestionApiResponse}
+				quizTitle={questionSetInfo?.title as string}
+				questionCount={questionSetInfo?.questionCount as number}
+				questionSetId={Number(questionSetId)}
+				showQualifierView={showQualifierView}
+				showWinner={showWinner}
+				isSubmitAllowed={isSubmitAllowed && !isFailed}
+				isFailed={isFailed}
+			/>
 		</>
 	);
 };

@@ -3,12 +3,12 @@ import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useAnswerSubmit } from "src/pages/solving/hooks/common/useAnswerSubmit";
 import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
+import { notify } from "@/components/Toast";
 import type { QuestionApiResponse } from "@/types";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import SolvingQuizContent from "./quiz-content";
 import SolvingQuizCorrect from "./SolvingSubmitResult";
 import SolvingTopBar from "./topbar";
-import { notify } from "@/components/Toast";
 
 //
 //
@@ -19,6 +19,8 @@ interface SolvingQuizContentProps {
 	quizTitle: string;
 	questionCount: number;
 	questionSetId: number;
+	showQualifierView: boolean;
+	showWinner: boolean;
 	isSubmitAllowed: boolean;
 	isFailed?: boolean;
 }
@@ -32,36 +34,24 @@ const SolvingQuiz = ({
 	quizTitle,
 	questionCount,
 	questionSetId,
+	showQualifierView,
+	showWinner,
 	isSubmitAllowed,
 	isFailed = false,
 }: SolvingQuizContentProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 	const [userAnswers, setUserAnswers] = useState<any>(null);
-
 	const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 	const [isAnswerDisabled, setIsAnswerDisabled] = useState(false);
 
 	const { submitAnswer, isSubmitting } = useAnswerSubmit();
 
-	const { isSubmitted, isCorrected, setIsSubmitted, setIsCorrected } =
+	const { isCorrected, setIsSubmitted, setIsCorrected } =
 		useSolvingCorrectStore();
 
-	// 최종 비활성화 상태: 정답을 맞췄거나 탈락했을 때
-	useEffect(() => {
-		// When the user is elemenated or the submit is not allowed, disable the submit button
-		setIsSubmitDisabled(isFailed || !isSubmitAllowed);
-
-		// When the user is elemenated or the answer is corrected, disable the answer input
-		setIsAnswerDisabled(isFailed || isCorrected);
-	}, [isFailed, isSubmitAllowed, isCorrected]);
-
-	// 문제가 바뀔 때 userAnswers와 isCorrected 초기화
-	useEffect(() => {
-		setUserAnswers(null);
-		setIsCorrected(false);
-		setIsSubmitted(false);
-	}, [questionInfo?.id]);
-
+		/**
+		 * 
+		 */
 	const handleAnimationComplete = () => {
 		const hideTimer = setTimeout(() => {
 			setShowCorrect(false);
@@ -204,6 +194,23 @@ const SolvingQuiz = ({
 			console.error(err);
 		}
 	};
+
+	// 최종 비활성화 상태: 정답을 맞췄거나 탈락했을 때
+	useEffect(() => {
+		setIsSubmitDisabled(isFailed || !isSubmitAllowed);
+		setIsAnswerDisabled(isFailed || isCorrected);
+	}, [isFailed, isSubmitAllowed, isCorrected]);
+
+	// 문제가 바뀔 때 userAnswers와 isCorrected 초기화
+	useEffect(() => {
+		setUserAnswers(null);
+		setIsCorrected(false);
+		setIsSubmitted(false);
+	}, [questionInfo?.id]);
+
+	if (showQualifierView || showWinner) {
+		return null;
+	}
 
 	return (
 		<SolvingLayout>
