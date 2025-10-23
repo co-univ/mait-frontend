@@ -5,6 +5,7 @@ import { creationRoutes } from "@/domains/creation/creation.routes";
 import { homeRoutes } from "@/domains/home";
 import { questionSetsRoutes } from "@/domains/question-sets/QuestionSets.routes";
 import { solvingRoutes } from "@/domains/solving/solving.routes";
+import { authRoutes } from "@/domains/auth";
 
 const router = createBrowserRouter([
 	{
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
 		element: <App />,
 		children: [
 			...homeRoutes,
+			...authRoutes,
 			...controlRoutes,
 			...solvingRoutes,
 			...creationRoutes,
