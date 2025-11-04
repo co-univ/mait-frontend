@@ -7,3 +7,5 @@ export const SIDEBAR_TRANSITION =
 	"transition-all duration-300 transition-ease-in-out";
 
 export const HEADER_HEIGHT = 96;
+
+export const FILL_BLANK_PATTERN = /\{\{(\d+)\}\}/g;

@@ -17,3 +17,5 @@ dist/
 .idea
 
 .env*
+
+*.local.md

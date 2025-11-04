@@ -1,10 +1,15 @@
 import { Puzzle } from "lucide-react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { FILL_BLANK_PATTERN } from "@/app.constants";
 import Badge from "@/components/Badge";
 import FileInput from "@/components/FileInput";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
 import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
+import useCreationQuestionFillBlank from "@/domains/creation/hooks/question/useCreationQuestionFillBlank";
 import type { QuestionType } from "@/libs/types";
+import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
+import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFillBlank";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
 import CreationQuestionAnswerOrdering from "./answer/CreationQuestionAnswerOrdering";
 import CreationQuestionAnswerShort from "./answer/CreationQuestionAnswerShort";
@@ -33,6 +38,8 @@ const CreationQuestionMain = () => {
 				return <CreationQuestionAnswerShort />;
 			case "ORDERING":
 				return <CreationQuestionAnswerOrdering />;
+			case "FILL_BLANK":
+				return <CreationQuestionAnswerFillBlank />;
 			default:
 				return null;
 		}
@@ -49,10 +56,14 @@ const CreationQuestionMain = () => {
 			/>
 
 			<div className="flex w-full">
-				<CreationQuestionContent
-					value={question?.content || ""}
-					onChange={handleContentChange}
-				/>
+				{(question?.type as QuestionType) === "FILL_BLANK" ? (
+					<CreationQuestionContentFillBlank />
+				) : (
+					<CreationQuestionContent
+						value={question?.content || ""}
+						onChange={handleContentChange}
+					/>
+				)}
 			</div>
 
 			<FileInput
