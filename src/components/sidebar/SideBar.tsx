@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
 	HEADER_HEIGHT,
@@ -32,7 +33,7 @@ const NAVIGATION_ITEMS = [
 //
 
 const SideBar = () => {
-	const { isSidebarOpen } = useSidebarOpenStore();
+	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
 	const location = useLocation();
 
@@ -59,6 +60,15 @@ const SideBar = () => {
 
 		return "100%";
 	};
+
+	//
+	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: toggleSidebarOpen does not effect to the useEffect
+	useEffect(() => {
+		if (sidebarVariant === "elevation" && isSidebarOpen) {
+			toggleSidebarOpen();
+		}
+	}, [sidebarVariant, isSidebarOpen]);
 
 	return (
 		<aside
