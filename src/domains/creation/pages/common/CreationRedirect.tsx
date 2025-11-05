@@ -10,13 +10,13 @@ const CreationRedirect = () => {
 	const navigate = useNavigate();
 	const questionSetId = Number(useParams().questionSetId);
 
-	const { questions } = useCreationQuestions({ questionSetId });
+	const { questions, isLoading } = useCreationQuestions({ questionSetId });
 
 	//
 	//
 	// biome-ignore lint/correctness/useExhaustiveDependencies: navigate function is stable
 	useEffect(() => {
-		if (questions) {
+		if (questions && !isLoading) {
 			const firstQuestionId = questions[0]?.id;
 
 			if (firstQuestionId) {
@@ -26,7 +26,7 @@ const CreationRedirect = () => {
 				);
 			}
 		}
-	}, [questions, questionSetId]);
+	}, [questions, questionSetId, isLoading]);
 
 	return null;
 };
