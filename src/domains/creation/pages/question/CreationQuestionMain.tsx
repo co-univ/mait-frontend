@@ -6,6 +6,7 @@ import CreationQuestionContent from "@/domains/creation/components/question/Crea
 import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
 import type { QuestionType } from "@/libs/types";
 import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
+import { useCreationQuestions } from "../../hooks/question";
 import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFillBlank";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
 import CreationQuestionAnswerOrdering from "./answer/CreationQuestionAnswerOrdering";
@@ -19,10 +20,21 @@ const CreationQuestionMain = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
+	const { questions } = useCreationQuestions({ questionSetId });
+
 	const { question, handleContentChange } = useCreationQuestion({
 		questionSetId,
 		questionId,
 	});
+
+	/**
+	 *
+	 */
+	const getQuestionNumber = () => {
+		const questionIndex = questions.findIndex((q) => q.id === questionId);
+
+		return questionIndex + 1;
+	};
 
 	/**
 	 *
@@ -47,7 +59,7 @@ const CreationQuestionMain = () => {
 			<Badge
 				icon={<Puzzle />}
 				item={
-					<span className="typo-heading-xsmall">{`Q${question?.number || 0}`}</span>
+					<span className="typo-heading-xsmall">{`Q${getQuestionNumber()}`}</span>
 				}
 				className="text-color-primary-50 !bg-color-primary-5 self-start"
 			/>
