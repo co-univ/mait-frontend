@@ -1,5 +1,6 @@
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import type {
+	FillBlankQuestionApiResponse,
 	MultipleQuestionApiResponse,
 	OrderingQuestionApiResponse,
 	QuestionType,
@@ -45,6 +46,17 @@ const CreationQuestionAnswerString = (question: QuestionResponseType) => {
 					?.sort((a, b) => (a.answerOrder || 0) - (b.answerOrder || 0))
 					.map((option) => String.fromCharCode(64 + option.originOrder))
 					.join(" → ") || ""
+			);
+		}
+
+		case "FILL_BLANK": {
+			const answers = (question as FillBlankQuestionApiResponse).answers;
+
+			return (
+				answers
+					?.filter((answer) => answer.isMain)
+					.map((answer) => answer.answer)
+					.join("\n") || ""
 			);
 		}
 

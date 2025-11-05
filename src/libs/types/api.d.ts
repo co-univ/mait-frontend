@@ -734,6 +734,7 @@ export interface components {
             id: number;
             content?: string;
             explanation?: string;
+            imageUrl?: string;
             /** Format: int64 */
             number?: number;
             /** @enum {string} */

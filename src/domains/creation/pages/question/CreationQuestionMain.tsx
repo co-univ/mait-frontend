@@ -6,7 +6,9 @@ import CreationQuestionContent from "@/domains/creation/components/question/Crea
 import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
 import type { QuestionType } from "@/libs/types";
 import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
+import CreationQuestionImage from "../../components/question/CreationQuestionImage";
 import { useCreationQuestions } from "../../hooks/question";
+import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
 import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFillBlank";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
 import CreationQuestionAnswerOrdering from "./answer/CreationQuestionAnswerOrdering";
@@ -22,7 +24,13 @@ const CreationQuestionMain = () => {
 
 	const { questions } = useCreationQuestions({ questionSetId });
 
-	const { question, handleContentChange } = useCreationQuestion({
+	const {
+		question,
+		handleContentChange,
+		handleImageChange,
+		handleImageAdd,
+		isUploadingImage,
+	} = useCreationQuestion({
 		questionSetId,
 		questionId,
 	});
@@ -30,10 +38,25 @@ const CreationQuestionMain = () => {
 	/**
 	 *
 	 */
-	const getQuestionNumber = () => {
-		const questionIndex = questions.findIndex((q) => q.id === questionId);
+	const renderQuestionImage = () => {
+		if (question?.imageUrl) {
+			return (
+				<CreationQuestionImage
+					imageUrl={question.imageUrl}
+					onDelete={() => handleImageChange(undefined)}
+				/>
+			);
+		}
 
-		return questionIndex + 1;
+		return (
+			<FileInput
+				text="이미지 추가"
+				accept=".jpg,.jpeg,.png,.svg"
+				file={null}
+				onChange={handleImageAdd}
+				isLoading={isUploadingImage}
+			/>
+		);
 	};
 
 	/**
@@ -59,7 +82,7 @@ const CreationQuestionMain = () => {
 			<Badge
 				icon={<Puzzle />}
 				item={
-					<span className="typo-heading-xsmall">{`Q${getQuestionNumber()}`}</span>
+					<span className="typo-heading-xsmall">{`Q${creationQuestionFindNumber(questions, questionId)}`}</span>
 				}
 				className="text-color-primary-50 !bg-color-primary-5 self-start"
 			/>
@@ -75,13 +98,7 @@ const CreationQuestionMain = () => {
 				)}
 			</div>
 
-			<FileInput
-				text="이미지 추가"
-				file={null}
-				onChange={() => {
-					alert("축하합니다! 당신은 따봉 퀴리릭을 발견하셨습니다.");
-				}}
-			/>
+			{renderQuestionImage()}
 
 			{renderQuestionAnswer()}
 		</div>

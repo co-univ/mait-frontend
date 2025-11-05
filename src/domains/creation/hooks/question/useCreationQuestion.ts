@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
@@ -6,8 +7,9 @@ import type { QuestionResponseType } from "@/domains/creation/creation.constant"
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import CreationQuestionConvertQuestionType from "@/domains/creation/utils/question/creation-question-convert-question-type";
 import creationQuestionResponseToUpdate from "@/domains/creation/utils/question/creation-question-response-to-update";
-import { apiHooks } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import type { QuestionType } from "@/libs/types";
+import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
 
 //
 //
@@ -23,10 +25,13 @@ interface UseQuestionReturn {
 	handleContentChange: (content: string) => void;
 	handleExplanationChange: (explanation: string) => void;
 	handleTypeChange: (type: QuestionType) => void;
+	handleImageChange: (imageUrl?: string) => void;
+	handleImageAdd: (file: File | null) => Promise<void>;
 	handleUpdateQuestion: () => void;
 	handleDeleteQuestion: (deleteQuestionId: number) => void;
 	isUpdating: boolean;
 	isDeleting: boolean;
+	isUploadingImage: boolean;
 }
 
 //
@@ -45,6 +50,8 @@ const useCreationQuestion = ({
 
 	const { confirm } = useConfirm();
 
+	const [isUploadingImage, setIsUploadingImage] = useState(false);
+
 	const { mutate: mutatePut, isPending: isUpdating } = apiHooks.useMutation(
 		"put",
 		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
@@ -61,6 +68,10 @@ const useCreationQuestion = ({
 						},
 					).queryKey,
 				});
+
+				navigate(
+					`/creation/question-set/${questionSetId}/question/${response.data?.id}`,
+				);
 			},
 
 			onError: () => {
@@ -139,6 +150,15 @@ const useCreationQuestion = ({
 	/**
 	 *
 	 */
+	const handleImageChange = (imageUrl?: string) => {
+		if (question) {
+			editQuestion({ ...question, imageUrl });
+		}
+	};
+
+	/**
+	 *
+	 */
 	const handleTypeChange = (type: QuestionType) => {
 		if (question) {
 			const convertedQuestion = CreationQuestionConvertQuestionType(
@@ -157,7 +177,14 @@ const useCreationQuestion = ({
 		const currentQuestions = useCreationQuestionsStore.getState().questions;
 		const targetQuestion = currentQuestions.find((q) => q.id === questionId);
 
-		if (!targetQuestion || !targetQuestion.isEditing) {
+		if (!targetQuestion) {
+			return;
+		}
+
+		if (!targetQuestion.isEditing) {
+			const questionNumber = creationQuestionFindNumber(questions, questionId);
+			notify.success(`${questionNumber}번 문제가 저장되었습니다.`);
+
 			return;
 		}
 
@@ -170,6 +197,46 @@ const useCreationQuestion = ({
 			},
 			body: creationQuestionResponseToUpdate(targetQuestion),
 		});
+	};
+
+	/**
+	 *
+	 */
+	const handleImageAdd = async (file: File | null) => {
+		if (!file) {
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append("image", file);
+
+		setIsUploadingImage(true);
+
+		try {
+			const res = await apiClient.POST(
+				"/api/v1/question-sets/{questionSetId}/questions/{questionId}/images",
+				{
+					params: {
+						path: {
+							questionSetId,
+							questionId,
+						},
+					},
+					body: formData as unknown as { image: string },
+					bodySerializer: (body) => body as unknown as FormData,
+				},
+			);
+
+			const imageUrl = res.data?.data?.imageUrl;
+
+			if (imageUrl) {
+				handleImageChange(imageUrl);
+			}
+		} catch {
+			notify.error("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+		} finally {
+			setIsUploadingImage(false);
+		}
 	};
 
 	/**
@@ -207,11 +274,14 @@ const useCreationQuestion = ({
 		question,
 		handleContentChange,
 		handleExplanationChange,
+		handleImageChange,
+		handleImageAdd,
 		handleTypeChange,
 		handleUpdateQuestion,
 		handleDeleteQuestion,
 		isUpdating,
 		isDeleting,
+		isUploadingImage,
 	};
 };
 
