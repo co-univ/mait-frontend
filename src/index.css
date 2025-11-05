@@ -91,11 +91,3 @@
          url('https://cdn.jsdelivr.net/npm/@fontsource/lexend/files/lexend-latin-400-normal.woff') format('woff');
 }
 
-.question-content-fill-blank > .ProseMirror p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  color: #8A949E;
-  pointer-events: none;
-  height: 0;
-}
-

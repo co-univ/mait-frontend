@@ -1,12 +1,9 @@
 import { Puzzle } from "lucide-react";
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { FILL_BLANK_PATTERN } from "@/app.constants";
 import Badge from "@/components/Badge";
 import FileInput from "@/components/FileInput";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
 import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
-import useCreationQuestionFillBlank from "@/domains/creation/hooks/question/useCreationQuestionFillBlank";
 import type { QuestionType } from "@/libs/types";
 import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
 import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFillBlank";

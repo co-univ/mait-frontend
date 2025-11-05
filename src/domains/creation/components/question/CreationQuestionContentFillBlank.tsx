@@ -11,6 +11,7 @@ import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
 import CreationQuestionBlankExtension from "@/domains/creation/editors/question/creation-question-blank-extention";
 import useCreationQuestionFillBlank from "../../hooks/question/useCreationQuestionFillBlank";
+import "./editor.css";
 
 //
 //
