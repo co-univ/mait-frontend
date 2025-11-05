@@ -63,12 +63,12 @@ const SideBar = () => {
 
 	//
 	//
-	// biome-ignore lint/correctness/useExhaustiveDependencies: toggleSidebarOpen does not effect to the useEffect
+	// biome-ignore lint/correctness/useExhaustiveDependencies: This effect runs only when sidebarVariant changes
 	useEffect(() => {
 		if (sidebarVariant === "elevation" && isSidebarOpen) {
 			toggleSidebarOpen();
 		}
-	}, [sidebarVariant, isSidebarOpen]);
+	}, [sidebarVariant]);
 
 	return (
 		<aside
