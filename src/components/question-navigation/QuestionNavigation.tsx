@@ -46,12 +46,21 @@ const QuestionNavigation = ({
 		canScrollDown,
 		handleScrollUp,
 		handleScrollDown,
+		scrollToBottom,
 	} = useQuestionNavigationLayout({
 		orientation,
 		questionLength: questions.length,
 	});
 
 	const isVertical = orientation === "vertical";
+
+	/**
+	 *
+	 */
+	const handleQuestionAdd = () => {
+		onQuestionAdd();
+		scrollToBottom();
+	};
 
 	/**
 	 *
@@ -120,7 +129,7 @@ const QuestionNavigation = ({
 
 			<button
 				type="button"
-				onClick={onQuestionAdd}
+				onClick={handleQuestionAdd}
 				className="flex items-center justify-center rounded-medium1 hover:bg-color-gray-5"
 				style={{
 					width: BUTTON_SIZE,

@@ -18,6 +18,7 @@ interface UseQuestionNavigationLayoutReturn {
 	canScrollDown: boolean;
 	handleScrollUp: () => void;
 	handleScrollDown: () => void;
+	scrollToBottom: () => void;
 }
 
 //
@@ -60,6 +61,17 @@ const useQuestionNavigationLayout = ({
 		}
 	};
 
+	/**
+	 * Scroll to bottom (show last questions)
+	 * @warning This function only used when a new question is added. When question is added, this function called before questionLength is updated
+	 */
+	const scrollToBottom = () => {
+		// TODO: Wait for questionLength to be updated
+		const maxIndex = Math.max(0, questionLength - visibleCount);
+
+		setStartIndex(maxIndex + 1);
+	};
+
 	//
 	// Calculate how many questions can fit in the viewport
 	// biome-ignore lint/correctness/useExhaustiveDependencies: this effect can catch containerRef's size when container is mounted
@@ -96,6 +108,7 @@ const useQuestionNavigationLayout = ({
 		canScrollDown,
 		handleScrollUp,
 		handleScrollDown,
+		scrollToBottom,
 	};
 };
 
