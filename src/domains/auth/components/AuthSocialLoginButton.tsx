@@ -7,7 +7,7 @@ import googleLogo from "@/assets/images/google-logo.png";
 const AuthSocialLoginButton = () => {
 	return (
 		<button type="button" className="w-full">
-			<div className="flex items-center py-padidng-8 px-padding-10 gap-[10px] bg-[#F2F2F2] rounded-md w-full max-w-[385px] h-size-height-10">
+			<div className="flex items-center py-padidng-8 px-padding-10 gap-[10px] bg-[#F2F2F2] rounded-md w-full max-w-[385px] h-size-height-10 select-none">
 				<img
 					src={googleLogo}
 					alt="구글 소셜 로고"
