@@ -25,7 +25,7 @@ interface UseQuestionReturn {
 	handleContentChange: (content: string) => void;
 	handleExplanationChange: (explanation: string) => void;
 	handleTypeChange: (type: QuestionType) => void;
-	handleImageChange: (imageUrl?: string) => void;
+	handleImageChange: (imageId: number | null, imageUrl?: string) => void;
 	handleImageAdd: (file: File | null) => Promise<void>;
 	handleUpdateQuestion: () => void;
 	handleDeleteQuestion: (deleteQuestionId: number) => void;
@@ -152,9 +152,9 @@ const useCreationQuestion = ({
 	/**
 	 *
 	 */
-	const handleImageChange = (imageUrl?: string) => {
+	const handleImageChange = (imageId: number | null, imageUrl?: string) => {
 		if (question) {
-			editQuestion({ ...question, imageUrl });
+			editQuestion({ ...question, imageId, imageUrl });
 		}
 	};
 
@@ -216,12 +216,11 @@ const useCreationQuestion = ({
 
 		try {
 			const res = await apiClient.POST(
-				"/api/v1/question-sets/{questionSetId}/questions/{questionId}/images",
+				"/api/v1/question-sets/{questionSetId}/questions/images",
 				{
 					params: {
 						path: {
 							questionSetId,
-							questionId,
 						},
 					},
 					body: formData as unknown as { image: string },
@@ -230,9 +229,10 @@ const useCreationQuestion = ({
 			);
 
 			const imageUrl = res.data?.data?.imageUrl;
+			const imageId = res.data?.data?.id ?? null;
 
 			if (imageUrl) {
-				handleImageChange(imageUrl);
+				handleImageChange(imageId, imageUrl);
 			}
 		} catch {
 			notify.error("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
