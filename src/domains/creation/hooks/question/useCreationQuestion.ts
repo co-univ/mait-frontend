@@ -57,7 +57,9 @@ const useCreationQuestion = ({
 		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
 		{
 			onSuccess: (response) => {
-				notify.success(`${response.data?.number}번 문제가 저장되었습니다.`);
+				notify.success(
+					`${creationQuestionFindNumber(questions, response.data?.id ?? 0)}번 문제가 저장되었습니다.`,
+				);
 
 				queryClient.invalidateQueries({
 					queryKey: apiHooks.queryOptions(
