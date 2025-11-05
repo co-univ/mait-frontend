@@ -1,10 +1,10 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import QuestionSetsCard from "@/components/question-sets/QuestionSetsCard";
-import QuestionSetsContentHeader from "@/components/question-sets/QuestionSetsContentHeader";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
 import QuestionSetsLayout from "@/layouts/question-sets/QuestionSetsLayout";
+import ManagementLiveTime from "./ManagementLiveTime";
+import ManagementMaking from "./ManagementMaking";
 
 //
 //
@@ -37,39 +37,16 @@ const Management = () => {
 			>
 				<QuestionSetsTabs />
 
-				<QuestionSetsContentHeader label="제작 중" />
-
 				<Tabs.Content value="making">
-					<div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-gap-9">
-						{questionSets.map((questionSet) => (
-							<QuestionSetsCard
-								key={questionSet.id}
-								questionSet={questionSet}
-							/>
-						))}
-					</div>
+					<ManagementMaking questionSets={questionSets} />
 				</Tabs.Content>
 
 				<Tabs.Content value="live-time">
-					<div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-gap-9">
-						{questionSets.map((questionSet) => (
-							<QuestionSetsCard
-								key={questionSet.id}
-								questionSet={questionSet}
-							/>
-						))}
-					</div>
+					<ManagementLiveTime questionSets={questionSets} />
 				</Tabs.Content>
 
 				<Tabs.Content value="review">
-					<div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-gap-9">
-						{questionSets.map((questionSet) => (
-							<QuestionSetsCard
-								key={questionSet.id}
-								questionSet={questionSet}
-							/>
-						))}
-					</div>
+					<ManagementMaking questionSets={questionSets} />
 				</Tabs.Content>
 			</Tabs.Root>
 		</QuestionSetsLayout>
