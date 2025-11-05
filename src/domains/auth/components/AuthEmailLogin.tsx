@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import useLoginModalOpenStore from "src/stores/useLoginModalOpenStore";
+import { useNavigate } from "react-router-dom";
 import CheckBox from "@/components/CheckBox";
 import { useLogin } from "@/hooks/useAuth";
 
@@ -18,8 +18,12 @@ const AuthEmailLogin = () => {
 	const [isRememberEmail, setIsRememberEmail] = useState(false);
 
 	const loginMutation = useLogin();
-	// const { handleLoginSuccess } = useLoginModalOpenStore();
 
+	const navigate = useNavigate();
+
+	/**
+	 *
+	 */
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
@@ -30,9 +34,9 @@ const AuthEmailLogin = () => {
 
 		try {
 			await loginMutation.mutateAsync({ email, password });
-			// handleLoginSuccess();
 			setEmail("");
 			setPassword("");
+			navigate("/");
 		} catch (error) {
 			console.error("로그인 실패:", error);
 			alert("로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
