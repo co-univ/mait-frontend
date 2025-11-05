@@ -237,6 +237,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/materials": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 문제 셋에 사용될 파일 업로드 API
+         * @description 문제 셋 생성 과정에서 사용될 파일을 업로드합니다.
+         */
+        post: operations["uploadQuestionSetFiles"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/live-status/winner": {
         parameters: {
             query?: never;
@@ -900,6 +920,24 @@ export interface components {
             questionId: number;
             /** @description 생성된 이미지 url */
             imageUrl: string;
+        };
+        ApiResponseQuestionSetMaterialApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionSetMaterialApiResponse"];
+        };
+        QuestionSetMaterialApiResponse: {
+            /**
+             * Format: int64
+             * @description 업로드한 자료 PK
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 해당 자료가 속한 문제 셋 PK
+             */
+            questionSetId: number;
+            /** @description 업로드된 자료가 저장된 url */
+            materialUrl: string;
         };
         SendWinnerRequest: {
             winnerUserIds?: number[];
@@ -1577,6 +1615,35 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionApiResponse"];
+                };
+            };
+        };
+    };
+    uploadQuestionSetFiles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    material: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetMaterialApiResponse"];
                 };
             };
         };
