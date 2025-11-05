@@ -24,7 +24,8 @@ const Home = () => {
 		if (user) {
 			navigate(`/solving/${process.env.PUBLIC_QUESTION_ID}`);
 		} else {
-			openLoginModal();
+			// openLoginModal();
+			navigate("/login");
 		}
 	};
 
