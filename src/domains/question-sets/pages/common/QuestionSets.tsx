@@ -40,7 +40,14 @@ const QuestionSets = () => {
 				<QuestionSetsContentHeader label="제작 중" />
 
 				<Tabs.Content value="making">
-					<div>{/* <QuestionSetsCard /> */}</div>
+					<div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-gap-9">
+						{questionSets.map((questionSet) => (
+							<QuestionSetsCard
+								key={questionSet.id}
+								questionSet={questionSet}
+							/>
+						))}
+					</div>
 				</Tabs.Content>
 
 				<Tabs.Content value="live-time">
@@ -55,7 +62,14 @@ const QuestionSets = () => {
 				</Tabs.Content>
 
 				<Tabs.Content value="review">
-					<div>{/* <QuestionSetsCard /> */}</div>
+					<div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-gap-9">
+						{questionSets.map((questionSet) => (
+							<QuestionSetsCard
+								key={questionSet.id}
+								questionSet={questionSet}
+							/>
+						))}
+					</div>
 				</Tabs.Content>
 			</Tabs.Root>
 		</QuestionSetsLayout>
