@@ -1,16 +1,16 @@
 import { useParams, useSearchParams } from "react-router-dom";
+import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
-import QuestionSetsCard from "@/domains/question-sets/components/common/QuestionSetsCard";
-import QuestionSetsContentHeader from "@/domains/question-sets/components/common/QuestionSetsContentHeader";
-import QuestionSetsTabs from "@/domains/question-sets/components/common/QuestionSetsTabs";
-import QuestionSetsLayout from "@/domains/question-sets/layouts/common/QuestionSetsLayout";
 import useQuestionSets from "@/hooks/useQuestionSets";
+import QuestionSetsLayout from "@/layouts/question-sets/QuestionSetsLayout";
+import ManagementLiveTime from "./ManagementLiveTime";
+import ManagementMaking from "./ManagementMaking";
 
 //
 //
 //
 
-const QuestionSets = () => {
+const Management = () => {
 	const teamId = Number(useParams().teamId);
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "making";
@@ -37,29 +37,20 @@ const QuestionSets = () => {
 			>
 				<QuestionSetsTabs />
 
-				<QuestionSetsContentHeader label="제작 중" />
-
 				<Tabs.Content value="making">
-					<div>{/* <QuestionSetsCard /> */}</div>
+					<ManagementMaking questionSets={questionSets} />
 				</Tabs.Content>
 
 				<Tabs.Content value="live-time">
-					<div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-gap-9">
-						{questionSets.map((questionSet) => (
-							<QuestionSetsCard
-								key={questionSet.id}
-								questionSet={questionSet}
-							/>
-						))}
-					</div>
+					<ManagementLiveTime questionSets={questionSets} />
 				</Tabs.Content>
 
 				<Tabs.Content value="review">
-					<div>{/* <QuestionSetsCard /> */}</div>
+					<ManagementMaking questionSets={questionSets} />
 				</Tabs.Content>
 			</Tabs.Root>
 		</QuestionSetsLayout>
 	);
 };
 
-export default QuestionSets;
+export default Management;

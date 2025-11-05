@@ -47,6 +47,17 @@ const CreationQuestionConvertQuestionType = (
 						content: "",
 						isCorrect: false,
 					},
+					{
+						id: CreationQuestionGenerateId(),
+						number: 3,
+						content: "",
+						isCorrect: false,
+					}, {
+						id: CreationQuestionGenerateId(),
+						number: 4,
+						content: "",
+						isCorrect: false,
+					}
 				] as MultipleChoiceApiResponse[],
 			} as unknown as MultipleQuestionApiResponse;
 

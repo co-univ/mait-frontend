@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
 	HEADER_HEIGHT,
@@ -17,7 +18,7 @@ import SidebarItem from "./SidebarItem";
 //
 
 const NAVIGATION_ITEMS = [
-	{ icon: <SquarePen />, label: "문제 관리", path: "/question-sets" },
+	{ icon: <SquarePen />, label: "문제 관리", path: "/management" },
 	{ icon: <Puzzle />, label: "문제 풀기", path: "/solving" },
 	{
 		icon: <LayoutDashboard />,
@@ -32,7 +33,7 @@ const NAVIGATION_ITEMS = [
 //
 
 const SideBar = () => {
-	const { isSidebarOpen } = useSidebarOpenStore();
+	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
 	const location = useLocation();
 
@@ -59,6 +60,15 @@ const SideBar = () => {
 
 		return "100%";
 	};
+
+	//
+	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: This effect runs only when sidebarVariant changes
+	useEffect(() => {
+		if (sidebarVariant === "elevation" && isSidebarOpen) {
+			toggleSidebarOpen();
+		}
+	}, [sidebarVariant]);
 
 	return (
 		<aside

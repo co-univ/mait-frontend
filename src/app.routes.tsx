@@ -3,8 +3,8 @@ import App from "@/App";
 import { controlRoutes } from "@/domains/control";
 import { creationRoutes } from "@/domains/creation/creation.routes";
 import { homeRoutes } from "@/domains/home";
-import { questionSetsRoutes } from "@/domains/question-sets/QuestionSets.routes";
 import { solvingRoutes } from "@/domains/solving/solving.routes";
+import { managementRoutes } from "./domains/management/Management.routes";
 
 const router = createBrowserRouter([
 	{
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
 			...controlRoutes,
 			...solvingRoutes,
 			...creationRoutes,
-			...questionSetsRoutes,
+			...managementRoutes,
 		],
 	},
 ]);

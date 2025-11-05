@@ -1,7 +1,12 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { SquareMinus } from "lucide-react";
-import type { FillBlankQuestionApiResponse, MultipleQuestionApiResponse, OrderingQuestionApiResponse, ShortQuestionApiResponse } from "@/libs/types";
+import type {
+	FillBlankQuestionApiResponse,
+	MultipleQuestionApiResponse,
+	OrderingQuestionApiResponse,
+	ShortQuestionApiResponse,
+} from "@/libs/types";
 import { BUTTON_SIZE, GAP } from "./constants";
 import QuestionNavigationButton from "./QuestionNavigationButton";
 
@@ -10,7 +15,12 @@ import QuestionNavigationButton from "./QuestionNavigationButton";
 //
 
 interface QuestionNavigationListProps {
-	questions: (MultipleQuestionApiResponse | ShortQuestionApiResponse | OrderingQuestionApiResponse | FillBlankQuestionApiResponse)[];
+	questions: (
+		| MultipleQuestionApiResponse
+		| ShortQuestionApiResponse
+		| OrderingQuestionApiResponse
+		| FillBlankQuestionApiResponse
+	)[];
 	activeQuestionId: number;
 	startIndex: number;
 	visibleCount: number;
@@ -65,7 +75,7 @@ const QuestionNavigationList = ({
 					gap: `${GAP}px`,
 				}}
 			>
-				{questions.map((question) => {
+				{questions.map((question, idx) => {
 					const isActive = question.id === activeQuestionId;
 
 					/**
@@ -88,7 +98,7 @@ const QuestionNavigationList = ({
 						<QuestionNavigationButton
 							canDelete={canDelete}
 							key={question.id}
-							number={question.number}
+							number={idx + 1}
 							isActive={isActive}
 							DeleteIcon={
 								<SquareMinus size={20} className="text-color-point-50" />

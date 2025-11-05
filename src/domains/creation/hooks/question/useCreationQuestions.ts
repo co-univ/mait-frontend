@@ -54,7 +54,7 @@ const useCreationQuestions = ({
 			onSuccess: (response) => {
 				const newQuestion = response.data as QuestionResponseType;
 
-				notify.success(`${newQuestion.number}번 문제가 추가되었습니다.`);
+				notify.success(`${questions.length + 1}번 문제가 추가되었습니다.`);
 
 				navigate(
 					`/creation/question-set/${questionSetId}/question/${newQuestion.id}`,
@@ -86,9 +86,6 @@ const useCreationQuestions = ({
 				path: {
 					questionSetId,
 				},
-			},
-			body: {
-				number: questions.length + 1,
 			},
 		});
 	};
