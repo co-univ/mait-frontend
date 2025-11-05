@@ -1,8 +1,8 @@
-import { CalendarDays, LockKeyholeOpen, PencilLine } from "lucide-react";
-import QuestionSetsCardButton from "@/domains/question-sets/components/common/QuestionSetsCardButton";
-import type { QuestionSetApiResponse } from "@/libs/types";
 import dayjs from "dayjs";
+import { CalendarDays, LockKeyholeOpen, PencilLine } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import QuestionSetsCardButton from "@/components/question-sets/QuestionSetsCardButton";
+import type { QuestionSetApiResponse } from "@/libs/types";
 
 //
 //
@@ -17,14 +17,14 @@ interface QuestionSetsCardProps {
 //
 
 const QuestionSetsCard = ({ questionSet }: QuestionSetsCardProps) => {
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	/**
-	 * 
+	 *
 	 */
 	const handleButtonClick = () => {
 		navigate(`/creation/question-set/${questionSet.id}`);
-	}
+	};
 
 	return (
 		<div className="flex flex-col gap-gap-10 p-padding-11 border border-color-gray-10 rounded-medium1 bg-color-alpha-white100">
@@ -42,10 +42,15 @@ const QuestionSetsCard = ({ questionSet }: QuestionSetsCardProps) => {
 			<div className="flex justify-between items-center">
 				<div className="flex gap-gap-5 items-center text-color-gray-40">
 					<CalendarDays size={20} />
-					<span className="typo-body-xsmall">{dayjs(questionSet.updatedAt).format("YYYY.MM.DD")}</span>
+					<span className="typo-body-xsmall">
+						{dayjs(questionSet.updatedAt).format("YYYY.MM.DD")}
+					</span>
 				</div>
 				<div className="flex gap-gap-5 items-center">
-					<QuestionSetsCardButton item="문제 수정" onClick={handleButtonClick} />
+					<QuestionSetsCardButton
+						item="문제 수정"
+						onClick={handleButtonClick}
+					/>
 				</div>
 			</div>
 		</div>

@@ -18,7 +18,7 @@ import SidebarItem from "./SidebarItem";
 //
 
 const NAVIGATION_ITEMS = [
-	{ icon: <SquarePen />, label: "문제 관리", path: "/question-sets" },
+	{ icon: <SquarePen />, label: "문제 관리", path: "/management" },
 	{ icon: <Puzzle />, label: "문제 풀기", path: "/solving" },
 	{
 		icon: <LayoutDashboard />,
