@@ -736,6 +736,8 @@ export interface components {
             explanation?: string;
             imageUrl?: string;
             /** Format: int64 */
+            imageId?: number;
+            /** Format: int64 */
             number?: number;
             /** @enum {string} */
             type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
@@ -785,9 +787,32 @@ export interface components {
             token: string;
         };
         CreateQuestionSetApiRequest: {
+            /** Format: int64 */
+            teamId: number;
             subject: string;
             /** @enum {string} */
             creationType: "AI_GENERATED" | "MANUAL";
+            /** @description 업로드한 해당 문제 셋의 파일 목록 */
+            materials?: components["schemas"]["MaterialDto"][];
+            /** @description 제작 요청할 문제 개수 */
+            counts?: components["schemas"]["QuestionCount"][];
+            /** @description 문제 난이도, AI 생성인 경우에만 활용 */
+            difficulty?: string;
+            /** @description 문제 셋에 대한 보충 설명, AI 생성인 경우에만 활용 */
+            instruction?: string;
+        };
+        /** @description 업로드한 해당 문제 셋의 파일 목록 */
+        MaterialDto: {
+            /** Format: int64 */
+            id?: number;
+            url?: string;
+        };
+        /** @description 제작 요청할 문제 개수 */
+        QuestionCount: {
+            /** @enum {string} */
+            type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+            /** Format: int32 */
+            count?: number;
         };
         ApiResponseCreateQuestionSetApiResponse: {
             isSuccess?: boolean;
