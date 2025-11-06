@@ -1,7 +1,6 @@
 import { Bell, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useUser from "@/hooks/useUser";
-import useLoginModalOpenStore from "@/stores/useLoginModalOpenStore";
 import HeaderInfoSectionSearchInput from "./HeaderInfoSectionSearchInput";
 
 //
@@ -18,8 +17,6 @@ interface HeaderInfoSectionProps {
 
 const HeaderInfoSection = ({ isHide }: HeaderInfoSectionProps) => {
 	const navigate = useNavigate();
-
-	const { openLoginModal } = useLoginModalOpenStore();
 
 	const { user } = useUser();
 
@@ -38,9 +35,9 @@ const HeaderInfoSection = ({ isHide }: HeaderInfoSectionProps) => {
 
 		if (user) {
 			// Handle user click
+			// TODO: navigate to my page
 		} else {
 			// Handle guest click
-			// openLoginModal();
 			navigate("/login");
 		}
 	};
