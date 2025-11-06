@@ -21,7 +21,7 @@ const CreationQuestionImage = ({
 	imageUrl,
 	onDelete,
 }: CreationQuestionImageProps) => {
-	const ref = useRef<HTMLImageElement>(null);
+	const imgRef = useRef<HTMLImageElement>(null);
 
 	const [isImageLoading, setIsImageLoading] = useState(true);
 
@@ -32,23 +32,44 @@ const CreationQuestionImage = ({
 		setIsImageLoading(false);
 	};
 
+	/**
+	 *
+	 */
+	const handleImageError = () => {
+		setIsImageLoading(false);
+	};
+
 	//
 	//
 	// biome-ignore lint/correctness/useExhaustiveDependencies: when imageUrl changes, image loading state should be reset
 	useEffect(() => {
-		if (!ref.current?.complete) {
-			setIsImageLoading(true);
-		}
+		setIsImageLoading(true);
+		
+		// 이미지 요소가 마운트된 후 확인하기 위해 약간의 지연 추가
+		// 이미지가 이미 로드된 경우(캐시에서 로드된 경우) 즉시 로딩 상태 해제
+		const checkImageLoaded = () => {
+			if (imgRef.current?.complete) {
+				setIsImageLoading(false);
+			}
+		};
+		
+		// 즉시 확인
+		checkImageLoaded();
+		
+		// DOM 업데이트 후 다시 확인
+		const timeoutId = setTimeout(checkImageLoaded, 0);
+		
+		return () => {
+			clearTimeout(timeoutId);
+		};
 	}, [imageUrl]);
 
 	return (
 		<div className="w-full flex justify-center">
 			<div
-				ref={ref}
 				className={clsx("relative h-auto", {
 					hidden: isImageLoading,
 				})}
-				onLoad={handleImageLoad}
 			>
 				<button
 					type="button"
@@ -58,9 +79,12 @@ const CreationQuestionImage = ({
 					<X size={16} />
 				</button>
 				<img
+					ref={imgRef}
 					src={imageUrl}
 					alt="question-image"
 					className="h-auto max-h-[400px] w-auto rounded-medium1"
+					onLoad={handleImageLoad}
+					onError={handleImageError}
 				/>
 			</div>
 			{isImageLoading && (
