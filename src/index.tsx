@@ -23,12 +23,12 @@ const rootEl = document.getElementById("root");
 if (rootEl) {
 	const root = ReactDOM.createRoot(rootEl);
 	root.render(
-		<React.StrictMode>
-			<QueryClientProvider client={queryClient}>
-				<ConfirmProvider>
-					<RouterProvider router={router} />
-				</ConfirmProvider>
-			</QueryClientProvider>
-		</React.StrictMode>,
+		// <React.StrictMode>
+		<QueryClientProvider client={queryClient}>
+			<ConfirmProvider>
+				<RouterProvider router={router} />
+			</ConfirmProvider>
+		</QueryClientProvider>,
+		// </React.StrictMode>,
 	);
 }

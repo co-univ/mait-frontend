@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie";
 import loadingAnimation from "@/assets/lotties/loading.json";
 
@@ -21,6 +21,8 @@ const CreationQuestionImage = ({
 	imageUrl,
 	onDelete,
 }: CreationQuestionImageProps) => {
+	const ref = useRef<HTMLImageElement>(null);
+
 	const [isImageLoading, setIsImageLoading] = useState(true);
 
 	/**
@@ -34,15 +36,19 @@ const CreationQuestionImage = ({
 	//
 	// biome-ignore lint/correctness/useExhaustiveDependencies: when imageUrl changes, image loading state should be reset
 	useEffect(() => {
-		setIsImageLoading(true);
+		if (!ref.current?.complete) {
+			setIsImageLoading(true);
+		}
 	}, [imageUrl]);
 
 	return (
 		<div className="w-full flex justify-center">
 			<div
+				ref={ref}
 				className={clsx("relative h-auto", {
 					hidden: isImageLoading,
 				})}
+				onLoad={handleImageLoad}
 			>
 				<button
 					type="button"
@@ -55,7 +61,6 @@ const CreationQuestionImage = ({
 					src={imageUrl}
 					alt="question-image"
 					className="h-auto max-h-[400px] w-auto rounded-medium1"
-					onLoad={handleImageLoad}
 				/>
 			</div>
 			{isImageLoading && (
