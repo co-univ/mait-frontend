@@ -1,8 +1,9 @@
+import { SquarePen } from "lucide-react";
 import { useParams, useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
-import QuestionSetsLayout from "@/layouts/question-sets/QuestionSetsLayout";
+import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import ManagementLiveTime from "./ManagementLiveTime";
 import ManagementMaking from "./ManagementMaking";
 
@@ -29,7 +30,7 @@ const Management = () => {
 	};
 
 	return (
-		<QuestionSetsLayout>
+		<LabeledPageLayout icon={<SquarePen />} label="문제 관리">
 			<Tabs.Root
 				value={mode}
 				onValueChange={handleModeChange}
@@ -49,7 +50,7 @@ const Management = () => {
 					<ManagementMaking questionSets={questionSets} />
 				</Tabs.Content>
 			</Tabs.Root>
-		</QuestionSetsLayout>
+		</LabeledPageLayout>
 	);
 };
 
