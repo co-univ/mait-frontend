@@ -61,10 +61,9 @@ const CreationQuestionImage = ({
 			{isImageLoading && (
 				<Lottie
 					options={{
-						loop: true,
-						autoplay: true,
 						animationData: loadingAnimation,
 					}}
+					height={100}
 				/>
 			)}
 		</div>
