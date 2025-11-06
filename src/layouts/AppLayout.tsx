@@ -12,7 +12,7 @@ import Header from "@/components/header/Header";
 import Sidebar from "@/components/sidebar/SideBar";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
-import { hasFirstValidPath } from "@/utils/path";
+import { hasValidPath } from "@/utils/path";
 import { SIDEBAR_TRANSITION } from "../app.constants";
 
 //
@@ -43,7 +43,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			right: 0,
 		};
 
-		const isSmallMarginPage = hasFirstValidPath(
+		const isSmallMarginPage = hasValidPath(
 			SMALL_PAGE_MARGIN_PATHS,
 			location.pathname,
 		);
