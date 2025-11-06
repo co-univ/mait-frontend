@@ -44,11 +44,9 @@ const CreationQuestionImage = ({
 	return (
 		<div className="w-full flex justify-center">
 			<div
-				ref={ref}
 				className={clsx("relative h-auto", {
 					hidden: isImageLoading,
 				})}
-				onLoad={handleImageLoad}
 			>
 				<button
 					type="button"
@@ -58,8 +56,10 @@ const CreationQuestionImage = ({
 					<X size={16} />
 				</button>
 				<img
+					ref={ref}
 					src={imageUrl}
 					alt="question-image"
+					onLoad={handleImageLoad}
 					className="h-auto max-h-[400px] w-auto rounded-medium1"
 				/>
 			</div>
