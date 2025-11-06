@@ -70,10 +70,6 @@ const useCreationQuestion = ({
 						},
 					).queryKey,
 				});
-
-				navigate(
-					`/creation/question-set/${questionSetId}/question/${response.data?.id}`,
-				);
 			},
 
 			onError: () => {
