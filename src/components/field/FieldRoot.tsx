@@ -6,8 +6,9 @@ import type { ReactNode } from "react";
 //
 
 interface FieldRootProps {
-	children: ReactNode;
+	disabled?: boolean;
 	className?: string;
+	children: ReactNode;
 }
 
 //
@@ -24,9 +25,19 @@ interface FieldRootProps {
  *   <textarea placeholder="내용을 입력하세요." />
  * </Field.Root>
  */
-const FieldRoot = ({ children, className }: FieldRootProps) => {
+const FieldRoot = ({ disabled, children, className }: FieldRootProps) => {
 	return (
-		<div className={clsx("flex flex-col gap-gap-5", className)}>{children}</div>
+		<div
+			className={clsx(
+				"flex flex-col gap-gap-5",
+				{
+					"text-color-gray-20": disabled,
+				},
+				className,
+			)}
+		>
+			{children}
+		</div>
 	);
 };
 
