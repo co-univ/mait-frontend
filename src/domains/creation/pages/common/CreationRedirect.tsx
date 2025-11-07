@@ -17,14 +17,12 @@ const CreationRedirect = () => {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: navigate function is stable
 	useEffect(() => {
 		if (questions && !isLoading) {
-			const firstQuestionId = questions[0]?.id;
+			const firstQuestionId = questions[0]?.id ?? 0;
 
-			if (firstQuestionId) {
-				navigate(
-					`/creation/question-set/${questionSetId}/question/${firstQuestionId}`,
-					{ replace: true },
-				);
-			}
+			navigate(
+				`/creation/question-set/${questionSetId}/question/${firstQuestionId}`,
+				{ replace: true },
+			);
 		}
 	}, [questions, questionSetId, isLoading]);
 

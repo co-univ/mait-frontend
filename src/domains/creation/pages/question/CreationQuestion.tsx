@@ -45,10 +45,16 @@ const CreationQuestion = () => {
 				onQuestionAdd={handleAddQuestion}
 				onQuestionDelete={handleDeleteQuestion}
 			/>
-
-			<CreationQuestionMain />
-
-			<CreationQuestionAdditional />
+			{questionId !== 0 ? (
+				<>
+					<CreationQuestionMain />
+					<CreationQuestionAdditional />
+				</>
+			) : (
+				<div className="flex flex-1 justify-center items-center typo-heading-large">
+					문제를 만들어야함
+				</div>
+			)}
 		</CreationQuestionLayout>
 	);
 };
