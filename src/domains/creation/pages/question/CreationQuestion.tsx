@@ -4,7 +4,7 @@ import {
 	useCreationQuestion,
 	useCreationQuestions,
 } from "@/domains/creation/hooks/question";
-import CreationLayout from "@/domains/creation/layouts/common/CreationLayout";
+import CreationQuestionLayout from "@/domains/creation/layouts/question/CreationQuestionLayout";
 import CreationQuestionAdditional from "@/domains/creation/pages/question/additional/CreationQuestionAdditional";
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
 
@@ -36,7 +36,7 @@ const CreationQuestion = () => {
 	};
 
 	return (
-		<CreationLayout>
+		<CreationQuestionLayout>
 			<QuestionNavigation
 				canDelete
 				questionSetId={questionSetId}
@@ -49,7 +49,7 @@ const CreationQuestion = () => {
 			<CreationQuestionMain />
 
 			<CreationQuestionAdditional />
-		</CreationLayout>
+		</CreationQuestionLayout>
 	);
 };
 
