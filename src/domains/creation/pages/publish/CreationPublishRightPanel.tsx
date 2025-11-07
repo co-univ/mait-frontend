@@ -1,4 +1,3 @@
-import React from "react";
 import { Field } from "@/components/field";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
@@ -7,13 +6,23 @@ import CreationPanelTextarea from "../../components/common/CreationPanelTextarea
 //
 //
 
-type CreationPublishRightPanelProps = {};
+type CreationPublishRightPanelProps = {
+	levelDescription?: string;
+	subject?: string;
+	onChangeLevelDescription: (levelDescription: string) => void;
+	onChangeSubject: (subject: string) => void;
+};
 
 //
 //
 //
 
-const CreationPublishRightPanel = () => {
+const CreationPublishRightPanel = ({
+	levelDescription,
+	subject,
+	onChangeLevelDescription,
+	onChangeSubject,
+}: CreationPublishRightPanelProps) => {
 	const renderLevelDescriptionField = () => {
 		return (
 			<Field.Root>
@@ -23,6 +32,8 @@ const CreationPublishRightPanel = () => {
 				<CreationPanelTextarea
 					minRows={1}
 					placeholder="ex. 대학생 3학년/컴퓨터공학 전공자"
+					value={levelDescription}
+					onChange={(e) => onChangeLevelDescription(e.target.value)}
 				/>
 			</Field.Root>
 		);
@@ -35,7 +46,12 @@ const CreationPublishRightPanel = () => {
 		return (
 			<Field.Root>
 				<Field.Label className="typo-body-large">주제</Field.Label>
-				<CreationPanelTextarea minRows={1} placeholder="ex. 네트워크" />
+				<CreationPanelTextarea
+					minRows={1}
+					placeholder="ex. 네트워크"
+					value={subject}
+					onChange={(e) => onChangeSubject(e.target.value)}
+				/>
 			</Field.Root>
 		);
 	};
