@@ -23,7 +23,7 @@ const CreationQuestionAdditionalButtons = () => {
 	 *
 	 */
 	const handleCreateButtonClick = () => {
-		navigate(`/creation/publish/team/1/question-set/${questionSetId}`);
+		navigate(`/creation/publish/team/${teamId}/question-set/${questionSetId}`);
 	};
 
 	return (
@@ -37,6 +37,7 @@ const CreationQuestionAdditionalButtons = () => {
 			<Button
 				icon={<Check />}
 				item="생성하기"
+				onClick={handleCreateButtonClick}
 				className="bg-color-primary-5 border-none text-color-primary-50"
 			/>
 		</div>

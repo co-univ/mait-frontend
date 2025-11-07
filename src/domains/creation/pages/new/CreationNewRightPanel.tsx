@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import FileInput from "@/components/FileInput";
 import { Field } from "@/components/field";
-import CreationNewPanelLayout from "../../components/new/CreationNewPanel";
-import CreationNewTextarea from "../../components/new/CreationNewTextarea";
+import CreationPanel from "../../components/common/CreationPanel";
+import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 
 //
 //
@@ -16,7 +16,7 @@ const CreationNewRightPanel = () => {
 		return (
 			<Field.Root disabled>
 				<Field.Label className="typo-body-large">문제 풀이 대상</Field.Label>
-				<CreationNewTextarea
+				<CreationPanelTextarea
 					disabled
 					minRows={1}
 					placeholder="대학생 3학년/컴퓨터공학 전공자"
@@ -61,7 +61,7 @@ const CreationNewRightPanel = () => {
 		return (
 			<Field.Root disabled>
 				<Field.Label className="typo-body-large">보충 설명</Field.Label>
-				<CreationNewTextarea
+				<CreationPanelTextarea
 					disabled
 					placeholder="이 문제에 대해서 태그 형식으로 어쩌구 저쩌구로 뭐 이렇게 해서 저렇게 해줘."
 				/>
@@ -70,11 +70,11 @@ const CreationNewRightPanel = () => {
 	};
 
 	return (
-		<CreationNewPanelLayout>
+		<CreationPanel>
 			{renderDifficultyField()}
 			{renderMaterialField()}
 			{renderInstructionField()}
-		</CreationNewPanelLayout>
+		</CreationPanel>
 	);
 };
 

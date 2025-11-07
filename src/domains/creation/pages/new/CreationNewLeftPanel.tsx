@@ -1,8 +1,8 @@
 import { Field } from "@/components/field";
 import { Radio } from "@/components/radio";
 import type { QuestionCount } from "@/libs/types";
-import CreationNewPanel from "../../components/new/CreationNewPanel";
-import CreationNewTextarea from "../../components/new/CreationNewTextarea";
+import CreationPanel from "../../components/common/CreationPanel";
+import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 
 //
@@ -68,7 +68,7 @@ const CreationNewLeftPanel = ({
 		return (
 			<Field.Root>
 				<Field.Label className="typo-body-large">주제</Field.Label>
-				<CreationNewTextarea
+				<CreationPanelTextarea
 					placeholder="ex. 네트워크"
 					value={subject}
 					onChange={(e) => onSubjectChange(e.target.value)}
@@ -79,7 +79,7 @@ const CreationNewLeftPanel = ({
 
 
 	return (
-		<CreationNewPanel>
+		<CreationPanel>
 			{renderCreationTypeField()}
 			{renderSubjectField()}
 			<CreationNewLeftPanelCountsField
@@ -87,7 +87,7 @@ const CreationNewLeftPanel = ({
 				onQuestionCountCheck={onQuestionCountCheck}
 				onQuestionCountCountChange={onQuestionCountCountChange}
 			/>
-		</CreationNewPanel>
+		</CreationPanel>
 	);
 };
 

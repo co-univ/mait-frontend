@@ -6,13 +6,13 @@ import AdjustableTextarea, {
 //
 //
 
-interface CreationNewTextareaProps extends AdjustableTextareaProps {}
+interface CreationPanelTextareaProps extends AdjustableTextareaProps {}
 
 //
 //
 //
 
-const CreationNewTextarea = (props: CreationNewTextareaProps) => {
+const CreationPanelTextarea = (props: CreationPanelTextareaProps) => {
 	return (
 		<AdjustableTextarea
 			minRows={3}
@@ -22,4 +22,4 @@ const CreationNewTextarea = (props: CreationNewTextareaProps) => {
 	);
 };
 
-export default CreationNewTextarea;
+export default CreationPanelTextarea;
