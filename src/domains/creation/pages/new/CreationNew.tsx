@@ -78,7 +78,9 @@ const CreationNew = () => {
 
 			const questionSetId = res.data?.data?.questionSetId;
 
-			navigate(`/creation/question-set/${questionSetId}/question/0`);
+			navigate(
+				`/creation/question/team/${teamId}/question-set/${questionSetId}/question/0`,
+			);
 		} catch {
 			notify.error("문제 생성에 실패했습니다.");
 		}

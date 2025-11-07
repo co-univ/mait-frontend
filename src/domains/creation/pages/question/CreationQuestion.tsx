@@ -15,6 +15,7 @@ import CreationQuestionMain from "@/domains/creation/pages/question/CreationQues
 const CreationQuestion = () => {
 	const navigate = useNavigate();
 
+	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
@@ -31,7 +32,8 @@ const CreationQuestion = () => {
 		handleUpdateQuestion();
 
 		navigate(
-			`/creation/question-set/${questionSetId}/question/${newQuestionId}`,
+			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${newQuestionId}`,
+			{ replace: true },
 		);
 	};
 

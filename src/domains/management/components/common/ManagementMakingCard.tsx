@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import type { QuestionSetApiResponse } from "@/libs/types";
 
@@ -17,11 +17,15 @@ interface ManagementMakingCardProps {
 const ManagementMakingCard = ({ questionSet }: ManagementMakingCardProps) => {
 	const navigate = useNavigate();
 
+	const teamId = Number(useParams().teamId);
+
 	/**
 	 *
 	 */
 	const handleButtonClick = () => {
-		navigate(`/creation/question-set/${questionSet.id}`);
+		navigate(
+			`/creation/team/${teamId}/question/question-set/${questionSet.id}`,
+		);
 	};
 
 	return (
