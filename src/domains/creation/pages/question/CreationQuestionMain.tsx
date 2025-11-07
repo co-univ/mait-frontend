@@ -43,7 +43,7 @@ const CreationQuestionMain = () => {
 			return (
 				<CreationQuestionImage
 					imageUrl={question.imageUrl}
-					onDelete={() => handleImageChange(null, undefined)}
+					onDelete={() => handleImageChange(undefined, undefined)}
 				/>
 			);
 		}

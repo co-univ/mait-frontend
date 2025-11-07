@@ -26,7 +26,7 @@ const QuestionSetsLabel = ({
 					variant === "secondary" && "bg-secondary-50",
 				)}
 			/>
-			<span
+			<h2
 				className={clsx(
 					"typo-heading-xsmall",
 					variant === "primary" && "text-primary-50",
@@ -34,7 +34,7 @@ const QuestionSetsLabel = ({
 				)}
 			>
 				{label}
-			</span>
+			</h2>
 		</div>
 	);
 };

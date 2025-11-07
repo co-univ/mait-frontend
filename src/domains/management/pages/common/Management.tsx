@@ -1,8 +1,9 @@
+import { SquarePen } from "lucide-react";
 import { useParams, useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
-import QuestionSetsLayout from "@/layouts/question-sets/QuestionSetsLayout";
+import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import ManagementLiveTime from "./ManagementLiveTime";
 import ManagementMaking from "./ManagementMaking";
 
@@ -15,7 +16,10 @@ const Management = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "making";
 
-	const { questionSets } = useQuestionSets({ teamId, mode });
+	const { questionSetList, questionSetGroup } = useQuestionSets({
+		teamId,
+		mode,
+	});
 
 	/**
 	 *
@@ -29,7 +33,7 @@ const Management = () => {
 	};
 
 	return (
-		<QuestionSetsLayout>
+		<LabeledPageLayout icon={<SquarePen />} label="문제 관리">
 			<Tabs.Root
 				value={mode}
 				onValueChange={handleModeChange}
@@ -38,18 +42,18 @@ const Management = () => {
 				<QuestionSetsTabs />
 
 				<Tabs.Content value="making">
-					<ManagementMaking questionSets={questionSets} />
+					<ManagementMaking questionSets={questionSetList ?? []} />
 				</Tabs.Content>
 
 				<Tabs.Content value="live-time">
-					<ManagementLiveTime questionSets={questionSets} />
+					<ManagementLiveTime questionSetGroup={questionSetGroup} />
 				</Tabs.Content>
 
 				<Tabs.Content value="review">
-					<ManagementMaking questionSets={questionSets} />
+					<ManagementMaking questionSets={questionSetList ?? []} />
 				</Tabs.Content>
 			</Tabs.Root>
-		</QuestionSetsLayout>
+		</LabeledPageLayout>
 	);
 };
 

@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import type { ApiResponseUserInfoApiResponse } from "@/types";
+import { apiHooks } from "@/libs/api";
 
 //
 //
@@ -16,22 +15,16 @@ const useUser = () => {
 		data: userData,
 		isPending,
 		isError,
-	} = useQuery<ApiResponseUserInfoApiResponse>({
-		queryKey: ["/api/v1/users/me"],
-		queryFn: () => {
-			return {
-				data: {
-					id: 1,
-					username: "mock",
-					email: "mock@example.com",
-					nickname: "mock",
-				},
-			};
+	} = apiHooks.useQuery(
+		"get",
+		"/api/v1/users/me",
+		{},
+		{
+			enabled: !!token,
+			staleTime: 1000 * 60 * 60,
+			retry: 0,
 		},
-		enabled: !!token,
-		staleTime: 1000 * 60 * 60,
-		retry: 0,
-	});
+	);
 
 	return {
 		user: userData?.data,

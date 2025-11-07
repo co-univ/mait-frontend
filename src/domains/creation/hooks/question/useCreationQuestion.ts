@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
@@ -25,7 +25,7 @@ interface UseQuestionReturn {
 	handleContentChange: (content: string) => void;
 	handleExplanationChange: (explanation: string) => void;
 	handleTypeChange: (type: QuestionType) => void;
-	handleImageChange: (imageId: number | null, imageUrl?: string) => void;
+	handleImageChange: (imageId?: number, imageUrl?: string) => void;
 	handleImageAdd: (file: File | null) => Promise<void>;
 	handleUpdateQuestion: () => void;
 	handleDeleteQuestion: (deleteQuestionId: number) => void;
@@ -42,6 +42,8 @@ const useCreationQuestion = ({
 	questionSetId,
 	questionId,
 }: UseQuestionProps): UseQuestionReturn => {
+	const teamId = useParams().teamId;
+
 	const { questions, editQuestion } = useCreationQuestionsStore();
 
 	const queryClient = useQueryClient();
@@ -114,7 +116,8 @@ const useCreationQuestion = ({
 
 				if (targetQuestionId) {
 					navigate(
-						`/creation/question-set/${questionSetId}/question/${targetQuestionId}`,
+						`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${targetQuestionId}`,
+						{ replace: true },
 					);
 				}
 			},
@@ -148,7 +151,7 @@ const useCreationQuestion = ({
 	/**
 	 *
 	 */
-	const handleImageChange = (imageId: number | null, imageUrl?: string) => {
+	const handleImageChange = (imageId?: number, imageUrl?: string) => {
 		if (question) {
 			editQuestion({ ...question, imageId, imageUrl });
 		}
@@ -225,9 +228,9 @@ const useCreationQuestion = ({
 			);
 
 			const imageUrl = res.data?.data?.imageUrl;
-			const imageId = res.data?.data?.id ?? null;
+			const imageId = res.data?.data?.id;
 
-			if (imageUrl) {
+			if (imageId && imageUrl) {
 				handleImageChange(imageId, imageUrl);
 			}
 		} catch {

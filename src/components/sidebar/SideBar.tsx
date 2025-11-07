@@ -10,7 +10,7 @@ import {
 } from "@/app.constants";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
-import { hasFirstValidPath } from "@/utils/path";
+import { hasValidPath } from "@/utils/path";
 import SidebarItem from "./SidebarItem";
 
 //
@@ -18,14 +18,30 @@ import SidebarItem from "./SidebarItem";
 //
 
 const NAVIGATION_ITEMS = [
-	{ icon: <SquarePen />, label: "문제 관리", path: "/management" },
-	{ icon: <Puzzle />, label: "문제 풀기", path: "/solving" },
+	{
+		icon: <SquarePen />,
+		label: "문제 관리",
+		path: "/management",
+		activePaths: ["/management", "/creation"],
+	},
+	{
+		icon: <Puzzle />,
+		label: "문제 풀기",
+		path: "/solving",
+		activePaths: ["/solving"],
+	},
 	{
 		icon: <LayoutDashboard />,
 		label: "풀이 결과 대시보드",
 		path: "/dashboard",
+		activePaths: ["/dashboard"],
 	},
-	{ icon: <Users />, label: "팀 관리", path: "/team-manage" },
+	{
+		icon: <Users />,
+		label: "팀 관리",
+		path: "/team-manage",
+		activePaths: ["/team-manage"],
+	},
 ];
 
 //
@@ -37,7 +53,7 @@ const SideBar = () => {
 	const { user } = useUser();
 	const location = useLocation();
 
-	const sidebarVariant: "default" | "elevation" = hasFirstValidPath(
+	const sidebarVariant: "default" | "elevation" = hasValidPath(
 		SMALL_PAGE_MARGIN_PATHS,
 		location.pathname,
 	)
@@ -100,7 +116,7 @@ const SideBar = () => {
 							key={item.path}
 							className={clsx("text-color-gray-30", {
 								"text-color-primary-50 typo-heading-xsmall bg-primary-5":
-									hasFirstValidPath([item.path], location.pathname),
+									hasValidPath(item.activePaths, location.pathname),
 							})}
 						>
 							<Link to={item.path} className="flex items-center gap-gap-5">

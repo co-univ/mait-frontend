@@ -9,14 +9,11 @@ import type {
 	UpdateShortQuestionApiRequest,
 } from "@/libs/types";
 
-export type QuestionResponseType = (
+export type QuestionResponseType =
 	| MultipleQuestionApiResponse
 	| ShortQuestionApiResponse
 	| OrderingQuestionApiResponse
-	| FillBlankQuestionApiResponse
-) & {
-	imageId: number | null;
-};
+	| FillBlankQuestionApiResponse;
 
 export type QuestionResponseTypeWithIsEditing = QuestionResponseType & {
 	isEditing: boolean;

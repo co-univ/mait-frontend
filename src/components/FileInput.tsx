@@ -112,9 +112,9 @@ const FileInput = ({
 	return (
 		<div
 			className={clsx(
-				"flex justify-center items-center gap-gap-5 w-full h-size-height-11 rounded-medium1 border border-color-gray-20 border-dashed bg-color-gray-5 cursor-pointer text-color-gray-40 typo-body-medium",
+				"flex justify-center items-center gap-gap-5 w-full py-padding-10 px-padding-10 rounded-medium1 border border-color-gray-20 border-dashed bg-color-gray-5 cursor-pointer text-color-gray-40 typo-body-medium",
 				{
-					"!border-color-gray-10 text-color-gray-20 cursor-not-allowed":
+					"!border-color-gray-10 !text-color-gray-20 cursor-not-allowed":
 						props.disabled || isLoading,
 				},
 				{
@@ -143,15 +143,14 @@ const FileInput = ({
 			{isLoading ? (
 				<Lottie
 					options={{
-						loop: true,
-						autoplay: true,
 						animationData: loadingAnimation,
 					}}
+					height={100}
 				/>
 			) : (
 				<>
 					<FileUp />
-					<span className="">{text}</span>
+					<span>{text}</span>
 				</>
 			)}
 		</div>

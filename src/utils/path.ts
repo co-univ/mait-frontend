@@ -4,9 +4,6 @@
  * @param currentPath - The current path to check.
  * @returns True if a match is found, false otherwise.
  */
-export const hasFirstValidPath = (
-	candidates: string[],
-	currentPath: string,
-) => {
+export const hasValidPath = (candidates: string[], currentPath: string) => {
 	return candidates.some((path) => currentPath.includes(path));
 };

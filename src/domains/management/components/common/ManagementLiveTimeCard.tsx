@@ -1,13 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
-import type { QuestionSetApiResponse } from "@/libs/types";
+import type { QuestionSetDto } from "@/libs/types";
 
 //
 //
 //
 
 interface ManagementLiveTimeCardProps {
-	questionSet: QuestionSetApiResponse;
+	questionSet: QuestionSetDto;
 }
 
 //
@@ -19,11 +19,15 @@ const ManagementLiveTimeCard = ({
 }: ManagementLiveTimeCardProps) => {
 	const navigate = useNavigate();
 
+	const teamId = Number(useParams().teamId);
+
 	/**
 	 *
 	 */
-	const handleButtonClick = () => {
-		navigate(`/creation/question-set/${questionSet.id}`);
+	const handleCreationButtonClick = () => {
+		navigate(
+			`/creation/question/team/${teamId}/question-set/${questionSet.id}`,
+		);
 	};
 
 	return (
@@ -38,7 +42,7 @@ const ManagementLiveTimeCard = ({
 					<QuestionSetsCard.Footer.Button
 						variant="secondary"
 						item="문제 수정"
-						onClick={handleButtonClick}
+						onClick={handleCreationButtonClick}
 					/>
 					<QuestionSetsCard.Footer.Button
 						variant="secondary"
