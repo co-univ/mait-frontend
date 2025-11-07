@@ -47,11 +47,11 @@ const CreationNewLeftPanel = ({
 						onChange={() => {}}
 						className="flex flex-1 flex-wrap gap-gap-8 justify-between"
 					>
-						<Radio.Item value="AI_GENERATED" className="flex-1 min-w-[140px]">
+						<Radio.Item value="AI_GENERATED" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>AI 생성</Radio.Label>
 						</Radio.Item>
-						<Radio.Item value="MANUAL" className="flex-1 min-w-[140px]">
+						<Radio.Item value="MANUAL" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>직접 제작</Radio.Label>
 						</Radio.Item>
@@ -76,7 +76,6 @@ const CreationNewLeftPanel = ({
 			</Field.Root>
 		);
 	};
-
 
 	return (
 		<CreationPanel>

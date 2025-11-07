@@ -73,7 +73,7 @@ export const RadioItem = ({ value, className, children }: RadioItemProps) => {
 				onClick={handleChange}
 				onKeyDown={handleKeyDown}
 				className={clsx(
-					"flex items-center gap-gap-10 cursor-pointer",
+					"flex items-center gap-gap-5 cursor-pointer",
 					{ "opacity-50 cursor-not-allowed": disabled },
 					className,
 				)}
