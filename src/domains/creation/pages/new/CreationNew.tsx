@@ -71,19 +71,20 @@ const CreationNew = () => {
 	 *
 	 */
 	const handleCreateButtonClick = async () => {
-		try {
-			const res = await apiClient.POST("/api/v1/question-sets", {
-				body: questionSet,
-			});
+		const res = await apiClient.POST("/api/v1/question-sets", {
+			body: questionSet,
+		});
 
-			const questionSetId = res.data?.data?.questionSetId;
-
-			navigate(
-				`/creation/question/team/${teamId}/question-set/${questionSetId}/question/0`,
-			);
-		} catch {
+		if (!res.data?.isSuccess) {
 			notify.error("문제 생성에 실패했습니다.");
+			return;
 		}
+
+		const questionSetId = res.data?.data?.questionSetId;
+
+		navigate(
+			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/0`,
+		);
 	};
 
 	return (
