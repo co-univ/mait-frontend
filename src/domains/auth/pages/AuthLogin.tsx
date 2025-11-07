@@ -1,5 +1,6 @@
 import AuthEmailLogin from "../components/AuthEmailLogin";
-import AuthLoginButton from "../components/AuthSocialLoginButton";
+import AuthGoogleLogin from "../components/AuthGoogleLogin";
+import AuthLoginButton from "../components/AuthGoogleLoginButton";
 
 //
 //
@@ -12,7 +13,7 @@ const AuthLogin = () => {
 				MAIT 로그인
 			</h2>
 			<div className="w-full max-w-[449px] p-5 bg-color-alpha-white100 rounded-radius-medium1 flex flex-col justify-center gap-[2rem]">
-				<AuthLoginButton />
+				<AuthGoogleLogin />
 				<div className="w-full relative flex items-center justify-center gap-gap-4">
 					<div className="w-full h-[1px] bg-color-gray-10 absolute"></div>
 					<span className="relative px-gap-4 leading-lineheights-0 top-0 bg-alpha-white100 font-pretendard text-[15px] font-normal select-none">
