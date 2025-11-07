@@ -16,7 +16,10 @@ const Management = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "making";
 
-	const { questionSets } = useQuestionSets({ teamId, mode });
+	const { questionSetList, questionSetGroup } = useQuestionSets({
+		teamId,
+		mode,
+	});
 
 	/**
 	 *
@@ -39,15 +42,15 @@ const Management = () => {
 				<QuestionSetsTabs />
 
 				<Tabs.Content value="making">
-					<ManagementMaking questionSets={questionSets} />
+					<ManagementMaking questionSets={questionSetList ?? []} />
 				</Tabs.Content>
 
 				<Tabs.Content value="live-time">
-					<ManagementLiveTime questionSets={questionSets} />
+					<ManagementLiveTime questionSetGroup={questionSetGroup} />
 				</Tabs.Content>
 
 				<Tabs.Content value="review">
-					<ManagementMaking questionSets={questionSets} />
+					<ManagementMaking questionSets={questionSetList ?? []} />
 				</Tabs.Content>
 			</Tabs.Root>
 		</LabeledPageLayout>

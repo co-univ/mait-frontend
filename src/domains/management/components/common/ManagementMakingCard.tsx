@@ -1,13 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
-import type { QuestionSetApiResponse } from "@/libs/types";
+import type { QuestionSetDto } from "@/libs/types";
 
 //
 //
 //
 
 interface ManagementMakingCardProps {
-	questionSet: QuestionSetApiResponse;
+	questionSet: QuestionSetDto;
 }
 
 //
