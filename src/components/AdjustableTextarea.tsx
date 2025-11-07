@@ -65,8 +65,7 @@ const AdjustableTextarea = ({
 			{...props}
 			ref={ref}
 			className={clsx(
-				"resize-none overflow-hidden focus-visible:outline-none placeholder:text-color-gray-40 bg-inherit",
-				{ "placeholder:text-color-gray-20": props.disabled },
+				"resize-none overflow-hidden focus-visible:outline-none placeholder:text-color-gray-40 bg-inherit disabled:placeholder:text-color-gray-20",
 				props.className,
 			)}
 			onInput={handleInput}
