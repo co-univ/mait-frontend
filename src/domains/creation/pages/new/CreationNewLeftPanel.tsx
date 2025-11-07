@@ -1,14 +1,39 @@
-import CheckBox from "@/components/CheckBox";
 import { Field } from "@/components/field";
 import { Radio } from "@/components/radio";
+import type { QuestionCount } from "@/libs/types";
 import CreationNewPanel from "../../components/new/CreationNewPanel";
 import CreationNewTextarea from "../../components/new/CreationNewTextarea";
+import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 
 //
 //
 //
 
-const CreationNewLeftPanel = () => {
+interface CreationNewLeftPanelProps {
+	subject: string;
+	counts?: QuestionCount[];
+	onSubjectChange: (subject: string) => void;
+	onQuestionCountCheck: (
+		checked: boolean,
+		questionType: QuestionCount["type"],
+	) => void;
+	onQuestionCountCountChange: (
+		type: QuestionCount["type"],
+		count: number,
+	) => void;
+}
+
+//
+//
+//
+
+const CreationNewLeftPanel = ({
+	subject,
+	counts,
+	onSubjectChange,
+	onQuestionCountCheck,
+	onQuestionCountCountChange,
+}: CreationNewLeftPanelProps) => {
 	/**
 	 *
 	 */
@@ -43,50 +68,25 @@ const CreationNewLeftPanel = () => {
 		return (
 			<Field.Root>
 				<Field.Label className="typo-body-large">주제</Field.Label>
-				<CreationNewTextarea placeholder="ex. 네트워크" />
+				<CreationNewTextarea
+					placeholder="ex. 네트워크"
+					value={subject}
+					onChange={(e) => onSubjectChange(e.target.value)}
+				/>
 			</Field.Root>
 		);
 	};
 
-	/**
-	 *
-	 */
-	const renderQuestionCountField = () => {
-		return (
-			<Field.Root>
-				<Field.Label className="typo-body-large">문제 유형</Field.Label>
-				<div className="flex flex-col gap-gap-8 bg-color-gray-5 py-padding-10 px-padding-12 rounded-radius-medium1 typo-body-medium">
-					<div className="flex flex-wrap gap-gap-8">
-						<div className="flex flex-1 gap-gap-5 min-w-[140px]">
-							<CheckBox checked onChange={() => {}} />
-							<span>객관식 __개</span>
-						</div>
-						<div className="flex flex-1 gap-gap-5 min-w-[140px]">
-							<CheckBox checked onChange={() => {}} />
-							<span>주관식 __개</span>
-						</div>
-					</div>
-
-					<div className="flex flex-wrap gap-gap-8">
-						<div className="flex flex-1 gap-gap-5 min-w-[140px]">
-							<CheckBox checked={false} onChange={() => {}} />
-							<span>빈칸 __개</span>
-						</div>
-						<div className="flex flex-1 gap-gap-5 min-w-[140px]">
-							<CheckBox checked onChange={() => {}} />
-							<span>순서 __개</span>
-						</div>
-					</div>
-				</div>
-			</Field.Root>
-		);
-	};
 
 	return (
 		<CreationNewPanel>
 			{renderCreationTypeField()}
 			{renderSubjectField()}
-			{renderQuestionCountField()}
+			<CreationNewLeftPanelCountsField
+				counts={counts}
+				onQuestionCountCheck={onQuestionCountCheck}
+				onQuestionCountCountChange={onQuestionCountCountChange}
+			/>
 		</CreationNewPanel>
 	);
 };
