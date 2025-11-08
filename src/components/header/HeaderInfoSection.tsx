@@ -1,14 +1,23 @@
 import { Bell, UserRound } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import useUser from "@/hooks/useUser";
-import useLoginModalOpenStore from "@/stores/useLoginModalOpenStore";
 import HeaderInfoSectionSearchInput from "./HeaderInfoSectionSearchInput";
 
 //
 //
 //
 
-const HeaderInfoSection = () => {
-	const { openLoginModal } = useLoginModalOpenStore();
+interface HeaderInfoSectionProps {
+	isHide?: boolean;
+}
+
+//
+//
+//
+
+const HeaderInfoSection = ({ isHide }: HeaderInfoSectionProps) => {
+	const navigate = useNavigate();
+
 	const { user } = useUser();
 
 	/**
@@ -26,11 +35,16 @@ const HeaderInfoSection = () => {
 
 		if (user) {
 			// Handle user click
+			// TODO: navigate to my page
 		} else {
 			// Handle guest click
-			openLoginModal();
+			navigate("/login");
 		}
 	};
+
+	if (isHide) {
+		return;
+	}
 
 	return (
 		<div className="flex items-center">

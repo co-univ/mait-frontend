@@ -11,6 +11,7 @@ export type ApiResponseCurrentQuestionApiResponse = components["schemas"]["ApiRe
 export type ApiResponseListParticipantInfoResponse = components["schemas"]["ApiResponseListParticipantInfoResponse"];
 export type ApiResponseListQuestionAnswerSubmitRecordApiResponse = components["schemas"]["ApiResponseListQuestionAnswerSubmitRecordApiResponse"];
 export type ApiResponseListQuestionApiResponse = components["schemas"]["ApiResponseListQuestionApiResponse"];
+export type ApiResponseListQuestionSetApiResponse = components["schemas"]["ApiResponseListQuestionSetApiResponse"];
 export type ApiResponseListQuestionValidationApiResponse = components["schemas"]["ApiResponseListQuestionValidationApiResponse"];
 export type ApiResponseParticipantsCorrectAnswerRankResponse = components["schemas"]["ApiResponseParticipantsCorrectAnswerRankResponse"];
 export type ApiResponseQuestionAnswerSubmitApiResponse = components["schemas"]["ApiResponseQuestionAnswerSubmitApiResponse"];

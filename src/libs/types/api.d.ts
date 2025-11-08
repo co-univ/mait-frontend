@@ -1690,6 +1690,28 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionImageApiResponse"];
+                };
+            };
+        };
+    };
+    createDefaultQuestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "*/*": components["schemas"]["ApiResponseQuestionApiResponse"];
                 };
             };

@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import type React from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
 	HEADER_HEIGHT,
@@ -19,6 +20,15 @@ import { SIDEBAR_TRANSITION } from "../app.constants";
 //
 //
 
+const ACCOUNT_BACKGROUND_STYLE = {
+	background:
+		"radial-gradient(100% 100% at 50% 0%, #F2ECFE 6.94%, #D8E5FD 46.15%, #ECF2FE 70.19%, #FFF 100%)",
+};
+
+//
+//
+//
+
 interface AppLayoutProps {
 	children: React.ReactNode;
 }
@@ -28,6 +38,7 @@ interface AppLayoutProps {
 //
 
 const AppLayout = ({ children }: AppLayoutProps) => {
+	const [isAccountPage, setIsAccountPage] = useState(false);
 	const location = useLocation();
 	const { isSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
@@ -65,9 +76,21 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 		return `${ret.top}px ${ret.right}px ${ret.bottom}px ${ret.left}px`;
 	};
 
+	//
+	useEffect(() => {
+		const isAccountPage = ["/login", "/account"].some((path) =>
+			location.pathname.startsWith(path),
+		);
+
+		setIsAccountPage(isAccountPage);
+	}, [location]);
+
 	return (
-		<div className="flex flex-col min-w-screen min-h-screen">
-			<Header />
+		<div
+			className="flex flex-col min-w-screen min-h-screen"
+			style={isAccountPage ? ACCOUNT_BACKGROUND_STYLE : {}}
+		>
+			<Header isAccountPage={isAccountPage} />
 			<div className="relative flex flex-1">
 				<Sidebar />
 				<main
