@@ -2,6 +2,8 @@ import clsx from "clsx";
 import { FileUp } from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
+import Lottie from "react-lottie";
+import loadingAnimation from "@/assets/lotties/loading.json";
 
 //
 //
@@ -13,6 +15,7 @@ interface FileInputProps
 	className?: string;
 	file: File | null;
 	onChange: (file: File | null) => void;
+	isLoading?: boolean;
 }
 
 //
@@ -23,6 +26,7 @@ const FileInput = ({
 	className,
 	file,
 	onChange,
+	isLoading = false,
 	...props
 }: FileInputProps) => {
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -41,7 +45,7 @@ const FileInput = ({
 	 *
 	 */
 	const handleDivClick = () => {
-		if (!props.disabled && inputRef.current) {
+		if (!props.disabled && !isLoading && inputRef.current) {
 			inputRef.current.click();
 		}
 	};
@@ -53,6 +57,7 @@ const FileInput = ({
 		if (
 			(event.key === "Enter" || event.key === " ") &&
 			!props.disabled &&
+			!isLoading &&
 			inputRef.current
 		) {
 			event.preventDefault();
@@ -66,7 +71,7 @@ const FileInput = ({
 	const handleDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
 
-		if (!props.disabled) {
+		if (!props.disabled && !isLoading) {
 			setIsDragging(true);
 		}
 	};
@@ -89,7 +94,7 @@ const FileInput = ({
 		event.preventDefault();
 		setIsDragging(false);
 
-		if (props.disabled) {
+		if (props.disabled || isLoading) {
 			return;
 		}
 
@@ -107,10 +112,10 @@ const FileInput = ({
 	return (
 		<div
 			className={clsx(
-				"flex justify-center items-center gap-gap-5 w-full h-size-height-11 rounded-medium1 border border-color-gray-20 border-dashed bg-color-gray-5 cursor-pointer text-color-gray-40 typo-body-medium",
+				"flex justify-center items-center gap-gap-5 w-full py-padding-10 px-padding-10 rounded-medium1 border border-color-gray-20 border-dashed bg-color-gray-5 cursor-pointer text-color-gray-40 typo-body-medium",
 				{
-					"!border-color-gray-10 text-color-gray-20 cursor-not-allowed":
-						props.disabled,
+					"!border-color-gray-10 !text-color-gray-20 cursor-not-allowed":
+						props.disabled || isLoading,
 				},
 				{
 					"!border-solid border-color-primary-40 !text-color-gray-30":
@@ -120,7 +125,7 @@ const FileInput = ({
 			)}
 			// biome-ignore lint/a11y/useSemanticElements: this div acts like a button with drag and drop functionality
 			role="button"
-			tabIndex={props.disabled ? -1 : 0}
+			tabIndex={props.disabled || isLoading ? -1 : 0}
 			onClick={handleDivClick}
 			onKeyDown={handleKeyDown}
 			onDragEnter={handleDragEnter}
@@ -135,8 +140,19 @@ const FileInput = ({
 				className="hidden"
 				{...props}
 			/>
-			<FileUp />
-			<span className="">{text}</span>
+			{isLoading ? (
+				<Lottie
+					options={{
+						animationData: loadingAnimation,
+					}}
+					height={100}
+				/>
+			) : (
+				<>
+					<FileUp />
+					<span>{text}</span>
+				</>
+			)}
 		</div>
 	);
 };

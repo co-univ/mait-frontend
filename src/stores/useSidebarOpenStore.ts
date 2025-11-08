@@ -17,7 +17,9 @@ interface SidebarOpenStoreActions {
 //
 //
 
-const useSidebarOpenStore = create<SidebarOpenState & SidebarOpenStoreActions>(
+const useSidebarOpenStore = create<
+	SidebarOpenState & SidebarOpenStoreActions
+>()(
 	persist(
 		(set) => ({
 			isSidebarOpen: true,

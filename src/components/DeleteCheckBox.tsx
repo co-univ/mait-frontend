@@ -45,7 +45,7 @@ const DeleteCheckBox = ({
 			)}
 			onClick={handleClick}
 			onKeyDown={handleKeyDown}
-			// biome-ignore lint/a11y/useSemanticElements: div is used for custom delete checkbox
+			// biome-ignore lint/a11y/useSemanticElements: DeleteCheckBox button can provide keyboard accessibility
 			role="button"
 			tabIndex={disabled ? -1 : 0}
 		>
@@ -55,7 +55,7 @@ const DeleteCheckBox = ({
 					"fill-color-point-5 text-color-point-5 [&>path]:text-color-point-50 hover:fill-color-point-10 hover:text-color-point-10",
 					{
 						"fill-color-gray-10 text-color-gray-10": disabled,
-					}
+					},
 				)}
 			/>
 		</div>

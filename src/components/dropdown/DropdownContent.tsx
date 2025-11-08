@@ -34,7 +34,7 @@ const DropdownContent = ({ children, className }: DropdownContentProps) => {
 	return (
 		<div
 			className={clsx(
-				"bg-color-alpha-white100 flex flex-col items-start py-padding-2 rounded-radius-medium1 w-full border border-color-gray-20 shadow-m",
+				"absolute z-50 bg-color-alpha-white100 flex flex-col items-start py-padding-2 rounded-radius-medium1 w-full border border-color-gray-20 shadow-m",
 				className,
 			)}
 		>

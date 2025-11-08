@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { notify } from "@/components/Toast";
 import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
@@ -29,6 +29,8 @@ interface UseQuestionsReturn {
 const useCreationQuestions = ({
 	questionSetId,
 }: UseQuestionsProps): UseQuestionsReturn => {
+	const teamId = useParams().teamId;
+
 	const { questions, initQuestions } = useCreationQuestionsStore();
 
 	const queryClient = useQueryClient();
@@ -54,10 +56,11 @@ const useCreationQuestions = ({
 			onSuccess: (response) => {
 				const newQuestion = response.data as QuestionResponseType;
 
-				notify.success(`${newQuestion.number}번 문제가 추가되었습니다.`);
+				notify.success(`${questions.length + 1}번 문제가 추가되었습니다.`);
 
 				navigate(
-					`/creation/question-set/${questionSetId}/question/${newQuestion.id}`,
+					`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${newQuestion.id}`,
+					{ replace: true },
 				);
 
 				queryClient.invalidateQueries({
@@ -86,9 +89,6 @@ const useCreationQuestions = ({
 				path: {
 					questionSetId,
 				},
-			},
-			body: {
-				number: questions.length + 1,
 			},
 		});
 	};
