@@ -67,7 +67,7 @@ const AuthEmailLogin = () => {
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									placeholder="비밀번호"
-									className="w-full rounded-radius-medium1 border border-gray-20 px-gap-8 py-gap-6 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+									className="w-full rounded-radius-medium1 border border-gray-20 px-gap-8 py-gap-6 focus:border-primary-50 focus:outline-none focus:ring-1 focus:ring-primary-50"
 									disabled={loginMutation.isPending}
 								/>
 								<button

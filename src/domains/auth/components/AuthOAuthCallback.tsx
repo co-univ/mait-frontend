@@ -11,7 +11,7 @@ const AuthOAuthCallback = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-  //
+	//
 	useEffect(() => {
 		const searchParams = new URLSearchParams(location.search);
 		const authCode = searchParams.get("code");
@@ -24,22 +24,25 @@ const AuthOAuthCallback = () => {
 			}
 
 			try {
-				const { data, error } = await apiClient.GET("/api/v1/auth/access-token", {
-					params: {
-						query: {
-							code: authCode,
+				const { data, error } = await apiClient.GET(
+					"/api/v1/auth/access-token",
+					{
+						params: {
+							query: {
+								code: authCode,
+							},
 						},
 					},
-				});
+				);
 
-				if (error) {
+				if (error || !data?.data) {
 					console.error("Access Token 발급 실패: ", error);
 					return;
 				}
 
 				if (data?.data) {
 					localStorage.setItem("token", data.data);
-          navigate("/");
+					navigate("/");
 				}
 			} catch (error) {
 				console.error("Access Token 발급 실패: ", error);

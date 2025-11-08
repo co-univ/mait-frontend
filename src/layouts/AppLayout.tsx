@@ -20,7 +20,7 @@ import { SIDEBAR_TRANSITION } from "../app.constants";
 //
 //
 
-const LOGIN_BACKGROUND_STYLE = {
+const ACCOUNT_BACKGROUND_STYLE = {
 	background:
 		"radial-gradient(100% 100% at 50% 0%, #F2ECFE 6.94%, #D8E5FD 46.15%, #ECF2FE 70.19%, #FFF 100%)",
 };
@@ -38,7 +38,7 @@ interface AppLayoutProps {
 //
 
 const AppLayout = ({ children }: AppLayoutProps) => {
-	const [isLoginPage, setIsLoginPage] = useState(false);
+	const [isAccountPage, setIsAccountPage] = useState(false);
 	const location = useLocation();
 	const { isSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
@@ -78,19 +78,19 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 	//
 	useEffect(() => {
-		if (location.pathname === "/login") {
-			setIsLoginPage(true);
-		} else {
-			setIsLoginPage(false);
-		}
+		const isAccountPage = ["/login", "/account"].some((path) =>
+			location.pathname.startsWith(path),
+		);
+
+		setIsAccountPage(isAccountPage);
 	}, [location]);
 
 	return (
 		<div
 			className="flex flex-col min-w-screen min-h-screen"
-			style={isLoginPage ? LOGIN_BACKGROUND_STYLE : {}}
+			style={isAccountPage ? ACCOUNT_BACKGROUND_STYLE : {}}
 		>
-			<Header isLoginPage={isLoginPage} />
+			<Header isAccountPage={isAccountPage} />
 			<div className="relative flex flex-1">
 				<Sidebar />
 				<main
