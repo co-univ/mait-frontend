@@ -1,4 +1,5 @@
 import PublicOnlyRoute from "@/ProtectedRoute";
+import AuthOAuthCallback from "./components/AuthOAuthCallback";
 import Login from "./pages/AuthLogin";
 
 export const authRoutes = [
@@ -9,5 +10,9 @@ export const authRoutes = [
 				<Login />
 			</PublicOnlyRoute>
 		),
+	},
+	{
+		path: "/oauth/success",
+		element: <AuthOAuthCallback />,
 	},
 ];
