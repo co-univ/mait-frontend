@@ -1,14 +1,15 @@
 import clsx from "clsx";
-import { useState } from "react";
 import { BUTTON_SIZE } from "./constants";
+
+//
+//
+//
 
 interface QuestionNavigationButtonProps {
 	isActive: boolean;
-	canDelete: boolean;
+	isMouseOver?: boolean;
 	number: number;
-	DeleteIcon: React.ReactNode;
 	onClick: () => void;
-	onDelete?: () => void;
 }
 
 //
@@ -17,34 +18,12 @@ interface QuestionNavigationButtonProps {
 
 const QuestionNavigationButton = ({
 	isActive,
-	canDelete,
+	isMouseOver,
 	number,
-	DeleteIcon,
 	onClick,
-	onDelete,
 }: QuestionNavigationButtonProps) => {
-	const [isMouseOver, setIsMouseOver] = useState(false);
-
-	/**
-	 *
-	 */
-	const handleMouseEnter = () => {
-		setIsMouseOver(true);
-	};
-
-	/**
-	 *
-	 */
-	const handleMouseLeave = () => {
-		setIsMouseOver(false);
-	};
-
 	return (
-		// biome-ignore lint/a11y/noStaticElementInteractions: -- IGNORE --
 		<div
-			onMouseEnter={handleMouseEnter}
-			onMouseLeave={handleMouseLeave}
-			className="relative"
 			style={{
 				width: BUTTON_SIZE,
 				height: BUTTON_SIZE,
@@ -53,6 +32,7 @@ const QuestionNavigationButton = ({
 			<button
 				type="button"
 				onClick={onClick}
+				aria-label={`Question ${number}${isActive ? " (active)" : ""}`}
 				className={clsx(
 					"w-full h-full rounded-medium1 flex items-center justify-center",
 					"typo-heading-small",
@@ -66,15 +46,6 @@ const QuestionNavigationButton = ({
 			>
 				{number}
 			</button>
-			{canDelete && isMouseOver && (
-				<button
-					type="button"
-					onClick={onDelete}
-					className="absolute top-[5px] right-[5px]"
-				>
-					{DeleteIcon}
-				</button>
-			)}
 		</div>
 	);
 };
