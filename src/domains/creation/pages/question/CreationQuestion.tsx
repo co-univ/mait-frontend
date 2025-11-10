@@ -33,7 +33,7 @@ const CreationQuestion = () => {
 	});
 
 	/**
-	 * Handle question navigation click
+	 *
 	 */
 	const handleQuestionNavigationClick = (newQuestionId: number) => {
 		handleUpdateQuestion();

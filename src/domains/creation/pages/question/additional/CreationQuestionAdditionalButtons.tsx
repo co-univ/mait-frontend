@@ -22,6 +22,18 @@ const CreationQuestionAdditionalButtons = () => {
 	/**
 	 *
 	 */
+	const handleUpdateButtonClick = async () => {
+		const res = await handleUpdateQuestion();
+		const questionId = res?.data?.id;
+
+		navigate(
+			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${questionId}`,
+		);
+	};
+
+	/**
+	 *
+	 */
 	const handleCreateButtonClick = () => {
 		navigate(`/creation/publish/team/${teamId}/question-set/${questionSetId}`);
 	};
@@ -31,7 +43,7 @@ const CreationQuestionAdditionalButtons = () => {
 			<Button
 				icon={<Save />}
 				item="임시저장"
-				onClick={handleUpdateQuestion}
+				onClick={handleUpdateButtonClick}
 				className="bg-color-gray-5 border-none"
 			/>
 			<Button
