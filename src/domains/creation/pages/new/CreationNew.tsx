@@ -32,6 +32,7 @@ const CreationNew = () => {
 		!questionSet.teamId,
 		!questionSet.creationType,
 		!questionSet.subject,
+		questionSet.counts?.reduce((acc, cur) => acc + (cur?.count ?? 0), 0) === 0,
 	].some(Boolean);
 
 	/**
