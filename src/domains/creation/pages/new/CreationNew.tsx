@@ -83,9 +83,7 @@ const CreationNew = () => {
 
 		const questionSetId = res.data?.data?.questionSetId;
 
-		navigate(
-			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/0`,
-		);
+		navigate(`/creation/question/team/${teamId}/question-set/${questionSetId}`);
 	};
 
 	return (
