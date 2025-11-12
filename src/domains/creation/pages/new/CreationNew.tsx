@@ -8,6 +8,7 @@ import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
 import type { QuestionCount } from "@/libs/types";
 import {
+	type CreationNewQuestionSetState,
 	creationNewQuestionSetInitialState,
 	creationNewQuestionSetReducer,
 } from "../../reducers/new/CreationNewQuestionSetReducer";
@@ -34,6 +35,15 @@ const CreationNew = () => {
 		!questionSet.subject,
 		questionSet.counts?.reduce((acc, cur) => acc + (cur?.count ?? 0), 0) === 0,
 	].some(Boolean);
+
+	/**
+	 *
+	 */
+	const handleCreationTypeChange = (
+		type: CreationNewQuestionSetState["creationType"],
+	) => {
+		dispatch({ type: "SET_CREATION_TYPE", payload: type });
+	};
 
 	/**
 	 *
@@ -66,6 +76,29 @@ const CreationNew = () => {
 			type: "SET_QUESTION_COUNT_COUNT",
 			payload: { type, count },
 		});
+	};
+
+	/**
+	 *
+	 */
+	const handleDifficultyChange = (difficulty: string) => {
+		dispatch({ type: "SET_DIFFICULTY", payload: difficulty });
+	};
+
+	/**
+	 *
+	 */
+	const handleMaterialsChange = (
+		materials: CreationNewQuestionSetState["materials"],
+	) => {
+		dispatch({ type: "SET_MATERIALS", payload: materials });
+	};
+
+	/**
+	 *
+	 */
+	const handleInstructionChange = (instruction: string) => {
+		dispatch({ type: "SET_INSTRUCTION", payload: instruction });
 	};
 
 	/**
@@ -107,14 +140,24 @@ const CreationNew = () => {
 
 				<div className="flex gap-gap-5 w-full">
 					<CreationNewLeftPanel
+						creationType={questionSet.creationType}
 						subject={questionSet.subject}
 						counts={questionSet.counts}
+						onCreationTypeChange={handleCreationTypeChange}
 						onSubjectChange={handleSubjectChange}
 						onQuestionCountCheck={handleQuestionCountCheck}
 						onQuestionCountCountChange={handleQuestionCountCountChange}
 					/>
 
-					<CreationNewRightPanel />
+					<CreationNewRightPanel
+						readonly={questionSet.creationType === "MANUAL"}
+						difficulty={questionSet.difficulty ?? ""}
+						materials={undefined}
+						instruction={questionSet.instruction ?? ""}
+						onDifficultyChange={handleDifficultyChange}
+						onMaterialsChange={handleMaterialsChange}
+						onInstructionChange={handleInstructionChange}
+					/>
 				</div>
 			</div>
 		</LabeledPageLayout>

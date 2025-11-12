@@ -4,9 +4,13 @@ import type { CreateQuestionSetApiRequest, QuestionCount } from "@/libs/types";
 //
 //
 
-type CreationNewQuestionSetState = CreateQuestionSetApiRequest;
+export type CreationNewQuestionSetState = CreateQuestionSetApiRequest;
 
 type CreationNewQuestionSetAction =
+	| {
+			type: "SET_CREATION_TYPE";
+			payload: CreationNewQuestionSetState["creationType"];
+	  }
 	| { type: "SET_SUBJECT"; payload: string }
 	| {
 			type: "SET_QUESTION_COUNT_CHECK";
@@ -15,6 +19,18 @@ type CreationNewQuestionSetAction =
 	| {
 			type: "SET_QUESTION_COUNT_COUNT";
 			payload: { type: QuestionCount["type"]; count: number };
+	  }
+	| {
+			type: "SET_DIFFICULTY";
+			payload: string;
+	  }
+	| {
+			type: "SET_MATERIALS";
+			payload: CreationNewQuestionSetState["materials"];
+	  }
+	| {
+			type: "SET_INSTRUCTION";
+			payload: string;
 	  };
 
 //
@@ -25,9 +41,12 @@ export const creationNewQuestionSetInitialState = (
 	teamId: number,
 ): CreationNewQuestionSetState => ({
 	teamId,
-	creationType: "MANUAL",
+	creationType: "AI_GENERATED",
 	subject: "",
 	counts: [],
+	difficulty: "",
+	materials: undefined,
+	instruction: "",
 });
 
 //
@@ -39,6 +58,11 @@ export const creationNewQuestionSetReducer = (
 	action: CreationNewQuestionSetAction,
 ): CreationNewQuestionSetState => {
 	switch (action.type) {
+		case "SET_CREATION_TYPE":
+			return {
+				...state,
+				creationType: action.payload,
+			};
 		case "SET_SUBJECT":
 			return {
 				...state,
@@ -77,6 +101,20 @@ export const creationNewQuestionSetReducer = (
 				counts: newCounts,
 			};
 		}
+		case "SET_DIFFICULTY":
+			return {
+				...state,
+				difficulty: action.payload,
+			};
+		case "SET_MATERIALS":
+			return {
+				...state,
+			};
+		case "SET_INSTRUCTION":
+			return {
+				...state,
+				instruction: action.payload,
+			};
 		default:
 			return state;
 	}
