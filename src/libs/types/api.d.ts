@@ -274,6 +274,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/policies/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 정책 동의/미동의 처리
+         * @description 여러 정책에 대해 동의 또는 미동의를 한번에 처리합니다.
+         */
+        post: operations["checkPolicies"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -496,6 +516,40 @@ export interface paths {
          * @description 문제 셋 전체 문제를 검증 후 조건을 만족하지 않는 문제 목록을 반환한다.
          */
         get: operations["validateQuestionSet"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/policies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 타이밍별 최신 정책 목록 조회 */
+        get: operations["findLatestPolicies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/policies/unchecked/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 타이밍별 미확인 정책 목록 조회 */
+        get: operations["findUnConfirmedPolicies"];
         put?: never;
         post?: never;
         delete?: never;
@@ -971,6 +1025,28 @@ export interface components {
         SendWinnerRequest: {
             winnerUserIds?: number[];
         };
+        CheckPoliciesApiRequest: {
+            /** @description 체크할 정책 목록 */
+            policyChecks: components["schemas"]["PolicyCheckRequest"][];
+        };
+        /** @description 체크할 정책 목록 */
+        PolicyCheckRequest: {
+            /**
+             * Format: int64
+             * @description 정책 ID
+             */
+            policyId: number;
+            /** @description 동의 여부 */
+            isChecked: boolean;
+        };
+        ApiResponseCheckPoliciesApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["CheckPoliciesApiResponse"];
+        };
+        CheckPoliciesApiResponse: {
+            /** @description 성공 메시지 */
+            message: string;
+        };
         LoginApiRequest: {
             email: string;
             password: string;
@@ -1213,6 +1289,57 @@ export interface components {
              * @description 문제 번호, 존재하지 않을 수 있음
              */
             number?: number;
+        };
+        ApiResponseListLatestPoliciesApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["LatestPoliciesApiResponse"][];
+        };
+        LatestPoliciesApiResponse: {
+            /**
+             * Format: int64
+             * @description 정책 버전 ID
+             */
+            id: number;
+            /** @description 정책 제목 */
+            title: string;
+            /** @description 정책 내용 */
+            content: string;
+            policyType: components["schemas"]["PolicyType"];
+            timing: components["schemas"]["PolicyTiming"];
+            category: components["schemas"]["PolicyCategory"];
+        };
+        /**
+         * @description 정책 카테고리
+         * @enum {string}
+         */
+        PolicyCategory: "TERMS_OF_SERVICE" | "PERSONAL_INFORMATION" | "MARKETING";
+        /**
+         * @description 정책 적용 타이밍
+         * @enum {string}
+         */
+        PolicyTiming: "SIGN_UP";
+        /**
+         * @description 정책 동의 필수
+         * @enum {string}
+         */
+        PolicyType: "ESSENTIAL" | "OPTIONAL";
+        ApiResponseListUnconfirmedPoliciesApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["UnconfirmedPoliciesApiResponse"][];
+        };
+        UnconfirmedPoliciesApiResponse: {
+            /**
+             * Format: int64
+             * @description 정책 버전 ID
+             */
+            id: number;
+            /** @description 정책 제목 */
+            title: string;
+            /** @description 정책 내용 */
+            content: string;
+            policyType: components["schemas"]["PolicyType"];
+            timing: components["schemas"]["PolicyTiming"];
+            category: components["schemas"]["PolicyCategory"];
         };
         ApiResponseString: {
             isSuccess?: boolean;
@@ -1690,28 +1817,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseQuestionImageApiResponse"];
-                };
-            };
-        };
-    };
-    createDefaultQuestion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                questionSetId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
                     "*/*": components["schemas"]["ApiResponseQuestionApiResponse"];
                 };
             };
@@ -1768,6 +1873,30 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    checkPolicies: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckPoliciesApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCheckPoliciesApiResponse"];
                 };
             };
         };
@@ -2061,6 +2190,52 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseListQuestionValidationApiResponse"];
+                };
+            };
+        };
+    };
+    findLatestPolicies: {
+        parameters: {
+            query: {
+                timing: "SIGN_UP";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListLatestPoliciesApiResponse"];
+                };
+            };
+        };
+    };
+    findUnConfirmedPolicies: {
+        parameters: {
+            query: {
+                timing: "SIGN_UP";
+            };
+            header?: never;
+            path: {
+                userId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListUnconfirmedPoliciesApiResponse"];
                 };
             };
         };
