@@ -1,4 +1,7 @@
 import clsx from "clsx";
+import { FileText, X } from "lucide-react";
+import Lottie from "react-lottie";
+import loadingAnimation from "@/assets/lotties/loading.json";
 import FileInput from "@/components/FileInput";
 import { Field } from "@/components/field";
 import CreationPanel from "../../components/common/CreationPanel";
@@ -11,23 +14,25 @@ import type { CreationNewQuestionSetState } from "../../reducers/new/CreationNew
 
 type CreationNewRightPanelProps = {
 	readonly: boolean;
+	isFileUploading: boolean;
 	difficulty: string;
-	materials?: undefined;
+	materials: CreationNewQuestionSetState["materials"];
 	instruction: string;
 	onDifficultyChange: (difficulty: string) => void;
-	onMaterialsChange: (
-		materials: CreationNewQuestionSetState["materials"],
-	) => void;
+	onMaterialUpload: (file: File | null) => void;
+	onMaterialsDelete: (index: number) => void;
 	onInstructionChange: (instruction: string) => void;
 };
 
 const CreationNewRightPanel = ({
 	readonly,
+	isFileUploading,
 	difficulty,
 	materials,
 	instruction,
 	onDifficultyChange,
-	onMaterialsChange,
+	onMaterialUpload,
+	onMaterialsDelete,
 	onInstructionChange,
 }: CreationNewRightPanelProps) => {
 	/**
@@ -63,13 +68,63 @@ const CreationNewRightPanel = ({
 					>
 						*관련 자료가 없는 경우 AI로 생성된 문제 정보가 부정확할 수 있습니다.
 					</span>
-					<FileInput
-						disabled={readonly}
-						file={null}
-						text=".pdf또는 .pptx 업로드"
-						onChange={() => {}}
-						className="flex-col"
-					/>
+					{materials?.length ? (
+						<div className="flex flex-col gap-gap-5 py-padding-8 px-padding-10 bg-color-gray-5 rounded-radius-medium1">
+							{materials.map((material, index) => (
+								<div
+									key={material.file.lastModified}
+									className="flex items-start gap-gap-3 w-full"
+								>
+									<FileText />
+
+									<div className="flex flex-col">
+										<span className="typo-body-xsmall">
+											{material.file.name}
+										</span>
+										<span className="typo-body-xsmall text-color-gray-40">
+											{(material.file.size / 1024).toFixed(2)} KB
+										</span>
+									</div>
+
+									<div className="flex-1" />
+
+									{isFileUploading ? (
+										<Lottie
+											options={{
+												animationData: loadingAnimation,
+											}}
+											width={60}
+										/>
+									) : (
+										<button
+											type="button"
+											onClick={() => {
+												onMaterialsDelete(index);
+											}}
+										>
+											<X size={20} />
+										</button>
+									)}
+								</div>
+							))}
+
+							<FileInput
+								accept=".pdf,.md"
+								text=".md또는 .pdf 업로드"
+								file={null}
+								onChange={(file) => onMaterialUpload(file)}
+								className="mt-size-height-2 py-padding-8"
+							/>
+						</div>
+					) : (
+						<FileInput
+							disabled={readonly}
+							file={null}
+							accept=".pdf,.md"
+							text=".md또는 .pdf 업로드"
+							onChange={(file) => onMaterialUpload(file)}
+						/>
+					)}
 				</div>
 			</Field.Root>
 		);

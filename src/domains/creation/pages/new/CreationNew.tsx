@@ -1,12 +1,12 @@
 import { ChevronRight, PencilLine, Puzzle } from "lucide-react";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Badge from "@/components/Badge";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
-import type { QuestionCount } from "@/libs/types";
+import type { CreateQuestionSetApiRequest, QuestionCount } from "@/libs/types";
 import {
 	type CreationNewQuestionSetState,
 	creationNewQuestionSetInitialState,
@@ -23,6 +23,8 @@ const CreationNew = () => {
 	const navigate = useNavigate();
 
 	const teamId = Number(useParams().teamId);
+
+	const [isFileUploading, setIsFileUploading] = useState(false);
 
 	const [questionSet, dispatch] = useReducer(
 		creationNewQuestionSetReducer,
@@ -88,10 +90,45 @@ const CreationNew = () => {
 	/**
 	 *
 	 */
-	const handleMaterialsChange = (
-		materials: CreationNewQuestionSetState["materials"],
-	) => {
-		dispatch({ type: "SET_MATERIALS", payload: materials });
+	const handleMaterialUpload = (file: File | null) => {
+		if (file === null) {
+			return;
+		}
+
+		const uploadFile = async () => {
+			setIsFileUploading(true);
+
+			try {
+				const formData = new FormData();
+				formData.append("material", file);
+
+				const id = 1234;
+				const url = "4567";
+
+				dispatch({
+					type: "SET_MATERIALS_ADD",
+					payload: {
+						id,
+						url,
+					},
+				});
+			} catch {
+				notify.error("파일 업로드에 실패했습니다.");
+				dispatch({ type: "SET_MATERIALS_POP", payload: undefined });
+			} finally {
+				setIsFileUploading(false);
+			}
+		};
+
+		dispatch({ type: "SET_UPLOAD_FILES", payload: file });
+		uploadFile();
+	};
+
+	/**
+	 *
+	 */
+	const handleMaterialsDelete = (index: number) => {
+		dispatch({ type: "SET_MATERIALS_DELETE", payload: index });
 	};
 
 	/**
@@ -106,7 +143,7 @@ const CreationNew = () => {
 	 */
 	const handleCreateButtonClick = async () => {
 		const res = await apiClient.POST("/api/v1/question-sets", {
-			body: questionSet,
+			body: questionSet as CreateQuestionSetApiRequest,
 		});
 
 		if (!res.data?.isSuccess) {
@@ -115,6 +152,12 @@ const CreationNew = () => {
 		}
 
 		const questionSetId = res.data?.data?.questionSetId;
+
+		if (questionSet.creationType === "AI_GENERATED") {
+			navigate(
+				`/creation/new/loading/team/${teamId}/question-set/${questionSetId}`,
+			);
+		}
 
 		navigate(`/creation/question/team/${teamId}/question-set/${questionSetId}`);
 	};
@@ -151,11 +194,13 @@ const CreationNew = () => {
 
 					<CreationNewRightPanel
 						readonly={questionSet.creationType === "MANUAL"}
+						isFileUploading={isFileUploading}
 						difficulty={questionSet.difficulty ?? ""}
-						materials={undefined}
+						materials={questionSet.materials}
 						instruction={questionSet.instruction ?? ""}
 						onDifficultyChange={handleDifficultyChange}
-						onMaterialsChange={handleMaterialsChange}
+						onMaterialUpload={handleMaterialUpload}
+						onMaterialsDelete={handleMaterialsDelete}
 						onInstructionChange={handleInstructionChange}
 					/>
 				</div>

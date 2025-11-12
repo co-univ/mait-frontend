@@ -1,10 +1,23 @@
-import type { CreateQuestionSetApiRequest, QuestionCount } from "@/libs/types";
+import type {
+	CreateQuestionSetApiRequest,
+	MaterialDto,
+	QuestionCount,
+} from "@/libs/types";
 
 //
 //
 //
 
-export type CreationNewQuestionSetState = CreateQuestionSetApiRequest;
+export type CreationNewQuestionSetState = Omit<
+	CreateQuestionSetApiRequest,
+	"materials"
+> & {
+	materials:
+		| ({
+				file: File;
+		  } & MaterialDto)[]
+		| undefined;
+};
 
 type CreationNewQuestionSetAction =
 	| {
@@ -25,8 +38,20 @@ type CreationNewQuestionSetAction =
 			payload: string;
 	  }
 	| {
-			type: "SET_MATERIALS";
-			payload: CreationNewQuestionSetState["materials"];
+			type: "SET_UPLOAD_FILES";
+			payload: File;
+	  }
+	| {
+			type: "SET_MATERIALS_ADD";
+			payload: MaterialDto;
+	  }
+	| {
+			type: "SET_MATERIALS_DELETE";
+			payload: number;
+	  }
+	| {
+			type: "SET_MATERIALS_POP";
+			payload: undefined;
 	  }
 	| {
 			type: "SET_INSTRUCTION";
@@ -106,9 +131,39 @@ export const creationNewQuestionSetReducer = (
 				...state,
 				difficulty: action.payload,
 			};
-		case "SET_MATERIALS":
+		case "SET_UPLOAD_FILES":
 			return {
 				...state,
+				materials: [...(state.materials ?? []), { file: action.payload }],
+			};
+		case "SET_MATERIALS_ADD":
+			return {
+				...state,
+				materials: state.materials?.map((material, index) => {
+					if (index === (state.materials?.length ?? 0) - 1) {
+						return {
+							...material,
+							...action.payload,
+						};
+					}
+
+					return material;
+				}),
+			};
+		case "SET_MATERIALS_DELETE":
+			return {
+				...state,
+				materials: state.materials?.filter(
+					(_, index) => index !== action.payload,
+				),
+			};
+		case "SET_MATERIALS_POP":
+			return {
+				...state,
+				materials: state.materials?.slice(
+					0,
+					(state.materials?.length ?? 1) - 1,
+				),
 			};
 		case "SET_INSTRUCTION":
 			return {
