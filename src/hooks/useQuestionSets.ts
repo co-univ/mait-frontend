@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { apiHooks } from "@/libs/api";
 import type { QuestionSetGroup, QuestionSetList } from "@/libs/types";
 
@@ -13,6 +14,7 @@ interface UseQuestionSetsProps {
 interface UseQuestionSetsReturn {
 	questionSetList?: QuestionSetList["questionSets"];
 	questionSetGroup?: QuestionSetGroup["questionSets"];
+	invalidateQuestionSetsQuery: () => void;
 	isLoading: boolean;
 	error: Error | null;
 }
@@ -44,6 +46,8 @@ const useQuestionSets = ({
 		},
 	);
 
+	const queryClient = useQueryClient();
+
 	const questionSets = data?.data?.content?.questionSets;
 
 	const questionSetList = Array.isArray(questionSets)
@@ -53,9 +57,26 @@ const useQuestionSets = ({
 		? questionSets
 		: undefined;
 
+	/**
+	 *
+	 */
+	const invalidateQuestionSetsQuery = () => {
+		queryClient.invalidateQueries({
+			queryKey: apiHooks.queryOptions("get", "/api/v1/question-sets", {
+				params: {
+					query: {
+						teamId: teamId,
+						mode: MODE_MAP[mode as keyof typeof MODE_MAP],
+					},
+				},
+			}).queryKey,
+		});
+	};
+
 	return {
 		questionSetList,
 		questionSetGroup,
+		invalidateQuestionSetsQuery,
 		isLoading: isPending,
 		error,
 	};

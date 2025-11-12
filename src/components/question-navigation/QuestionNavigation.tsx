@@ -1,43 +1,42 @@
 import clsx from "clsx";
-import { ChevronsLeft, Plus } from "lucide-react";
-import { useCreationQuestions } from "@/domains/creation/hooks/question";
+import {
+	ChevronsDown,
+	ChevronsLeft,
+	ChevronsRight,
+	ChevronsUp,
+	Plus,
+} from "lucide-react";
 import { BUTTON_SIZE, GAP } from "./constants";
-import QuestionNavigationList from "./QuestionNavigationList";
+import QuestionNavigationList, {
+	type QuestionNavigationButtonRenderProps,
+} from "./QuestionNavigationList";
 import useQuestionNavigationLayout from "./useQuestionNavigationLayout";
 
 //
 //
 //
 
-interface QuestionNavigationProps {
-	canDelete?: boolean;
-	questionSetId: number;
-	activeQuestionId: number;
+interface QuestionNavigationProps<T> {
+	activeQuestionId?: number;
 	orientation?: "vertical" | "horizontal";
-	onQuestionClick: (questionId: number) => void;
-	onQuestionAdd: () => void;
-	onQuestionDelete: (questionId: number) => void;
+	questions: T[];
+	onQuestionAdd?: () => void;
+	renderQuestionNavigationButton: (
+		props: QuestionNavigationButtonRenderProps<T>,
+	) => React.ReactNode;
 }
 
 //
 //
 //
 
-/**
- * Question navigation sidebar.
- * Displays question numbers with scroll controls.
- */
-const QuestionNavigation = ({
-	canDelete = false,
-	questionSetId,
+const QuestionNavigation = <T extends { id: number }>({
+	questions,
 	activeQuestionId,
 	orientation = "vertical",
-	onQuestionClick,
 	onQuestionAdd,
-	onQuestionDelete,
-}: QuestionNavigationProps) => {
-	const { questions } = useCreationQuestions({ questionSetId });
-
+	renderQuestionNavigationButton,
+}: QuestionNavigationProps<T>) => {
 	const {
 		containerRef,
 		startIndex,
@@ -58,7 +57,7 @@ const QuestionNavigation = ({
 	 *
 	 */
 	const handleQuestionAdd = () => {
-		onQuestionAdd();
+		onQuestionAdd?.();
 		scrollToBottom();
 	};
 
@@ -67,28 +66,15 @@ const QuestionNavigation = ({
 	 */
 	const renderDirectionButton = (direction: "up" | "down") => {
 		const isUp = direction === "up";
-
 		const canScroll = isUp ? canScrollUp : canScrollDown;
 		const onClick = isUp ? handleScrollUp : handleScrollDown;
-		const rotationClass = (() => {
-			if (isVertical && isUp) {
-				return "rotate-90";
-			} else if (isVertical && !isUp) {
-				return "rotate-[270deg]";
-			} else if (!isVertical && isUp) {
-				return "";
-			} else if (!isVertical && !isUp) {
-				return "rotate-180";
-			} else {
-				return "";
-			}
-		})();
 
 		return (
 			<button
 				type="button"
 				onClick={onClick}
 				disabled={!canScroll}
+				aria-label={`Scroll ${direction}`}
 				className={clsx("flex items-center justify-center rounded-medium1", {
 					"hover:bg-color-gray-5": canScroll,
 					"opacity-30 cursor-not-allowed": !canScroll,
@@ -98,9 +84,36 @@ const QuestionNavigation = ({
 					height: BUTTON_SIZE,
 				}}
 			>
-				<ChevronsLeft className={rotationClass} />
+				{isVertical && isUp && <ChevronsUp />}
+				{isVertical && !isUp && <ChevronsDown />}
+				{!isVertical && isUp && <ChevronsLeft />}
+				{!isVertical && !isUp && <ChevronsRight />}
 			</button>
 		);
+	};
+
+	/**
+	 *
+	 */
+	const renderAddButton = () => {
+		if (onQuestionAdd) {
+			return (
+				<button
+					type="button"
+					onClick={handleQuestionAdd}
+					aria-label="Add new question"
+					className="flex items-center justify-center rounded-medium1 hover:bg-color-gray-5"
+					style={{
+						width: BUTTON_SIZE,
+						height: BUTTON_SIZE,
+					}}
+				>
+					<Plus />
+				</button>
+			);
+		}
+
+		return null;
 	};
 
 	return (
@@ -122,22 +135,10 @@ const QuestionNavigation = ({
 				startIndex={startIndex}
 				visibleCount={visibleCount}
 				orientation={orientation}
-				canDelete={canDelete}
-				onQuestionClick={onQuestionClick}
-				onQuestionDelete={onQuestionDelete}
+				renderQuestionNavigationButton={renderQuestionNavigationButton}
 			/>
 
-			<button
-				type="button"
-				onClick={handleQuestionAdd}
-				className="flex items-center justify-center rounded-medium1 hover:bg-color-gray-5"
-				style={{
-					width: BUTTON_SIZE,
-					height: BUTTON_SIZE,
-				}}
-			>
-				<Plus />
-			</button>
+			{renderAddButton()}
 
 			{renderDirectionButton("down")}
 		</div>

@@ -24,7 +24,7 @@ const ManagementMakingCard = ({ questionSet }: ManagementMakingCardProps) => {
 	 */
 	const handleButtonClick = () => {
 		navigate(
-			`/creation/team/${teamId}/question/question-set/${questionSet.id}`,
+			`/creation/question/team/${teamId}/question-set/${questionSet.id}`,
 		);
 	};
 

@@ -3,6 +3,7 @@ import { useReducer } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
+import useQuestionSets from "@/hooks/useQuestionSets";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
 import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
@@ -18,6 +19,7 @@ import CreationPublishRightPanel from "./CreationPublishRightPanel";
 //
 
 const CreationPublish = () => {
+	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
 	const navigate = useNavigate();
@@ -26,6 +28,17 @@ const CreationPublish = () => {
 		creationPublishQuestionSetReducer,
 		CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	);
+
+	const { invalidateQuestionSetsQuery: invalidateMakingQuery } =
+		useQuestionSets({
+			teamId,
+			mode: "MAKING",
+		});
+	const { invalidateQuestionSetsQuery: invalidateLiveTimeQuery } =
+		useQuestionSets({
+			teamId,
+			mode: "LIVE-TIME",
+		});
 
 	const disabledPublishQuestionSet = [
 		!questionSet.title,
@@ -82,6 +95,9 @@ const CreationPublish = () => {
 			});
 
 			notify.success("문제 셋을 생성했습니다.");
+
+			invalidateMakingQuery();
+			invalidateLiveTimeQuery();
 
 			const teamId = res.data?.data?.teamId;
 

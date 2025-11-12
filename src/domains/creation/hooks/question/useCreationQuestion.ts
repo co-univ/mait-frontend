@@ -8,7 +8,10 @@ import useCreationQuestionsStore from "@/domains/creation/stores/question/useCre
 import CreationQuestionConvertQuestionType from "@/domains/creation/utils/question/creation-question-convert-question-type";
 import creationQuestionResponseToUpdate from "@/domains/creation/utils/question/creation-question-response-to-update";
 import { apiClient, apiHooks } from "@/libs/api";
-import type { QuestionType } from "@/libs/types";
+import type {
+	ApiResponseQuestionApiResponse,
+	QuestionType,
+} from "@/libs/types";
 import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
 
 //
@@ -27,8 +30,11 @@ interface UseQuestionReturn {
 	handleTypeChange: (type: QuestionType) => void;
 	handleImageChange: (imageId?: number, imageUrl?: string) => void;
 	handleImageAdd: (file: File | null) => Promise<void>;
-	handleUpdateQuestion: () => void;
+	handleUpdateQuestion: () => Promise<
+		ApiResponseQuestionApiResponse | undefined
+	>;
 	handleDeleteQuestion: (deleteQuestionId: number) => void;
+	isEditing?: boolean;
 	isUpdating: boolean;
 	isDeleting: boolean;
 	isUploadingImage: boolean;
@@ -54,31 +60,37 @@ const useCreationQuestion = ({
 
 	const [isUploadingImage, setIsUploadingImage] = useState(false);
 
-	const { mutate: mutatePut, isPending: isUpdating } = apiHooks.useMutation(
-		"put",
-		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
-		{
-			onSuccess: (response) => {
-				notify.success(
-					`${creationQuestionFindNumber(questions, response.data?.id ?? 0)}번 문제가 저장되었습니다.`,
-				);
+	const { mutateAsync: mutatePut, isPending: isUpdating } =
+		apiHooks.useMutation(
+			"put",
+			"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
+			{
+				onSuccess: () => {
+					notify.success("문제가 저장되었습니다.");
+					queryClient.invalidateQueries({
+						queryKey: apiHooks.queryOptions(
+							"get",
+							"/api/v1/question-sets/{questionSetId}/questions",
+							{
+								params: { path: { questionSetId } },
+							},
+						).queryKey,
+					});
+				},
 
-				queryClient.invalidateQueries({
-					queryKey: apiHooks.queryOptions(
-						"get",
-						"/api/v1/question-sets/{questionSetId}/questions",
-						{
-							params: { path: { questionSetId } },
-						},
-					).queryKey,
-				});
-			},
+				onError: (_, context) => {
+					const questionId = context?.params.path.questionId;
+					const questionNumber = creationQuestionFindNumber(
+						questions,
+						questionId,
+					);
 
-			onError: () => {
-				notify.error("문제 저장에 실패했습니다. 다시 시도해주세요.");
+					notify.error(
+						`${questionNumber}번 문제 저장에 실패했습니다. 다시 시도해주세요.`,
+					);
+				},
 			},
-		},
-	);
+		);
 
 	const { mutate: mutateDelete, isPending: isDeleting } = apiHooks.useMutation(
 		"delete",
@@ -167,37 +179,10 @@ const useCreationQuestion = ({
 				type,
 			);
 
+			console.log(convertedQuestion);
+
 			editQuestion(convertedQuestion);
 		}
-	};
-
-	/**
-	 *
-	 */
-	const handleUpdateQuestion = () => {
-		const currentQuestions = useCreationQuestionsStore.getState().questions;
-		const targetQuestion = currentQuestions.find((q) => q.id === questionId);
-
-		if (!targetQuestion) {
-			return;
-		}
-
-		if (!targetQuestion.isEditing) {
-			const questionNumber = creationQuestionFindNumber(questions, questionId);
-			notify.success(`${questionNumber}번 문제가 저장되었습니다.`);
-
-			return;
-		}
-
-		mutatePut({
-			params: {
-				path: {
-					questionSetId,
-					questionId: targetQuestion.id,
-				},
-			},
-			body: creationQuestionResponseToUpdate(targetQuestion),
-		});
 	};
 
 	/**
@@ -243,6 +228,34 @@ const useCreationQuestion = ({
 	/**
 	 *
 	 */
+	const handleUpdateQuestion = async () => {
+		const currentQuestions = useCreationQuestionsStore.getState().questions;
+		const targetQuestion = currentQuestions.find((q) => q.id === questionId);
+
+		if (!targetQuestion) {
+			return;
+		}
+
+		if (targetQuestion.isEditing === false) {
+			return;
+		}
+
+		const res = await mutatePut({
+			params: {
+				path: {
+					questionSetId,
+					questionId: targetQuestion.id,
+				},
+			},
+			body: creationQuestionResponseToUpdate(targetQuestion),
+		});
+
+		return res;
+	};
+
+	/**
+	 *
+	 */
 	const handleDeleteQuestion = (deleteQuestionId: number) => {
 		if (questions.length === 1) {
 			notify.error("문제는 최소 1개 이상 존재해야 합니다.");
@@ -280,6 +293,7 @@ const useCreationQuestion = ({
 		handleTypeChange,
 		handleUpdateQuestion,
 		handleDeleteQuestion,
+		isEditing: question?.isEditing,
 		isUpdating,
 		isDeleting,
 		isUploadingImage,

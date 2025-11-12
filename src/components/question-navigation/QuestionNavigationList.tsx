@@ -1,49 +1,49 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { SquareMinus } from "lucide-react";
-import type {
-	FillBlankQuestionApiResponse,
-	MultipleQuestionApiResponse,
-	OrderingQuestionApiResponse,
-	ShortQuestionApiResponse,
-} from "@/libs/types";
+import { useState } from "react";
 import { BUTTON_SIZE, GAP } from "./constants";
-import QuestionNavigationButton from "./QuestionNavigationButton";
 
 //
 //
 //
 
-interface QuestionNavigationListProps {
-	questions: (
-		| MultipleQuestionApiResponse
-		| ShortQuestionApiResponse
-		| OrderingQuestionApiResponse
-		| FillBlankQuestionApiResponse
-	)[];
-	activeQuestionId: number;
+export interface QuestionNavigationButtonRenderProps<T> {
+	isActive: boolean;
+	isMouseOver?: boolean;
+	index: number;
+	questions: T[];
+	question: T;
+	onMouseEnter?: () => void;
+	onMouseLeave?: () => void;
+}
+
+interface QuestionNavigationListProps<T> {
+	activeQuestionId?: number;
 	startIndex: number;
 	visibleCount: number;
 	orientation: "vertical" | "horizontal";
-	canDelete: boolean;
-	onQuestionClick: (questionId: number) => void;
-	onQuestionDelete?: (questionId: number) => void;
+	questions: T[];
+	renderQuestionNavigationButton: (
+		props: QuestionNavigationButtonRenderProps<T>,
+	) => React.ReactNode;
 }
 
 //
 //
 //
 
-const QuestionNavigationList = ({
+const QuestionNavigationList = <T extends { id: number }>({
 	questions,
 	activeQuestionId,
 	startIndex,
 	visibleCount,
 	orientation,
-	canDelete,
-	onQuestionClick,
-	onQuestionDelete,
-}: QuestionNavigationListProps) => {
+	renderQuestionNavigationButton,
+}: QuestionNavigationListProps<T>) => {
+	const [hoveredQuestionId, setHoveredQuestionId] = useState<number | null>(
+		null,
+	);
+
 	const isVertical = orientation === "vertical";
 	const renderedCount = Math.min(visibleCount, questions.length);
 
@@ -75,37 +75,23 @@ const QuestionNavigationList = ({
 					gap: `${GAP}px`,
 				}}
 			>
-				{questions.map((question, idx) => {
-					const isActive = question.id === activeQuestionId;
-
-					/**
-					 *
-					 */
-					const handleClick = () => {
-						onQuestionClick(question.id);
-					};
-
-					/**
-					 *
-					 */
-					const handleDelete = () => {
-						if (canDelete && onQuestionDelete) {
-							onQuestionDelete(question.id);
-						}
-					};
+				{questions.map((question, index) => {
+					const isActive =
+						activeQuestionId !== undefined && question.id === activeQuestionId;
+					const isMouseOver = hoveredQuestionId === question.id;
 
 					return (
-						<QuestionNavigationButton
-							canDelete={canDelete}
-							key={question.id}
-							number={idx + 1}
-							isActive={isActive}
-							DeleteIcon={
-								<SquareMinus size={20} className="text-color-point-50" />
-							}
-							onClick={handleClick}
-							onDelete={handleDelete}
-						/>
+						<div key={question.id}>
+							{renderQuestionNavigationButton({
+								questions,
+								question,
+								index,
+								isActive,
+								isMouseOver,
+								onMouseEnter: () => setHoveredQuestionId(question.id),
+								onMouseLeave: () => setHoveredQuestionId(null),
+							})}
+						</div>
 					);
 				})}
 			</motion.div>

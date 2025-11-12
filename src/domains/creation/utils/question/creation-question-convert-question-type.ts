@@ -29,11 +29,16 @@ const CreationQuestionConvertQuestionType = (
 		return question;
 	}
 
+	const convertedQuestion = {
+		...question,
+		content: "",
+		type: newType,
+	};
+
 	switch (newType) {
 		case "MULTIPLE":
 			return {
-				...question,
-				type: "MULTIPLE",
+				...convertedQuestion,
 				choices: [
 					{
 						id: CreationQuestionGenerateId(),
@@ -52,19 +57,19 @@ const CreationQuestionConvertQuestionType = (
 						number: 3,
 						content: "",
 						isCorrect: false,
-					}, {
+					},
+					{
 						id: CreationQuestionGenerateId(),
 						number: 4,
 						content: "",
 						isCorrect: false,
-					}
+					},
 				] as MultipleChoiceApiResponse[],
 			} as unknown as MultipleQuestionApiResponse;
 
 		case "SHORT":
 			return {
-				...question,
-				type: "SHORT",
+				...convertedQuestion,
 				answerCount: 1,
 				answers: [
 					{
@@ -78,8 +83,7 @@ const CreationQuestionConvertQuestionType = (
 
 		case "ORDERING":
 			return {
-				...question,
-				type: "ORDERING",
+				...convertedQuestion,
 				options: [
 					{
 						id: CreationQuestionGenerateId(),
@@ -104,14 +108,13 @@ const CreationQuestionConvertQuestionType = (
 
 		case "FILL_BLANK":
 			return {
-				...question,
-				type: "FILL_BLANK",
+				...convertedQuestion,
 				answers: [],
 				blankCount: 0,
 			} as unknown as FillBlankQuestionApiResponse;
 
 		default:
-			return question;
+			return convertedQuestion;
 	}
 };
 
