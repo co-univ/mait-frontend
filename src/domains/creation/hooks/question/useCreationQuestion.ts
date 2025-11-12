@@ -34,6 +34,7 @@ interface UseQuestionReturn {
 		ApiResponseQuestionApiResponse | undefined
 	>;
 	handleDeleteQuestion: (deleteQuestionId: number) => void;
+	isEditing?: boolean;
 	isUpdating: boolean;
 	isDeleting: boolean;
 	isUploadingImage: boolean;
@@ -233,6 +234,10 @@ const useCreationQuestion = ({
 			return;
 		}
 
+		if (targetQuestion.isEditing === false) {
+			return;
+		}
+
 		const res = await mutatePut({
 			params: {
 				path: {
@@ -286,6 +291,7 @@ const useCreationQuestion = ({
 		handleTypeChange,
 		handleUpdateQuestion,
 		handleDeleteQuestion,
+		isEditing: question?.isEditing,
 		isUpdating,
 		isDeleting,
 		isUploadingImage,
