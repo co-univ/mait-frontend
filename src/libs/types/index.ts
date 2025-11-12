@@ -5,6 +5,9 @@
 
 import type { components } from "./api.d.ts";
 
+export type AiRequestStatus = components["schemas"]["AiRequestStatus"];
+export type AiRequestStatusApiResponse = components["schemas"]["AiRequestStatusApiResponse"];
+export type ApiResponseAiRequestStatusApiResponse = components["schemas"]["ApiResponseAiRequestStatusApiResponse"];
 export type ApiResponseCheckPoliciesApiResponse = components["schemas"]["ApiResponseCheckPoliciesApiResponse"];
 export type ApiResponseCreateQuestionSetApiResponse = components["schemas"]["ApiResponseCreateQuestionSetApiResponse"];
 export type ApiResponseCreateTeamInviteApiResponse = components["schemas"]["ApiResponseCreateTeamInviteApiResponse"];

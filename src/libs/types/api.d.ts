@@ -237,7 +237,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/question-sets/{questionSetId}/materials": {
+    "/api/v1/question-sets/{questionSetId}/live-status/winner": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 우승자 전송 */
+        post: operations["sendWinner"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/materials": {
         parameters: {
             query?: never;
             header?: never;
@@ -251,23 +268,6 @@ export interface paths {
          * @description 문제 셋 생성 과정에서 사용될 파일을 업로드합니다.
          */
         post: operations["uploadQuestionSetFiles"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/question-sets/{questionSetId}/live-status/winner": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 우승자 전송 */
-        post: operations["sendWinner"];
         delete?: never;
         options?: never;
         head?: never;
@@ -504,6 +504,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/ai-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * AI 문제 제작 상태 조회
+         * @description AI 문제 제작 상태를 조회합니다.
+         */
+        get: operations["getAiRequestStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/validate": {
         parameters: {
             query?: never;
@@ -639,12 +659,13 @@ export interface components {
             /** Format: int64 */
             id?: number;
             answer?: string;
+            /** @description 빈칸 문제의 메인 정답 여부 */
+            main: boolean;
             /**
              * Format: int64
              * @description 빈칸 문제 정답 그룹 번호
              */
             number: number;
-            main?: boolean;
         };
         MultipleChoiceDto: {
             /** Format: int64 */
@@ -674,12 +695,13 @@ export interface components {
             /** Format: int64 */
             id?: number;
             answer?: string;
+            /** @description 주관식 문제의 메인 정답 여부 */
+            main: boolean;
             /**
              * Format: int64
              * @description 주관식 문제 정답 그룹 번호
              */
             number: number;
-            main?: boolean;
         };
         UpdateFillBlankQuestionApiRequest: {
             type: "UpdateFillBlankQuestionApiRequest";
@@ -1004,6 +1026,9 @@ export interface components {
             /** @description 생성된 이미지 url */
             imageUrl: string;
         };
+        SendWinnerRequest: {
+            winnerUserIds?: number[];
+        };
         ApiResponseQuestionSetMaterialApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetMaterialApiResponse"];
@@ -1014,16 +1039,8 @@ export interface components {
              * @description 업로드한 자료 PK
              */
             id: number;
-            /**
-             * Format: int64
-             * @description 해당 자료가 속한 문제 셋 PK
-             */
-            questionSetId: number;
             /** @description 업로드된 자료가 저장된 url */
             materialUrl: string;
-        };
-        SendWinnerRequest: {
-            winnerUserIds?: number[];
         };
         CheckPoliciesApiRequest: {
             /** @description 체크할 정책 목록 */
@@ -1271,6 +1288,17 @@ export interface components {
             questionId?: number;
             /** @enum {string} */
             questionStatusType?: "NOT_OPEN" | "ACCESS_PERMISSION" | "SOLVE_PERMISSION";
+        };
+        /** @enum {string} */
+        AiRequestStatus: "PENDING" | "PROCESSING" | "COMPLETED" | "NOT_FOUND" | "FAILED";
+        AiRequestStatusApiResponse: {
+            /** Format: int64 */
+            questionSetId: number;
+            status: components["schemas"]["AiRequestStatus"];
+        };
+        ApiResponseAiRequestStatusApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["AiRequestStatusApiResponse"];
         };
         ApiResponseListQuestionValidationApiResponse: {
             isSuccess?: boolean;
@@ -1822,35 +1850,6 @@ export interface operations {
             };
         };
     };
-    uploadQuestionSetFiles: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                questionSetId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "multipart/form-data": {
-                    /** Format: binary */
-                    material: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseQuestionSetMaterialApiResponse"];
-                };
-            };
-        };
-    };
     sendWinner: {
         parameters: {
             query?: never;
@@ -1873,6 +1872,33 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    uploadQuestionSetFiles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    material: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetMaterialApiResponse"];
                 };
             };
         };
@@ -2168,6 +2194,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseCurrentQuestionApiResponse"];
+                };
+            };
+        };
+    };
+    getAiRequestStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAiRequestStatusApiResponse"];
                 };
             };
         };
