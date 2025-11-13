@@ -1,6 +1,11 @@
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-import { useBeforeUnload, useNavigate, useParams } from "react-router-dom";
+import {
+	useBeforeUnload,
+	useBlocker,
+	useNavigate,
+	useParams,
+} from "react-router-dom";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import { apiClient } from "@/libs/api";
@@ -29,8 +34,31 @@ const CreationNewLoading = () => {
 		e.returnValue = "";
 	});
 
+	const blocker = useBlocker(({ nextLocation }) => {
+		return !nextLocation.pathname.startsWith("/creation/question");
+	});
+
 	//
-	// prevent pop event(for back button) during loading
+	// Prevent navigaate other page while AI generation is in progress (only allow navigation to creation question page)
+	//
+	useEffect(() => {
+		if (blocker.state === "blocked") {
+			confirm({
+				title: "페이지를 벗어나시겠습니까?",
+				description:
+					"AI 문제 생성이 진행 중입니다. 페이지를 벗어나면 생성이 취소됩니다.",
+			}).then((result) => {
+				if (result) {
+					blocker.proceed();
+				} else {
+					blocker.reset();
+				}
+			});
+		}
+	}, [blocker, confirm]);
+
+	//
+	// polling for checking AI generation status
 	// biome-ignore lint/correctness/useExhaustiveDependencies: checkStatus only needs to run on mount
 	useEffect(() => {
 		if (!questionSetId) {
@@ -81,42 +109,6 @@ const CreationNewLoading = () => {
 
 		return () => {
 			clearInterval(intervalId);
-		};
-	}, []);
-
-	//
-	// polling for checking AI generation status
-	// biome-ignore lint/correctness/useExhaustiveDependencies: confirm only needs to be defined on mount
-	useEffect(() => {
-		window.history.pushState(null, "", window.location.href);
-
-		const handlePopState = () => {
-			console.log("popstate triggered - back button pressed");
-			// Push the state back to prevent navigation
-
-			confirm(
-				{
-					title: "페이지를 벗어나시겠습니까?",
-					description:
-						"AI 문제 생성이 진행 중입니다. 페이지를 벗어나면 생성이 취소됩니다.",
-				},
-				() => {
-					window.removeEventListener("popstate", handlePopState);
-
-					navigate(`/creation/new/team/${teamId}`, { replace: true });
-				},
-				() => {
-					window.history.pushState(null, "", window.location.href);
-				},
-			);
-
-			window.history.pushState(null, "", window.location.href);
-		};
-
-		window.addEventListener("popstate", handlePopState);
-
-		return () => {
-			window.removeEventListener("popstate", handlePopState);
 		};
 	}, []);
 
