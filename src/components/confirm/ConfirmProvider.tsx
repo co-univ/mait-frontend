@@ -20,41 +20,38 @@ const ConfirmProvider = ({ children }: { children: ReactNode }) => {
 	const [confirmState, setConfirmState] = useState<{
 		isOpen: boolean;
 		options: ConfirmOptions;
-		onConfirm: () => void;
-		onCancel: () => void;
+		resolve: (value: boolean) => void;
 	} | null>(null);
 
 	/**
-	 *
+	 * Show confirm dialog and return a Promise that resolves when user responds
 	 */
-	const confirm = useCallback(
-		(options: ConfirmOptions, onConfirm: () => void, onCancel?: () => void) => {
+	const confirm = useCallback((options: ConfirmOptions): Promise<boolean> => {
+		return new Promise((resolve) => {
 			setConfirmState({
 				isOpen: true,
 				options,
-				onConfirm,
-				onCancel: onCancel || (() => {}),
+				resolve,
 			});
-		},
-		[],
-	);
+		});
+	}, []);
 
 	/**
-	 *
+	 * Handle confirm button click
 	 */
 	const handleConfirm = () => {
 		if (confirmState) {
-			confirmState.onConfirm();
+			confirmState.resolve(true);
 			setConfirmState(null);
 		}
 	};
 
 	/**
-	 *
+	 * Handle cancel button click
 	 */
 	const handleCancel = () => {
 		if (confirmState) {
-			confirmState.onCancel();
+			confirmState.resolve(false);
 			setConfirmState(null);
 		}
 	};

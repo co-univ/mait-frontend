@@ -12,11 +12,7 @@ export interface ConfirmOptions {
 }
 
 interface ConfirmContextValue {
-	confirm: (
-		options: ConfirmOptions,
-		onConfirm: () => void,
-		onCancel?: () => void,
-	) => void;
+	confirm: (options: ConfirmOptions) => Promise<boolean>;
 }
 
 //
@@ -37,20 +33,16 @@ export const ConfirmContext = createContext<ConfirmContextValue | undefined>(
  * @example
  * const { confirm } = useConfirm();
  *
- * const handleDelete = () => {
- *   confirm(
- *     {
- *       title: "정말 삭제하시겠습니까?",
- *       description: "문제를 삭제하실 경우, 원하시는 상태로 복구가 어렵습니다.",
- *     },
- *     () => {
- *       // User confirmed
- *       deleteItem();
- *     },
- *     () => {
- *       // User cancelled (optional)
- *     }
- *   );
+ * const handleDelete = async () => {
+ *   const result = await confirm({
+ *     title: "정말 삭제하시겠습니까?",
+ *     description: "문제를 삭제하실 경우, 원하시는 상태로 복구가 어렵습니다.",
+ *   });
+ *
+ *   if (result) {
+ *     // User confirmed
+ *     deleteItem();
+ *   }
  * };
  */
 export const useConfirm = () => {
