@@ -6,7 +6,7 @@ import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
-import type { CreateQuestionSetApiRequest, QuestionCount } from "@/libs/types";
+import type { QuestionCount } from "@/libs/types";
 import {
 	type CreationNewQuestionSetState,
 	creationNewQuestionSetInitialState,
@@ -102,18 +102,24 @@ const CreationNew = () => {
 				const formData = new FormData();
 				formData.append("material", file);
 
-				const id = 1234;
-				const url = "4567";
+				const res = await apiClient.POST("/api/v1/question-sets/materials", {
+					body: formData as unknown as { material: string },
+					bodySerializer: (body) => body as unknown as FormData, // 이 부분이 필요합니다
+				});
+
+				if (!res.data?.isSuccess) {
+					throw new Error("File upload failed");
+				}
 
 				dispatch({
 					type: "SET_MATERIALS_ADD",
 					payload: {
-						id,
-						url,
+						id: res.data?.data?.id ?? 0,
+						url: res.data?.data?.materialUrl ?? "",
 					},
 				});
 			} catch {
-				notify.error("파일 업로드에 실패했습니다.");
+				notify.error("자료 업로드에 실패했습니다.");
 				dispatch({ type: "SET_MATERIALS_POP", payload: undefined });
 			} finally {
 				setIsFileUploading(false);
@@ -143,7 +149,13 @@ const CreationNew = () => {
 	 */
 	const handleCreateButtonClick = async () => {
 		const res = await apiClient.POST("/api/v1/question-sets", {
-			body: questionSet as CreateQuestionSetApiRequest,
+			body: {
+				...questionSet,
+				materials: questionSet.materials?.map((material) => ({
+					id: material.id,
+					url: material.url,
+				})),
+			},
 		});
 
 		if (!res.data?.isSuccess) {
@@ -157,6 +169,7 @@ const CreationNew = () => {
 			navigate(
 				`/creation/new/loading/team/${teamId}/question-set/${questionSetId}`,
 			);
+			return;
 		}
 
 		navigate(`/creation/question/team/${teamId}/question-set/${questionSetId}`);
