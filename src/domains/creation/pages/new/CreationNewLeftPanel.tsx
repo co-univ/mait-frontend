@@ -3,6 +3,7 @@ import { Radio } from "@/components/radio";
 import type { QuestionCount } from "@/libs/types";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
+import type { CreationNewQuestionSetState } from "../../reducers/new/CreationNewQuestionSetReducer";
 import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 
 //
@@ -10,8 +11,12 @@ import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 //
 
 interface CreationNewLeftPanelProps {
+	creationType: CreationNewQuestionSetState["creationType"];
 	subject: string;
 	counts?: QuestionCount[];
+	onCreationTypeChange: (
+		type: CreationNewQuestionSetState["creationType"],
+	) => void;
 	onSubjectChange: (subject: string) => void;
 	onQuestionCountCheck: (
 		checked: boolean,
@@ -28,8 +33,10 @@ interface CreationNewLeftPanelProps {
 //
 
 const CreationNewLeftPanel = ({
+	creationType,
 	subject,
 	counts,
+	onCreationTypeChange,
 	onSubjectChange,
 	onQuestionCountCheck,
 	onQuestionCountCountChange,
@@ -43,8 +50,12 @@ const CreationNewLeftPanel = ({
 				<Field.Label className="typo-body-large">문제 생성 방식</Field.Label>
 				<div className="flex justify-between py-padding-10 px-padding-12 bg-color-gray-5 rounded-radius-medium1">
 					<Radio.Group
-						value="MANUAL"
-						onChange={() => {}}
+						value={creationType}
+						onChange={(value) =>
+							onCreationTypeChange(
+								value as CreationNewQuestionSetState["creationType"],
+							)
+						}
 						className="flex flex-1 flex-wrap gap-gap-8 justify-between"
 					>
 						<Radio.Item value="AI_GENERATED" className="flex-1 min-w-[100px]">

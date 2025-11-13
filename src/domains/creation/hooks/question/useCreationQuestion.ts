@@ -256,7 +256,7 @@ const useCreationQuestion = ({
 	/**
 	 *
 	 */
-	const handleDeleteQuestion = (deleteQuestionId: number) => {
+	const handleDeleteQuestion = async (deleteQuestionId: number) => {
 		if (questions.length === 1) {
 			notify.error("문제는 최소 1개 이상 존재해야 합니다.");
 			return;
@@ -264,24 +264,23 @@ const useCreationQuestion = ({
 
 		const targetQuestion = questions.find((q) => q.id === deleteQuestionId);
 
-		confirm(
-			{
-				title: "정말 삭제하시겠습니까?",
-				description: `${targetQuestion?.number}번 문제를 삭제하실 경우, 원하시는 상태로 복구가 어렵습니다.`,
-				cancelText: "취소",
-				confirmText: "확인",
-			},
-			() => {
-				mutateDelete({
-					params: {
-						path: {
-							questionSetId,
-							questionId: deleteQuestionId,
-						},
+		const result = await confirm({
+			title: "정말 삭제하시겠습니까?",
+			description: `${targetQuestion?.number}번 문제를 삭제하실 경우, 원하시는 상태로 복구가 어렵습니다.`,
+			cancelText: "취소",
+			confirmText: "확인",
+		});
+
+		if (result) {
+			mutateDelete({
+				params: {
+					path: {
+						questionSetId,
+						questionId: deleteQuestionId,
 					},
-				});
-			},
-		);
+				},
+			});
+		}
 	};
 
 	return {

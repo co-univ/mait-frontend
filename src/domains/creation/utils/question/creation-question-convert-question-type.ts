@@ -33,7 +33,7 @@ const CreationQuestionConvertQuestionType = (
 		...question,
 		content: "",
 		type: newType,
-	};
+	} as unknown as QuestionResponseType;
 
 	switch (newType) {
 		case "MULTIPLE":

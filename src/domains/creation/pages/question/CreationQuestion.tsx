@@ -1,5 +1,12 @@
 import { SquareMinus } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import {
+	useBeforeUnload,
+	useBlocker,
+	useNavigate,
+	useParams,
+} from "react-router-dom";
+import { useConfirm } from "@/components/confirm";
 import QuestionNavigation, {
 	QuestionNavigationButton,
 } from "@/components/question-navigation";
@@ -31,6 +38,26 @@ const CreationQuestion = () => {
 		questionSetId,
 		questionId,
 	});
+
+	const isExistEditingQuestion = questions.some(
+		(question) => question.isEditing,
+	);
+
+	const blocker = useBlocker(({ nextLocation }) => {
+		return (
+			isExistEditingQuestion &&
+			!nextLocation.pathname.startsWith("/creation/question")
+		);
+	});
+
+	useBeforeUnload((e) => {
+		if (isExistEditingQuestion) {
+			e.preventDefault();
+			e.returnValue = "";
+		}
+	});
+
+	const { confirm } = useConfirm();
 
 	/**
 	 *
@@ -81,6 +108,25 @@ const CreationQuestion = () => {
 			</div>
 		);
 	};
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (blocker.state === "blocked") {
+			confirm({
+				title: "편집 중인 문제가 있습니다.",
+				description:
+					"페이지를 떠나시겠습니까? (편집 내용은 저장되지 않습니다.)",
+			}).then((result) => {
+				if (result) {
+					blocker.proceed();
+				} else {
+					blocker.reset();
+				}
+			});
+		}
+	}, [blocker, confirm]);
 
 	return (
 		<CreationQuestionLayout>
