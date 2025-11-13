@@ -24,7 +24,7 @@ const ManagementMaking = ({ questionSets }: ManagementMakingProps) => {
 				<ManagementCreateQuestionButton />
 			</div>
 
-			<QuestionSetsCardsLayout minGridWidth={260}>
+			<QuestionSetsCardsLayout minGridWidth={280}>
 				{questionSets.map((questionSet) => (
 					<ManagementMakingCard
 						key={questionSet.id}
