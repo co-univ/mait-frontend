@@ -1,11 +1,11 @@
 import { ChevronRight, PencilLine } from "lucide-react";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
 import useQuestionSets from "@/hooks/useQuestionSets";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import { apiClient } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
 import {
 	CREATION_PUBLISH_QUESTION_INITIAL_STATE,
@@ -22,6 +22,18 @@ const CreationPublish = () => {
 	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
+	const { data } = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets/{questionSetId}",
+		{
+			params: {
+				path: {
+					questionSetId,
+				},
+			},
+		},
+	);
+
 	const navigate = useNavigate();
 
 	const [questionSet, dispatch] = useReducer(
@@ -37,7 +49,7 @@ const CreationPublish = () => {
 	const { invalidateQuestionSetsQuery: invalidateLiveTimeQuery } =
 		useQuestionSets({
 			teamId,
-			mode: "LIVE-TIME",
+			mode: "LIVE_TIME",
 		});
 
 	const disabledPublishQuestionSet = [
@@ -106,6 +118,21 @@ const CreationPublish = () => {
 			notify.error("문제 셋 생성에 실패했습니다.");
 		}
 	};
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (data?.data) {
+			const { subject, levelDescription } = data.data;
+
+			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
+			dispatch({
+				type: "SET_LEVEL_DESCRIPTION",
+				payload: levelDescription ?? "",
+			});
+		}
+	}, [data?.data]);
 
 	return (
 		<LabeledPageLayout
