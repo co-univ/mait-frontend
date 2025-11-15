@@ -641,7 +641,7 @@ export interface components {
             ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
             /** Format: int64 */
             questionCount: number;
-            levelDescription?: string;
+            difficulty?: string;
             /** Format: date-time */
             updatedAt: string;
         };
@@ -1147,7 +1147,7 @@ export interface components {
             teamId?: number;
             /** Format: int64 */
             questionCount?: number;
-            levelDescription?: string;
+            difficulty?: string;
             materials?: components["schemas"]["MaterialDto"][];
             /** Format: date-time */
             updatedAt?: string;
