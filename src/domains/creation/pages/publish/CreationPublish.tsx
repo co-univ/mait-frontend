@@ -22,6 +22,13 @@ const CreationPublish = () => {
 	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
+	const navigate = useNavigate();
+
+	const [questionSet, dispatch] = useReducer(
+		creationPublishQuestionSetReducer,
+		CREATION_PUBLISH_QUESTION_INITIAL_STATE,
+	);
+
 	const { data } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}",
@@ -32,13 +39,6 @@ const CreationPublish = () => {
 				},
 			},
 		},
-	);
-
-	const navigate = useNavigate();
-
-	const [questionSet, dispatch] = useReducer(
-		creationPublishQuestionSetReducer,
-		CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	);
 
 	const { invalidateQuestionSetsQuery: invalidateMakingQuery } =
@@ -159,6 +159,7 @@ const CreationPublish = () => {
 						onChangeMode={handleModeChange}
 					/>
 					<CreationPublishRightPanel
+						creationType={data?.data?.creationType}
 						difficulty={questionSet.difficulty}
 						subject={questionSet.subject}
 						onChangeDifficulty={handleDifficultyChange}

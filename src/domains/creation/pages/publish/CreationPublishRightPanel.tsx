@@ -1,4 +1,5 @@
 import { Field } from "@/components/field";
+import type { QuestionSetCreationType } from "@/libs/types";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 
@@ -7,6 +8,7 @@ import CreationPanelTextarea from "../../components/common/CreationPanelTextarea
 //
 
 type CreationPublishRightPanelProps = {
+	creationType?: QuestionSetCreationType;
 	difficulty?: string;
 	subject?: string;
 	onChangeDifficulty: (difficulty: string) => void;
@@ -18,12 +20,17 @@ type CreationPublishRightPanelProps = {
 //
 
 const CreationPublishRightPanel = ({
+	creationType,
 	difficulty,
 	subject,
 	onChangeDifficulty,
 	onChangeSubject,
 }: CreationPublishRightPanelProps) => {
 	const renderDifficultyField = () => {
+		if (creationType === "MANUAL") {
+			return null;
+		}
+
 		return (
 			<Field.Root>
 				<Field.Label className="typo-body-large">
@@ -55,6 +62,7 @@ const CreationPublishRightPanel = ({
 			</Field.Root>
 		);
 	};
+
 	return (
 		<CreationPanel>
 			{renderDifficultyField()}
