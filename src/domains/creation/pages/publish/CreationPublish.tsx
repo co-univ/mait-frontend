@@ -81,8 +81,8 @@ const CreationPublish = () => {
 	/**
 	 *
 	 */
-	const handleLevelDescriptionChange = (levelDescription: string) => {
-		dispatch({ type: "SET_LEVEL_DESCRIPTION", payload: levelDescription });
+	const handleDifficultyChange = (difficulty: string) => {
+		dispatch({ type: "SET_DIFFICULTY", payload: difficulty });
 	};
 
 	/**
@@ -124,12 +124,12 @@ const CreationPublish = () => {
 	//
 	useEffect(() => {
 		if (data?.data) {
-			const { subject, levelDescription } = data.data;
+			const { subject, difficulty } = data.data;
 
 			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
 			dispatch({
-				type: "SET_LEVEL_DESCRIPTION",
-				payload: levelDescription ?? "",
+				type: "SET_DIFFICULTY",
+				payload: difficulty ?? "",
 			});
 		}
 	}, [data?.data]);
@@ -159,9 +159,9 @@ const CreationPublish = () => {
 						onChangeMode={handleModeChange}
 					/>
 					<CreationPublishRightPanel
-						levelDescription={questionSet.levelDescription}
+						difficulty={questionSet.difficulty}
 						subject={questionSet.subject}
-						onChangeLevelDescription={handleLevelDescriptionChange}
+						onChangeDifficulty={handleDifficultyChange}
 						onChangeSubject={handleSubjectChange}
 					/>
 				</div>

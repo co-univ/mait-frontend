@@ -7,9 +7,9 @@ import CreationPanelTextarea from "../../components/common/CreationPanelTextarea
 //
 
 type CreationPublishRightPanelProps = {
-	levelDescription?: string;
+	difficulty?: string;
 	subject?: string;
-	onChangeLevelDescription: (levelDescription: string) => void;
+	onChangeDifficulty: (difficulty: string) => void;
 	onChangeSubject: (subject: string) => void;
 };
 
@@ -18,12 +18,12 @@ type CreationPublishRightPanelProps = {
 //
 
 const CreationPublishRightPanel = ({
-	levelDescription,
+	difficulty,
 	subject,
-	onChangeLevelDescription,
+	onChangeDifficulty,
 	onChangeSubject,
 }: CreationPublishRightPanelProps) => {
-	const renderLevelDescriptionField = () => {
+	const renderDifficultyField = () => {
 		return (
 			<Field.Root>
 				<Field.Label className="typo-body-large">
@@ -32,8 +32,8 @@ const CreationPublishRightPanel = ({
 				<CreationPanelTextarea
 					disabled
 					minRows={1}
-					value={levelDescription}
-					onChange={(e) => onChangeLevelDescription(e.target.value)}
+					value={difficulty}
+					onChange={(e) => onChangeDifficulty(e.target.value)}
 				/>
 			</Field.Root>
 		);
@@ -57,7 +57,7 @@ const CreationPublishRightPanel = ({
 	};
 	return (
 		<CreationPanel>
-			{renderLevelDescriptionField()}
+			{renderDifficultyField()}
 			{renderSubjectField()}
 		</CreationPanel>
 	);

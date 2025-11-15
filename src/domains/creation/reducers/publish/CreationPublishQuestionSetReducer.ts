@@ -8,20 +8,25 @@ import type {
 //
 //
 
-type CreationPublishQuestionSetState = UpdateQuestionSetApiRequest;
+type CreationPublishQuestionSetState = Omit<
+	UpdateQuestionSetApiRequest,
+	"levelDescription"
+> & {
+	difficulty?: string;
+};
 
 type CreationPublishQuestionSetAction =
 	| { type: "SET_TITLE"; payload: string }
 	| { type: "SET_SUBJECT"; payload: string }
 	| { type: "SET_MODE"; payload: DeliveryMode }
-	| { type: "SET_LEVEL_DESCRIPTION"; payload: string }
+	| { type: "SET_DIFFICULTY"; payload: string }
 	| { type: "SET_VISIBILITY"; payload: QuestionSetVisibility };
 
 export const CREATION_PUBLISH_QUESTION_INITIAL_STATE = {
 	title: "",
 	subject: "",
 	mode: "LIVE_TIME" as DeliveryMode,
-	levelDescription: "",
+	difficulty: "",
 	visibility: "PUBLIC" as QuestionSetVisibility,
 };
 
@@ -40,8 +45,8 @@ export const creationPublishQuestionSetReducer = (
 			return { ...state, subject: action.payload };
 		case "SET_MODE":
 			return { ...state, mode: action.payload };
-		case "SET_LEVEL_DESCRIPTION":
-			return { ...state, levelDescription: action.payload };
+		case "SET_DIFFICULTY":
+			return { ...state, difficulty: action.payload };
 		case "SET_VISIBILITY":
 			return { ...state, visibility: action.payload };
 		default:
