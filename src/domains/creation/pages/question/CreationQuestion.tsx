@@ -131,6 +131,7 @@ const CreationQuestion = () => {
 	return (
 		<CreationQuestionLayout>
 			<QuestionNavigation
+				hasAddButton
 				questions={questions}
 				activeQuestionId={questionId}
 				onQuestionAdd={handleAddQuestion}

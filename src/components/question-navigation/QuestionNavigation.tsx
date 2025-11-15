@@ -17,6 +17,7 @@ import useQuestionNavigationLayout from "./useQuestionNavigationLayout";
 //
 
 interface QuestionNavigationProps<T> {
+	hasAddButton?: boolean;
 	activeQuestionId?: number;
 	orientation?: "vertical" | "horizontal";
 	questions: T[];
@@ -31,6 +32,7 @@ interface QuestionNavigationProps<T> {
 //
 
 const QuestionNavigation = <T extends { id: number }>({
+	hasAddButton = false,
 	questions,
 	activeQuestionId,
 	orientation = "vertical",
@@ -38,17 +40,18 @@ const QuestionNavigation = <T extends { id: number }>({
 	renderQuestionNavigationButton,
 }: QuestionNavigationProps<T>) => {
 	const {
-		containerRef,
-		startIndex,
-		visibleCount,
 		canScrollUp,
 		canScrollDown,
+		containerRef,
+		listRef,
 		handleScrollUp,
 		handleScrollDown,
 		scrollToBottom,
 	} = useQuestionNavigationLayout({
+		hasAddButton,
 		orientation,
-		questionLength: questions.length,
+		activeQuestionId: activeQuestionId ?? 0,
+		questions,
 	});
 
 	const isVertical = orientation === "vertical";
@@ -96,7 +99,7 @@ const QuestionNavigation = <T extends { id: number }>({
 	 *
 	 */
 	const renderAddButton = () => {
-		if (onQuestionAdd) {
+		if (hasAddButton && onQuestionAdd) {
 			return (
 				<button
 					type="button"
@@ -119,9 +122,9 @@ const QuestionNavigation = <T extends { id: number }>({
 	return (
 		<div
 			ref={containerRef}
-			className={clsx("flex items-center h-full", {
-				"flex-col justify-start": isVertical,
-				"flex-row justify-center": !isVertical,
+			className={clsx("flex justify-center items-center", {
+				"flex-col justify-start h-full": isVertical,
+				"flex-row justify-center w-full": !isVertical,
 			})}
 			style={{
 				gap: `${GAP}px`,
@@ -130,11 +133,10 @@ const QuestionNavigation = <T extends { id: number }>({
 			{renderDirectionButton("up")}
 
 			<QuestionNavigationList
-				questions={questions}
 				activeQuestionId={activeQuestionId}
-				startIndex={startIndex}
-				visibleCount={visibleCount}
 				orientation={orientation}
+				questions={questions}
+				listRef={listRef}
 				renderQuestionNavigationButton={renderQuestionNavigationButton}
 			/>
 

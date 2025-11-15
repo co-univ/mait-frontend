@@ -1,7 +1,6 @@
 import clsx from "clsx";
-import { motion } from "framer-motion";
 import { useState } from "react";
-import { BUTTON_SIZE, GAP } from "./constants";
+import { GAP } from "./constants";
 
 //
 //
@@ -19,10 +18,9 @@ export interface QuestionNavigationButtonRenderProps<T> {
 
 interface QuestionNavigationListProps<T> {
 	activeQuestionId?: number;
-	startIndex: number;
-	visibleCount: number;
 	orientation: "vertical" | "horizontal";
 	questions: T[];
+	listRef: React.RefObject<HTMLDivElement | null>;
 	renderQuestionNavigationButton: (
 		props: QuestionNavigationButtonRenderProps<T>,
 	) => React.ReactNode;
@@ -35,9 +33,8 @@ interface QuestionNavigationListProps<T> {
 const QuestionNavigationList = <T extends { id: number }>({
 	questions,
 	activeQuestionId,
-	startIndex,
-	visibleCount,
 	orientation,
+	listRef,
 	renderQuestionNavigationButton,
 }: QuestionNavigationListProps<T>) => {
 	const [hoveredQuestionId, setHoveredQuestionId] = useState<number | null>(
@@ -45,28 +42,16 @@ const QuestionNavigationList = <T extends { id: number }>({
 	);
 
 	const isVertical = orientation === "vertical";
-	const renderedCount = Math.min(visibleCount, questions.length);
 
 	return (
 		<div
-			className="relative overflow-hidden"
-			style={
-				isVertical
-					? {
-							height: `${renderedCount * BUTTON_SIZE + (renderedCount - 1) * GAP}px`,
-						}
-					: {
-							width: `${renderedCount * BUTTON_SIZE + (renderedCount - 1) * GAP}px`,
-						}
-			}
+			ref={listRef}
+			className={clsx("overflow-hidden scrollbar-hide", {
+				"overflow-y-hidden overflow-x-hidden": isVertical,
+				"overflow-x-hidden overflow-y-hidden": !isVertical,
+			})}
 		>
-			<motion.div
-				animate={
-					isVertical
-						? { y: -startIndex * (BUTTON_SIZE + GAP) }
-						: { x: -startIndex * (BUTTON_SIZE + GAP) }
-				}
-				transition={{ duration: 0.3, ease: "easeInOut" }}
+			<div
 				className={clsx("flex", {
 					"flex-col": isVertical,
 					"flex-row": !isVertical,
@@ -94,7 +79,7 @@ const QuestionNavigationList = <T extends { id: number }>({
 						</div>
 					);
 				})}
-			</motion.div>
+			</div>
 		</div>
 	);
 };
