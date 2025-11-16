@@ -1,9 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import type { QuestionResponseType } from "@/app.constants";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
-import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import CreationQuestionConvertQuestionType from "@/domains/creation/utils/question/creation-question-convert-question-type";
 import creationQuestionResponseToUpdate from "@/domains/creation/utils/question/creation-question-response-to-update";

@@ -1,4 +1,4 @@
-import type { QuestionResponseType } from "@/domains/creation/creation.constant";
+import type { QuestionResponseType } from "@/app.constants";
 import type {
 	FillBlankQuestionApiResponse,
 	MultipleQuestionApiResponse,

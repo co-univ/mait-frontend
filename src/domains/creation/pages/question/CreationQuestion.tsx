@@ -21,7 +21,7 @@ import CreationQuestionLayout from "@/domains/creation/layouts/question/Creation
 import CreationQuestionAdditional from "@/domains/creation/pages/question/additional/CreationQuestionAdditional";
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
 import type { QuestionNavigationButtonRenderProps } from "../../../../components/question-navigation/QuestionNavigationList";
-import type { QuestionResponseType } from "../../creation.constant";
+import type { QuestionResponseType } from "@/app.constants";
 
 //
 //

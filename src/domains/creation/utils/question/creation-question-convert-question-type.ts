@@ -1,4 +1,4 @@
-import type { QuestionResponseType } from "@/domains/creation/creation.constant";
+import type { QuestionResponseType } from "@/app.constants";
 import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
 	FillBlankQuestionApiResponse,

@@ -2,10 +2,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { notify } from "@/components/Toast";
-import type {
-	QuestionResponseType,
-	QuestionResponseTypeWithIsEditing,
-} from "@/domains/creation/creation.constant";
+import type { QuestionResponseType } from "@/app.constants";
+import type { QuestionResponseTypeWithIsEditing } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import { apiClient, apiHooks } from "@/libs/api";
 

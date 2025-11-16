@@ -1,8 +1,6 @@
 import { create } from "zustand";
-import type {
-	QuestionResponseType,
-	QuestionResponseTypeWithIsEditing,
-} from "@/domains/creation/creation.constant";
+import type { QuestionResponseType } from "@/app.constants";
+import type { QuestionResponseTypeWithIsEditing } from "@/domains/creation/creation.constant";
 import type { QuestionValidationApiResponse } from "@/libs/types";
 
 //
