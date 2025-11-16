@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { apiHooks } from "@/libs/api";
-import type { QuestionSetGroup, QuestionSetList } from "@/libs/types";
+import type { DeliveryMode, QuestionSetGroup, QuestionSetList } from "@/libs/types";
 
 //
 //
@@ -8,7 +8,7 @@ import type { QuestionSetGroup, QuestionSetList } from "@/libs/types";
 
 interface UseQuestionSetsProps {
 	teamId: number;
-	mode: string;
+	mode: DeliveryMode;
 }
 
 interface UseQuestionSetsReturn {
@@ -19,11 +19,6 @@ interface UseQuestionSetsReturn {
 	error: Error | null;
 }
 
-enum MODE_MAP {
-	making = "MAKING",
-	review = "REVIEW",
-	"live-time" = "LIVE_TIME",
-}
 
 //
 //
@@ -39,8 +34,8 @@ const useQuestionSets = ({
 		{
 			params: {
 				query: {
-					teamId: teamId,
-					mode: MODE_MAP[mode as keyof typeof MODE_MAP],
+					teamId,
+					mode,
 				},
 			},
 		},
@@ -65,8 +60,8 @@ const useQuestionSets = ({
 			queryKey: apiHooks.queryOptions("get", "/api/v1/question-sets", {
 				params: {
 					query: {
-						teamId: teamId,
-						mode: MODE_MAP[mode as keyof typeof MODE_MAP],
+						teamId,
+						mode,
 					},
 				},
 			}).queryKey,

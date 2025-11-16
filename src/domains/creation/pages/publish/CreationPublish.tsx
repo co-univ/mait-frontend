@@ -1,11 +1,11 @@
 import { ChevronRight, PencilLine } from "lucide-react";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
 import useQuestionSets from "@/hooks/useQuestionSets";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import { apiClient } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
 import {
 	CREATION_PUBLISH_QUESTION_INITIAL_STATE,
@@ -29,6 +29,18 @@ const CreationPublish = () => {
 		CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	);
 
+	const { data } = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets/{questionSetId}",
+		{
+			params: {
+				path: {
+					questionSetId,
+				},
+			},
+		},
+	);
+
 	const { invalidateQuestionSetsQuery: invalidateMakingQuery } =
 		useQuestionSets({
 			teamId,
@@ -37,7 +49,7 @@ const CreationPublish = () => {
 	const { invalidateQuestionSetsQuery: invalidateLiveTimeQuery } =
 		useQuestionSets({
 			teamId,
-			mode: "LIVE-TIME",
+			mode: "LIVE_TIME",
 		});
 
 	const disabledPublishQuestionSet = [
@@ -69,8 +81,8 @@ const CreationPublish = () => {
 	/**
 	 *
 	 */
-	const handleLevelDescriptionChange = (levelDescription: string) => {
-		dispatch({ type: "SET_LEVEL_DESCRIPTION", payload: levelDescription });
+	const handleDifficultyChange = (difficulty: string) => {
+		dispatch({ type: "SET_DIFFICULTY", payload: difficulty });
 	};
 
 	/**
@@ -107,6 +119,21 @@ const CreationPublish = () => {
 		}
 	};
 
+	//
+	//
+	//
+	useEffect(() => {
+		if (data?.data) {
+			const { subject, difficulty } = data.data;
+
+			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
+			dispatch({
+				type: "SET_DIFFICULTY",
+				payload: difficulty ?? "",
+			});
+		}
+	}, [data?.data]);
+
 	return (
 		<LabeledPageLayout
 			icon={<PencilLine />}
@@ -132,9 +159,10 @@ const CreationPublish = () => {
 						onChangeMode={handleModeChange}
 					/>
 					<CreationPublishRightPanel
-						levelDescription={questionSet.levelDescription}
+						creationType={data?.data?.creationType}
+						difficulty={questionSet.difficulty}
 						subject={questionSet.subject}
-						onChangeLevelDescription={handleLevelDescriptionChange}
+						onChangeDifficulty={handleDifficultyChange}
 						onChangeSubject={handleSubjectChange}
 					/>
 				</div>

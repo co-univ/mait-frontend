@@ -4,8 +4,19 @@ import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
+import type { DeliveryMode } from "@/libs/types";
 import ManagementLiveTime from "./ManagementLiveTime";
 import ManagementMaking from "./ManagementMaking";
+
+//
+//
+//
+
+const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
+	making: "MAKING",
+	"live-time": "LIVE_TIME",
+	review: "REVIEW",
+};
 
 //
 //
@@ -18,7 +29,7 @@ const Management = () => {
 
 	const { questionSetList, questionSetGroup } = useQuestionSets({
 		teamId,
-		mode,
+		mode: QUESTION_SET_MODES[mode],
 	});
 
 	/**

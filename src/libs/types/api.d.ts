@@ -619,7 +619,7 @@ export interface components {
             subject: string;
             mode?: components["schemas"]["DeliveryMode"];
             /** @description 문제 셋 난이도 설명 */
-            levelDescription?: string;
+            difficulty?: string;
             visibility?: components["schemas"]["QuestionSetVisibility"];
         };
         ApiResponseQuestionSetApiResponse: {
@@ -641,7 +641,7 @@ export interface components {
             ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
             /** Format: int64 */
             questionCount: number;
-            levelDescription?: string;
+            difficulty?: string;
             /** Format: date-time */
             updatedAt: string;
         };
@@ -1147,7 +1147,7 @@ export interface components {
             teamId?: number;
             /** Format: int64 */
             questionCount?: number;
-            levelDescription?: string;
+            difficulty?: string;
             materials?: components["schemas"]["MaterialDto"][];
             /** Format: date-time */
             updatedAt?: string;

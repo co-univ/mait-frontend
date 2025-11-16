@@ -6,7 +6,9 @@ import {
 	ChevronsUp,
 	Plus,
 } from "lucide-react";
+import { useImperativeHandle } from "react";
 import { BUTTON_SIZE, GAP } from "./constants";
+import QuestionNavigationDirectionButton from "./QuestionNavigationDirectionButton";
 import QuestionNavigationList, {
 	type QuestionNavigationButtonRenderProps,
 } from "./QuestionNavigationList";
@@ -16,11 +18,22 @@ import useQuestionNavigationLayout from "./useQuestionNavigationLayout";
 //
 //
 
+export interface QuestionNavigationRef {
+	scrollUp: () => void;
+	scrollDown: () => void;
+	scrollToBottom: () => void;
+	getVisibleRange: () => { startIndex: number; endIndex: number };
+}
+
 interface QuestionNavigationProps<T> {
+	ref?: React.Ref<QuestionNavigationRef>;
+	hasAddButton?: boolean;
 	activeQuestionId?: number;
 	orientation?: "vertical" | "horizontal";
 	questions: T[];
 	onQuestionAdd?: () => void;
+	renderUpButton?: () => React.ReactNode;
+	renderDownButton?: () => React.ReactNode;
 	renderQuestionNavigationButton: (
 		props: QuestionNavigationButtonRenderProps<T>,
 	) => React.ReactNode;
@@ -31,24 +44,30 @@ interface QuestionNavigationProps<T> {
 //
 
 const QuestionNavigation = <T extends { id: number }>({
+	ref,
+	hasAddButton = false,
 	questions,
 	activeQuestionId,
 	orientation = "vertical",
 	onQuestionAdd,
+	renderUpButton,
+	renderDownButton,
 	renderQuestionNavigationButton,
 }: QuestionNavigationProps<T>) => {
 	const {
-		containerRef,
-		startIndex,
-		visibleCount,
 		canScrollUp,
 		canScrollDown,
+		containerRef,
+		listRef,
 		handleScrollUp,
 		handleScrollDown,
 		scrollToBottom,
+		getVisibleRange,
 	} = useQuestionNavigationLayout({
+		hasAddButton,
 		orientation,
-		questionLength: questions.length,
+		activeQuestionId: activeQuestionId ?? 0,
+		questions,
 	});
 
 	const isVertical = orientation === "vertical";
@@ -65,30 +84,28 @@ const QuestionNavigation = <T extends { id: number }>({
 	 *
 	 */
 	const renderDirectionButton = (direction: "up" | "down") => {
+		if (direction === "up" && renderUpButton) {
+			return renderUpButton();
+		}
+
+		if (direction === "down" && renderDownButton) {
+			return renderDownButton();
+		}
+
 		const isUp = direction === "up";
 		const canScroll = isUp ? canScrollUp : canScrollDown;
 		const onClick = isUp ? handleScrollUp : handleScrollDown;
 
 		return (
-			<button
-				type="button"
+			<QuestionNavigationDirectionButton
 				onClick={onClick}
 				disabled={!canScroll}
-				aria-label={`Scroll ${direction}`}
-				className={clsx("flex items-center justify-center rounded-medium1", {
-					"hover:bg-color-gray-5": canScroll,
-					"opacity-30 cursor-not-allowed": !canScroll,
-				})}
-				style={{
-					width: BUTTON_SIZE,
-					height: BUTTON_SIZE,
-				}}
 			>
 				{isVertical && isUp && <ChevronsUp />}
 				{isVertical && !isUp && <ChevronsDown />}
 				{!isVertical && isUp && <ChevronsLeft />}
 				{!isVertical && !isUp && <ChevronsRight />}
-			</button>
+			</QuestionNavigationDirectionButton>
 		);
 	};
 
@@ -96,7 +113,7 @@ const QuestionNavigation = <T extends { id: number }>({
 	 *
 	 */
 	const renderAddButton = () => {
-		if (onQuestionAdd) {
+		if (hasAddButton && onQuestionAdd) {
 			return (
 				<button
 					type="button"
@@ -116,12 +133,22 @@ const QuestionNavigation = <T extends { id: number }>({
 		return null;
 	};
 
+	//
+	//
+	//
+	useImperativeHandle(ref, () => ({
+		scrollUp: handleScrollUp,
+		scrollDown: handleScrollDown,
+		scrollToBottom,
+		getVisibleRange,
+	}));
+
 	return (
 		<div
 			ref={containerRef}
-			className={clsx("flex items-center h-full", {
-				"flex-col justify-start": isVertical,
-				"flex-row justify-center": !isVertical,
+			className={clsx("flex justify-center items-center", {
+				"flex-col h-full": isVertical,
+				"flex-row w-full": !isVertical,
 			})}
 			style={{
 				gap: `${GAP}px`,
@@ -130,11 +157,10 @@ const QuestionNavigation = <T extends { id: number }>({
 			{renderDirectionButton("up")}
 
 			<QuestionNavigationList
-				questions={questions}
 				activeQuestionId={activeQuestionId}
-				startIndex={startIndex}
-				visibleCount={visibleCount}
 				orientation={orientation}
+				questions={questions}
+				listRef={listRef}
 				renderQuestionNavigationButton={renderQuestionNavigationButton}
 			/>
 
