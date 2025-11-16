@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { SquareMinus } from "lucide-react";
 import { useEffect } from "react";
 import {
@@ -31,9 +32,11 @@ const CreationQuestion = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { questions, handleAddQuestion } = useCreationQuestions({
-		questionSetId,
-	});
+	const { questions, invalidQuestions, handleAddQuestion } =
+		useCreationQuestions({
+			questionSetId,
+		});
+
 	const { handleUpdateQuestion, handleDeleteQuestion } = useCreationQuestion({
 		questionSetId,
 		questionId,
@@ -82,6 +85,8 @@ const CreationQuestion = () => {
 		onMouseEnter,
 		onMouseLeave,
 	}: QuestionNavigationButtonRenderProps<QuestionResponseType>) => {
+		const isInvalid = invalidQuestions.includes(question.id);
+
 		return (
 			// biome-ignore lint/a11y/noStaticElementInteractions: div used for hover state
 			<div
@@ -94,6 +99,9 @@ const CreationQuestion = () => {
 					isMouseOver={isMouseOver}
 					number={index + 1}
 					onClick={() => handleQuestionNavigationClick(question.id)}
+					className={clsx({
+						"border !border-color-point-50": isInvalid,
+					})}
 				/>
 
 				{isMouseOver && (

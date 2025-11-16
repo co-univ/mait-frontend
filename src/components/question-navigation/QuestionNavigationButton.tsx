@@ -10,6 +10,7 @@ interface QuestionNavigationButtonProps {
 	isMouseOver?: boolean;
 	number: number;
 	onClick: () => void;
+	className?: string;
 }
 
 //
@@ -21,6 +22,7 @@ const QuestionNavigationButton = ({
 	isMouseOver,
 	number,
 	onClick,
+	className,
 }: QuestionNavigationButtonProps) => {
 	return (
 		<div
@@ -42,6 +44,7 @@ const QuestionNavigationButton = ({
 						"text-color-alpha-black100": !isActive,
 						"hover:bg-color-gray-5": !isActive && isMouseOver,
 					},
+					className,
 				)}
 			>
 				{number}

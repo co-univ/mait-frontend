@@ -2,7 +2,11 @@ import { Check, LogIn, Save } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
-import { useCreationQuestion } from "@/domains/creation/hooks/question";
+import { notify } from "@/components/Toast";
+import {
+	useCreationQuestion,
+	useCreationQuestions,
+} from "@/domains/creation/hooks/question";
 
 //
 //
@@ -22,6 +26,10 @@ const CreationQuestionAdditionalButtons = () => {
 		questionId,
 	});
 
+	const { questions, handleValidateQuestions } = useCreationQuestions({
+		questionSetId,
+	});
+
 	/**
 	 *
 	 */
@@ -37,7 +45,22 @@ const CreationQuestionAdditionalButtons = () => {
 	/**
 	 *
 	 */
-	const handleCreateButtonClick = () => {
+	const handleCreateButtonClick = async () => {
+		const isExistEditingQuestion = questions.some(
+			(question) => question.isEditing,
+		);
+
+		if (isExistEditingQuestion) {
+			await handleUpdateQuestion();
+		}
+
+		const isValid = await handleValidateQuestions();
+
+		if (!isValid) {
+			notify.error("유효하지 않은 문제가 있습니다. 확인해주세요.");
+			return;
+		}
+
 		navigate(`/creation/publish/team/${teamId}/question-set/${questionSetId}`);
 	};
 
