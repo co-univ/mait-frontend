@@ -619,7 +619,7 @@ export interface components {
             subject: string;
             mode?: components["schemas"]["DeliveryMode"];
             /** @description 문제 셋 난이도 설명 */
-            levelDescription?: string;
+            difficulty?: string;
             visibility?: components["schemas"]["QuestionSetVisibility"];
         };
         ApiResponseQuestionSetApiResponse: {
