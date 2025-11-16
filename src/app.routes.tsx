@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
-import { controlRoutes } from "@/domains/control";
+import { authRoutes } from "@/domains/auth";
+import { controlRoutes } from "@/domains/control/Control.routes";
 import { creationRoutes } from "@/domains/creation/creation.routes";
 import { homeRoutes } from "@/domains/home";
 import { solvingRoutes } from "@/domains/solving/solving.routes";
-import { authRoutes } from "@/domains/auth";
 import { managementRoutes } from "./domains/management/Management.routes";
 
 const router = createBrowserRouter([
