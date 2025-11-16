@@ -112,6 +112,10 @@ const useCreationQuestions = ({
 				},
 			});
 
+			if (!res.data?.isSuccess) {
+				throw new Error("Failed to validate questions");
+			}
+
 			if (res.data?.data) {
 				const invalidQuestions = res.data.data.filter((q) => !q.isValid);
 
@@ -122,6 +126,8 @@ const useCreationQuestions = ({
 
 			return true;
 		} catch {
+			notify.error("문제 유효성 검사에 실패했습니다. 다시 시도해주세요.");
+
 			return false;
 		}
 	};

@@ -8,12 +8,7 @@ import type {
 //
 //
 
-type CreationPublishQuestionSetState = Omit<
-	UpdateQuestionSetApiRequest,
-	"levelDescription"
-> & {
-	difficulty?: string;
-};
+type CreationPublishQuestionSetState = UpdateQuestionSetApiRequest;
 
 type CreationPublishQuestionSetAction =
 	| { type: "SET_TITLE"; payload: string }

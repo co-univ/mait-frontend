@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import { SquareMinus } from "lucide-react";
-import { useEffect } from "react";
+import { ChevronsDown, ChevronsUp, SquareMinus } from "lucide-react";
+import { useEffect, useRef } from "react";
 import {
 	useBeforeUnload,
 	useBlocker,
@@ -10,7 +10,9 @@ import {
 import { useConfirm } from "@/components/confirm";
 import QuestionNavigation, {
 	QuestionNavigationButton,
+	type QuestionNavigationRef,
 } from "@/components/question-navigation";
+import QuestionNavigationDirectionButton from "@/components/question-navigation/QuestionNavigationDirectionButton";
 import {
 	useCreationQuestion,
 	useCreationQuestions,
@@ -27,6 +29,7 @@ import type { QuestionResponseType } from "../../creation.constant";
 
 const CreationQuestion = () => {
 	const navigate = useNavigate();
+	const questionNavigationRef = useRef<QuestionNavigationRef>(null);
 
 	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
@@ -71,6 +74,72 @@ const CreationQuestion = () => {
 		navigate(
 			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${newQuestionId}`,
 			{ replace: true },
+		);
+	};
+
+	/**
+	 *
+	 */
+	const renderQuestoinNaivigationUpButton = () => {
+		const visibleRange = questionNavigationRef.current?.getVisibleRange();
+
+		if (!visibleRange) {
+			return (
+				<QuestionNavigationDirectionButton
+					onClick={() => questionNavigationRef.current?.scrollUp()}
+				>
+					<ChevronsUp />
+				</QuestionNavigationDirectionButton>
+			);
+		}
+
+		const hasInvalidAbove = invalidQuestions.some((invalidId) => {
+			const index = questions.findIndex((q) => q.id === invalidId);
+			return index !== -1 && index < visibleRange.startIndex;
+		});
+
+		return (
+			<QuestionNavigationDirectionButton
+				onClick={() => questionNavigationRef.current?.scrollUp()}
+				className={clsx({
+					"border !border-color-point-50": hasInvalidAbove,
+				})}
+			>
+				<ChevronsUp />
+			</QuestionNavigationDirectionButton>
+		);
+	};
+
+	/**
+	 *
+	 */
+	const renderQuestoinNavigationDownButton = () => {
+		const visibleRange = questionNavigationRef.current?.getVisibleRange();
+
+		if (!visibleRange) {
+			return (
+				<QuestionNavigationDirectionButton
+					onClick={() => questionNavigationRef.current?.scrollDown()}
+				>
+					<ChevronsDown />
+				</QuestionNavigationDirectionButton>
+			);
+		}
+
+		const hasInvalidBelow = invalidQuestions.some((invalidId) => {
+			const index = questions.findIndex((q) => q.id === invalidId);
+			return index !== -1 && index > visibleRange.endIndex;
+		});
+
+		return (
+			<QuestionNavigationDirectionButton
+				onClick={() => questionNavigationRef.current?.scrollDown()}
+				className={clsx({
+					"border !border-color-point-50": hasInvalidBelow,
+				})}
+			>
+				<ChevronsDown />
+			</QuestionNavigationDirectionButton>
 		);
 	};
 
@@ -139,10 +208,13 @@ const CreationQuestion = () => {
 	return (
 		<CreationQuestionLayout>
 			<QuestionNavigation
+				ref={questionNavigationRef}
 				hasAddButton
 				questions={questions}
 				activeQuestionId={questionId}
 				onQuestionAdd={handleAddQuestion}
+				renderUpButton={renderQuestoinNaivigationUpButton}
+				renderDownButton={renderQuestoinNavigationDownButton}
 				renderQuestionNavigationButton={renderQuestionNavigationButton}
 			/>
 			{questionId !== 0 ? (
