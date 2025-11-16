@@ -20,6 +20,7 @@ interface UseQuestionNavigationLayoutReturn {
 	handleScrollUp: () => void;
 	handleScrollDown: () => void;
 	scrollToBottom: () => void;
+	getVisibleRange: () => { startIndex: number; endIndex: number };
 }
 
 //
@@ -130,6 +131,28 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 			behavior: "smooth",
 		});
 	};
+
+	/**
+	 *
+	 */
+	const getVisibleRange = useCallback(() => {
+		const list = listRef.current;
+
+		if (!list) {
+			return { startIndex: 0, endIndex: 0 };
+		}
+
+		const scrollPosition = getScrollPosition(list);
+		const listSize = getClientSize(list);
+
+		const startIndex = Math.floor(scrollPosition / (BUTTON_SIZE + GAP));
+		const endIndex = Math.min(
+			Math.ceil((scrollPosition + listSize) / (BUTTON_SIZE + GAP)) - 1,
+			questions.length - 1,
+		);
+
+		return { startIndex, endIndex };
+	}, [getScrollPosition, getClientSize, questions.length]);
 
 	//
 	// Scroll to active question if it's out of view
@@ -262,6 +285,7 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 		handleScrollUp,
 		handleScrollDown,
 		scrollToBottom,
+		getVisibleRange,
 	};
 };
 
