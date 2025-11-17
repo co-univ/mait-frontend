@@ -9,6 +9,7 @@ import type { QuestionNavigationButtonRenderProps } from "@/components/question-
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import useControlSolvings from "../../hooks/solving/question/useControlSolvingQuestions";
 import ControlSolvingQuestion from "./question/ControlSolvingQuestion";
+import ControlSolvingSubmission from "./submission/ControlSolvingSubmission";
 
 //
 //
@@ -90,7 +91,9 @@ const ControlSolving = () => {
 					<div className="flex-[2] w-0">
 						<ControlSolvingQuestion />
 					</div>
-					<div className="flex-[3] min-w-0">제출</div>
+					<div className="flex-[3] min-w-0">
+						<ControlSolvingSubmission />
+					</div>
 				</div>
 			</div>
 		</LabeledPageLayout>
