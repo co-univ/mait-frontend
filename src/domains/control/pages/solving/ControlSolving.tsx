@@ -87,7 +87,7 @@ const ControlSolving = () => {
 					renderQuestionNavigationButton={renderQuestionNavigationButton}
 				/>
 				<div className="flex gap-gap-10 w-full">
-					<div className="flex-[2]">
+					<div className="flex-[2] min-w-0">
 						<ControlSolvingQuestion />
 					</div>
 					<div className="flex-[3]">제출</div>

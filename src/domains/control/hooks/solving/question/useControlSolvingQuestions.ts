@@ -5,11 +5,11 @@ import { apiHooks } from "@/libs/api";
 //
 //
 
-interface useControlSolvingQuestionsProps {
+interface UseControlSolvingQuestionsProps {
 	questionSetId: number;
 }
 
-interface useControlSolvingQuestionsReturn {
+interface UseControlSolvingQuestionsReturn {
 	questions?: QuestionResponseType[];
 	isLoading: boolean;
 }
@@ -20,7 +20,7 @@ interface useControlSolvingQuestionsReturn {
 
 const useControlSolvingQuestions = ({
 	questionSetId,
-}: useControlSolvingQuestionsProps): useControlSolvingQuestionsReturn => {
+}: UseControlSolvingQuestionsProps): UseControlSolvingQuestionsReturn => {
 	const { data, isPending } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/questions",

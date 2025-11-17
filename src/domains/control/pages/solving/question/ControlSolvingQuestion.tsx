@@ -1,4 +1,5 @@
 import { Pencil } from "lucide-react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Switch } from "@/components/switch/Switch";
@@ -12,6 +13,8 @@ import ControlSolvingQuestionMultiple from "./ControlSolvingQuestionMultiple";
 //
 
 const ControlSolvingQuestion = () => {
+	const [isEditing, setIsEditing] = useState(false);
+
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
@@ -19,6 +22,13 @@ const ControlSolvingQuestion = () => {
 		questionSetId,
 		questionId,
 	});
+
+	/**
+	 *
+	 */
+	const handleEditButtonClick = () => {
+		setIsEditing((prev) => !prev);
+	};
 
 	/**
 	 *
@@ -42,7 +52,7 @@ const ControlSolvingQuestion = () => {
 	 *
 	 */
 	const renderEditButton = () => {
-		return <Button icon={<Pencil />} />;
+		return <Button icon={<Pencil />} onClick={handleEditButtonClick} />;
 	};
 
 	/**
@@ -63,7 +73,7 @@ const ControlSolvingQuestion = () => {
 	const renderQuestionAnswer = () => {
 		switch (question?.type as QuestionType) {
 			case "MULTIPLE":
-				return <ControlSolvingQuestionMultiple />;
+				return <ControlSolvingQuestionMultiple readOnly={!isEditing} />;
 			default:
 				return "얍";
 		}
