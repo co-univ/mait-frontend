@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useControlQuestions from "../../hooks/question/useControlQuestions";
+import useControlSolvings from "../../hooks/solving/useControlSolvingQuestions";
 
 //
 //
@@ -10,7 +10,7 @@ const ControlRedirect = () => {
 	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
-	const { questions, isLoading } = useControlQuestions({ questionSetId });
+	const { questions, isLoading } = useControlSolvings({ questionSetId });
 
 	const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ const ControlRedirect = () => {
 
 			if (firstQuestionId) {
 				navigate(
-					`/control/question/team/${teamId}/question-set/${questionSetId}/question/${firstQuestionId}`,
+					`/control/solving/team/${teamId}/question-set/${questionSetId}/question/${firstQuestionId}`,
 				);
 			}
 		}

@@ -1,6 +1,6 @@
 import type { RouteObject } from "react-router-dom";
 import ControlRedirect from "./pages/common/ControlRedirect";
-import ControlQuestion from "./pages/question/ControlQuestion";
+import ControlSolving from "./pages/solving/ControlSolving";
 
 //
 //
@@ -8,11 +8,11 @@ import ControlQuestion from "./pages/question/ControlQuestion";
 
 export const controlRoutes: RouteObject[] = [
 	{
-		path: "/control/question/team/:teamId/question-set/:questionSetId/question/:questionId",
-		element: <ControlQuestion />,
+		path: "/control/solving/team/:teamId/question-set/:questionSetId/question/:questionId",
+		element: <ControlSolving />,
 	},
 	{
-		path: "/control/question/team/:teamId/question-set/:questionSetId",
+		path: "/control/solving/team/:teamId/question-set/:questionSetId",
 		element: <ControlRedirect />,
 	},
 ];

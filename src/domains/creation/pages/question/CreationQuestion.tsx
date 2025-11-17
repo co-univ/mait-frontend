@@ -7,6 +7,7 @@ import {
 	useNavigate,
 	useParams,
 } from "react-router-dom";
+import type { QuestionResponseType } from "@/app.constants";
 import { useConfirm } from "@/components/confirm";
 import QuestionNavigation, {
 	QuestionNavigationButton,
@@ -21,7 +22,6 @@ import CreationQuestionLayout from "@/domains/creation/layouts/question/Creation
 import CreationQuestionAdditional from "@/domains/creation/pages/question/additional/CreationQuestionAdditional";
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
 import type { QuestionNavigationButtonRenderProps } from "../../../../components/question-navigation/QuestionNavigationList";
-import type { QuestionResponseType } from "@/app.constants";
 
 //
 //

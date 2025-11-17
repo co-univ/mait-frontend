@@ -34,7 +34,7 @@ const ManagementLiveTimeCard = ({
 	 *
 	 */
 	const handleControlButtonClick = () => {
-		navigate(`/control/question/team/${teamId}/question-set/${questionSet.id}`);
+		navigate(`/control/solving/team/${teamId}/question-set/${questionSet.id}`);
 	};
 
 	return (
