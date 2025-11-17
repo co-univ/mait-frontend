@@ -1,7 +1,9 @@
 import { Circle } from "lucide-react";
+import { useState } from "react";
 import Button from "@/components/Button";
 import { Table } from "@/components/table";
 import { Tabs } from "@/components/tabs";
+import ControlSolvingSubmissionScorerSideDialog from "./ControlSolvingSubmissionScorerSideDialog";
 import ControlSolvingSubmissionTabs from "./ControlSolvingSubmissionTabs";
 
 //
@@ -9,6 +11,22 @@ import ControlSolvingSubmissionTabs from "./ControlSolvingSubmissionTabs";
 //
 
 const ControlSolvingSubmission = () => {
+	const [isScorerDialogOpen, setIsScorerDialogOpen] = useState(false);
+
+	/**
+	 *
+	 */
+	const handleScorerDialogOpen = () => {
+		setIsScorerDialogOpen(true);
+	};
+
+	/**
+	 *
+	 */
+	const handleScorerDialogClose = () => {
+		setIsScorerDialogOpen(false);
+	};
+
 	/**
 	 *
 	 */
@@ -16,13 +34,14 @@ const ControlSolvingSubmission = () => {
 		return (
 			<div className="flex justify-between items-start">
 				<div className="flex flex-col">
-					<span className="typo-body-medium text-color-gray-40">득점자</span>
-					<span className="typo-heading-medium">전민재</span>
+					<h3 className="typo-body-medium text-color-gray-40">득점자</h3>
+					<h2 className="typo-heading-medium">전민재</h2>
 				</div>
 				<div className="flex gap-gap-5">
 					<Button
 						item="문제별 득점자"
 						className="bg-color-primary-5 typo-body-small text-color-primary-50 border-none"
+						onClick={handleScorerDialogOpen}
 					/>
 					<Button
 						item="진출자 선정"
@@ -90,10 +109,16 @@ const ControlSolvingSubmission = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-gap-9 p-padding-11 border border-color-gray-10 rounded-radius-large2">
-			{renderHeader()}
-			{renderBody()}
-		</div>
+		<>
+			<div className="flex flex-col gap-gap-9 p-padding-11 border border-color-gray-10 rounded-radius-large2">
+				{renderHeader()}
+				{renderBody()}
+			</div>
+			<ControlSolvingSubmissionScorerSideDialog
+				open={isScorerDialogOpen}
+				onClose={handleScorerDialogClose}
+			/>
+		</>
 	);
 };
 
