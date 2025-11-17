@@ -27,7 +27,12 @@ const useControlSolvingQuestion = ({
 		"get",
 		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
 		{
-			params: { path: { questionSetId, questionId } },
+			params: {
+				path: { questionSetId, questionId },
+				query: {
+					mode: "MAKING",
+				},
+			},
 		},
 	);
 

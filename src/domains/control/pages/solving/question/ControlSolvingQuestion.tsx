@@ -7,6 +7,7 @@ import ControlSolvingQuestionContent from "@/domains/control/components/solving/
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
 import type { QuestionType } from "@/libs/types";
 import ControlSolvingQuestionMultiple from "./ControlSolvingQuestionMultiple";
+import ControlSolvingQuestionShort from "./ControlSolvingQuestionShort";
 
 //
 //
@@ -74,13 +75,15 @@ const ControlSolvingQuestion = () => {
 		switch (question?.type as QuestionType) {
 			case "MULTIPLE":
 				return <ControlSolvingQuestionMultiple readOnly={!isEditing} />;
+			case "SHORT":
+				return <ControlSolvingQuestionShort readonly={!isEditing} />;
 			default:
 				return "얍";
 		}
 	};
 
 	return (
-		<div className="flex flex-col gap-gap-11">
+		<div className="flex flex-col gap-gap-11 min-w-0">
 			<div className="flex justify-between">
 				{renderQuestionControlButtons()}
 				{renderEditButton()}

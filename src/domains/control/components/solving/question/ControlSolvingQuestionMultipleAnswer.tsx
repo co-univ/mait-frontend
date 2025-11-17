@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import CheckBox from "@/components/CheckBox";
+import ControlSolvingQuestionAnswerExpandButton from "./ControlSolvingQuestionAnswerExpandButton";
 
 //
 //
@@ -34,7 +35,7 @@ const ControlSolvingQuestionMultipleAnswer = ({
 	return (
 		<div
 			className={clsx(
-				"flex items-start gap-gap-9 px-padding-12 py-padding-9 bg-color-gray-5 rounded-radius-medium1 overflow-hidden typo-body-medium",
+				"w-full flex items-start justify-between gap-gap-9 px-padding-12 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium",
 				{
 					"border border-color-primary-50 bg-color-primary-5 typo-body-medium-bold text-color-primary-50":
 						isCorrect,
@@ -50,9 +51,10 @@ const ControlSolvingQuestionMultipleAnswer = ({
 				{content}
 			</p>
 			{readOnly && (
-				<button type="button" onClick={handleExpandButtonClick}>
-					{isExpanded ? <ChevronUp /> : <ChevronDown />}
-				</button>
+				<ControlSolvingQuestionAnswerExpandButton
+					isExpanded={isExpanded}
+					onClick={handleExpandButtonClick}
+				/>
 			)}
 		</div>
 	);
