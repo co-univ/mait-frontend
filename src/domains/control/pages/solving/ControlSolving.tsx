@@ -7,7 +7,8 @@ import QuestionNavigation, {
 } from "@/components/question-navigation";
 import type { QuestionNavigationButtonRenderProps } from "@/components/question-navigation/QuestionNavigationList";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import useControlSolvings from "../../hooks/solving/useControlSolvingQuestions";
+import useControlSolvings from "../../hooks/solving/question/useControlSolvingQuestions";
+import ControlSolvingQuestion from "./question/ControlSolvingQuestion";
 
 //
 //
@@ -85,7 +86,12 @@ const ControlSolving = () => {
 					questions={questions ?? []}
 					renderQuestionNavigationButton={renderQuestionNavigationButton}
 				/>
-				ㅎㅇ
+				<div className="flex gap-gap-10 w-full">
+					<div className="flex-[2]">
+						<ControlSolvingQuestion />
+					</div>
+					<div className="flex-[3]">제출</div>
+				</div>
 			</div>
 		</LabeledPageLayout>
 	);

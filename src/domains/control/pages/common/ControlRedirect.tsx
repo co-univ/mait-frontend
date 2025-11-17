@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useControlSolvings from "../../hooks/solving/useControlSolvingQuestions";
+import useControlSolvings from "../../hooks/solving/question/useControlSolvingQuestions";
 
 //
 //
@@ -24,6 +24,9 @@ const ControlRedirect = () => {
 			if (firstQuestionId) {
 				navigate(
 					`/control/solving/team/${teamId}/question-set/${questionSetId}/question/${firstQuestionId}`,
+					{
+						replace: true,
+					},
 				);
 			}
 		}
