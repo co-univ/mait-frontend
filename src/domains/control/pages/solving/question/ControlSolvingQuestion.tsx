@@ -1,11 +1,11 @@
-import { Pencil } from "lucide-react";
+import { Check, Pencil, X } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Switch } from "@/components/switch/Switch";
 import ControlSolvingQuestionContent from "@/domains/control/components/solving/question/ControlSolvingQuestionContent";
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
-import type { QuestionType } from "@/libs/types";
+import type { QuestionApiResponse, QuestionType } from "@/libs/types";
 import ControlSolvingQuestionFillBlank from "./ControlSolvingQuestionFillBlank";
 import ControlSolvingQuestionMultiple from "./ControlSolvingQuestionMultiple";
 import ControlSolvingQuestionOrdering from "./ControlSolvingQuestionOrdering";
@@ -30,20 +30,39 @@ const ControlSolvingQuestion = () => {
 	 *
 	 */
 	const handleEditButtonClick = () => {
-		setIsEditing((prev) => !prev);
+		setIsEditing(true);
+	};
+
+	/**
+	 *
+	 */
+	const handleCancelButtonClick = () => {
+		setIsEditing(false);
 	};
 
 	/**
 	 *
 	 */
 	const renderQuestionControlButtons = () => {
+		const allowedAccessTypes: QuestionApiResponse["questionStatusType"][] = [
+			"ACCESS_PERMISSION",
+			"SOLVE_PERMISSION",
+		];
+		const allowedSolveType: QuestionApiResponse["questionStatusType"][] = [
+			"SOLVE_PERMISSION",
+		];
+
 		return (
 			<div className="flex gap-gap-9">
-				<Switch.Root checked>
+				<Switch.Root
+					checked={allowedAccessTypes.includes(question?.questionStatusType)}
+				>
 					<Switch.Label>문제 공개</Switch.Label>
 					<Switch.Toggle />
 				</Switch.Root>
-				<Switch.Root checked>
+				<Switch.Root
+					checked={allowedSolveType.includes(question?.questionStatusType)}
+				>
 					<Switch.Label>제출 허용</Switch.Label>
 					<Switch.Toggle />
 				</Switch.Root>
@@ -54,7 +73,28 @@ const ControlSolvingQuestion = () => {
 	/**
 	 *
 	 */
+	const renderCancelButton = () => {
+		if (!isEditing) {
+			return null;
+		}
+
+		return (
+			<Button
+				icon={<X />}
+				onClick={handleCancelButtonClick}
+				className="border-none"
+			/>
+		);
+	};
+
+	/**
+	 *
+	 */
 	const renderEditButton = () => {
+		if (isEditing) {
+			return <Button icon={<Check />} item="수정 완료" />;
+		}
+
 		return <Button icon={<Pencil />} onClick={handleEditButtonClick} />;
 	};
 
@@ -91,7 +131,7 @@ const ControlSolvingQuestion = () => {
 	return (
 		<div className="flex flex-col gap-gap-11 min-w-0">
 			<div className="flex justify-between">
-				{renderQuestionControlButtons()}
+				{isEditing ? renderCancelButton() : renderQuestionControlButtons()}
 				{renderEditButton()}
 			</div>
 			{renderQuestionContent()}
