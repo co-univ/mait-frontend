@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { Dices } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
@@ -9,14 +10,27 @@ import AuthTerms from "../components/AuthTerms";
 //
 //
 
+const REGEX_NICKNAME = /^[a-zA-Z0-9가-힣]{2,20}$/;
+
+//
+//
+//
+
 const AuthCreateAccount = () => {
 	const [nickname, setNickname] = useState("");
+	const [isNicknameValid, setIsNicknameValid] = useState(true);
 
 	/**
 	 *
 	 */
 	const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setNickname(e.target.value);
+		const inputNickname = e.target.value;
+		if (!REGEX_NICKNAME.test(inputNickname)) {
+			setIsNicknameValid(false);
+		} else {
+			setIsNicknameValid(true);
+		}
+		setNickname(inputNickname);
 	};
 
 	/**
@@ -26,7 +40,6 @@ const AuthCreateAccount = () => {
 		try {
 			const response = await apiClient.GET("/api/v1/users/nickname/random");
 			setNickname(response?.data?.data?.nickname || "");
-			console.log(response.data?.data?.nickname);
 		} catch (error) {
 			console.log("임의의 닉네임 생성 실패:", error);
 		}
@@ -89,7 +102,15 @@ const AuthCreateAccount = () => {
 						type="text"
 						value={nickname}
 						placeholder={nickname}
-						className="w-full h-[47px] py-gap-6 px-gap-8 flex flex-col items-start rounded-radius-medium1 border-[1px] border-gray-20 focus:border-primary-50 focus:outline-none focus:ring-1 focus:ring-primary-50"
+						className={clsx(
+							"w-full h-[47px] py-gap-6 px-gap-8 flex flex-col items-start rounded-radius-medium1 border-[1px] border-gray-20 focus:outline-none",
+							{
+								"focus:border-danger-50 focus:ring-danger-50 border-danger-50 border-[2px]":
+									!isNicknameValid,
+								"focus:border-primary-50 focus:ring-primary-50 focus:ring-1":
+									isNicknameValid,
+							},
+						)}
 						onChange={handleNicknameChange}
 					/>
 					<Dices
@@ -97,7 +118,12 @@ const AuthCreateAccount = () => {
 						onClick={getRandomNickname}
 					/>
 				</div>
-				<p className="typo-body-xsmall font-pretendard text-gray-50">
+				<p
+					className={clsx("typo-body-xsmall font-pretendard", {
+						"text-danger-50": !isNicknameValid,
+						"text-gray-50": isNicknameValid,
+					})}
+				>
 					닉네임은 2~20자로 입력할 수 있습니다.
 				</p>
 			</div>
