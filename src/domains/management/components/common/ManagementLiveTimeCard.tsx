@@ -30,6 +30,13 @@ const ManagementLiveTimeCard = ({
 		);
 	};
 
+	/**
+	 *
+	 */
+	const handleControlButtonClick = () => {
+		navigate(`/control/solving/team/${teamId}/question-set/${questionSet.id}`);
+	};
+
 	return (
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
@@ -47,6 +54,7 @@ const ManagementLiveTimeCard = ({
 					<QuestionSetsCard.Footer.Button
 						variant="secondary"
 						item="풀이 관리"
+						onClick={handleControlButtonClick}
 					/>
 				</div>
 			</QuestionSetsCard.Footer>

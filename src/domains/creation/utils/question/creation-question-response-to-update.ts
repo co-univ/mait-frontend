@@ -1,7 +1,7 @@
 import type {
 	QuestionResponseType,
 	QuestionUpdateType,
-} from "@/domains/creation/creation.constant";
+} from "@/app.constants";
 import type {
 	FillBlankQuestionApiResponse,
 	QuestionType,
