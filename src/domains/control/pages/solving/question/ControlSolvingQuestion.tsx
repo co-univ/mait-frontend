@@ -6,6 +6,7 @@ import { Switch } from "@/components/switch/Switch";
 import ControlSolvingQuestionContent from "@/domains/control/components/solving/question/ControlSolvingQuestionContent";
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
 import type { QuestionType } from "@/libs/types";
+import ControlSolvingQuestionFillBlank from "./ControlSolvingQuestionFillBlank";
 import ControlSolvingQuestionMultiple from "./ControlSolvingQuestionMultiple";
 import ControlSolvingQuestionOrdering from "./ControlSolvingQuestionOrdering";
 import ControlSolvingQuestionShort from "./ControlSolvingQuestionShort";
@@ -80,8 +81,10 @@ const ControlSolvingQuestion = () => {
 				return <ControlSolvingQuestionShort readOnly={!isEditing} />;
 			case "ORDERING":
 				return <ControlSolvingQuestionOrdering readOnly={!isEditing} />;
+			case "FILL_BLANK":
+				return <ControlSolvingQuestionFillBlank readOnly={!isEditing} />;
 			default:
-				return "얍";
+				return null;
 		}
 	};
 
