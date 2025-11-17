@@ -7,7 +7,7 @@ import useControlSolvingQuestionShort from "@/domains/control/hooks/solving/ques
 //
 
 interface ControlSolvingQuestionShortProps {
-	readonly: boolean;
+	readOnly: boolean;
 }
 
 //
@@ -15,7 +15,7 @@ interface ControlSolvingQuestionShortProps {
 //
 
 const ControlSolvingQuestionShort = ({
-	readonly,
+	readOnly,
 }: ControlSolvingQuestionShortProps) => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
@@ -30,7 +30,7 @@ const ControlSolvingQuestionShort = ({
 			{groupedAnswers.map((answers) => (
 				<ControlSolvingQuestionShortAnswer
 					key={answers[0].id}
-					readOnly={readonly}
+					readOnly={readOnly}
 					answers={answers}
 				/>
 			))}

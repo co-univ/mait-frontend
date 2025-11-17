@@ -1,6 +1,9 @@
 import clsx from "clsx";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import AdjustableTextarea from "@/components/AdjustableTextarea";
+import Button from "@/components/Button";
+import DeleteCheckBox from "@/components/DeleteCheckBox";
 import type { ShortAnswerApiResponse } from "@/libs/types";
 import ControlSolvingQuestionAnswerExpandButton from "./ControlSolvingQuestionAnswerExpandButton";
 
@@ -54,7 +57,7 @@ const ControlSolvingQuestionShortAnswer = ({
 					subAnswers.map((answer) => (
 						<span
 							key={answer.id}
-							className="w-full p-padding-6 bg-color-gray-10 rounded-radius-medium1"
+							className="w-full py-padding-3 px-padding-6 bg-color-gray-10 rounded-radius-medium1"
 						>
 							{answer.answer}
 						</span>
@@ -71,7 +74,23 @@ const ControlSolvingQuestionShortAnswer = ({
 			return null;
 		}
 
-		return <div>gd</div>;
+		return (
+			<div className="w-full flex flex-col gap-gap-9">
+				<span className="flex items-center justify-between gap-gap-9">
+					<AdjustableTextarea value={mainAnswer?.answer} />
+					<Button icon={<Plus />} className="bg-color-gray-10 py-padding-3" />
+				</span>
+				{subAnswers.map((answer) => (
+					<div
+						key={answer.id}
+						className="flex justify-between gap-gap-9 bg-color-gray-10 rounded-radius-medium1 p-padding-6"
+					>
+						<AdjustableTextarea value={answer.answer} />
+						<DeleteCheckBox />
+					</div>
+				))}
+			</div>
+		);
 	};
 
 	return (

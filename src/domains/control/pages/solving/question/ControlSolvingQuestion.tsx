@@ -7,6 +7,7 @@ import ControlSolvingQuestionContent from "@/domains/control/components/solving/
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
 import type { QuestionType } from "@/libs/types";
 import ControlSolvingQuestionMultiple from "./ControlSolvingQuestionMultiple";
+import ControlSolvingQuestionOrdering from "./ControlSolvingQuestionOrdering";
 import ControlSolvingQuestionShort from "./ControlSolvingQuestionShort";
 
 //
@@ -76,7 +77,9 @@ const ControlSolvingQuestion = () => {
 			case "MULTIPLE":
 				return <ControlSolvingQuestionMultiple readOnly={!isEditing} />;
 			case "SHORT":
-				return <ControlSolvingQuestionShort readonly={!isEditing} />;
+				return <ControlSolvingQuestionShort readOnly={!isEditing} />;
+			case "ORDERING":
+				return <ControlSolvingQuestionOrdering readOnly={!isEditing} />;
 			default:
 				return "얍";
 		}

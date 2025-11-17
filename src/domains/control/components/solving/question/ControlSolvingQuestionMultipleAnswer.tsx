@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import CheckBox from "@/components/CheckBox";
 import ControlSolvingQuestionAnswerExpandButton from "./ControlSolvingQuestionAnswerExpandButton";
