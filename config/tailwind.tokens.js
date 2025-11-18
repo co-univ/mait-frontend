@@ -198,6 +198,9 @@ module.exports = {
       ],
       "pretendard": [
         "Pretendard"
+      ],
+      "lexend": [
+        "Lexend"
       ]
     },
     "fontSize": {
