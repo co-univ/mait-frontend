@@ -6,7 +6,8 @@ import { apiClient } from "@/libs/api";
 import type { LatestPoliciesApiResponse, PolicyType } from "@/libs/types";
 import AuthCard from "../components/AuthCard";
 import AuthTermDetail from "../components/AuthTermDetail";
-import AuthTerms, { TERMS_ITEMS } from "../components/AuthTerms";
+import AuthTerms from "../components/AuthTerms";
+import { useNavigate } from "react-router-dom";
 
 //
 //
@@ -36,6 +37,8 @@ const AuthCreateAccount = () => {
 		useState<LatestPoliciesApiResponse | null>(null);
 	const [isDetailOpen, setIsDetailOpen] = useState(false);
 
+	const navigate = useNavigate();
+
 	/**
 	 *
 	 */
@@ -64,13 +67,18 @@ const AuthCreateAccount = () => {
 	/**
 	 *
 	 */
-	// const updateNickname = () => {
-	// 	const response = apiClient.PATCH("/api/v1/users/nickname", {
-	// 		body: {
-	// 			nickname: nickname,
-	// 		},
-	// 	});
-	// };
+	const updateNickname = () => {
+		try {
+			const response = apiClient.PATCH("/api/v1/users/nickname", {
+				body: {
+					nickname: nickname,
+				},
+			});
+			return response;
+		} catch (error) {
+			console.error("닉네임 업데이트 실패:", error);
+		}
+	};
 
 	/**
 	 *
@@ -84,13 +92,11 @@ const AuthCreateAccount = () => {
 					},
 				},
 			});
-			// const termsData = response.data?.data || [];
-			// setTerms(termsData);
-			setTerms(TERMS_ITEMS);
+			const termsData = response.data?.data || [];
+			setTerms(termsData);
 
 			// 약관 동의 상태 초기화
-			const initialTermChecks: TERM_CHECK_TYPE[] = TERMS_ITEMS.map(
-				// termsData.map(
+			const initialTermChecks: TERM_CHECK_TYPE[] = termsData.map(
 				(termCheck) => ({
 					policyId: termCheck.id,
 					isChecked: true,
@@ -105,32 +111,36 @@ const AuthCreateAccount = () => {
 	/**
 	 *
 	 */
-	// const registerAgreement = () => {
-	// 	try {
-	// 		const response = apiClient.POST("/api/v1/policies/check", {
-	// 			body: {
-	// 				policyChecks: termChecks,
-	// 			},
-	// 		});
-	// 		console.log(response);
-	// 	} catch (error) {
-	// 		console.error("약관 동의 등록 실패:", error);
-	// 	}
-	// };
+	const registerAgreement = () => {
+		try {
+			const response = apiClient.POST("/api/v1/policies/check", {
+				body: {
+					policyChecks: termChecks,
+				},
+			});
+			return response;
+		} catch (error) {
+			console.error("약관 동의 등록 실패:", error);
+		}
+	};
 
 	/**
 	 *
 	 */
-	// const handleButtonClick = async () => {
-	// 	try {
-	// 		const [userNickname, agreementStatus] = await Promise.all([
-	// 			updateNickname(),
-	// 			registerAgreement(),
-	// 		]);
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// };
+	const handleButtonClick = async () => {
+		try {
+			const [userNickname, agreementStatus] = await Promise.all([
+				updateNickname(),
+				registerAgreement(),
+			]);
+
+			if (userNickname?.data?.isSuccess && agreementStatus?.data?.isSuccess) {
+				navigate('success');
+			}
+		} catch (error) {
+			console.error("계정 생성하기 실패: ", error);
+		}
+	};
 
 	/**
 	 *
@@ -214,6 +224,7 @@ const AuthCreateAccount = () => {
 			<Button
 				className="bg-primary-50 h-[50px] w-full flex justify-center text-alpha-white100"
 				item={<p>계정 생성하기</p>}
+				onClick={handleButtonClick}
 			/>
 		</AuthCard>
 	);

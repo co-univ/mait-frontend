@@ -8,43 +8,6 @@ import type { TERM_CHECK_TYPE } from "../pages/AuthCreateAccount";
 //
 //
 
-export const TERMS_ITEMS: LatestPoliciesApiResponse[] = [
-	{
-		id: 0,
-		title: "서비스 이용약관 동의 (필수)",
-		content: "서비스 이용약관에 동의합니다.",
-		policyType: "ESSENTIAL",
-		timing: "SIGN_UP",
-		category: "TERMS_OF_SERVICE",
-	},
-	{
-		id: 1,
-		title: "개인정보 처리방침 동의 (필수)",
-		content: "개인정보 처리방침에 동의합니다.",
-		policyType: "ESSENTIAL",
-		timing: "SIGN_UP",
-		category: "TERMS_OF_SERVICE",
-	},
-	{
-		id: 2,
-		title: "마케팅 정보 수신 동의 (선택)",
-		content: "마케팅 정보 수신에 동의합니다.",
-		policyType: "OPTIONAL",
-		timing: "SIGN_UP",
-		category: "TERMS_OF_SERVICE",
-	},
-];
-
-export const TERM_CHECKS = [
-	{ policyId: 0, isChecked: true },
-	{ policyId: 1, isChecked: true },
-	{ policyId: 2, isChecked: false },
-];
-
-//
-//
-//
-
 interface AuthTermsProps {
 	terms: LatestPoliciesApiResponse[];
 	termChecks: TERM_CHECK_TYPE[];
@@ -94,7 +57,7 @@ const AuthTerms = ({
 	 *
 	 */
 	const handleDetailClick = (policyId: number) => {
-		const term = TERMS_ITEMS.find((term) => term.id === policyId);
+		const term = terms.find((term) => term.id === policyId);
 		if (term) {
 			onDetailClick(term);
 		}
@@ -102,7 +65,7 @@ const AuthTerms = ({
 
 	return (
 		<div className="flex flex-col gap-gap-5">
-			{TERMS_ITEMS.map((term) => (
+			{terms.map((term) => (
 				<div key={term.id} className="flex items-center gap-gap-4">
 					<CheckBox
 						checked={getCheckedState(term.id)}
