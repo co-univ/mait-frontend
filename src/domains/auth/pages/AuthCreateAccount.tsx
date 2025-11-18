@@ -3,8 +3,10 @@ import { Dices } from "lucide-react";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { apiClient } from "@/libs/api";
+import type { LatestPoliciesApiResponse, PolicyType } from "@/libs/types";
 import AuthCard from "../components/AuthCard";
-import AuthTerms from "../components/AuthTerms";
+import AuthTermDetail from "../components/AuthTermDetail";
+import AuthTerms, { TERMS_ITEMS } from "../components/AuthTerms";
 
 //
 //
@@ -16,9 +18,23 @@ const REGEX_NICKNAME = /^[a-zA-Z0-9가-힣]{2,20}$/;
 //
 //
 
+export type TERM_CHECK_TYPE = {
+	policyId: number;
+	isChecked: boolean;
+};
+
+//
+//
+//
+
 const AuthCreateAccount = () => {
 	const [nickname, setNickname] = useState("");
 	const [isNicknameValid, setIsNicknameValid] = useState(true);
+	const [terms, setTerms] = useState<LatestPoliciesApiResponse[]>([]);
+	const [termChecks, setTermChecks] = useState<TERM_CHECK_TYPE[]>([]);
+	const [selectedTerm, setSelectedTerm] =
+		useState<LatestPoliciesApiResponse | null>(null);
+	const [isDetailOpen, setIsDetailOpen] = useState(false);
 
 	/**
 	 *
@@ -41,46 +57,106 @@ const AuthCreateAccount = () => {
 			const response = await apiClient.GET("/api/v1/users/nickname/random");
 			setNickname(response?.data?.data?.nickname || "");
 		} catch (error) {
-			console.log("임의의 닉네임 생성 실패:", error);
+			console.log("랜덤 닉네임 생성 실패:", error);
 		}
 	};
 
 	/**
 	 *
 	 */
-	const updateNickname = () => {
-		const response = apiClient.PATCH("/api/v1/users/nickname", {
-			body: {
-				nickname: nickname,
-			},
-		});
-	};
+	// const updateNickname = () => {
+	// 	const response = apiClient.PATCH("/api/v1/users/nickname", {
+	// 		body: {
+	// 			nickname: nickname,
+	// 		},
+	// 	});
+	// };
 
 	/**
 	 *
 	 */
-	const registerAgreement = () => {
-		// TODO: 약관 동의 API 호출
-	};
-
-	/**
-	 *
-	 */
-	const handleButtonClick = async () => {
+	const getAgreementList = async () => {
 		try {
-			const [userNickname, agreementStatus] = await Promise.all([
-				updateNickname(),
-				registerAgreement(),
-			]);
+			const response = await apiClient.GET("/api/v1/policies", {
+				params: {
+					query: {
+						timing: "SIGN_UP",
+					},
+				},
+			});
+			// const termsData = response.data?.data || [];
+			// setTerms(termsData);
+			setTerms(TERMS_ITEMS);
+
+			// 약관 동의 상태 초기화
+			const initialTermChecks: TERM_CHECK_TYPE[] = TERMS_ITEMS.map(
+				// termsData.map(
+				(termCheck) => ({
+					policyId: termCheck.id,
+					isChecked: true,
+				}),
+			);
+			setTermChecks(initialTermChecks);
 		} catch (error) {
-			console.error(error);
+			console.error("약관 목록 조회 실패:", error);
 		}
+	};
+
+	/**
+	 *
+	 */
+	// const registerAgreement = () => {
+	// 	try {
+	// 		const response = apiClient.POST("/api/v1/policies/check", {
+	// 			body: {
+	// 				policyChecks: termChecks,
+	// 			},
+	// 		});
+	// 		console.log(response);
+	// 	} catch (error) {
+	// 		console.error("약관 동의 등록 실패:", error);
+	// 	}
+	// };
+
+	/**
+	 *
+	 */
+	// const handleButtonClick = async () => {
+	// 	try {
+	// 		const [userNickname, agreementStatus] = await Promise.all([
+	// 			updateNickname(),
+	// 			registerAgreement(),
+	// 		]);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// };
+
+	/**
+	 *
+	 */
+	const handleTermDetailClick = (term: LatestPoliciesApiResponse) => {
+		setSelectedTerm(term);
+		setIsDetailOpen(true);
 	};
 
 	//
 	useEffect(() => {
 		getRandomNickname();
+		getAgreementList();
 	}, []);
+
+	if (isDetailOpen && selectedTerm) {
+		return (
+			<AuthTermDetail
+				isOpen={isDetailOpen}
+				setIsOpen={setIsDetailOpen}
+				policyType={selectedTerm.policyType as PolicyType}
+				title={selectedTerm.title}
+				content={selectedTerm.content}
+			/>
+		);
+	}
 
 	return (
 		<AuthCard title="계정 생성하기">
@@ -129,7 +205,12 @@ const AuthCreateAccount = () => {
 			</div>
 
 			<div className="bg-color-gray-10 h-[1px] w-full"></div>
-			<AuthTerms />
+			<AuthTerms
+				terms={terms}
+				termChecks={termChecks}
+				setTermChecks={setTermChecks}
+				onDetailClick={handleTermDetailClick}
+			/>
 			<Button
 				className="bg-primary-50 h-[50px] w-full flex justify-center text-alpha-white100"
 				item={<p>계정 생성하기</p>}
