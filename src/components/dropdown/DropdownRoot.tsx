@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { DropdownContext } from "@/components/dropdown/DropdownContext";
@@ -94,7 +95,7 @@ const DropdownRoot = ({
 				onValueChange: handleValueChange,
 			}}
 		>
-			<div className={className}>{children}</div>
+			<div className={clsx("relative", className)}>{children}</div>
 		</DropdownContext.Provider>
 	);
 };

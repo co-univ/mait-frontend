@@ -5,6 +5,11 @@ import FileInput from "@/components/FileInput";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
 import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
 import type { QuestionType } from "@/libs/types";
+import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
+import CreationQuestionImage from "../../components/question/CreationQuestionImage";
+import { useCreationQuestions } from "../../hooks/question";
+import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
+import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFillBlank";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
 import CreationQuestionAnswerOrdering from "./answer/CreationQuestionAnswerOrdering";
 import CreationQuestionAnswerShort from "./answer/CreationQuestionAnswerShort";
@@ -17,10 +22,42 @@ const CreationQuestionMain = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { question, handleContentChange } = useCreationQuestion({
+	const { questions } = useCreationQuestions({ questionSetId });
+
+	const {
+		question,
+		handleContentChange,
+		handleImageChange,
+		handleImageAdd,
+		isUploadingImage,
+	} = useCreationQuestion({
 		questionSetId,
 		questionId,
 	});
+
+	/**
+	 *
+	 */
+	const renderQuestionImage = () => {
+		if (question?.imageUrl) {
+			return (
+				<CreationQuestionImage
+					imageUrl={question.imageUrl}
+					onDelete={() => handleImageChange(undefined, undefined)}
+				/>
+			);
+		}
+
+		return (
+			<FileInput
+				text="이미지 추가"
+				accept=".jpg,.jpeg,.png,.svg"
+				file={null}
+				onChange={handleImageAdd}
+				isLoading={isUploadingImage}
+			/>
+		);
+	};
 
 	/**
 	 *
@@ -33,6 +70,8 @@ const CreationQuestionMain = () => {
 				return <CreationQuestionAnswerShort />;
 			case "ORDERING":
 				return <CreationQuestionAnswerOrdering />;
+			case "FILL_BLANK":
+				return <CreationQuestionAnswerFillBlank />;
 			default:
 				return null;
 		}
@@ -43,25 +82,23 @@ const CreationQuestionMain = () => {
 			<Badge
 				icon={<Puzzle />}
 				item={
-					<span className="typo-heading-xsmall">{`Q${question?.number || 0}`}</span>
+					<span className="typo-heading-xsmall">{`Q${creationQuestionFindNumber(questions, questionId)}`}</span>
 				}
 				className="text-color-primary-50 !bg-color-primary-5 self-start"
 			/>
 
 			<div className="flex w-full">
-				<CreationQuestionContent
-					value={question?.content || ""}
-					onChange={handleContentChange}
-				/>
+				{(question?.type as QuestionType) === "FILL_BLANK" ? (
+					<CreationQuestionContentFillBlank />
+				) : (
+					<CreationQuestionContent
+						value={question?.content || ""}
+						onChange={handleContentChange}
+					/>
+				)}
 			</div>
 
-			<FileInput
-				text="이미지 추가"
-				file={null}
-				onChange={() => {
-					alert("축하합니다! 당신은 따봉 퀴리릭을 발견하셨습니다.");
-				}}
-			/>
+			{renderQuestionImage()}
 
 			{renderQuestionAnswer()}
 		</div>

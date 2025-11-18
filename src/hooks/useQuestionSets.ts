@@ -1,19 +1,20 @@
 import { apiHooks } from "@/libs/api";
-import type { QuestionSetApiResponse } from "@/libs/types";
+import type { QuestionSetGroup, QuestionSetList } from "@/libs/types";
 
 //
 //
 //
 
 interface UseQuestionSetsProps {
-  teamId: number;
-  mode: string;
+	teamId: number;
+	mode: string;
 }
 
 interface UseQuestionSetsReturn {
-  questionSets: QuestionSetApiResponse[];
-  isLoading: boolean;
-  error: Error | null;
+	questionSetList?: QuestionSetList["questionSets"];
+	questionSetGroup?: QuestionSetGroup["questionSets"];
+	isLoading: boolean;
+	error: Error | null;
 }
 
 enum MODE_MAP {
@@ -26,22 +27,37 @@ enum MODE_MAP {
 //
 //
 
-const useQuestionSets = ({ teamId, mode }: UseQuestionSetsProps): UseQuestionSetsReturn => {
-	const { data, isPending, error } = apiHooks.useQuery("get", "/api/v1/question-sets", {
-		params: {
-			query: {
-				teamId: teamId,
-				mode: MODE_MAP[mode as keyof typeof MODE_MAP],
+const useQuestionSets = ({
+	teamId,
+	mode,
+}: UseQuestionSetsProps): UseQuestionSetsReturn => {
+	const { data, isPending, error } = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets",
+		{
+			params: {
+				query: {
+					teamId: teamId,
+					mode: MODE_MAP[mode as keyof typeof MODE_MAP],
+				},
 			},
 		},
-	});
+	);
 
-	const questionSets = data?.data || [];
+	const questionSets = data?.data?.content?.questionSets;
+
+	const questionSetList = Array.isArray(questionSets)
+		? questionSets
+		: undefined;
+	const questionSetGroup = !Array.isArray(questionSets)
+		? questionSets
+		: undefined;
 
 	return {
-		questionSets,
+		questionSetList,
+		questionSetGroup,
 		isLoading: isPending,
-    error,
+		error,
 	};
 };
 

@@ -650,7 +650,9 @@ export interface components {
             /** Format: int64 */
             id: number;
             /** @description 문제 셋에서 다루는 주제 */
+            /** @description 문제 셋에서 다루는 주제 */
             subject?: string;
+            /** @description 문제 셋 제목 */
             /** @description 문제 셋 제목 */
             title?: string;
             creationType: components["schemas"]["QuestionSetCreationType"];
@@ -658,6 +660,7 @@ export interface components {
             deliveryMode: components["schemas"]["DeliveryMode"];
             /** Format: int64 */
             teamId: number;
+            ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
             ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
             /** Format: int64 */
             questionCount: number;
@@ -670,6 +673,11 @@ export interface components {
          * @enum {string}
          */
         QuestionSetCreationType: "AI_GENERATED" | "MANUAL";
+        /**
+         * @description 문제 셋 진행 상태
+         * @enum {string}
+         */
+        QuestionSetOngoingStatus: "BEFORE" | "ONGOING" | "AFTER";
         /**
          * @description 문제 셋 진행 상태
          * @enum {string}
@@ -842,6 +850,8 @@ export interface components {
             /** Format: int64 */
             imageId?: number;
             /** Format: int64 */
+            imageId?: number;
+            /** Format: int64 */
             number?: number;
             /** @enum {string} */
             type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
@@ -893,9 +903,32 @@ export interface components {
         CreateQuestionSetApiRequest: {
             /** Format: int64 */
             teamId: number;
+            /** Format: int64 */
+            teamId: number;
             subject: string;
             /** @enum {string} */
             creationType: "AI_GENERATED" | "MANUAL";
+            /** @description 업로드한 해당 문제 셋의 파일 목록 */
+            materials?: components["schemas"]["MaterialDto"][];
+            /** @description 제작 요청할 문제 개수 */
+            counts?: components["schemas"]["QuestionCount"][];
+            /** @description 문제 난이도, AI 생성인 경우에만 활용 */
+            difficulty?: string;
+            /** @description 문제 셋에 대한 보충 설명, AI 생성인 경우에만 활용 */
+            instruction?: string;
+        };
+        /** @description 업로드한 해당 문제 셋의 파일 목록 */
+        MaterialDto: {
+            /** Format: int64 */
+            id?: number;
+            url?: string;
+        };
+        /** @description 제작 요청할 문제 개수 */
+        QuestionCount: {
+            /** @enum {string} */
+            type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+            /** Format: int32 */
+            count?: number;
             /** @description 업로드한 해당 문제 셋의 파일 목록 */
             materials?: components["schemas"]["MaterialDto"][];
             /** @description 제작 요청할 문제 개수 */
@@ -1210,6 +1243,7 @@ export interface components {
             fullNickname?: string;
         };
         ApiResponseQuestionSetsApiResponse: {
+        ApiResponseQuestionSetsApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetsApiResponse"];
         };
@@ -1353,6 +1387,7 @@ export interface components {
             /** Format: int64 */
             questionSetId?: number;
             /** @enum {string} */
+            liveStatus?: "BEFORE" | "ONGOING" | "AFTER";
             liveStatus?: "BEFORE" | "ONGOING" | "AFTER";
         };
         ApiResponseParticipantsCorrectAnswerRankResponse: {
@@ -1757,6 +1792,7 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionSetsApiResponse"];
+                    "*/*": components["schemas"]["ApiResponseQuestionSetsApiResponse"];
                 };
             };
         };
@@ -1952,6 +1988,28 @@ export interface operations {
                 };
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionImageApiResponse"];
+                };
+            };
+        };
+    };
+    createDefaultQuestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {

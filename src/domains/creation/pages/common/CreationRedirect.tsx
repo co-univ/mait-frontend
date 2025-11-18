@@ -8,25 +8,25 @@ import useCreationQuestions from "@/domains/creation/hooks/question/useCreationQ
 
 const CreationRedirect = () => {
 	const navigate = useNavigate();
+
+	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
-	const { questions } = useCreationQuestions({ questionSetId });
+	const { questions, isLoading } = useCreationQuestions({ questionSetId });
 
 	//
 	//
 	// biome-ignore lint/correctness/useExhaustiveDependencies: navigate function is stable
 	useEffect(() => {
-		if (questions) {
-			const firstQuestionId = questions[0]?.id;
+		if (questions && !isLoading) {
+			const firstQuestionId = questions[0]?.id ?? 0;
 
-			if (firstQuestionId) {
-				navigate(
-					`/creation/question-set/${questionSetId}/question/${firstQuestionId}`,
-					{ replace: true },
-				);
-			}
+			navigate(
+				`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${firstQuestionId}`,
+				{ replace: true },
+			);
 		}
-	}, [questions, questionSetId]);
+	}, [questions, questionSetId, isLoading]);
 
 	return null;
 };

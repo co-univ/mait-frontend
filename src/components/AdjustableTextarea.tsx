@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 //
 //
 
-interface AdjustableTextareaProps
+export interface AdjustableTextareaProps
 	extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
 	minRows?: number;
 	maxRows?: number;
@@ -65,7 +65,7 @@ const AdjustableTextarea = ({
 			{...props}
 			ref={ref}
 			className={clsx(
-				"resize-none overflow-hidden focus-visible:outline-none placeholder:text-color-gray-40 bg-inherit",
+				"resize-none overflow-hidden focus-visible:outline-none placeholder:text-color-gray-40 bg-inherit disabled:placeholder:text-color-gray-20",
 				props.className,
 			)}
 			onInput={handleInput}

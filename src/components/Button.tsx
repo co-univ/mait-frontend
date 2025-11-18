@@ -5,8 +5,10 @@ import type React from "react";
 //
 //
 
-export interface ButtonProps {
+export interface ButtonProps
+	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	className?: string;
+	variant?: "primary" | "secondary";
 	icon?: React.ReactNode;
 	item?: React.ReactNode;
 	onClick?: () => void;
@@ -16,15 +18,27 @@ export interface ButtonProps {
 //
 //
 
-const Button = ({ className, icon, item, onClick }: ButtonProps) => {
+const Button = ({
+	className,
+	variant,
+	icon,
+	item,
+	onClick,
+	...props
+}: ButtonProps) => {
 	return (
 		<button
 			type="button"
 			className={clsx(
 				"p-padding-6 flex gap-gap-5 rounded-medium1 border border-color-gray-10 typo-body-medium",
 				className,
+				variant === "primary" &&
+					"hover:bg-color-primary-50 hover:border-color-primary-50 hover:text-color-alpha-white100",
+				variant === "secondary" &&
+					"hover:bg-color-secondary-50 hover:border-color-secondary-50 hover:text-color-alpha-white100",
 			)}
 			onClick={onClick}
+			{...props}
 		>
 			{icon}
 			{item}

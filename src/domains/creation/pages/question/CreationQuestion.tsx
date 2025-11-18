@@ -4,7 +4,7 @@ import {
 	useCreationQuestion,
 	useCreationQuestions,
 } from "@/domains/creation/hooks/question";
-import CreationLayout from "@/domains/creation/layouts/common/CreationLayout";
+import CreationQuestionLayout from "@/domains/creation/layouts/question/CreationQuestionLayout";
 import CreationQuestionAdditional from "@/domains/creation/pages/question/additional/CreationQuestionAdditional";
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
 
@@ -15,6 +15,7 @@ import CreationQuestionMain from "@/domains/creation/pages/question/CreationQues
 const CreationQuestion = () => {
 	const navigate = useNavigate();
 
+	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
@@ -31,12 +32,13 @@ const CreationQuestion = () => {
 		handleUpdateQuestion();
 
 		navigate(
-			`/creation/question-set/${questionSetId}/question/${newQuestionId}`,
+			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${newQuestionId}`,
+			{ replace: true },
 		);
 	};
 
 	return (
-		<CreationLayout>
+		<CreationQuestionLayout>
 			<QuestionNavigation
 				canDelete
 				questionSetId={questionSetId}
@@ -45,11 +47,17 @@ const CreationQuestion = () => {
 				onQuestionAdd={handleAddQuestion}
 				onQuestionDelete={handleDeleteQuestion}
 			/>
-
-			<CreationQuestionMain />
-
-			<CreationQuestionAdditional />
-		</CreationLayout>
+			{questionId !== 0 ? (
+				<>
+					<CreationQuestionMain />
+					<CreationQuestionAdditional />
+				</>
+			) : (
+				<div className="flex flex-1 justify-center items-center typo-heading-large">
+					문제를 만들어야함
+				</div>
+			)}
+		</CreationQuestionLayout>
 	);
 };
 
