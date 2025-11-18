@@ -49,7 +49,9 @@ const AuthTermDetail = ({
 					<span>[{type}]</span>
 					{title}
 				</h3>
-				<p className="w-full typo-body-small font-pretendard">{content}</p>
+				<p className="w-full typo-body-small font-pretendard whitespace-pre-line break-keep">
+					{content}
+				</p>
 			</div>
 		</AuthCard>
 	);
