@@ -1,11 +1,11 @@
 import type { QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
-import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
 	ShortAnswerApiResponse,
 	ShortQuestionApiResponse,
 } from "@/libs/types";
+import generateTemporaryId from "@/utils/generate-temporary-id";
 
 //
 //
@@ -76,7 +76,7 @@ const useCreationQuestionShort = ({
 
 		if (question) {
 			const newAnswer: ShortAnswerApiResponse = {
-				id: CreationQuestionGenerateId(),
+				id: generateTemporaryId(),
 				answer: "",
 				isMain: true,
 				number: groupedAnswers.length + 1,
@@ -107,7 +107,7 @@ const useCreationQuestionShort = ({
 
 		if (question) {
 			const newAnswer: ShortAnswerApiResponse = {
-				id: CreationQuestionGenerateId(),
+				id: generateTemporaryId(),
 				answer: "",
 				isMain: false,
 				number,

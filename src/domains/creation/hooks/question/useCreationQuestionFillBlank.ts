@@ -2,11 +2,11 @@ import { useMemo } from "react";
 import { FILL_BLANK_PATTERN, type QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
-import creationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
 	FillBlankAnswerApiResponse,
 	FillBlankQuestionApiResponse,
 } from "@/libs/types";
+import generateTemporaryId from "@/utils/generate-temporary-id";
 
 //
 //
@@ -194,7 +194,7 @@ const useCreationQuestionFillBlank = ({
 
 		if (question) {
 			const newAnswer: FillBlankAnswerApiResponse = {
-				id: creationQuestionGenerateId(),
+				id: generateTemporaryId(),
 				answer: "",
 				isMain: true,
 				number: groupedAnswers.length + 1,
@@ -226,7 +226,7 @@ const useCreationQuestionFillBlank = ({
 
 		if (question) {
 			const newAnswer: FillBlankAnswerApiResponse = {
-				id: creationQuestionGenerateId(),
+				id: generateTemporaryId(),
 				answer: "",
 				isMain: false,
 				number,

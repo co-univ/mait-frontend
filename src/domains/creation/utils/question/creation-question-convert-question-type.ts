@@ -1,5 +1,4 @@
 import type { QuestionResponseType } from "@/app.constants";
-import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
 	FillBlankQuestionApiResponse,
 	MultipleChoiceApiResponse,
@@ -10,6 +9,7 @@ import type {
 	ShortAnswerApiResponse,
 	ShortQuestionApiResponse,
 } from "@/libs/types";
+import generateTemporaryId from "@/utils/generate-temporary-id";
 
 //
 //
@@ -41,25 +41,25 @@ const CreationQuestionConvertQuestionType = (
 				...convertedQuestion,
 				choices: [
 					{
-						id: CreationQuestionGenerateId(),
+						id: generateTemporaryId(),
 						number: 1,
 						content: "",
 						isCorrect: false,
 					},
 					{
-						id: CreationQuestionGenerateId(),
+						id: generateTemporaryId(),
 						number: 2,
 						content: "",
 						isCorrect: false,
 					},
 					{
-						id: CreationQuestionGenerateId(),
+						id: generateTemporaryId(),
 						number: 3,
 						content: "",
 						isCorrect: false,
 					},
 					{
-						id: CreationQuestionGenerateId(),
+						id: generateTemporaryId(),
 						number: 4,
 						content: "",
 						isCorrect: false,
@@ -73,7 +73,7 @@ const CreationQuestionConvertQuestionType = (
 				answerCount: 1,
 				answers: [
 					{
-						id: CreationQuestionGenerateId(),
+						id: generateTemporaryId(),
 						number: 1,
 						answer: "",
 						isMain: true,
@@ -86,19 +86,19 @@ const CreationQuestionConvertQuestionType = (
 				...convertedQuestion,
 				options: [
 					{
-						id: CreationQuestionGenerateId(),
+						id: generateTemporaryId(),
 						content: "",
 						originOrder: 1,
 						answerOrder: 1,
 					},
 					{
-						id: CreationQuestionGenerateId(),
+						id: generateTemporaryId(),
 						content: "",
 						originOrder: 2,
 						answerOrder: 2,
 					},
 					{
-						id: CreationQuestionGenerateId(),
+						id: generateTemporaryId(),
 						content: "",
 						originOrder: 3,
 						answerOrder: 3,
