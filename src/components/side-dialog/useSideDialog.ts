@@ -48,18 +48,25 @@ export const useSideDialog = ({ open, onClose }: UseSideDialogProps) => {
 	useEffect(() => {
 		if (open) {
 			setIsVisible(true);
-
-			// Trigger animation after render
-			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					setIsAnimating(true);
-				});
-			});
 		} else if (isVisible) {
 			// Trigger closing animation
 			setIsAnimating(false);
 		}
 	}, [open, isVisible]);
+
+	//
+	// Trigger animation when dialog element is mounted
+	//
+	useEffect(() => {
+		if (dialogElement && open && !isAnimating) {
+			// Force reflow to ensure initial styles are applied
+			dialogElement.offsetHeight;
+
+			requestAnimationFrame(() => {
+				setIsAnimating(true);
+			});
+		}
+	}, [dialogElement, open, isAnimating]);
 
 	//
 	// Handle transitionend event for closing animation
