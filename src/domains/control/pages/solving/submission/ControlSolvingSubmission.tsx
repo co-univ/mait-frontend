@@ -1,5 +1,6 @@
 import { Circle } from "lucide-react";
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Table } from "@/components/table";
 import { Tabs } from "@/components/tabs";
@@ -13,11 +14,26 @@ import ControlSolvingSubmissionTabs from "./ControlSolvingSubmissionTabs";
 const ControlSolvingSubmission = () => {
 	const [isScorerDialogOpen, setIsScorerDialogOpen] = useState(false);
 
+	const teamId = Number(useParams().teamId);
+	const questionSetId = Number(useParams().questionSetId);
+	const questionId = Number(useParams().questionId);
+
+	const navigate = useNavigate();
+
 	/**
 	 *
 	 */
 	const handleScorerDialogOpen = () => {
 		setIsScorerDialogOpen(true);
+	};
+
+	/**
+	 *
+	 */
+	const handlePariticipantButtonClick = () => {
+		navigate(
+			`/control/participant/team/${teamId}/question-set/${questionSetId}/question/${questionId}`,
+		);
 	};
 
 	/**
@@ -46,6 +62,7 @@ const ControlSolvingSubmission = () => {
 					<Button
 						item="진출자 선정"
 						className="bg-color-primary-5 typo-body-small text-color-primary-50 border-none"
+						onClick={handlePariticipantButtonClick}
 					/>
 				</div>
 			</div>
