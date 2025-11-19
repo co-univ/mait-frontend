@@ -197,6 +197,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/questions/{questionId}/answers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 문제 정답 추가 API
+         * @description 실시간 풀이 진행 중 특정 문제의 정답을 추가한다.
+         */
+        post: operations["regradeQuestionSubmitRecords"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/questions/images": {
         parameters: {
             query?: never;
@@ -630,7 +650,9 @@ export interface components {
             /** Format: int64 */
             id: number;
             /** @description 문제 셋에서 다루는 주제 */
+            /** @description 문제 셋에서 다루는 주제 */
             subject?: string;
+            /** @description 문제 셋 제목 */
             /** @description 문제 셋 제목 */
             title?: string;
             creationType: components["schemas"]["QuestionSetCreationType"];
@@ -638,6 +660,7 @@ export interface components {
             deliveryMode: components["schemas"]["DeliveryMode"];
             /** Format: int64 */
             teamId: number;
+            ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
             ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
             /** Format: int64 */
             questionCount: number;
@@ -650,6 +673,11 @@ export interface components {
          * @enum {string}
          */
         QuestionSetCreationType: "AI_GENERATED" | "MANUAL";
+        /**
+         * @description 문제 셋 진행 상태
+         * @enum {string}
+         */
+        QuestionSetOngoingStatus: "BEFORE" | "ONGOING" | "AFTER";
         /**
          * @description 문제 셋 진행 상태
          * @enum {string}
@@ -822,6 +850,8 @@ export interface components {
             /** Format: int64 */
             imageId?: number;
             /** Format: int64 */
+            imageId?: number;
+            /** Format: int64 */
             number?: number;
             /** @enum {string} */
             type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
@@ -873,9 +903,32 @@ export interface components {
         CreateQuestionSetApiRequest: {
             /** Format: int64 */
             teamId: number;
+            /** Format: int64 */
+            teamId: number;
             subject: string;
             /** @enum {string} */
             creationType: "AI_GENERATED" | "MANUAL";
+            /** @description 업로드한 해당 문제 셋의 파일 목록 */
+            materials?: components["schemas"]["MaterialDto"][];
+            /** @description 제작 요청할 문제 개수 */
+            counts?: components["schemas"]["QuestionCount"][];
+            /** @description 문제 난이도, AI 생성인 경우에만 활용 */
+            difficulty?: string;
+            /** @description 문제 셋에 대한 보충 설명, AI 생성인 경우에만 활용 */
+            instruction?: string;
+        };
+        /** @description 업로드한 해당 문제 셋의 파일 목록 */
+        MaterialDto: {
+            /** Format: int64 */
+            id?: number;
+            url?: string;
+        };
+        /** @description 제작 요청할 문제 개수 */
+        QuestionCount: {
+            /** @enum {string} */
+            type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+            /** Format: int32 */
+            count?: number;
             /** @description 업로드한 해당 문제 셋의 파일 목록 */
             materials?: components["schemas"]["MaterialDto"][];
             /** @description 제작 요청할 문제 개수 */
@@ -938,42 +991,57 @@ export interface components {
         } & (Omit<WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">, "type"> & {
             shortAnswers: components["schemas"]["ShortAnswerDto"][];
         });
+        FillBlankQuestionSubmitAnswer: {
+            type: "FillBlankQuestionSubmitAnswer";
+        } & (Omit<components["schemas"]["SubmitAnswerDtoObject"], "type"> & {
+            submitAnswers?: components["schemas"]["FillBlankSubmitAnswer"][];
+        } & Omit<components["schemas"]["SubmitAnswerDtoString"], "type"> & Omit<components["schemas"]["SubmitAnswerDtoLong"], "type"> & Omit<components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"], "type">);
         FillBlankQuestionSubmitApiRequest: {
             type: "FillBlankQuestionSubmitApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type"> & {
-            submitAnswers: components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"];
-        });
+        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type">;
         FillBlankSubmitAnswer: {
             /** Format: int64 */
             number: number;
             answer: string;
         };
+        MultipleQuestionSubmitAnswer: {
+            type: "MultipleQuestionSubmitAnswer";
+        } & (Omit<WithRequired<components["schemas"]["SubmitAnswerDtoObject"], "submitAnswers">, "type"> & {
+            /** @description 선택한 번호 목록 */
+            submitAnswers: number[];
+        } & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoString"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoLong"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"], "submitAnswers">, "type">);
         MultipleQuestionSubmitApiRequest: {
             type: "MultipleQuestionSubmitApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type"> & {
-            submitAnswers: components["schemas"]["SubmitAnswerDtoLong"];
-        });
+        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type">;
+        OrderingQuestionSubmitAnswer: {
+            type: "OrderingQuestionSubmitAnswer";
+        } & (Omit<WithRequired<components["schemas"]["SubmitAnswerDtoObject"], "submitAnswers">, "type"> & {
+            /** @description 사용자가 입력한 답변 순서 */
+            submitAnswers: number[];
+        } & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoString"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoLong"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"], "submitAnswers">, "type">);
         OrderingQuestionSubmitApiRequest: {
             type: "OrderingQuestionSubmitApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type"> & {
-            submitAnswers: components["schemas"]["SubmitAnswerDtoLong"];
-        });
+        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type">;
         QuestionAnswerSubmitApiRequest: {
             /**
              * Format: int64
              * @description 문제 PK, 추후에 삭제 예정
              */
             userId: number;
-            submitAnswers?: components["schemas"]["SubmitAnswerDtoObject"];
+            submitAnswers?: components["schemas"]["FillBlankQuestionSubmitAnswer"] | components["schemas"]["MultipleQuestionSubmitAnswer"] | components["schemas"]["OrderingQuestionSubmitAnswer"] | components["schemas"]["ShortQuestionSubmitAnswer"];
             type: string;
         };
         /** @enum {string} */
         QuestionType: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+        ShortQuestionSubmitAnswer: {
+            type: "ShortQuestionSubmitAnswer";
+        } & (Omit<WithRequired<components["schemas"]["SubmitAnswerDtoObject"], "submitAnswers">, "type"> & {
+            /** @description 사용자가 입력한 답변 */
+            submitAnswers: string[];
+        } & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoString"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoLong"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"], "submitAnswers">, "type">);
         ShortQuestionSubmitApiRequest: {
             type: "ShortQuestionSubmitApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type"> & {
-            submitAnswers: components["schemas"]["SubmitAnswerDtoString"];
-        });
+        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type">;
         SubmitAnswerDtoFillBlankSubmitAnswer: {
             type?: components["schemas"]["QuestionType"];
             submitAnswers?: components["schemas"]["FillBlankSubmitAnswer"][];
@@ -1012,6 +1080,57 @@ export interface components {
             questionId: number;
             /** @description 정/오답 여부 */
             isCorrect: boolean;
+        };
+        FillBlankUpdateAnswerPayload: Omit<components["schemas"]["UpdateAnswerPayload"], "type"> & {
+            answers: components["schemas"]["FillBlankAnswerDto"][];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "FillBlankUpdateAnswerPayload";
+        };
+        MultipleChoiceUpdateAnswerPayload: Omit<components["schemas"]["UpdateAnswerPayload"], "type"> & {
+            correctChoiceIds: number[];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "MultipleChoiceUpdateAnswerPayload";
+        };
+        OptionOrderPatch: {
+            /** Format: int64 */
+            optionId: number;
+            /** Format: int32 */
+            answerOrder?: number;
+        };
+        OrderingUpdateAnswerPayload: Omit<components["schemas"]["UpdateAnswerPayload"], "type"> & {
+            options: components["schemas"]["OptionOrderPatch"][];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "OrderingUpdateAnswerPayload";
+        };
+        ShortUpdateAnswerPayload: Omit<components["schemas"]["UpdateAnswerPayload"], "type"> & {
+            shortAnswers: components["schemas"]["ShortAnswerDto"][];
+        } & {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "ShortUpdateAnswerPayload";
+        };
+        /** @description 수정할 문제 값 */
+        UpdateAnswerPayload: {
+            type: string;
+        } & (components["schemas"]["MultipleChoiceUpdateAnswerPayload"] | components["schemas"]["OrderingUpdateAnswerPayload"] | components["schemas"]["FillBlankUpdateAnswerPayload"] | components["schemas"]["ShortUpdateAnswerPayload"]);
+        UpdateQuestionAnswerApiRequest: {
+            /** @enum {string} */
+            type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+            payload: components["schemas"]["UpdateAnswerPayload"];
         };
         ApiResponseQuestionImageApiResponse: {
             isSuccess?: boolean;
@@ -1124,6 +1243,7 @@ export interface components {
             fullNickname?: string;
         };
         ApiResponseQuestionSetsApiResponse: {
+        ApiResponseQuestionSetsApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetsApiResponse"];
         };
@@ -1178,10 +1298,11 @@ export interface components {
             isSuccess?: boolean;
             data?: (components["schemas"]["FillBlankQuestionApiResponse"] | components["schemas"]["MultipleQuestionApiResponse"] | components["schemas"]["OrderingQuestionApiResponse"] | components["schemas"]["ShortQuestionApiResponse"])[];
         };
-        ApiResponseListQuestionAnswerSubmitRecordApiResponse: {
+        ApiResponseQuestionAnswerSubmitRecordsApiResponse: {
             isSuccess?: boolean;
-            data?: components["schemas"]["QuestionAnswerSubmitRecordApiResponse"][];
+            data?: components["schemas"]["QuestionAnswerSubmitRecordsApiResponse"];
         };
+        /** @description 선착순 제출 기록으로 정렬된 제출 기록 목록 */
         QuestionAnswerSubmitRecordApiResponse: {
             /**
              * Format: int64
@@ -1195,6 +1316,8 @@ export interface components {
             userId: number;
             /** @description 제출한 유저 이름 */
             userName?: string;
+            /** @description 제출한 유저 닉네임 */
+            userNickname?: string;
             /**
              * Format: int64
              * @description 제출한 문제 PK
@@ -1207,6 +1330,26 @@ export interface components {
              * @description 제출 순서
              */
             submitOrder: number;
+            submittedAnswer: components["schemas"]["SubmitAnswerDtoObject"];
+        };
+        QuestionAnswerSubmitRecordsApiResponse: {
+            /**
+             * Format: int64
+             * @description 전체 기록 개수
+             */
+            totalCounts: number;
+            /**
+             * Format: int64
+             * @description 정답자 수
+             */
+            correctUserCounts: number;
+            /**
+             * Format: int64
+             * @description 오답자 수
+             */
+            incorrectUserCounts: number;
+            /** @description 선착순 제출 기록으로 정렬된 제출 기록 목록 */
+            submitRecords: components["schemas"]["QuestionAnswerSubmitRecordApiResponse"][];
         };
         ApiResponseQuestionScorerApiResponse: {
             isSuccess?: boolean;
@@ -1244,6 +1387,7 @@ export interface components {
             /** Format: int64 */
             questionSetId?: number;
             /** @enum {string} */
+            liveStatus?: "BEFORE" | "ONGOING" | "AFTER";
             liveStatus?: "BEFORE" | "ONGOING" | "AFTER";
         };
         ApiResponseParticipantsCorrectAnswerRankResponse: {
@@ -1648,6 +1792,7 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionSetsApiResponse"];
+                    "*/*": components["schemas"]["ApiResponseQuestionSetsApiResponse"];
                 };
             };
         };
@@ -1787,6 +1932,33 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    regradeQuestionSubmitRecords: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+                questionId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateQuestionAnswerApiRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
@@ -2104,7 +2276,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListQuestionAnswerSubmitRecordApiResponse"];
+                    "*/*": components["schemas"]["ApiResponseQuestionAnswerSubmitRecordsApiResponse"];
                 };
             };
         };
