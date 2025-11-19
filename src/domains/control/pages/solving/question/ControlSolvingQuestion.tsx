@@ -1,5 +1,5 @@
 import { Check, Pencil, X } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Switch } from "@/components/switch/Switch";
@@ -17,14 +17,27 @@ import ControlSolvingQuestionShort from "./ControlSolvingQuestionShort";
 
 const ControlSolvingQuestion = () => {
 	const [isEditing, setIsEditing] = useState(false);
+	const [submitHandler, setSubmitHandler] = useState<
+		(() => Promise<boolean>) | null
+	>(null);
 
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { question } = useControlSolvingQuestion({
+	const { question, refetchQuestion } = useControlSolvingQuestion({
 		questionSetId,
 		questionId,
 	});
+
+	/**
+	 *
+	 */
+	const handleRegisterSubmit = useCallback(
+		(handler: () => Promise<boolean>) => {
+			setSubmitHandler(() => handler);
+		},
+		[],
+	);
 
 	/**
 	 *
@@ -38,6 +51,18 @@ const ControlSolvingQuestion = () => {
 	 */
 	const handleCancelButtonClick = () => {
 		setIsEditing(false);
+		refetchQuestion();
+	};
+
+	/**
+	 *
+	 */
+	const handleCompleteButtonClick = async () => {
+		const res = await submitHandler?.();
+
+		if (res) {
+			setIsEditing(false);
+		}
 	};
 
 	/**
@@ -92,7 +117,13 @@ const ControlSolvingQuestion = () => {
 	 */
 	const renderEditButton = () => {
 		if (isEditing) {
-			return <Button icon={<Check />} item="수정 완료" />;
+			return (
+				<Button
+					icon={<Check />}
+					item="수정 완료"
+					onClick={handleCompleteButtonClick}
+				/>
+			);
 		}
 
 		return <Button icon={<Pencil />} onClick={handleEditButtonClick} />;
@@ -116,13 +147,33 @@ const ControlSolvingQuestion = () => {
 	const renderQuestionAnswer = () => {
 		switch (question?.type as QuestionType) {
 			case "MULTIPLE":
-				return <ControlSolvingQuestionMultiple readOnly={!isEditing} />;
+				return (
+					<ControlSolvingQuestionMultiple
+						readOnly={!isEditing}
+						onRegisterSubmit={handleRegisterSubmit}
+					/>
+				);
 			case "SHORT":
-				return <ControlSolvingQuestionShort readOnly={!isEditing} />;
+				return (
+					<ControlSolvingQuestionShort
+						readOnly={!isEditing}
+						onRegisterSubmit={handleRegisterSubmit}
+					/>
+				);
 			case "ORDERING":
-				return <ControlSolvingQuestionOrdering readOnly={!isEditing} />;
+				return (
+					<ControlSolvingQuestionOrdering
+						readOnly={!isEditing}
+						onRegisterSubmit={handleRegisterSubmit}
+					/>
+				);
 			case "FILL_BLANK":
-				return <ControlSolvingQuestionFillBlank readOnly={!isEditing} />;
+				return (
+					<ControlSolvingQuestionFillBlank
+						readOnly={!isEditing}
+						onRegisterSubmit={handleRegisterSubmit}
+					/>
+				);
 			default:
 				return null;
 		}

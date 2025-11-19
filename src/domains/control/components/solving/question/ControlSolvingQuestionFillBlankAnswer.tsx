@@ -14,6 +14,9 @@ import ControlSolvingQuestionAnswerExpandButton from "./ControlSolvingQuestionAn
 interface ControlSolvingQuestionFillBlankAnswerProps {
 	readOnly: boolean;
 	answers: FillBlankAnswerApiResponse[];
+	onAnswerChange: (id: number, answer: string) => void;
+	onSubAnswerAdd: (number: number) => void;
+	onSubAnswerDelete: (id: number) => void;
 }
 
 //
@@ -23,6 +26,9 @@ interface ControlSolvingQuestionFillBlankAnswerProps {
 const ControlSolvingQuestionFillBlankAnswer = ({
 	readOnly,
 	answers,
+	onAnswerChange,
+	onSubAnswerAdd,
+	onSubAnswerDelete,
 }: ControlSolvingQuestionFillBlankAnswerProps) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 
@@ -77,16 +83,30 @@ const ControlSolvingQuestionFillBlankAnswer = ({
 		return (
 			<div className="w-full flex flex-col gap-gap-9">
 				<span className="flex items-center justify-between gap-gap-9">
-					<AdjustableTextarea value={mainAnswer?.answer} />
-					<Button icon={<Plus />} className="bg-color-gray-10 py-padding-3" />
+					<AdjustableTextarea
+						value={mainAnswer?.answer}
+						onChange={(e) =>
+							onAnswerChange(mainAnswer?.id ?? 0, e.target.value)
+						}
+						className="w-full"
+					/>
+					<Button
+						icon={<Plus />}
+						onClick={() => onSubAnswerAdd(mainAnswer?.number ?? 0)}
+						className="bg-color-gray-10 py-padding-3"
+					/>
 				</span>
 				{subAnswers.map((answer) => (
 					<div
 						key={answer.id}
 						className="flex justify-between gap-gap-9 bg-color-gray-10 rounded-radius-medium1 p-padding-6"
 					>
-						<AdjustableTextarea value={answer.answer} />
-						<DeleteCheckBox />
+						<AdjustableTextarea
+							value={answer.answer}
+							onChange={(e) => onAnswerChange(answer?.id ?? 0, e.target.value)}
+							className="w-full"
+						/>
+						<DeleteCheckBox onClick={() => onSubAnswerDelete(answer.id)} />
 					</div>
 				))}
 			</div>
@@ -94,7 +114,7 @@ const ControlSolvingQuestionFillBlankAnswer = ({
 	};
 
 	return (
-		<div className="w-full flex justify-between items-start gap-gap-9 px-padding-12 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium">
+		<div className="w-full flex justify-between items-start gap-gap-9 px-padding-11 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium">
 			{readOnly ? renderReadOnlyAnswer() : renderEditableAnswer()}
 
 			{readOnly ? (
