@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Table } from "@/components/table";
 import { Tabs } from "@/components/tabs";
+import { apiHooks } from "@/libs/api";
 import ControlSolvingSubmissionScorerSideDialog from "./ControlSolvingSubmissionScorerSideDialog";
 import ControlSolvingSubmissionTabs from "./ControlSolvingSubmissionTabs";
 
@@ -17,6 +18,11 @@ const ControlSolvingSubmission = () => {
 	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
+
+	// const { data } = apiHooks.useQuery(
+	// 	"get",
+	// 	"/api/v1/question-sets/{questionSetId}/questions/{questionId}/",
+	// );
 
 	const navigate = useNavigate();
 

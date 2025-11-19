@@ -24,7 +24,14 @@ const ControlSolvingQuestion = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { question, refetchQuestion } = useControlSolvingQuestion({
+	const {
+		question,
+		refetchQuestion,
+		handleAccessOpen,
+		handleAccessClose,
+		handleSolveOpen,
+		handleSolveClose,
+	} = useControlSolvingQuestion({
 		questionSetId,
 		questionId,
 	});
@@ -81,12 +88,26 @@ const ControlSolvingQuestion = () => {
 			<div className="flex gap-gap-9">
 				<Switch.Root
 					checked={allowedAccessTypes.includes(question?.questionStatusType)}
+					onChange={(checked) => {
+						if (checked) {
+							handleAccessOpen();
+						} else {
+							handleAccessClose();
+						}
+					}}
 				>
 					<Switch.Label>문제 공개</Switch.Label>
 					<Switch.Toggle />
 				</Switch.Root>
 				<Switch.Root
 					checked={allowedSolveType.includes(question?.questionStatusType)}
+					onChange={(checked) => {
+						if (checked) {
+							handleSolveOpen();
+						} else {
+							handleSolveClose();
+						}
+					}}
 				>
 					<Switch.Label>제출 허용</Switch.Label>
 					<Switch.Toggle />

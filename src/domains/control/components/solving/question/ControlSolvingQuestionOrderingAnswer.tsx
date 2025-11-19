@@ -32,7 +32,7 @@ const ControlSolvingQuestionOrderingAnswer = ({
 	};
 
 	return (
-		<div className="flex items-center gap-gap-9">
+		<div className="flex items-center gap-gap-5">
 			<span className="typo-heading-xsmall">
 				{String.fromCharCode(64 + option.originOrder)}
 			</span>

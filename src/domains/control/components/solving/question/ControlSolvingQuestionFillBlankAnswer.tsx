@@ -114,7 +114,7 @@ const ControlSolvingQuestionFillBlankAnswer = ({
 	};
 
 	return (
-		<div className="w-full flex justify-between items-start gap-gap-9 px-padding-11 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium">
+		<div className="w-full flex justify-between items-start gap-gap-5 px-padding-11 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium">
 			{readOnly ? renderReadOnlyAnswer() : renderEditableAnswer()}
 
 			{readOnly ? (
