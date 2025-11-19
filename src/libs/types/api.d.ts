@@ -486,7 +486,7 @@ export interface paths {
          * 정답 개수에 따른 등수 조회 API
          * @description 해당 문제 셋에 정답 개수에 따른 등수 그룹을 조회한다.
          */
-        get: operations["getCorrectorsByQuestionSetId"];
+        get: operations["getScorersByQuestionSetId"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1346,6 +1346,43 @@ export interface components {
             mode?: "MAKING" | "LIVE_TIME" | "REVIEW";
             content?: components["schemas"]["QuestionSetContainer"];
         };
+        ApiResponseScorerRanksApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["ScorerRanksApiResponse"];
+        };
+        /** @description 득점자 그룹 */
+        ScorerRankApiResponse: {
+            /**
+             * Format: int64
+             * @description 득점한 문제 개수
+             */
+            scoreCount: number;
+            /** @description 유저 정보 */
+            users?: components["schemas"]["UserApiResponse"][];
+        };
+        ScorerRanksApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            questionSetId: number;
+            /** @description 득점자 그룹 */
+            ranksGroup?: components["schemas"]["ScorerRankApiResponse"][];
+        };
+        /** @description 유저 정보 */
+        UserApiResponse: {
+            /** Format: int64 */
+            userId: number;
+            /** @description 유저 이름 */
+            name?: string;
+            /** @description 일반 닉네임 */
+            nickName?: string;
+            /**
+             * @description 코드를 포함한 닉네임
+             * @example 신유승#0319
+             */
+            fullNickname?: string;
+        };
         AnswerRankApiResponse: {
             /**
              * Format: int64
@@ -1366,20 +1403,6 @@ export interface components {
              */
             questionSetId: number;
             ranksGroup?: components["schemas"]["AnswerRankApiResponse"][];
-        };
-        /** @description 유저 정보 */
-        UserApiResponse: {
-            /** Format: int64 */
-            userId: number;
-            /** @description 유저 이름 */
-            name?: string;
-            /** @description 일반 닉네임 */
-            nickName?: string;
-            /**
-             * @description 코드를 포함한 닉네임
-             * @example 신유승#0319
-             */
-            fullNickname?: string;
         };
         ApiResponseListQuestionApiResponse: {
             isSuccess?: boolean;
@@ -2394,7 +2417,7 @@ export interface operations {
             };
         };
     };
-    getCorrectorsByQuestionSetId: {
+    getScorersByQuestionSetId: {
         parameters: {
             query: {
                 /**
@@ -2417,7 +2440,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseCorrectorRanksApiResponse"];
+                    "*/*": components["schemas"]["ApiResponseCorrectorRanksApiResponse"] | components["schemas"]["ApiResponseScorerRanksApiResponse"];
                 };
             };
         };
