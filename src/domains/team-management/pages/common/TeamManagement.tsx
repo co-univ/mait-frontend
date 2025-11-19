@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import TeamManagementCreateLinkModal from "./TeamManagementCreateLinkModal";
+import TeamManagementLinkCreateModal from "./TeamManagementLinkCreateModal";
+import TeamManagementLinkManageModal from "./TeamManagementLinkManageModal";
 
 //
 //
@@ -14,6 +15,14 @@ const TeamManagement = () => {
 	const [isLinkManageModalOpen, setIsLinkManageModalOpen] = useState(false);
 
 	const teamId = Number(useParams().teamId);
+
+	/**
+	 *
+	 */
+	const handleLinkManageModalOpen = () => {
+		setIsLinkCreateModalOpen(false);
+		setIsLinkManageModalOpen(true);
+	};
 
 	/**
 	 *
@@ -33,7 +42,7 @@ const TeamManagement = () => {
 			</div>
 		);
 	};
-
+	console.log(isLinkCreateModalOpen);
 	return (
 		<>
 			<LabeledPageLayout
@@ -43,9 +52,14 @@ const TeamManagement = () => {
 			>
 				ㅎㅇ
 			</LabeledPageLayout>
-			<TeamManagementCreateLinkModal
+			<TeamManagementLinkCreateModal
 				open={isLinkCreateModalOpen}
 				onClose={() => setIsLinkCreateModalOpen(false)}
+				onLinkManageClick={handleLinkManageModalOpen}
+			/>
+			<TeamManagementLinkManageModal
+				open={isLinkManageModalOpen}
+				onClose={() => setIsLinkManageModalOpen(false)}
 			/>
 		</>
 	);
