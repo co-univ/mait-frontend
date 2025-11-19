@@ -39,8 +39,8 @@ const NAVIGATION_ITEMS = [
 	{
 		icon: <Users />,
 		label: "팀 관리",
-		path: "/team-manage",
-		activePaths: ["/team-manage"],
+		path: "/team-management",
+		activePaths: ["/team-management"],
 	},
 ];
 
