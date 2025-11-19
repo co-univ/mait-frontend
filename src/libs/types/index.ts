@@ -17,6 +17,7 @@ export type ApiResponseCurrentQuestionApiResponse = components["schemas"]["ApiRe
 export type ApiResponseListLatestPoliciesApiResponse = components["schemas"]["ApiResponseListLatestPoliciesApiResponse"];
 export type ApiResponseListParticipantInfoResponse = components["schemas"]["ApiResponseListParticipantInfoResponse"];
 export type ApiResponseListQuestionApiResponse = components["schemas"]["ApiResponseListQuestionApiResponse"];
+export type ApiResponseListQuestionScorerApiResponse = components["schemas"]["ApiResponseListQuestionScorerApiResponse"];
 export type ApiResponseListQuestionValidationApiResponse = components["schemas"]["ApiResponseListQuestionValidationApiResponse"];
 export type ApiResponseListUnconfirmedPoliciesApiResponse = components["schemas"]["ApiResponseListUnconfirmedPoliciesApiResponse"];
 export type ApiResponseParticipantsCorrectAnswerRankResponse = components["schemas"]["ApiResponseParticipantsCorrectAnswerRankResponse"];

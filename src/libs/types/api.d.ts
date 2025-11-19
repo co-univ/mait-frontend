@@ -475,6 +475,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/scorers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 문제 셋 문제별 득점자 조회 */
+        get: operations["getScorers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/ranks": {
         parameters: {
             query?: never;
@@ -512,7 +529,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorer": {
+    "/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorers": {
         parameters: {
             query?: never;
             header?: never;
@@ -1346,6 +1363,41 @@ export interface components {
             mode?: "MAKING" | "LIVE_TIME" | "REVIEW";
             content?: components["schemas"]["QuestionSetContainer"];
         };
+        ApiResponseListQuestionScorerApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionScorerApiResponse"][];
+        };
+        QuestionScorerApiResponse: {
+            /**
+             * Format: int64
+             * @description 득점자 PK
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 문제 PK
+             */
+            questionId: number;
+            /**
+             * Format: int64
+             * @description 문제 번호
+             */
+            questionNumber?: number;
+            /**
+             * Format: int64
+             * @description 득점한 사용자 PK
+             */
+            userId?: number;
+            /** @description 득점한 사용자 이름 */
+            userName?: string;
+            /** @description 득점자 닉네임 */
+            userNickname?: string;
+            /**
+             * Format: int64
+             * @description 득점 순서
+             */
+            submitOrder?: number;
+        };
         ApiResponseScorerRanksApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["ScorerRanksApiResponse"];
@@ -1464,30 +1516,6 @@ export interface components {
         ApiResponseQuestionScorerApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionScorerApiResponse"];
-        };
-        QuestionScorerApiResponse: {
-            /**
-             * Format: int64
-             * @description 득점자 PK
-             */
-            id: number;
-            /**
-             * Format: int64
-             * @description 문제 PK
-             */
-            questionId: number;
-            /**
-             * Format: int64
-             * @description 득점한 사용자 PK
-             */
-            userId?: number;
-            /** @description 득점한 사용자 이름 */
-            userName?: string;
-            /**
-             * Format: int64
-             * @description 득점 순서
-             */
-            submitOrder?: number;
         };
         ApiResponseQuestionSetLiveStatusResponse: {
             isSuccess?: boolean;
@@ -2413,6 +2441,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseTeamInviteApiResponse"];
+                };
+            };
+        };
+    };
+    getScorers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListQuestionScorerApiResponse"];
                 };
             };
         };
