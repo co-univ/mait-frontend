@@ -51,6 +51,9 @@ const ControlSolving = () => {
 	const handleQuestionNavigationClick = (questionId: number) => {
 		navigate(
 			`/control/solving/team/${teamId}/question-set/${questionSetId}/question/${questionId}`,
+			{
+				replace: true,
+			},
 		);
 	};
 

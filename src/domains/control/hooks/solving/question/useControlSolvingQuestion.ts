@@ -38,6 +38,18 @@ const useControlSolvingQuestion = ({
 }: UseControlSolvingQuestionProps): UseControlSolvingQuestionReturn => {
 	const [isStatusUpdating, setIsStatusUpdating] = useState(false);
 
+		const { data: questionSetData } = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets/{questionSetId}",
+		{
+			params: {
+				path: {
+					questionSetId,
+				},
+			},
+		},
+	);
+
 	const { data, isPending, refetch, dataUpdatedAt } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
@@ -100,7 +112,7 @@ const useControlSolvingQuestion = ({
 			return;
 		}
 
-		if (question?.questionStatusType === "NOT_OPEN") {
+		if (questionSetData?.data?.ongoingStatus === "BEFORE") {
 			notify.warn("문제 시작 후 문제 공개 및 제출 허용이 가능합니다.");
 
 			return;
