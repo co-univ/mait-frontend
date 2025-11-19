@@ -54,13 +54,6 @@ const useControlSolvingQuestion = ({
 		},
 	);
 
-	//
-	//
-	// biome-ignore lint/correctness/useExhaustiveDependencies: fetch on questionId change
-	useEffect(() => {
-		refetch();
-	}, [questionId, refetch]);
-
 	const question = data?.data;
 
 	/**
@@ -104,6 +97,12 @@ const useControlSolvingQuestion = ({
 		status: UpdateQuestionStatusApiRequest["statusType"],
 	) => {
 		if (isStatusUpdating) {
+			return;
+		}
+
+		if (question?.questionStatusType === "NOT_OPEN") {
+			notify.warn("문제 시작 후 문제 공개 및 제출 허용이 가능합니다.");
+
 			return;
 		}
 
@@ -170,6 +169,13 @@ const useControlSolvingQuestion = ({
 	const handleSolveClose = () => {
 		handleStatusUpdate("ACCESS_PERMISSION");
 	};
+
+	//
+	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: fetch on questionId change
+	useEffect(() => {
+		refetch();
+	}, [questionId, refetch]);
 
 	return {
 		question,
