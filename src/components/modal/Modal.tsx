@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { getPortalContainer } from "./portal";
 import useModal from "./useModal";
 
 //
@@ -19,36 +19,13 @@ interface ModalProps {
 //
 
 const Modal = ({ open, onClose, children }: ModalProps) => {
-	const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
-		null,
-	);
-
 	useModal({ open, onClose });
 
-	//
-	//
-	//
-	useEffect(() => {
-		let container = document.getElementById("modal-portal");
-
-		if (!container) {
-			container = document.createElement("div");
-			container.id = "modal-portal";
-			document.body.appendChild(container);
-		}
-
-		setPortalContainer(container);
-
-		return () => {
-			if (container && container.children.length === 0) {
-				document.body.removeChild(container);
-			}
-		};
-	}, []);
-
-	if (!open || !portalContainer) {
+	if (!open) {
 		return null;
 	}
+
+	const portalContainer = getPortalContainer();
 
 	//
 	//
