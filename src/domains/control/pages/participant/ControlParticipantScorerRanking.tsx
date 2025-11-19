@@ -6,7 +6,7 @@ import { ControlParticipantRankingPanel } from "../../components/participant/ran
 //
 //
 
-const ControlParticipantLiveRanking = () => {
+const ControlParticipantScorerRanking = () => {
 	return (
 		<ControlParticipantRankingPanel.Root>
 			<ControlParticipantRankingPanel.Header
@@ -38,4 +38,4 @@ const ControlParticipantLiveRanking = () => {
 	);
 };
 
-export default ControlParticipantLiveRanking;
+export default ControlParticipantScorerRanking;

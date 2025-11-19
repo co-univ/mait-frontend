@@ -1,9 +1,9 @@
 import { BellRing } from "lucide-react";
 import Button from "@/components/Button";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import ControlParticipantAnswerRanking from "./ControlParticipantAnswerRanking";
-import ControlParticipantLiveRanking from "./ControlParticipantLiveRanking";
+import ControlParticipantCorrectRanking from "./ControlParticipantCorrectRanking";
 import ControlParticipantNextMembers from "./ControlParticipantNextMembers";
+import ControlParticipantScorerRanking from "./ControlParticipantScorerRanking";
 
 //
 //
@@ -38,10 +38,10 @@ const ControlParticipant = () => {
 				<ControlParticipantNextMembers />
 				<div className="flex items-stretch gap-gap-9">
 					<div className="flex flex-[2]">
-						<ControlParticipantLiveRanking />
+						<ControlParticipantScorerRanking />
 					</div>
 					<div className="flex flex-[3]">
-						<ControlParticipantAnswerRanking />
+						<ControlParticipantCorrectRanking />
 					</div>
 				</div>
 			</div>
