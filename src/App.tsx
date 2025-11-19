@@ -1,11 +1,24 @@
-import "./App.css";
+import { Outlet } from "react-router-dom";
+import LoginModal from "@/components/auth/LoginModal";
+import AppLayout from "@/layouts/AppLayout";
+import Toast from "./components/Toast";
+import useLoginModalOpenStore from "./stores/useLoginModalOpenStore";
+
+//
+//
+//
 
 const App = () => {
+	const { isLoginModalOpen, closeLoginModal } = useLoginModalOpenStore();
+
 	return (
-		<div className="content">
-			<h1>Rsbuild with React</h1>
-			<p>Start building amazing things with Rsbuild.</p>
-		</div>
+		<>
+			<AppLayout>
+				<Outlet />
+			</AppLayout>
+			<LoginModal open={isLoginModalOpen} onClose={closeLoginModal} />
+			<Toast />
+		</>
 	);
 };
 

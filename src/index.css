@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+	body {
+		@apply text-color-alpha-black100
+	}
+}
+
 /* Pretendard */
 @font-face {
 	font-family: "Pretendard";
@@ -76,3 +82,12 @@
 	font-weight: 700;
 	font-style: normal;
 }
+
+@font-face {
+    font-family: 'Lexend';
+    font-style: normal;
+    font-weight: 400;
+    src: url('https://cdn.jsdelivr.net/npm/@fontsource/lexend/files/lexend-latin-400-normal.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/npm/@fontsource/lexend/files/lexend-latin-400-normal.woff') format('woff');
+}
+

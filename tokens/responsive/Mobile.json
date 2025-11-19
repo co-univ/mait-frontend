@@ -1,0 +1,150 @@
+{
+	"font-size": {
+		"display": {
+			"large": {
+				"value": "2.75rem",
+				"type": "dimension"
+			},
+			"medium": {
+				"value": "2rem",
+				"type": "dimension"
+			},
+			"small": {
+				"value": "1.75rem",
+				"type": "dimension"
+			}
+		},
+		"heading": {
+			"xlarge": {
+				"value": "0rem",
+				"type": "dimension"
+			},
+			"large": {
+				"value": "0rem",
+				"type": "dimension"
+			},
+			"medium": {
+				"value": "0rem",
+				"type": "dimension"
+			},
+			"small": {
+				"value": "0rem",
+				"type": "dimension"
+			},
+			"xsmall": {
+				"value": "0rem",
+				"type": "dimension"
+			},
+			"xxsmall": {
+				"value": "0rem",
+				"type": "dimension"
+			}
+		},
+		"body": {
+			"large": {
+				"value": "1.188rem",
+				"type": "dimension"
+			},
+			"medium": {
+				"value": "1.062rem",
+				"type": "dimension"
+			},
+			"small": {
+				"value": "0.938rem",
+				"type": "dimension"
+			},
+			"xsmall": {
+				"value": "0.812rem",
+				"type": "dimension"
+			}
+		}
+	},
+	"gap-layout": {
+		"h1-h2": {
+			"value": "{32}",
+			"type": "dimension"
+		},
+		"h2-h2": {
+			"value": "{40}",
+			"type": "dimension"
+		},
+		"h2-h3": {
+			"value": "{24}",
+			"type": "dimension"
+		},
+		"h3-h3": {
+			"value": "{32}",
+			"type": "dimension"
+		},
+		"h3-h4": {
+			"value": "{16}",
+			"type": "dimension"
+		},
+		"h4-h4": {
+			"value": "{24}",
+			"type": "dimension"
+		},
+		"h4-h5": {
+			"value": "{12}",
+			"type": "dimension"
+		},
+		"h5-h5": {
+			"value": "{16}",
+			"type": "dimension"
+		},
+		"title-body-large": {
+			"value": "{20}",
+			"type": "dimension"
+		},
+		"title-body-medium": {
+			"value": "{12}",
+			"type": "dimension"
+		},
+		"title-body-small": {
+			"value": "{8}",
+			"type": "dimension"
+		},
+		"text-text-large": {
+			"value": "{16}",
+			"type": "dimension"
+		},
+		"text-text-medium": {
+			"value": "{12}",
+			"type": "dimension"
+		},
+		"text-text-small": {
+			"value": "{10}",
+			"type": "dimension"
+		},
+		"image-text-large": {
+			"value": "{24}",
+			"type": "dimension"
+		},
+		"image-text-medium": {
+			"value": "{20}",
+			"type": "dimension"
+		},
+		"image-text-small": {
+			"value": "{16}",
+			"type": "dimension"
+		}
+	},
+	"padding-card": {
+		"large": {
+			"value": "{24}",
+			"type": "dimension"
+		},
+		"medium": {
+			"value": "{24}",
+			"type": "dimension"
+		},
+		"small": {
+			"value": "{20}",
+			"type": "dimension"
+		},
+		"xsmall": {
+			"value": "{12}",
+			"type": "dimension"
+		}
+	}
+}
