@@ -1,4 +1,3 @@
-import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
@@ -9,24 +8,27 @@ import { notify } from "@/components/Toast";
 import { apiClient } from "@/libs/api";
 import type { CreateTeamInviteApiRequest } from "@/libs/types";
 import { getInviteUrl } from "@/utils/get-invite-url";
+import CopyButton from "../../components/common/CopyButton";
 
 //
 //
 //
 
-interface TeamManagementCreateLinkModalProps {
+interface TeamManagementLinkCreateModalProps {
 	open: boolean;
 	onClose: () => void;
+	onLinkManageClick: () => void;
 }
 
 //
 //
 //
 
-const TeamManagementCreateLinkModal = ({
+const TeamManagementLinkCreateModal = ({
 	open,
 	onClose,
-}: TeamManagementCreateLinkModalProps) => {
+	onLinkManageClick,
+}: TeamManagementLinkCreateModalProps) => {
 	const [role, setRole] = useState<CreateTeamInviteApiRequest["role"]>("MAKER");
 	const [duration, setDuration] =
 		useState<CreateTeamInviteApiRequest["duration"]>("ONE_DAY");
@@ -35,7 +37,6 @@ const TeamManagementCreateLinkModal = ({
 	);
 	const [linkCode, setLinkCode] = useState<string>();
 	const [isCreating, setIsCreating] = useState(false);
-	const [isCopied, setIsCopied] = useState(false);
 
 	const teamId = Number(useParams().teamId);
 
@@ -100,23 +101,6 @@ const TeamManagementCreateLinkModal = ({
 		} finally {
 			setIsCreating(false);
 		}
-	};
-
-	/**
-	 *
-	 */
-	const handleCopyLink = async () => {
-		if (!linkCode) {
-			return;
-		}
-
-		await navigator.clipboard.writeText(getInviteUrl(linkCode));
-
-		setIsCopied(true);
-
-		setTimeout(() => {
-			setIsCopied(false);
-		}, 3000);
 	};
 
 	/**
@@ -223,12 +207,13 @@ const TeamManagementCreateLinkModal = ({
 				<div className="flex-1" />
 				<Button
 					item="초대 링크 관리"
+					onClick={onLinkManageClick}
 					className="py-padding-4 px-padding-8 typo-body-small border-none underline"
 				/>
 				<Button
 					item="생성하기"
-					className="py-padding-4 px-padding-8 typo-body-small"
 					onClick={handleLinkCreate}
+					className="py-padding-4 px-padding-8 typo-body-small"
 				/>
 			</div>
 		);
@@ -249,11 +234,7 @@ const TeamManagementCreateLinkModal = ({
 					value={getInviteUrl(linkCode)}
 					className="flex-1 py-padding-4 px-padding-6 rounded-radius-medium1 border border-color-gray-20 overflow-x-auto typo-body-small"
 				/>
-				<Button
-					icon={isCopied ? <Check /> : <Copy />}
-					onClick={handleCopyLink}
-					className="border-none"
-				/>
+				<CopyButton value={getInviteUrl(linkCode)} />
 			</div>
 		);
 	};
@@ -270,4 +251,4 @@ const TeamManagementCreateLinkModal = ({
 	);
 };
 
-export default TeamManagementCreateLinkModal;
+export default TeamManagementLinkCreateModal;
