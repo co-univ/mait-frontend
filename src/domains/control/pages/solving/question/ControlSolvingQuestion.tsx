@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Check, Pencil, X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -5,6 +6,7 @@ import Button from "@/components/Button";
 import { Switch } from "@/components/switch/Switch";
 import ControlSolvingQuestionContent from "@/domains/control/components/solving/question/ControlSolvingQuestionContent";
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
+import { apiHooks } from "@/libs/api";
 import type {
 	QuestionApiResponse,
 	QuestionSetApiResponse,
@@ -56,6 +58,8 @@ const ControlSolvingQuestion = ({
 				: undefined,
 	});
 
+	const queryClient = useQueryClient();
+
 	/**
 	 *
 	 */
@@ -89,6 +93,36 @@ const ControlSolvingQuestion = ({
 
 		if (res) {
 			setIsEditing(false);
+
+			queryClient.invalidateQueries({
+				queryKey: apiHooks.queryOptions(
+					"get",
+					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorer",
+					{
+						params: {
+							path: {
+								questionSetId,
+								questionId,
+							},
+						},
+					},
+				).queryKey,
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: apiHooks.queryOptions(
+					"get",
+					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit-records",
+					{
+						params: {
+							path: {
+								questionSetId,
+								questionId,
+							},
+						},
+					},
+				).queryKey,
+			});
 		}
 	};
 
