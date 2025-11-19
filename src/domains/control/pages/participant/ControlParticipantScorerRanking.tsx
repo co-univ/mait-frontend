@@ -1,12 +1,21 @@
 import { Coins } from "lucide-react";
+import { useParams } from "react-router-dom";
 import { Table } from "@/components/table";
 import { ControlParticipantRankingPanel } from "../../components/participant/ranking-panel";
+import useControlParticipantRanking from "../../hooks/paticipant/useControlParticipantRanking";
 
 //
 //
 //
 
 const ControlParticipantScorerRanking = () => {
+	const questionSetId = Number(useParams().questionSetId);
+
+	const { ranking } = useControlParticipantRanking({
+		questionSetId,
+		type: "SCORER" as const,
+	});
+
 	return (
 		<ControlParticipantRankingPanel.Root>
 			<ControlParticipantRankingPanel.Header
@@ -18,20 +27,17 @@ const ControlParticipantScorerRanking = () => {
 				<ControlParticipantRankingPanel.TableHeader />
 				<Table.Divider />
 				<Table.Body>
-					<ControlParticipantRankingPanel.TableRow
-						rankCell="1등"
-						nameCell="이하은(아지 송)"
-					/>
-					<Table.Divider />
-					<ControlParticipantRankingPanel.TableRow
-						rankCell="2등"
-						nameCell="전민재(전밈)"
-					/>
-					<Table.Divider />
-					<ControlParticipantRankingPanel.TableRow
-						rankCell="3등"
-						nameCell="손민재(Son)"
-					/>
+					{ranking?.map(({ users }, index) => (
+						<>
+							<ControlParticipantRankingPanel.TableRow
+								// biome-ignore lint/suspicious/noArrayIndexKey: ranking order is stable and only user data changes
+								key={index}
+								rankCell={`${index + 1}등`}
+								nameCell={users?.map((user) => user.name).join(", ")}
+							/>
+							{index < (ranking?.length ?? 0) - 1 && <Table.Divider />}
+						</>
+					))}
 				</Table.Body>
 			</Table.Root>
 		</ControlParticipantRankingPanel.Root>
