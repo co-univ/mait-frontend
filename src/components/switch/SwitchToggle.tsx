@@ -50,10 +50,9 @@ export const SwitchToggle = ({ className }: SwitchToggleProps) => {
 		>
 			<div
 				className={clsx(
-					"absolute size-2 bg-alpha-white100 rounded-full top-[2px] transition-all",
+					"absolute size-2 bg-alpha-white100 rounded-full top-[2px] transition-all left-[2.5px]",
 					{
-						"left-[2.5px]": checked,
-						"right-[2.5px]": !checked,
+						"translate-x-[15px]": checked,
 					},
 				)}
 				data-switch-thumb
