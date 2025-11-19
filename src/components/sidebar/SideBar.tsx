@@ -22,7 +22,7 @@ const NAVIGATION_ITEMS = [
 		icon: <SquarePen />,
 		label: "문제 관리",
 		path: "/management",
-		activePaths: ["/management", "/creation"],
+		activePaths: ["/management", "/creation", "/control"],
 	},
 	{
 		icon: <Puzzle />,
