@@ -38,7 +38,7 @@ const useControlSolvingQuestion = ({
 }: UseControlSolvingQuestionProps): UseControlSolvingQuestionReturn => {
 	const [isStatusUpdating, setIsStatusUpdating] = useState(false);
 
-		const { data: questionSetData } = apiHooks.useQuery(
+	const { data: questionSetData } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}",
 		{
