@@ -115,7 +115,7 @@ const SideBar = () => {
 						<SidebarItem
 							key={item.path}
 							className={clsx("text-color-gray-30", {
-								"text-color-primary-50 typo-heading-xsmall bg-primary-5":
+								"text-color-primary-50 !typo-heading-xsmall bg-primary-5":
 									hasValidPath(item.activePaths, location.pathname),
 							})}
 						>

@@ -1,4 +1,5 @@
 import { Field } from "@/components/field";
+import type { QuestionSetCreationType } from "@/libs/types";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 
@@ -7,9 +8,10 @@ import CreationPanelTextarea from "../../components/common/CreationPanelTextarea
 //
 
 type CreationPublishRightPanelProps = {
-	levelDescription?: string;
+	creationType?: QuestionSetCreationType;
+	difficulty?: string;
 	subject?: string;
-	onChangeLevelDescription: (levelDescription: string) => void;
+	onChangeDifficulty: (difficulty: string) => void;
 	onChangeSubject: (subject: string) => void;
 };
 
@@ -18,22 +20,27 @@ type CreationPublishRightPanelProps = {
 //
 
 const CreationPublishRightPanel = ({
-	levelDescription,
+	creationType,
+	difficulty,
 	subject,
-	onChangeLevelDescription,
+	onChangeDifficulty,
 	onChangeSubject,
 }: CreationPublishRightPanelProps) => {
-	const renderLevelDescriptionField = () => {
+	const renderDifficultyField = () => {
+		if (creationType === "MANUAL") {
+			return null;
+		}
+
 		return (
 			<Field.Root>
 				<Field.Label className="typo-body-large">
 					문제 풀이 대상/난이도
 				</Field.Label>
 				<CreationPanelTextarea
+					disabled
 					minRows={1}
-					placeholder="ex. 대학생 3학년/컴퓨터공학 전공자"
-					value={levelDescription}
-					onChange={(e) => onChangeLevelDescription(e.target.value)}
+					value={difficulty}
+					onChange={(e) => onChangeDifficulty(e.target.value)}
 				/>
 			</Field.Root>
 		);
@@ -47,17 +54,18 @@ const CreationPublishRightPanel = ({
 			<Field.Root>
 				<Field.Label className="typo-body-large">주제</Field.Label>
 				<CreationPanelTextarea
+					disabled
 					minRows={1}
-					placeholder="ex. 네트워크"
 					value={subject}
 					onChange={(e) => onChangeSubject(e.target.value)}
 				/>
 			</Field.Root>
 		);
 	};
+
 	return (
 		<CreationPanel>
-			{renderLevelDescriptionField()}
+			{renderDifficultyField()}
 			{renderSubjectField()}
 		</CreationPanel>
 	);

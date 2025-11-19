@@ -43,7 +43,7 @@ export const RadioInput = ({ className }: RadioInputProps) => {
 			<div className="overflow-hidden rounded-inherit size-4">
 				<div
 					className={clsx(
-						"absolute size-[12px] bg-color-alpha-black100 border border-color-alpha-black100 rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity",
+						"absolute size-[12px] bg-color-alpha-black100 border border-color-alpha-black100 rounded-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
 						isChecked ? "opacity-100" : "opacity-0",
 					)}
 					data-radio-inner

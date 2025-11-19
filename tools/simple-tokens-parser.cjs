@@ -192,6 +192,8 @@ Object.entries(flatTokens).forEach(([key, tokenData]) => {
 					fontKey = "pretendard";
 				} else if (sanitizedKey === "fontfamilies-paperlogy") {
 					fontKey = "paperlogy";
+				} else if (sanitizedKey === "fontfamilies-lexend") {
+					fontKey = "lexend";
 				}
 				theme.fontFamily[fontKey] = Array.isArray(value) ? value : [value];
 				break;

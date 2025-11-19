@@ -1,4 +1,4 @@
-import type { QuestionResponseType } from "../../creation.constant";
+import type { QuestionResponseType } from "@/app.constants";
 
 /**
  *

@@ -2,9 +2,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { notify } from "@/components/Toast";
-import type { QuestionResponseType } from "@/domains/creation/creation.constant";
+import type { QuestionResponseType } from "@/app.constants";
+import type { QuestionResponseTypeWithIsEditing } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
-import { apiHooks } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 
 //
 //
@@ -15,8 +16,10 @@ interface UseQuestionsProps {
 }
 
 interface UseQuestionsReturn {
-	questions: QuestionResponseType[];
+	questions: QuestionResponseTypeWithIsEditing[];
+	invalidQuestions: number[];
 	handleAddQuestion: () => void;
+	handleValidateQuestions: () => Promise<boolean>;
 	isLoading: boolean;
 	isAdding: boolean;
 	error: Error | null;
@@ -31,7 +34,8 @@ const useCreationQuestions = ({
 }: UseQuestionsProps): UseQuestionsReturn => {
 	const teamId = useParams().teamId;
 
-	const { questions, initQuestions } = useCreationQuestionsStore();
+	const { questions, invalidQuestions, initQuestions, setInvalidQuestions } =
+		useCreationQuestionsStore();
 
 	const queryClient = useQueryClient();
 
@@ -93,6 +97,39 @@ const useCreationQuestions = ({
 		});
 	};
 
+	/**
+	 *
+	 */
+	const handleValidateQuestions = async (): Promise<boolean> => {
+		try {
+			const res = await apiClient.GET("/api/v1/question-sets/validate", {
+				params: {
+					query: {
+						questionSetId,
+					},
+				},
+			});
+
+			if (!res.data?.isSuccess) {
+				throw new Error("Failed to validate questions");
+			}
+
+			if (res.data?.data) {
+				const invalidQuestions = res.data.data.filter((q) => !q.isValid);
+
+				setInvalidQuestions(invalidQuestions);
+
+				return invalidQuestions.length === 0;
+			}
+
+			return true;
+		} catch {
+			notify.error("문제 유효성 검사에 실패했습니다. 다시 시도해주세요.");
+
+			return false;
+		}
+	};
+
 	//
 	//
 	// biome-ignore lint/correctness/useExhaustiveDependencies: set function does not effect to the useEffect
@@ -104,7 +141,9 @@ const useCreationQuestions = ({
 
 	return {
 		questions,
+		invalidQuestions: invalidQuestions?.map((q) => q.questionId) ?? [],
 		handleAddQuestion,
+		handleValidateQuestions,
 		isLoading: isPending,
 		isAdding,
 		error,

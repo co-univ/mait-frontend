@@ -1,55 +1,73 @@
 import clsx from "clsx";
-import { ChevronsLeft, Plus } from "lucide-react";
-import { useCreationQuestions } from "@/domains/creation/hooks/question";
+import {
+	ChevronsDown,
+	ChevronsLeft,
+	ChevronsRight,
+	ChevronsUp,
+	Plus,
+} from "lucide-react";
+import { useImperativeHandle } from "react";
 import { BUTTON_SIZE, GAP } from "./constants";
-import QuestionNavigationList from "./QuestionNavigationList";
+import QuestionNavigationDirectionButton from "./QuestionNavigationDirectionButton";
+import QuestionNavigationList, {
+	type QuestionNavigationButtonRenderProps,
+} from "./QuestionNavigationList";
 import useQuestionNavigationLayout from "./useQuestionNavigationLayout";
 
 //
 //
 //
 
-interface QuestionNavigationProps {
-	canDelete?: boolean;
-	questionSetId: number;
-	activeQuestionId: number;
+export interface QuestionNavigationRef {
+	scrollUp: () => void;
+	scrollDown: () => void;
+	scrollToBottom: () => void;
+	getVisibleRange: () => { startIndex: number; endIndex: number };
+}
+
+interface QuestionNavigationProps<T> {
+	ref?: React.Ref<QuestionNavigationRef>;
+	hasAddButton?: boolean;
+	activeQuestionId?: number;
 	orientation?: "vertical" | "horizontal";
-	onQuestionClick: (questionId: number) => void;
-	onQuestionAdd: () => void;
-	onQuestionDelete: (questionId: number) => void;
+	questions: T[];
+	onQuestionAdd?: () => void;
+	renderUpButton?: () => React.ReactNode;
+	renderDownButton?: () => React.ReactNode;
+	renderQuestionNavigationButton: (
+		props: QuestionNavigationButtonRenderProps<T>,
+	) => React.ReactNode;
 }
 
 //
 //
 //
 
-/**
- * Question navigation sidebar.
- * Displays question numbers with scroll controls.
- */
-const QuestionNavigation = ({
-	canDelete = false,
-	questionSetId,
+const QuestionNavigation = <T extends { id: number }>({
+	ref,
+	hasAddButton = false,
+	questions,
 	activeQuestionId,
 	orientation = "vertical",
-	onQuestionClick,
 	onQuestionAdd,
-	onQuestionDelete,
-}: QuestionNavigationProps) => {
-	const { questions } = useCreationQuestions({ questionSetId });
-
+	renderUpButton,
+	renderDownButton,
+	renderQuestionNavigationButton,
+}: QuestionNavigationProps<T>) => {
 	const {
-		containerRef,
-		startIndex,
-		visibleCount,
 		canScrollUp,
 		canScrollDown,
+		containerRef,
+		listRef,
 		handleScrollUp,
 		handleScrollDown,
 		scrollToBottom,
+		getVisibleRange,
 	} = useQuestionNavigationLayout({
+		hasAddButton,
 		orientation,
-		questionLength: questions.length,
+		activeQuestionId: activeQuestionId ?? 0,
+		questions,
 	});
 
 	const isVertical = orientation === "vertical";
@@ -58,7 +76,7 @@ const QuestionNavigation = ({
 	 *
 	 */
 	const handleQuestionAdd = () => {
-		onQuestionAdd();
+		onQuestionAdd?.();
 		scrollToBottom();
 	};
 
@@ -66,49 +84,71 @@ const QuestionNavigation = ({
 	 *
 	 */
 	const renderDirectionButton = (direction: "up" | "down") => {
-		const isUp = direction === "up";
+		if (direction === "up" && renderUpButton) {
+			return renderUpButton();
+		}
 
+		if (direction === "down" && renderDownButton) {
+			return renderDownButton();
+		}
+
+		const isUp = direction === "up";
 		const canScroll = isUp ? canScrollUp : canScrollDown;
 		const onClick = isUp ? handleScrollUp : handleScrollDown;
-		const rotationClass = (() => {
-			if (isVertical && isUp) {
-				return "rotate-90";
-			} else if (isVertical && !isUp) {
-				return "rotate-[270deg]";
-			} else if (!isVertical && isUp) {
-				return "";
-			} else if (!isVertical && !isUp) {
-				return "rotate-180";
-			} else {
-				return "";
-			}
-		})();
 
 		return (
-			<button
-				type="button"
+			<QuestionNavigationDirectionButton
 				onClick={onClick}
 				disabled={!canScroll}
-				className={clsx("flex items-center justify-center rounded-medium1", {
-					"hover:bg-color-gray-5": canScroll,
-					"opacity-30 cursor-not-allowed": !canScroll,
-				})}
-				style={{
-					width: BUTTON_SIZE,
-					height: BUTTON_SIZE,
-				}}
 			>
-				<ChevronsLeft className={rotationClass} />
-			</button>
+				{isVertical && isUp && <ChevronsUp />}
+				{isVertical && !isUp && <ChevronsDown />}
+				{!isVertical && isUp && <ChevronsLeft />}
+				{!isVertical && !isUp && <ChevronsRight />}
+			</QuestionNavigationDirectionButton>
 		);
 	};
+
+	/**
+	 *
+	 */
+	const renderAddButton = () => {
+		if (hasAddButton && onQuestionAdd) {
+			return (
+				<button
+					type="button"
+					onClick={handleQuestionAdd}
+					aria-label="Add new question"
+					className="flex items-center justify-center rounded-medium1 hover:bg-color-gray-5"
+					style={{
+						width: BUTTON_SIZE,
+						height: BUTTON_SIZE,
+					}}
+				>
+					<Plus />
+				</button>
+			);
+		}
+
+		return null;
+	};
+
+	//
+	//
+	//
+	useImperativeHandle(ref, () => ({
+		scrollUp: handleScrollUp,
+		scrollDown: handleScrollDown,
+		scrollToBottom,
+		getVisibleRange,
+	}));
 
 	return (
 		<div
 			ref={containerRef}
-			className={clsx("flex items-center h-full", {
-				"flex-col justify-start": isVertical,
-				"flex-row justify-center": !isVertical,
+			className={clsx("flex justify-center items-center", {
+				"flex-col h-full": isVertical,
+				"flex-row w-full": !isVertical,
 			})}
 			style={{
 				gap: `${GAP}px`,
@@ -117,27 +157,14 @@ const QuestionNavigation = ({
 			{renderDirectionButton("up")}
 
 			<QuestionNavigationList
-				questions={questions}
 				activeQuestionId={activeQuestionId}
-				startIndex={startIndex}
-				visibleCount={visibleCount}
 				orientation={orientation}
-				canDelete={canDelete}
-				onQuestionClick={onQuestionClick}
-				onQuestionDelete={onQuestionDelete}
+				questions={questions}
+				listRef={listRef}
+				renderQuestionNavigationButton={renderQuestionNavigationButton}
 			/>
 
-			<button
-				type="button"
-				onClick={handleQuestionAdd}
-				className="flex items-center justify-center rounded-medium1 hover:bg-color-gray-5"
-				style={{
-					width: BUTTON_SIZE,
-					height: BUTTON_SIZE,
-				}}
-			>
-				<Plus />
-			</button>
+			{renderAddButton()}
 
 			{renderDirectionButton("down")}
 		</div>

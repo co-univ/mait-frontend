@@ -1,72 +1,57 @@
 import clsx from "clsx";
-import { motion } from "framer-motion";
-import { SquareMinus } from "lucide-react";
-import type {
-	FillBlankQuestionApiResponse,
-	MultipleQuestionApiResponse,
-	OrderingQuestionApiResponse,
-	ShortQuestionApiResponse,
-} from "@/libs/types";
-import { BUTTON_SIZE, GAP } from "./constants";
-import QuestionNavigationButton from "./QuestionNavigationButton";
+import { useState } from "react";
+import { GAP } from "./constants";
 
 //
 //
 //
 
-interface QuestionNavigationListProps {
-	questions: (
-		| MultipleQuestionApiResponse
-		| ShortQuestionApiResponse
-		| OrderingQuestionApiResponse
-		| FillBlankQuestionApiResponse
-	)[];
-	activeQuestionId: number;
-	startIndex: number;
-	visibleCount: number;
+export interface QuestionNavigationButtonRenderProps<T> {
+	isActive: boolean;
+	isMouseOver?: boolean;
+	index: number;
+	questions: T[];
+	question: T;
+	onMouseEnter?: () => void;
+	onMouseLeave?: () => void;
+}
+
+interface QuestionNavigationListProps<T> {
+	activeQuestionId?: number;
 	orientation: "vertical" | "horizontal";
-	canDelete: boolean;
-	onQuestionClick: (questionId: number) => void;
-	onQuestionDelete?: (questionId: number) => void;
+	questions: T[];
+	listRef: React.RefObject<HTMLDivElement | null>;
+	renderQuestionNavigationButton: (
+		props: QuestionNavigationButtonRenderProps<T>,
+	) => React.ReactNode;
 }
 
 //
 //
 //
 
-const QuestionNavigationList = ({
+const QuestionNavigationList = <T extends { id: number }>({
 	questions,
 	activeQuestionId,
-	startIndex,
-	visibleCount,
 	orientation,
-	canDelete,
-	onQuestionClick,
-	onQuestionDelete,
-}: QuestionNavigationListProps) => {
+	listRef,
+	renderQuestionNavigationButton,
+}: QuestionNavigationListProps<T>) => {
+	const [hoveredQuestionId, setHoveredQuestionId] = useState<number | null>(
+		null,
+	);
+
 	const isVertical = orientation === "vertical";
-	const renderedCount = Math.min(visibleCount, questions.length);
 
 	return (
 		<div
-			className="relative overflow-hidden"
-			style={
-				isVertical
-					? {
-							height: `${renderedCount * BUTTON_SIZE + (renderedCount - 1) * GAP}px`,
-						}
-					: {
-							width: `${renderedCount * BUTTON_SIZE + (renderedCount - 1) * GAP}px`,
-						}
-			}
+			ref={listRef}
+			className={clsx("overflow-hidden scrollbar-hide", {
+				"overflow-y-hidden overflow-x-hidden": isVertical,
+				"overflow-x-hidden overflow-y-hidden": !isVertical,
+			})}
 		>
-			<motion.div
-				animate={
-					isVertical
-						? { y: -startIndex * (BUTTON_SIZE + GAP) }
-						: { x: -startIndex * (BUTTON_SIZE + GAP) }
-				}
-				transition={{ duration: 0.3, ease: "easeInOut" }}
+			<div
 				className={clsx("flex", {
 					"flex-col": isVertical,
 					"flex-row": !isVertical,
@@ -75,40 +60,26 @@ const QuestionNavigationList = ({
 					gap: `${GAP}px`,
 				}}
 			>
-				{questions.map((question, idx) => {
-					const isActive = question.id === activeQuestionId;
-
-					/**
-					 *
-					 */
-					const handleClick = () => {
-						onQuestionClick(question.id);
-					};
-
-					/**
-					 *
-					 */
-					const handleDelete = () => {
-						if (canDelete && onQuestionDelete) {
-							onQuestionDelete(question.id);
-						}
-					};
+				{questions.map((question, index) => {
+					const isActive =
+						activeQuestionId !== undefined && question.id === activeQuestionId;
+					const isMouseOver = hoveredQuestionId === question.id;
 
 					return (
-						<QuestionNavigationButton
-							canDelete={canDelete}
-							key={question.id}
-							number={idx + 1}
-							isActive={isActive}
-							DeleteIcon={
-								<SquareMinus size={20} className="text-color-point-50" />
-							}
-							onClick={handleClick}
-							onDelete={handleDelete}
-						/>
+						<div key={question.id}>
+							{renderQuestionNavigationButton({
+								questions,
+								question,
+								index,
+								isActive,
+								isMouseOver,
+								onMouseEnter: () => setHoveredQuestionId(question.id),
+								onMouseLeave: () => setHoveredQuestionId(null),
+							})}
+						</div>
 					);
 				})}
-			</motion.div>
+			</div>
 		</div>
 	);
 };

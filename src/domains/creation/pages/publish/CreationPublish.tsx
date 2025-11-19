@@ -1,10 +1,11 @@
 import { ChevronRight, PencilLine } from "lucide-react";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
+import useQuestionSets from "@/hooks/useQuestionSets";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import { apiClient } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
 import {
 	CREATION_PUBLISH_QUESTION_INITIAL_STATE,
@@ -18,6 +19,7 @@ import CreationPublishRightPanel from "./CreationPublishRightPanel";
 //
 
 const CreationPublish = () => {
+	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
 	const navigate = useNavigate();
@@ -26,6 +28,29 @@ const CreationPublish = () => {
 		creationPublishQuestionSetReducer,
 		CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	);
+
+	const { data } = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets/{questionSetId}",
+		{
+			params: {
+				path: {
+					questionSetId,
+				},
+			},
+		},
+	);
+
+	const { invalidateQuestionSetsQuery: invalidateMakingQuery } =
+		useQuestionSets({
+			teamId,
+			mode: "MAKING",
+		});
+	const { invalidateQuestionSetsQuery: invalidateLiveTimeQuery } =
+		useQuestionSets({
+			teamId,
+			mode: "LIVE_TIME",
+		});
 
 	const disabledPublishQuestionSet = [
 		!questionSet.title,
@@ -56,8 +81,8 @@ const CreationPublish = () => {
 	/**
 	 *
 	 */
-	const handleLevelDescriptionChange = (levelDescription: string) => {
-		dispatch({ type: "SET_LEVEL_DESCRIPTION", payload: levelDescription });
+	const handleDifficultyChange = (difficulty: string) => {
+		dispatch({ type: "SET_DIFFICULTY", payload: difficulty });
 	};
 
 	/**
@@ -83,6 +108,9 @@ const CreationPublish = () => {
 
 			notify.success("문제 셋을 생성했습니다.");
 
+			invalidateMakingQuery();
+			invalidateLiveTimeQuery();
+
 			const teamId = res.data?.data?.teamId;
 
 			navigate(`/management/team/${teamId}`);
@@ -90,6 +118,21 @@ const CreationPublish = () => {
 			notify.error("문제 셋 생성에 실패했습니다.");
 		}
 	};
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (data?.data) {
+			const { subject, difficulty } = data.data;
+
+			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
+			dispatch({
+				type: "SET_DIFFICULTY",
+				payload: difficulty ?? "",
+			});
+		}
+	}, [data?.data]);
 
 	return (
 		<LabeledPageLayout
@@ -116,9 +159,10 @@ const CreationPublish = () => {
 						onChangeMode={handleModeChange}
 					/>
 					<CreationPublishRightPanel
-						levelDescription={questionSet.levelDescription}
+						creationType={data?.data?.creationType}
+						difficulty={questionSet.difficulty}
 						subject={questionSet.subject}
-						onChangeLevelDescription={handleLevelDescriptionChange}
+						onChangeDifficulty={handleDifficultyChange}
 						onChangeSubject={handleSubjectChange}
 					/>
 				</div>

@@ -1,5 +1,5 @@
 import { ChevronRight, PencilLine, Puzzle } from "lucide-react";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Badge from "@/components/Badge";
 import Button from "@/components/Button";
@@ -8,6 +8,7 @@ import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
 import type { QuestionCount } from "@/libs/types";
 import {
+	type CreationNewQuestionSetState,
 	creationNewQuestionSetInitialState,
 	creationNewQuestionSetReducer,
 } from "../../reducers/new/CreationNewQuestionSetReducer";
@@ -23,6 +24,8 @@ const CreationNew = () => {
 
 	const teamId = Number(useParams().teamId);
 
+	const [isFileUploading, setIsFileUploading] = useState(false);
+
 	const [questionSet, dispatch] = useReducer(
 		creationNewQuestionSetReducer,
 		creationNewQuestionSetInitialState(teamId),
@@ -32,7 +35,17 @@ const CreationNew = () => {
 		!questionSet.teamId,
 		!questionSet.creationType,
 		!questionSet.subject,
+		questionSet.counts?.reduce((acc, cur) => acc + (cur?.count ?? 0), 0) === 0,
 	].some(Boolean);
+
+	/**
+	 *
+	 */
+	const handleCreationTypeChange = (
+		type: CreationNewQuestionSetState["creationType"],
+	) => {
+		dispatch({ type: "SET_CREATION_TYPE", payload: type });
+	};
 
 	/**
 	 *
@@ -70,9 +83,79 @@ const CreationNew = () => {
 	/**
 	 *
 	 */
+	const handleDifficultyChange = (difficulty: string) => {
+		dispatch({ type: "SET_DIFFICULTY", payload: difficulty });
+	};
+
+	/**
+	 *
+	 */
+	const handleMaterialUpload = (file: File | null) => {
+		if (file === null) {
+			return;
+		}
+
+		const uploadFile = async () => {
+			setIsFileUploading(true);
+
+			try {
+				const formData = new FormData();
+				formData.append("material", file);
+
+				const res = await apiClient.POST("/api/v1/question-sets/materials", {
+					body: formData as unknown as { material: string },
+					bodySerializer: (body) => body as unknown as FormData, // 이 부분이 필요합니다
+				});
+
+				if (!res.data?.isSuccess) {
+					throw new Error("File upload failed");
+				}
+
+				dispatch({
+					type: "SET_MATERIALS_ADD",
+					payload: {
+						id: res.data?.data?.id ?? 0,
+						url: res.data?.data?.materialUrl ?? "",
+					},
+				});
+			} catch {
+				notify.error("자료 업로드에 실패했습니다.");
+				dispatch({ type: "SET_MATERIALS_POP", payload: undefined });
+			} finally {
+				setIsFileUploading(false);
+			}
+		};
+
+		dispatch({ type: "SET_UPLOAD_FILES", payload: file });
+		uploadFile();
+	};
+
+	/**
+	 *
+	 */
+	const handleMaterialsDelete = (index: number) => {
+		dispatch({ type: "SET_MATERIALS_DELETE", payload: index });
+	};
+
+	/**
+	 *
+	 */
+	const handleInstructionChange = (instruction: string) => {
+		dispatch({ type: "SET_INSTRUCTION", payload: instruction });
+	};
+
+	/**
+	 *
+	 */
 	const handleCreateButtonClick = async () => {
 		const res = await apiClient.POST("/api/v1/question-sets", {
-			body: questionSet,
+			body: {
+				...questionSet,
+				materials: questionSet.materials?.map((material) => ({
+					id: material.id,
+					url: material.url,
+				})),
+			},
 		});
 
 		if (!res.data?.isSuccess) {
@@ -82,9 +165,14 @@ const CreationNew = () => {
 
 		const questionSetId = res.data?.data?.questionSetId;
 
-		navigate(
-			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/0`,
-		);
+		if (questionSet.creationType === "AI_GENERATED") {
+			navigate(
+				`/creation/new/loading/team/${teamId}/question-set/${questionSetId}`,
+			);
+			return;
+		}
+
+		navigate(`/creation/question/team/${teamId}/question-set/${questionSetId}`);
 	};
 
 	return (
@@ -108,14 +196,26 @@ const CreationNew = () => {
 
 				<div className="flex gap-gap-5 w-full">
 					<CreationNewLeftPanel
+						creationType={questionSet.creationType}
 						subject={questionSet.subject}
 						counts={questionSet.counts}
+						onCreationTypeChange={handleCreationTypeChange}
 						onSubjectChange={handleSubjectChange}
 						onQuestionCountCheck={handleQuestionCountCheck}
 						onQuestionCountCountChange={handleQuestionCountCountChange}
 					/>
 
-					<CreationNewRightPanel />
+					<CreationNewRightPanel
+						readonly={questionSet.creationType === "MANUAL"}
+						isFileUploading={isFileUploading}
+						difficulty={questionSet.difficulty ?? ""}
+						materials={questionSet.materials}
+						instruction={questionSet.instruction ?? ""}
+						onDifficultyChange={handleDifficultyChange}
+						onMaterialUpload={handleMaterialUpload}
+						onMaterialsDelete={handleMaterialsDelete}
+						onInstructionChange={handleInstructionChange}
+					/>
 				</div>
 			</div>
 		</LabeledPageLayout>

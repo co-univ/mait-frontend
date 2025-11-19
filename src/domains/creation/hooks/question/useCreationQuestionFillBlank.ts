@@ -1,7 +1,6 @@
 import { useMemo } from "react";
-import { FILL_BLANK_PATTERN } from "@/app.constants";
+import { FILL_BLANK_PATTERN, type QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
-import type { QuestionResponseType } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import creationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
