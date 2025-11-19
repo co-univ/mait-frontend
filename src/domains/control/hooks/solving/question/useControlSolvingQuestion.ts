@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
 import type { QuestionUpdatePayload } from "@/domains/control/control.constant";
@@ -12,6 +12,7 @@ import type { UpdateQuestionStatusApiRequest } from "@/libs/types";
 type UseControlSolvingQuestionProps = {
 	questionSetId: number;
 	questionId: number;
+	refetchInterval?: number;
 };
 
 type UseControlSolvingQuestionReturn = {
@@ -33,6 +34,7 @@ type UseControlSolvingQuestionReturn = {
 const useControlSolvingQuestion = ({
 	questionSetId,
 	questionId,
+	refetchInterval,
 }: UseControlSolvingQuestionProps): UseControlSolvingQuestionReturn => {
 	const [isStatusUpdating, setIsStatusUpdating] = useState(false);
 
@@ -47,7 +49,17 @@ const useControlSolvingQuestion = ({
 				},
 			},
 		},
+		{
+			refetchInterval,
+		},
 	);
+
+	//
+	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: fetch on questionId change
+	useEffect(() => {
+		refetch();
+	}, [questionId, refetch]);
 
 	const question = data?.data;
 

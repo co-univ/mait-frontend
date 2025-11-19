@@ -5,7 +5,11 @@ import Button from "@/components/Button";
 import { Switch } from "@/components/switch/Switch";
 import ControlSolvingQuestionContent from "@/domains/control/components/solving/question/ControlSolvingQuestionContent";
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
-import type { QuestionApiResponse, QuestionType } from "@/libs/types";
+import type {
+	QuestionApiResponse,
+	QuestionSetApiResponse,
+	QuestionType,
+} from "@/libs/types";
 import ControlSolvingQuestionFillBlank from "./ControlSolvingQuestionFillBlank";
 import ControlSolvingQuestionMultiple from "./ControlSolvingQuestionMultiple";
 import ControlSolvingQuestionOrdering from "./ControlSolvingQuestionOrdering";
@@ -15,7 +19,19 @@ import ControlSolvingQuestionShort from "./ControlSolvingQuestionShort";
 //
 //
 
-const ControlSolvingQuestion = () => {
+interface ControlSolvingQuestionProps {
+	questionSetOngoingStatus?: QuestionSetApiResponse["ongoingStatus"];
+}
+
+const QUESTION_POLLING_INTERVAL = 10000;
+
+//
+//
+//
+
+const ControlSolvingQuestion = ({
+	questionSetOngoingStatus,
+}: ControlSolvingQuestionProps) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [submitHandler, setSubmitHandler] = useState<
 		(() => Promise<boolean>) | null
@@ -34,6 +50,10 @@ const ControlSolvingQuestion = () => {
 	} = useControlSolvingQuestion({
 		questionSetId,
 		questionId,
+		refetchInterval:
+			questionSetOngoingStatus === "ONGOING"
+				? QUESTION_POLLING_INTERVAL
+				: undefined,
 	});
 
 	/**

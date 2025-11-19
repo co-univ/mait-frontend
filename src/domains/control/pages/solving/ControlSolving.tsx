@@ -9,6 +9,7 @@ import type { QuestionNavigationButtonRenderProps } from "@/components/question-
 import { notify } from "@/components/Toast";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient, apiHooks } from "@/libs/api";
+import useControlSolvingQuestion from "../../hooks/solving/question/useControlSolvingQuestion";
 import useControlSolvingQuestions from "../../hooks/solving/question/useControlSolvingQuestions";
 import ControlSolvingQuestion from "./question/ControlSolvingQuestion";
 import ControlSolvingSubmission from "./submission/ControlSolvingSubmission";
@@ -23,6 +24,10 @@ const ControlSolving = () => {
 	const questionId = Number(useParams().questionId);
 
 	const { questions } = useControlSolvingQuestions({ questionSetId });
+	const { question } = useControlSolvingQuestion({
+		questionSetId,
+		questionId,
+	});
 
 	const { data, refetch } = apiHooks.useQuery(
 		"get",
@@ -183,10 +188,14 @@ const ControlSolving = () => {
 				/>
 				<div className="flex gap-gap-10 w-full">
 					<div className="flex-[2] w-0">
-						<ControlSolvingQuestion />
+						<ControlSolvingQuestion
+							questionSetOngoingStatus={questionSet?.ongoingStatus}
+						/>
 					</div>
 					<div className="flex-[3] min-w-0">
-						<ControlSolvingSubmission />
+						<ControlSolvingSubmission
+							questionStatusType={question?.questionStatusType}
+						/>
 					</div>
 				</div>
 			</div>
