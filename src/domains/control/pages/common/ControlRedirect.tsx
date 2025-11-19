@@ -23,7 +23,7 @@ const ControlRedirect = () => {
 
 			if (firstQuestionId) {
 				navigate(
-					`/control/solving/team/${teamId}/question-set/${questionSetId}/question/${firstQuestionId}`,
+					`/control/solving/team/${teamId}/question-set/${questionSetId}/question/${firstQuestionId}?submit-type=all`,
 					{
 						replace: true,
 					},

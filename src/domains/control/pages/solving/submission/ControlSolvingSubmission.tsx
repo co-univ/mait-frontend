@@ -1,30 +1,100 @@
-import { Circle } from "lucide-react";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Table } from "@/components/table";
 import { Tabs } from "@/components/tabs";
+import { apiHooks } from "@/libs/api";
+import type { UpdateQuestionStatusApiRequest } from "@/libs/types";
 import ControlSolvingSubmissionScorerSideDialog from "./ControlSolvingSubmissionScorerSideDialog";
+import ControlSolvingSubmissionTableBody from "./ControlSolvingSubmissionTableBody";
+import ControlSolvingSubmissionTableHeader from "./ControlSolvingSubmissionTableHeader";
 import ControlSolvingSubmissionTabs from "./ControlSolvingSubmissionTabs";
 
 //
 //
 //
 
-const ControlSolvingSubmission = () => {
+interface ControlSolvingSubmissionProps {
+	questionStatusType?: UpdateQuestionStatusApiRequest["statusType"];
+}
+
+const SUBMIT_RECORDS_POLLING_INTERVAL = 5000;
+
+//
+//
+//
+
+const ControlSolvingSubmission = ({
+	questionStatusType,
+}: ControlSolvingSubmissionProps) => {
 	const [isScorerDialogOpen, setIsScorerDialogOpen] = useState(false);
+
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
+	const { data: scorerData } = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorer",
+		{
+			params: {
+				path: {
+					questionSetId,
+					questionId,
+				},
+			},
+		},
+		{
+			retry: false,
+			refetchInterval: (query) => {
+				if (
+					questionStatusType === "SOLVE_PERMISSION" &&
+					query.state.status === "error"
+				) {
+					return SUBMIT_RECORDS_POLLING_INTERVAL;
+				}
+
+				return false;
+			},
+		},
+	);
+	const { data: submitRecordsData } = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit-records",
+		{
+			params: {
+				path: { questionSetId, questionId },
+			},
+		},
+		{
+			refetchInterval:
+				questionStatusType === "SOLVE_PERMISSION"
+					? SUBMIT_RECORDS_POLLING_INTERVAL
+					: false,
+		},
+	);
+
+	const scorer = scorerData?.data;
+	const submitInfos = submitRecordsData?.data;
+
 	const navigate = useNavigate();
+
+	const submitType = searchParams.get("submit-type") || "all";
 
 	/**
 	 *
 	 */
 	const handleScorerDialogOpen = () => {
 		setIsScorerDialogOpen(true);
+	};
+
+	/**
+	 *
+	 */
+	const handleScorerDialogClose = () => {
+		setIsScorerDialogOpen(false);
 	};
 
 	/**
@@ -39,8 +109,13 @@ const ControlSolvingSubmission = () => {
 	/**
 	 *
 	 */
-	const handleScorerDialogClose = () => {
-		setIsScorerDialogOpen(false);
+	const handleSubmitTypeChange = (type: string) => {
+		const validTypes: readonly string[] = ["all", "correct", "incorrect"];
+		const submitType = validTypes.includes(type) ? type : "all";
+
+		setSearchParams({
+			"submit-type": submitType as "all" | "correct" | "incorrect",
+		});
 	};
 
 	/**
@@ -51,7 +126,7 @@ const ControlSolvingSubmission = () => {
 			<div className="flex justify-between items-start">
 				<div className="flex flex-col">
 					<h3 className="typo-body-medium text-color-gray-40">득점자</h3>
-					<h2 className="typo-heading-medium">전민재</h2>
+					<h2 className="typo-heading-medium">{scorer?.userName}</h2>
 				</div>
 				<div className="flex gap-gap-5">
 					<Button
@@ -72,55 +147,42 @@ const ControlSolvingSubmission = () => {
 	/**
 	 *
 	 */
+	const renderTabContent = () => {
+		return (
+			<Table.Root>
+				<ControlSolvingSubmissionTableHeader />
+				<Table.Divider />
+
+				<ControlSolvingSubmissionTableBody
+					submitType={submitType as "all" | "correct" | "incorrect"}
+					submitRecords={submitInfos?.submitRecords}
+				/>
+			</Table.Root>
+		);
+	};
+
+	/**
+	 *
+	 */
 	const renderBody = () => {
 		return (
-			<Tabs.Root defaultValue="all" className="flex flex-col gap-gap-9">
-				<ControlSolvingSubmissionTabs />
+			<Tabs.Root
+				defaultValue="all"
+				onValueChange={(value) =>
+					handleSubmitTypeChange(value as "all" | "correct" | "incorrect")
+				}
+				className="flex flex-col gap-gap-9"
+			>
+				<ControlSolvingSubmissionTabs
+					correctUserCounts={submitInfos?.correctUserCounts}
+					incorrectUserCounts={submitInfos?.incorrectUserCounts}
+				/>
 
-				<Tabs.Content value="all">
-					<Table.Root>
-						<Table.Header>
-							<Table.HeaderCell>
-								<Circle size={16} className="px-padding-1 drop-shadow-md" />
-							</Table.HeaderCell>
-							<Table.HeaderCell width="100px">이름</Table.HeaderCell>
-							<Table.HeaderCell grow>선택 답안</Table.HeaderCell>
-							<Table.HeaderCell width="158px">닉네임</Table.HeaderCell>
-						</Table.Header>
-						<Table.Divider />
-						<Table.Body>
-							<Table.Row>
-								<Table.Cell>
-									<Circle
-										size={16}
-										className="px-padding-1 drop-shadow-md fill-color-danger-50 text-color-danger-50"
-									/>
-								</Table.Cell>
-								<Table.Cell width="100px">이하은</Table.Cell>
-								<Table.Cell grow className="typo-body-small-bold">
-									<span className="ml-padding-4">2,3</span>
-								</Table.Cell>
-								<Table.Cell width="158px">귀여운 감자</Table.Cell>
-							</Table.Row>
-							<Table.Divider />
-							<Table.Row>
-								<Table.Cell>
-									<Circle
-										size={16}
-										className="px-padding-1 drop-shadow-md fill-color-success-50 text-color-success-50"
-									/>
-								</Table.Cell>
-								<Table.Cell width="100px">전민재</Table.Cell>
-								<Table.Cell grow className="typo-body-small-bold">
-									<span className="ml-padding-4 text-color-success-50">2</span>
-								</Table.Cell>
-								<Table.Cell width="158px" className="truncate">
-									귀엽고 깜찍한 유니브먀앙
-								</Table.Cell>
-							</Table.Row>
-						</Table.Body>
-					</Table.Root>
-				</Tabs.Content>
+				{(["all", "correct", "incorrect"] as const).map((value) => (
+					<Tabs.Content key={value} value={value}>
+						{renderTabContent()}
+					</Tabs.Content>
+				))}
 			</Tabs.Root>
 		);
 	};

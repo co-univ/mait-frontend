@@ -1,11 +1,11 @@
 import type { QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
-import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
 	OrderingOptionApiResponse,
 	OrderingQuestionApiResponse,
 } from "@/libs/types";
+import generateTemporaryId from "@/utils/generate-temporary-id";
 
 //
 //
@@ -91,7 +91,7 @@ const useCreationQuestionOrdering = ({
 		}
 
 		const newOption: OrderingOptionApiResponse = {
-			id: CreationQuestionGenerateId(),
+			id: generateTemporaryId(),
 			content: "",
 			originOrder: options.length + 1,
 			answerOrder: options.length + 1,

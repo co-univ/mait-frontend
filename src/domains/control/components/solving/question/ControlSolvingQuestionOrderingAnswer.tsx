@@ -9,6 +9,7 @@ import ControlSolvingQuestionAnswerExpandButton from "./ControlSolvingQuestionAn
 
 interface ControlSolvingQuestionOrderingAnswerProps {
 	readOnly: boolean;
+	isDragging: boolean;
 	option: OrderingOptionApiResponse;
 }
 
@@ -18,6 +19,7 @@ interface ControlSolvingQuestionOrderingAnswerProps {
 
 const ControlSolvingQuestionOrderingAnswer = ({
 	readOnly,
+	isDragging,
 	option,
 }: ControlSolvingQuestionOrderingAnswerProps) => {
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -30,12 +32,19 @@ const ControlSolvingQuestionOrderingAnswer = ({
 	};
 
 	return (
-		<div className="flex items-center gap-gap-9">
+		<div className="flex items-center gap-gap-5">
 			<span className="typo-heading-xsmall">
 				{String.fromCharCode(64 + option.originOrder)}
 			</span>
 
-			<div className="w-full min-w-0 flex items-start justify-between gap-gap-9 px-padding-12 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium">
+			<div
+				className={clsx(
+					"w-full min-w-0 flex items-start justify-between gap-gap-9 px-padding-11 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium",
+					{
+						"bg-color-primary-5": isDragging,
+					},
+				)}
+			>
 				<p
 					className={clsx({
 						truncate: readOnly && !isExpanded,

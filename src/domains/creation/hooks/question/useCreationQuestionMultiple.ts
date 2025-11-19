@@ -1,11 +1,11 @@
-import { notify } from "@/components/Toast";
 import type { QuestionResponseType } from "@/app.constants";
+import { notify } from "@/components/Toast";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
-import CreationQuestionGenerateId from "@/domains/creation/utils/question/creation-question-generate-id";
 import type {
 	MultipleChoiceDto,
 	MultipleQuestionApiResponse,
 } from "@/libs/types";
+import generateTemporaryId from "@/utils/generate-temporary-id";
 
 //
 //
@@ -75,7 +75,7 @@ const useCreationQuestionMultiple = ({
 		}
 
 		const newChoice: MultipleChoiceDto = {
-			id: CreationQuestionGenerateId(),
+			id: generateTemporaryId(),
 			number: question ? question.choices.length + 1 : 1,
 			content: "",
 			isCorrect: false,

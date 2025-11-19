@@ -1,11 +1,17 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Check, Pencil, X } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Switch } from "@/components/switch/Switch";
 import ControlSolvingQuestionContent from "@/domains/control/components/solving/question/ControlSolvingQuestionContent";
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
-import type { QuestionApiResponse, QuestionType } from "@/libs/types";
+import { apiHooks } from "@/libs/api";
+import type {
+	QuestionApiResponse,
+	QuestionSetApiResponse,
+	QuestionType,
+} from "@/libs/types";
 import ControlSolvingQuestionFillBlank from "./ControlSolvingQuestionFillBlank";
 import ControlSolvingQuestionMultiple from "./ControlSolvingQuestionMultiple";
 import ControlSolvingQuestionOrdering from "./ControlSolvingQuestionOrdering";
@@ -15,16 +21,54 @@ import ControlSolvingQuestionShort from "./ControlSolvingQuestionShort";
 //
 //
 
-const ControlSolvingQuestion = () => {
+interface ControlSolvingQuestionProps {
+	questionSetOngoingStatus?: QuestionSetApiResponse["ongoingStatus"];
+}
+
+const QUESTION_POLLING_INTERVAL = 10000;
+
+//
+//
+//
+
+const ControlSolvingQuestion = ({
+	questionSetOngoingStatus,
+}: ControlSolvingQuestionProps) => {
 	const [isEditing, setIsEditing] = useState(false);
+	const [submitHandler, setSubmitHandler] = useState<
+		(() => Promise<boolean>) | null
+	>(null);
 
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { question } = useControlSolvingQuestion({
+	const {
+		question,
+		refetchQuestion,
+		handleAccessOpen,
+		handleAccessClose,
+		handleSolveOpen,
+		handleSolveClose,
+	} = useControlSolvingQuestion({
 		questionSetId,
 		questionId,
+		refetchInterval:
+			questionSetOngoingStatus === "ONGOING"
+				? QUESTION_POLLING_INTERVAL
+				: undefined,
 	});
+
+	const queryClient = useQueryClient();
+
+	/**
+	 *
+	 */
+	const handleRegisterSubmit = useCallback(
+		(handler: () => Promise<boolean>) => {
+			setSubmitHandler(() => handler);
+		},
+		[],
+	);
 
 	/**
 	 *
@@ -38,6 +82,48 @@ const ControlSolvingQuestion = () => {
 	 */
 	const handleCancelButtonClick = () => {
 		setIsEditing(false);
+		refetchQuestion();
+	};
+
+	/**
+	 *
+	 */
+	const handleCompleteButtonClick = async () => {
+		const res = await submitHandler?.();
+
+		if (res) {
+			setIsEditing(false);
+
+			queryClient.invalidateQueries({
+				queryKey: apiHooks.queryOptions(
+					"get",
+					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorer",
+					{
+						params: {
+							path: {
+								questionSetId,
+								questionId,
+							},
+						},
+					},
+				).queryKey,
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: apiHooks.queryOptions(
+					"get",
+					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit-records",
+					{
+						params: {
+							path: {
+								questionSetId,
+								questionId,
+							},
+						},
+					},
+				).queryKey,
+			});
+		}
 	};
 
 	/**
@@ -56,12 +142,26 @@ const ControlSolvingQuestion = () => {
 			<div className="flex gap-gap-9">
 				<Switch.Root
 					checked={allowedAccessTypes.includes(question?.questionStatusType)}
+					onChange={(checked) => {
+						if (checked) {
+							handleAccessOpen();
+						} else {
+							handleAccessClose();
+						}
+					}}
 				>
 					<Switch.Label>문제 공개</Switch.Label>
 					<Switch.Toggle />
 				</Switch.Root>
 				<Switch.Root
 					checked={allowedSolveType.includes(question?.questionStatusType)}
+					onChange={(checked) => {
+						if (checked) {
+							handleSolveOpen();
+						} else {
+							handleSolveClose();
+						}
+					}}
 				>
 					<Switch.Label>제출 허용</Switch.Label>
 					<Switch.Toggle />
@@ -92,7 +192,13 @@ const ControlSolvingQuestion = () => {
 	 */
 	const renderEditButton = () => {
 		if (isEditing) {
-			return <Button icon={<Check />} item="수정 완료" />;
+			return (
+				<Button
+					icon={<Check />}
+					item="수정 완료"
+					onClick={handleCompleteButtonClick}
+				/>
+			);
 		}
 
 		return <Button icon={<Pencil />} onClick={handleEditButtonClick} />;
@@ -116,13 +222,33 @@ const ControlSolvingQuestion = () => {
 	const renderQuestionAnswer = () => {
 		switch (question?.type as QuestionType) {
 			case "MULTIPLE":
-				return <ControlSolvingQuestionMultiple readOnly={!isEditing} />;
+				return (
+					<ControlSolvingQuestionMultiple
+						readOnly={!isEditing}
+						onRegisterSubmit={handleRegisterSubmit}
+					/>
+				);
 			case "SHORT":
-				return <ControlSolvingQuestionShort readOnly={!isEditing} />;
+				return (
+					<ControlSolvingQuestionShort
+						readOnly={!isEditing}
+						onRegisterSubmit={handleRegisterSubmit}
+					/>
+				);
 			case "ORDERING":
-				return <ControlSolvingQuestionOrdering readOnly={!isEditing} />;
+				return (
+					<ControlSolvingQuestionOrdering
+						readOnly={!isEditing}
+						onRegisterSubmit={handleRegisterSubmit}
+					/>
+				);
 			case "FILL_BLANK":
-				return <ControlSolvingQuestionFillBlank readOnly={!isEditing} />;
+				return (
+					<ControlSolvingQuestionFillBlank
+						readOnly={!isEditing}
+						onRegisterSubmit={handleRegisterSubmit}
+					/>
+				);
 			default:
 				return null;
 		}

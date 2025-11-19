@@ -89,7 +89,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/teams/{teamId}/invite": {
+    "/api/v1/teams/{teamId}/invitation": {
         parameters: {
             query?: never;
             header?: never;
@@ -174,6 +174,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** @deprecated */
         post: operations["allowQuestionSolve"];
         delete?: never;
         options?: never;
@@ -190,6 +191,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** @deprecated */
         post: operations["allowQuestionAccess"];
         delete?: never;
         options?: never;
@@ -351,6 +353,23 @@ export interface paths {
         patch: operations["updateUserNickname"];
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/questions/{questionId}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 문제 상태 변경 API */
+        patch: operations["updateQuestionStatus"];
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/questions/{questionId}/orders": {
         parameters: {
             query?: never;
@@ -431,6 +450,43 @@ export interface paths {
         };
         /** 사용자 정보 반환 */
         get: operations["getUserInfo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/invitation/info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 초대 링크 팀 정보 반환 API */
+        get: operations["getTeamInfo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/ranks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 정답 개수에 따른 등수 조회 API
+         * @description 해당 문제 셋에 정답 개수에 따른 등수 그룹을 조회한다.
+         */
+        get: operations["getCorrectorsByQuestionSetId"];
         put?: never;
         post?: never;
         delete?: never;
@@ -650,9 +706,7 @@ export interface components {
             /** Format: int64 */
             id: number;
             /** @description 문제 셋에서 다루는 주제 */
-            /** @description 문제 셋에서 다루는 주제 */
             subject?: string;
-            /** @description 문제 셋 제목 */
             /** @description 문제 셋 제목 */
             title?: string;
             creationType: components["schemas"]["QuestionSetCreationType"];
@@ -660,7 +714,6 @@ export interface components {
             deliveryMode: components["schemas"]["DeliveryMode"];
             /** Format: int64 */
             teamId: number;
-            ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
             ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
             /** Format: int64 */
             questionCount: number;
@@ -673,11 +726,6 @@ export interface components {
          * @enum {string}
          */
         QuestionSetCreationType: "AI_GENERATED" | "MANUAL";
-        /**
-         * @description 문제 셋 진행 상태
-         * @enum {string}
-         */
-        QuestionSetOngoingStatus: "BEFORE" | "ONGOING" | "AFTER";
         /**
          * @description 문제 셋 진행 상태
          * @enum {string}
@@ -850,8 +898,6 @@ export interface components {
             /** Format: int64 */
             imageId?: number;
             /** Format: int64 */
-            imageId?: number;
-            /** Format: int64 */
             number?: number;
             /** @enum {string} */
             type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
@@ -891,6 +937,8 @@ export interface components {
         CreateTeamInviteApiRequest: {
             /** @enum {string} */
             duration: "ONE_DAY" | "THREE_DAYS" | "SEVEN_DAYS" | "NO_EXPIRATION";
+            /** @enum {string} */
+            role: "MAKER" | "OWNER" | "PLAYER";
         };
         ApiResponseCreateTeamInviteApiResponse: {
             isSuccess?: boolean;
@@ -903,32 +951,9 @@ export interface components {
         CreateQuestionSetApiRequest: {
             /** Format: int64 */
             teamId: number;
-            /** Format: int64 */
-            teamId: number;
             subject: string;
             /** @enum {string} */
             creationType: "AI_GENERATED" | "MANUAL";
-            /** @description 업로드한 해당 문제 셋의 파일 목록 */
-            materials?: components["schemas"]["MaterialDto"][];
-            /** @description 제작 요청할 문제 개수 */
-            counts?: components["schemas"]["QuestionCount"][];
-            /** @description 문제 난이도, AI 생성인 경우에만 활용 */
-            difficulty?: string;
-            /** @description 문제 셋에 대한 보충 설명, AI 생성인 경우에만 활용 */
-            instruction?: string;
-        };
-        /** @description 업로드한 해당 문제 셋의 파일 목록 */
-        MaterialDto: {
-            /** Format: int64 */
-            id?: number;
-            url?: string;
-        };
-        /** @description 제작 요청할 문제 개수 */
-        QuestionCount: {
-            /** @enum {string} */
-            type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
-            /** Format: int32 */
-            count?: number;
             /** @description 업로드한 해당 문제 셋의 파일 목록 */
             materials?: components["schemas"]["MaterialDto"][];
             /** @description 제작 요청할 문제 개수 */
@@ -1125,11 +1150,10 @@ export interface components {
         };
         /** @description 수정할 문제 값 */
         UpdateAnswerPayload: {
-            type: string;
+            /** @enum {string} */
+            type?: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
         } & (components["schemas"]["MultipleChoiceUpdateAnswerPayload"] | components["schemas"]["OrderingUpdateAnswerPayload"] | components["schemas"]["FillBlankUpdateAnswerPayload"] | components["schemas"]["ShortUpdateAnswerPayload"]);
         UpdateQuestionAnswerApiRequest: {
-            /** @enum {string} */
-            type: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
             payload: components["schemas"]["UpdateAnswerPayload"];
         };
         ApiResponseQuestionImageApiResponse: {
@@ -1203,6 +1227,10 @@ export interface components {
         UpdateQuestionSetFieldApiRequest: {
             title: string;
         };
+        UpdateQuestionStatusApiRequest: {
+            /** @enum {string} */
+            statusType?: "NOT_OPEN" | "ACCESS_PERMISSION" | "SOLVE_PERMISSION";
+        };
         UpdateQuestionOrderApiRequest: {
             /**
              * Format: int64
@@ -1242,7 +1270,31 @@ export interface components {
             /** @description 사용자 전체 닉네임 */
             fullNickname?: string;
         };
-        ApiResponseQuestionSetsApiResponse: {
+        ApiResponseTeamInviteApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["TeamInviteApiResponse"];
+        };
+        TeamInviteApiResponse: {
+            /**
+             * Format: int64
+             * @description 팀 아이디
+             */
+            teamId: number;
+            /** @description 팀 이름 */
+            teamName: string;
+            /**
+             * @description 팀 초대 유형
+             * @enum {string}
+             */
+            role: "MAKER" | "OWNER" | "PLAYER";
+            /** @description 승인 필요 여부 */
+            requiresApproval: boolean;
+            /**
+             * @description 초대 신청 상태
+             * @enum {string}
+             */
+            applicationStatus: "PENDING" | "APPROVED" | "REJECTED";
+        };
         ApiResponseQuestionSetsApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetsApiResponse"];
@@ -1293,6 +1345,41 @@ export interface components {
              */
             mode?: "MAKING" | "LIVE_TIME" | "REVIEW";
             content?: components["schemas"]["QuestionSetContainer"];
+        };
+        AnswerRankApiResponse: {
+            /**
+             * Format: int64
+             * @description 맞춘 정답 개수
+             */
+            answerCount: number;
+            /** @description 유저 정보 */
+            users?: components["schemas"]["UserApiResponse"][];
+        };
+        ApiResponseCorrectorRanksApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["CorrectorRanksApiResponse"];
+        };
+        CorrectorRanksApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            questionSetId: number;
+            ranksGroup?: components["schemas"]["AnswerRankApiResponse"][];
+        };
+        /** @description 유저 정보 */
+        UserApiResponse: {
+            /** Format: int64 */
+            userId: number;
+            /** @description 유저 이름 */
+            name?: string;
+            /** @description 일반 닉네임 */
+            nickName?: string;
+            /**
+             * @description 코드를 포함한 닉네임
+             * @example 신유승#0319
+             */
+            fullNickname?: string;
         };
         ApiResponseListQuestionApiResponse: {
             isSuccess?: boolean;
@@ -1387,7 +1474,6 @@ export interface components {
             /** Format: int64 */
             questionSetId?: number;
             /** @enum {string} */
-            liveStatus?: "BEFORE" | "ONGOING" | "AFTER";
             liveStatus?: "BEFORE" | "ONGOING" | "AFTER";
         };
         ApiResponseParticipantsCorrectAnswerRankResponse: {
@@ -1749,7 +1835,9 @@ export interface operations {
     };
     createTeamInviteCode: {
         parameters: {
-            query?: never;
+            query?: {
+                requiresApproval?: boolean;
+            };
             header?: never;
             path: {
                 teamId: number;
@@ -1791,7 +1879,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseQuestionSetsApiResponse"];
                     "*/*": components["schemas"]["ApiResponseQuestionSetsApiResponse"];
                 };
             };
@@ -2147,6 +2234,33 @@ export interface operations {
             };
         };
     };
+    updateQuestionStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+                questionId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateQuestionStatusApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
     changeQuestionOrder: {
         parameters: {
             query?: never;
@@ -2254,6 +2368,56 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseUserInfoApiResponse"];
+                };
+            };
+        };
+    };
+    getTeamInfo: {
+        parameters: {
+            query: {
+                code: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseTeamInviteApiResponse"];
+                };
+            };
+        };
+    };
+    getCorrectorsByQuestionSetId: {
+        parameters: {
+            query: {
+                /**
+                 * @description 랭킹 타입
+                 * @example CORRECT
+                 */
+                type: string;
+            };
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCorrectorRanksApiResponse"];
                 };
             };
         };
