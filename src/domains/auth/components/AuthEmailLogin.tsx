@@ -36,7 +36,14 @@ const AuthEmailLogin = () => {
 			await loginMutation.mutateAsync({ email, password });
 			setEmail("");
 			setPassword("");
-			navigate("/");
+
+			const redirectUrl = localStorage.getItem("redirectAfterLogin");
+			if (redirectUrl) {
+				localStorage.removeItem("redirectAfterLogin");
+				window.location.href = redirectUrl;
+			} else {
+				navigate("/");
+			}
 		} catch (error) {
 			console.error("로그인 실패:", error);
 			alert("로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
