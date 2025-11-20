@@ -13,10 +13,11 @@ import useControlParticipantRanking from "../../hooks/paticipant/useControlParti
 const ControlParticipantScorerRanking = () => {
 	const questionSetId = Number(useParams().questionSetId);
 
-	const { ranking } = useControlParticipantRanking({
-		questionSetId,
-		type: "SCORER" as const,
-	});
+	const { ranking, handleRankingRowParticipantsChange, checkIsAllUsersActive } =
+		useControlParticipantRanking({
+			questionSetId,
+			type: "SCORER" as const,
+		});
 
 	/**
 	 *
@@ -54,8 +55,12 @@ const ControlParticipantScorerRanking = () => {
 							<ControlParticipantRankingPanel.TableRow
 								// biome-ignore lint/suspicious/noArrayIndexKey: ranking order is stable and only user data changes
 								key={index}
+								checked={checkIsAllUsersActive(users)}
 								rankCell={`${index + 1}등`}
 								nameCell={renderNameCell(users)}
+								onChange={(checked) =>
+									handleRankingRowParticipantsChange(checked, users)
+								}
 							/>
 							{index < (ranking?.length ?? 0) - 1 && <Table.Divider />}
 						</>

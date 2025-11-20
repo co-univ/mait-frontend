@@ -41,10 +41,22 @@ const useControlParticipantStore = create<
 	},
 
 	setActiveParticipants: (participants: ParticipantInfoApiResponse[]) =>
-		set({ activeParticipants: participants, isEditing: true }),
+		set({
+			activeParticipants: participants.map((participant) => ({
+				...participant,
+				status: "ACTIVE",
+			})),
+			isEditing: true,
+		}),
 
 	setEliminatedParticipants: (participants: ParticipantInfoApiResponse[]) =>
-		set({ eliminatedParticipants: participants, isEditing: true }),
+		set({
+			eliminatedParticipants: participants.map((participant) => ({
+				...participant,
+				status: "ELIMINATED",
+			})),
+			isEditing: true,
+		}),
 }));
 
 export default useControlParticipantStore;
