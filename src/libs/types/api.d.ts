@@ -61,8 +61,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 다음 문제 진출자 조회 */
-        get: operations["getActiveParticipants"];
+        /**
+         * 상태에 따른 실시간 풀이 참여 인원 조회 API
+         * @description 현재 풀이가 가능한 인원 및 불가능한 인원 반환
+         */
+        get: operations["getParticipants"];
         /** 다음 문제 진출자 수정 */
         put: operations["updateActiveParticipants"];
         post?: never;
@@ -100,6 +103,40 @@ export interface paths {
         put?: never;
         /** 팀 초대 링크 생성 API */
         post: operations["createTeamInviteCode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/{teamId}/applicant": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 초대 링크 팀 참가 API */
+        post: operations["applyTeamInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/{teamId}/applicant/{applicationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 초대 링크 신청 허용 API */
+        post: operations["approveTeamApplication"];
         delete?: never;
         options?: never;
         head?: never;
@@ -353,6 +390,23 @@ export interface paths {
         patch: operations["updateUserNickname"];
         trace?: never;
     };
+    "/api/v1/teams/team-users/{teamUserId}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 팀 유저 역할 변경 API */
+        patch: operations["updateTeamUserRole"];
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/questions/{questionId}/status": {
         parameters: {
             query?: never;
@@ -450,6 +504,57 @@ export interface paths {
         };
         /** 사용자 정보 반환 */
         get: operations["getUserInfo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/{teamId}/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 팀 가입 회원 목록 반환 API */
+        get: operations["getTeamUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/{teamId}/applicants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 팀 가입 승인 대기 회원 목록 반환 API */
+        get: operations["getTeamApplicants"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/joined": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 가입 팀 목록 반환 API */
+        get: operations["getJoinedTeams"];
         put?: never;
         post?: never;
         delete?: never;
@@ -686,6 +791,23 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/team-users/{teamUserId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** 팀 유저 삭제 API */
+        delete: operations["deleteTeamUser"];
         options?: never;
         head?: never;
         patch?: never;
@@ -965,6 +1087,23 @@ export interface components {
             /** @description 팀 초대 토큰 */
             token: string;
         };
+        ApiResponseTeamInvitationApplyApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["TeamInvitationApplyApiResponse"];
+        };
+        TeamInvitationApplyApiResponse: {
+            /**
+             * Format: int64
+             * @description 팀 아이디
+             */
+            teamId: number;
+            /** @description 팀 즉시 가입되는지 유무 */
+            joinedImmediate: boolean;
+        };
+        ApproveTeamApplicationApiRequest: {
+            /** @enum {string} */
+            status: "PENDING" | "APPROVED" | "REJECTED";
+        };
         CreateQuestionSetApiRequest: {
             /** Format: int64 */
             teamId: number;
@@ -1241,6 +1380,10 @@ export interface components {
             /** @description 사용자 전체 닉네임 */
             fullNickname: string;
         };
+        UpdateTeamUserRoleApiRequest: {
+            /** @enum {string} */
+            role: "MAKER" | "OWNER" | "PLAYER";
+        };
         UpdateQuestionSetFieldApiRequest: {
             title: string;
         };
@@ -1287,6 +1430,55 @@ export interface components {
             /** @description 사용자 전체 닉네임 */
             fullNickname?: string;
         };
+        ApiResponseListJoinedTeamUserApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["JoinedTeamUserApiResponse"][];
+        };
+        JoinedTeamUserApiResponse: {
+            /**
+             * Format: int64
+             * @description 팀유저 pk
+             */
+            teamUserId: number;
+            /** @description 유저 이름 */
+            name: string;
+            /** @description 유저 닉네임 */
+            nickname: string;
+            /**
+             * @description 팀 내 유저 역할
+             * @enum {string}
+             */
+            role: "MAKER" | "OWNER" | "PLAYER";
+        };
+        ApiResponseListApplyTeamUserApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["ApplyTeamUserApiResponse"][];
+        };
+        ApplyTeamUserApiResponse: {
+            /**
+             * Format: int64
+             * @description 팀 신청 pk
+             */
+            id: number;
+            /** @description 유저 이름 */
+            name: string;
+            /** @description 유저 닉네임 */
+            nickname: string;
+            /**
+             * @description 팀 유저 역할
+             * @enum {string}
+             */
+            role: "MAKER" | "OWNER" | "PLAYER";
+        };
+        ApiResponseListTeamApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["TeamApiResponse"][];
+        };
+        TeamApiResponse: {
+            /** Format: int64 */
+            teamId?: number;
+            teamName?: string;
+        };
         ApiResponseTeamInviteApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["TeamInviteApiResponse"];
@@ -1310,7 +1502,7 @@ export interface components {
              * @description 초대 신청 상태
              * @enum {string}
              */
-            applicationStatus: "PENDING" | "APPROVED" | "REJECTED";
+            applicationStatus: "PENDING" | "APPROVED" | "REJECTED" | "NOT_APPLIED";
         };
         ApiResponseQuestionSetsApiResponse: {
             isSuccess?: boolean;
@@ -1532,11 +1724,11 @@ export interface components {
             data?: components["schemas"]["ParticipantsCorrectAnswerRankResponse"];
         };
         ParticipantCorrectAnswerResponse: {
-            participantInfos?: components["schemas"]["ParticipantInfoResponse"];
+            participantInfos?: components["schemas"]["ParticipantInfoApiResponse"];
             /** Format: int64 */
             correctAnswerCount?: number;
         };
-        ParticipantInfoResponse: {
+        ParticipantInfoApiResponse: {
             /**
              * Format: int64
              * @description 진출 유저 ID
@@ -1549,14 +1741,28 @@ export interface components {
             participantId: number;
             /** @description 참여자 이름 */
             participantName: string;
+            /** @description 유저 닉네임 */
+            userNickname?: string;
+            status: components["schemas"]["ParticipantStatus"];
         };
+        /**
+         * @description 진행 상태
+         * @enum {string}
+         */
+        ParticipantStatus: "ACTIVE" | "ELIMINATED";
         ParticipantsCorrectAnswerRankResponse: {
             activeParticipants?: components["schemas"]["ParticipantCorrectAnswerResponse"][];
             eliminatedParticipants?: components["schemas"]["ParticipantCorrectAnswerResponse"][];
         };
-        ApiResponseListParticipantInfoResponse: {
+        ApiResponseParticipantsByStatusApiResponse: {
             isSuccess?: boolean;
-            data?: components["schemas"]["ParticipantInfoResponse"][];
+            data?: components["schemas"]["ParticipantsByStatusApiResponse"];
+        };
+        ParticipantsByStatusApiResponse: {
+            /** @description 현재 진행 중인 문제 풀이에 풀이가 가능한 인원 */
+            activeParticipants: components["schemas"]["ParticipantInfoApiResponse"][];
+            /** @description 현재 풀이가 불가능한 인원 목록 조회 */
+            eliminatedParticipants: components["schemas"]["ParticipantInfoApiResponse"][];
         };
         ApiResponseCurrentQuestionApiResponse: {
             isSuccess?: boolean;
@@ -1812,7 +2018,7 @@ export interface operations {
             };
         };
     };
-    getActiveParticipants: {
+    getParticipants: {
         parameters: {
             query?: never;
             header?: never;
@@ -1829,7 +2035,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListParticipantInfoResponse"];
+                    "*/*": components["schemas"]["ApiResponseParticipantsByStatusApiResponse"];
                 };
             };
         };
@@ -1908,6 +2114,57 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseCreateTeamInviteApiResponse"];
+                };
+            };
+        };
+    };
+    applyTeamInvitation: {
+        parameters: {
+            query: {
+                code: string;
+            };
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseTeamInvitationApplyApiResponse"];
+                };
+            };
+        };
+    };
+    approveTeamApplication: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+                applicationId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApproveTeamApplicationApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };
@@ -2285,6 +2542,32 @@ export interface operations {
             };
         };
     };
+    updateTeamUserRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamUserId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTeamUserRoleApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
     updateQuestionStatus: {
         parameters: {
             query?: never;
@@ -2419,6 +2702,70 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseUserInfoApiResponse"];
+                };
+            };
+        };
+    };
+    getTeamUsers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListJoinedTeamUserApiResponse"];
+                };
+            };
+        };
+    };
+    getTeamApplicants: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListApplyTeamUserApiResponse"];
+                };
+            };
+        };
+    };
+    getJoinedTeams: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTeamApiResponse"];
                 };
             };
         };
@@ -2715,6 +3062,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseString"];
+                };
+            };
+        };
+    };
+    deleteTeamUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamUserId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };
