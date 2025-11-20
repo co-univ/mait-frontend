@@ -1,7 +1,15 @@
-import React from "react";
+import InviteExpiredLink from "./InviteExpiredLink";
+import InviteNotApplied from "./InviteNotApplied";
+import InviteNotLogin from "./InviteNotLogin";
+import InvitePending from "./InvitePending";
+import InviteRejected from "./InviteRejected";
+
+//
+//
+//
 
 const Invite = () => {
-	return <div>예</div>;
+	return <InvitePending />;
 };
 
 export default Invite;
