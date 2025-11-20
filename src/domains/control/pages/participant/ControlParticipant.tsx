@@ -2,7 +2,7 @@ import { BellRing } from "lucide-react";
 import Button from "@/components/Button";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import ControlParticipantCorrectRanking from "./ControlParticipantCorrectRanking";
-import ControlParticipantNextMembers from "./ControlParticipantNextMembers";
+import ControlParticipantActiveMembers from "./ControlParticipantActiveMembers";
 import ControlParticipantScorerRanking from "./ControlParticipantScorerRanking";
 
 //
@@ -35,7 +35,7 @@ const ControlParticipant = () => {
 			rightContent={renderSubmitButtons()}
 		>
 			<div className="flex flex-col gap-gap-11">
-				<ControlParticipantNextMembers />
+				<ControlParticipantActiveMembers />
 				<div className="flex items-stretch gap-gap-9">
 					<div className="flex flex-[2]">
 						<ControlParticipantScorerRanking />

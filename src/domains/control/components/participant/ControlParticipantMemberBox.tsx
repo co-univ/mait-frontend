@@ -1,12 +1,12 @@
 import DeleteCheckBox from "@/components/DeleteCheckBox";
-import type { ParticipantInfoResponse } from "@/libs/types";
+import type { ParticipantInfoApiResponse } from "@/libs/types";
 
 //
 //
 //
 
 interface ControlParticipantMemberBoxProps {
-	member: ParticipantInfoResponse;
+	member: ParticipantInfoApiResponse;
 }
 
 //
@@ -18,7 +18,9 @@ const ControlParticipantMemberBox = ({
 }: ControlParticipantMemberBoxProps) => {
 	return (
 		<div className="flex justify-between p-padding-8 rounded-radius-medium1 border border-color-gray-10">
-			<span className="typo-heading-small">{member.participantName}</span>
+			<span className="typo-heading-small">
+				{member.participantName}({member.userNickname})
+			</span>
 			<DeleteCheckBox />
 		</div>
 	);

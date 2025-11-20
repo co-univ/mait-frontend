@@ -1,6 +1,8 @@
 import { Coins } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { Table } from "@/components/table";
+import type { UserApiResponse } from "@/libs/types";
+import ControlParticipantRankingUser from "../../components/participant/ControlParticipantRankingUser";
 import { ControlParticipantRankingPanel } from "../../components/participant/ranking-panel";
 import useControlParticipantRanking from "../../hooks/paticipant/useControlParticipantRanking";
 
@@ -15,6 +17,26 @@ const ControlParticipantScorerRanking = () => {
 		questionSetId,
 		type: "SCORER" as const,
 	});
+
+	/**
+	 *
+	 */
+	const renderNameCell = (users?: UserApiResponse[]) => {
+		return (
+			<>
+				{users?.map((user, index) => (
+					<span key={user.userId}>
+						<ControlParticipantRankingUser
+							hasTrailingComma={index < (users?.length ?? 0) - 1}
+							userId={user.userId}
+							name={user.name ?? ""}
+							nickName={user.nickName ?? ""}
+						/>
+					</span>
+				))}
+			</>
+		);
+	};
 
 	return (
 		<ControlParticipantRankingPanel.Root>
@@ -33,7 +55,7 @@ const ControlParticipantScorerRanking = () => {
 								// biome-ignore lint/suspicious/noArrayIndexKey: ranking order is stable and only user data changes
 								key={index}
 								rankCell={`${index + 1}등`}
-								nameCell={users?.map((user) => user.name).join(", ")}
+								nameCell={renderNameCell(users)}
 							/>
 							{index < (ranking?.length ?? 0) - 1 && <Table.Divider />}
 						</>
