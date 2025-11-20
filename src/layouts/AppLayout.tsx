@@ -78,7 +78,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 	//
 	useEffect(() => {
-		const isAccountPage = ["/login", "/account"].some((path) =>
+		const isAccountPage = ["/login", "/account", "/mypage"].some((path) =>
 			location.pathname.startsWith(path),
 		);
 
