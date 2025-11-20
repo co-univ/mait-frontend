@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, NotebookPen, Plus } from "lucide-react";
+import { Check, ChevronsUpDown, NotebookPen } from "lucide-react";
 import { useState } from "react";
 import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
@@ -18,7 +18,7 @@ const SideBarDropdown = () => {
 	const [isAddingTeamLoading, setIsAddingTeamLoading] = useState(false);
 
 	const { user } = useUser();
-	const { teams, activeTeam, refetch } = useTeams();
+	const { teams, activeTeam, handleActiveTeamChange, refetch } = useTeams();
 
 	/**
 	 *
@@ -55,7 +55,7 @@ const SideBarDropdown = () => {
 		<Dropdown.Root
 			value={activeTeam?.teamId?.toString() || ""}
 			className="w-full"
-			// onValueChange={handleValueChange}
+			onValueChange={(value) => handleActiveTeamChange(Number(value))}
 		>
 			<Dropdown.Trigger
 				icon={<ChevronsUpDown size={20} />}
