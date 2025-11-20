@@ -6,6 +6,7 @@ import { creationRoutes } from "@/domains/creation/creation.routes";
 import { homeRoutes } from "@/domains/home";
 import { solvingRoutes } from "@/domains/solving/solving.routes";
 import { managementRoutes } from "./domains/management/Management.routes";
+import { myPageRoutes } from "./domains/my-page";
 
 const router = createBrowserRouter([
 	{
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
 			...solvingRoutes,
 			...creationRoutes,
 			...managementRoutes,
+			...myPageRoutes,
 		],
 	},
 ]);
