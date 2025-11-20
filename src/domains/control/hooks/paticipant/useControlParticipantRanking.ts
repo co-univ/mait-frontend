@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { apiHooks } from "@/libs/api";
 import type {
 	AnswerRankApiResponse,
@@ -21,12 +22,15 @@ interface UseControlParticipantRankingProps<T extends "SCORER" | "CORRECT"> {
 
 interface UseControlParticipantRankingReture<T extends "SCORER" | "CORRECT"> {
 	ranking?: RankingType<T>;
-	isLoading: boolean;
+	selectedRank: number;
+	handleSelectRank: (rank: number) => void;
+	handleApplyRankSelection: () => void;
+	checkIsAllUsersActive: (users?: UserApiResponse[]) => boolean;
 	handleRankingRowParticipantsChange: (
 		checked: boolean,
 		users?: UserApiResponse[],
 	) => void;
-	checkIsAllUsersActive: (users?: UserApiResponse[]) => boolean;
+	isLoading: boolean;
 }
 
 //
@@ -37,6 +41,8 @@ const useControlParticipantRanking = <T extends "SCORER" | "CORRECT">({
 	questionSetId,
 	type,
 }: UseControlParticipantRankingProps<T>): UseControlParticipantRankingReture<T> => {
+	const [selectedRank, setSelectedRank] = useState(0);
+
 	const {
 		activeParticipants,
 		eliminatedParticipants,
@@ -79,6 +85,28 @@ const useControlParticipantRanking = <T extends "SCORER" | "CORRECT">({
 	/**
 	 *
 	 */
+	const handleSelectRank = (rank: number) => {
+		setSelectedRank(rank);
+	};
+
+	/**
+	 *
+	 */
+	const handleApplyRankSelection = () => {
+		if (!ranking || selectedRank === 0) {
+			return;
+		}
+
+		const allUsers = ranking
+			.slice(0, selectedRank)
+			.flatMap((rank) => rank.users ?? []);
+
+		handleRankingRowParticipantsChange(true, allUsers);
+	};
+
+	/**
+	 *
+	 */
 	const handleRankingRowParticipantsChange = (
 		checked: boolean,
 		users?: UserApiResponse[],
@@ -115,11 +143,44 @@ const useControlParticipantRanking = <T extends "SCORER" | "CORRECT">({
 		}
 	};
 
+	//
+	//
+	//
+	useEffect(() => {
+		if (!ranking || !activeParticipants) {
+			return;
+		}
+
+		let consecutiveRank = 0;
+
+		for (let i = 0; i < ranking.length; i++) {
+			const users = ranking[i].users;
+			if (
+				users &&
+				users.length > 0 &&
+				users.every((user) =>
+					activeParticipants.some(
+						(participant) => participant.userId === user.userId,
+					),
+				)
+			) {
+				consecutiveRank = i + 1;
+			} else {
+				break;
+			}
+		}
+
+		setSelectedRank(consecutiveRank);
+	}, [ranking, activeParticipants]);
+
 	return {
 		ranking,
-		isLoading: isPending,
-		handleRankingRowParticipantsChange,
+		selectedRank,
+		handleSelectRank,
+		handleApplyRankSelection,
 		checkIsAllUsersActive,
+		handleRankingRowParticipantsChange,
+		isLoading: isPending,
 	};
 };
 

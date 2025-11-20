@@ -13,11 +13,17 @@ import useControlParticipantRanking from "../../hooks/paticipant/useControlParti
 const ControlParticipantScorerRanking = () => {
 	const questionSetId = Number(useParams().questionSetId);
 
-	const { ranking, handleRankingRowParticipantsChange, checkIsAllUsersActive } =
-		useControlParticipantRanking({
-			questionSetId,
-			type: "SCORER" as const,
-		});
+	const {
+		ranking,
+		handleRankingRowParticipantsChange,
+		checkIsAllUsersActive,
+		selectedRank,
+		handleSelectRank,
+		handleApplyRankSelection,
+	} = useControlParticipantRanking({
+		questionSetId,
+		type: "SCORER" as const,
+	});
 
 	/**
 	 *
@@ -45,7 +51,12 @@ const ControlParticipantScorerRanking = () => {
 				icon={<Coins />}
 				title="선착순 기준 등수"
 			/>
-			<ControlParticipantRankingPanel.Selector ranking="선착순" />
+			<ControlParticipantRankingPanel.Selector
+				ranking="선착순"
+				selectedRank={selectedRank}
+				onRankChange={handleSelectRank}
+				onApplySelection={handleApplyRankSelection}
+			/>
 			<Table.Root>
 				<ControlParticipantRankingPanel.TableHeader />
 				<Table.Divider />
