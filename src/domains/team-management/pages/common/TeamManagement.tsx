@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
+import TeamManagementUsers from "../users/TeamManagementUsers";
 import TeamManagementLinkCreateModal from "./TeamManagementLinkCreateModal";
 import TeamManagementLinkManageModal from "./TeamManagementLinkManageModal";
 
@@ -42,7 +43,7 @@ const TeamManagement = () => {
 			</div>
 		);
 	};
-	console.log(isLinkCreateModalOpen);
+
 	return (
 		<>
 			<LabeledPageLayout
@@ -50,7 +51,7 @@ const TeamManagement = () => {
 				label="조원영의 문제세상"
 				rightContent={renderInviteButtons()}
 			>
-				ㅎㅇ
+				<TeamManagementUsers />
 			</LabeledPageLayout>
 			<TeamManagementLinkCreateModal
 				open={isLinkCreateModalOpen}
