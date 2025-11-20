@@ -53,8 +53,8 @@ const HomeFirst = () => {
 	}, []);
 
 	return (
-		<div className="w-full h-full flex flex-col items-center justify-center absolute inset-0">
-			<div className="h-full mb-[45vh] flex flex-col gap-gap-11 items-center justify-center">
+		<div className="relative w-full h-full flex flex-col items-center justify-center">
+			<div className="relative z-10 h-full mb-[50vh] flex flex-col gap-gap-11 items-center justify-center">
 				<div className="flex flex-col gap-gap-5 items-center">
 					<h1 className="typo-heading-xlarge">
 						문제 제작은 자동으로, 학습은 함께

@@ -70,6 +70,10 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			right: 0,
 		};
 
+		if (location.pathname === "/") {
+			return `${ret.top}px ${ret.right}px ${ret.bottom}px ${ret.left}px`;
+		}
+
 		const isSmallMarginPage = hasValidPath(
 			SMALL_PAGE_MARGIN_PATHS,
 			location.pathname,
