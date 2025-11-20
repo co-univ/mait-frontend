@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { useState } from "react";
+import DeleteCheckBox from "@/components/DeleteCheckBox";
 import type { JoinedTeamUserApiResponse } from "@/libs/types";
 
 //
@@ -8,13 +9,17 @@ import type { JoinedTeamUserApiResponse } from "@/libs/types";
 
 interface TeamManagementUsersBoxProps {
 	user: JoinedTeamUserApiResponse;
+	onUserDelete: (teamUserId: number, name: string) => Promise<void>;
 }
 
 //
 //
 //
 
-const TeamManagementUsersBox = ({ user }: TeamManagementUsersBoxProps) => {
+const TeamManagementUsersBox = ({
+	user,
+	onUserDelete,
+}: TeamManagementUsersBoxProps) => {
 	const [isMouseOver, setIsMouseOver] = useState(false);
 
 	return (
@@ -29,7 +34,15 @@ const TeamManagementUsersBox = ({ user }: TeamManagementUsersBoxProps) => {
 				},
 			)}
 		>
-			<span className="w-[112px]">{user.name}</span>
+			<span className="w-[112px] flex items-center gap-gap-5">
+				{isMouseOver && (
+					<DeleteCheckBox
+						size={20}
+						onClick={() => onUserDelete(user.teamUserId, user.name)}
+					/>
+				)}
+				{user.name}
+			</span>
 			<span className="w-[180px]">{user.role}</span>
 			<span className="w-0 flex-1 truncate">{user.nickname}</span>
 		</div>

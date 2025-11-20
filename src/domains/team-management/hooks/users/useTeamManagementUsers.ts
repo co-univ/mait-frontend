@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import { apiClient, apiHooks } from "@/libs/api";
 import type { JoinedTeamUserApiResponse } from "@/libs/types";
@@ -23,6 +24,7 @@ interface UseTeamManagementUsersReturn {
 		teamUserId: number,
 		role: "MAKER" | "PLAYER",
 	) => Promise<void>;
+	handleUserDelete: (teamUserId: number, name: string) => Promise<void>;
 	isLoading: boolean;
 }
 
@@ -53,6 +55,8 @@ const useTeamManagementUsers = ({
 		() => data?.data?.filter((user) => user.role === "PLAYER"),
 		[data],
 	);
+
+	const { confirm } = useConfirm();
 
 	/**
 	 *
@@ -101,11 +105,48 @@ const useTeamManagementUsers = ({
 		}
 	};
 
+	/**
+	 *
+	 */
+	const handleUserDelete = async (teamUserId: number, name: string) => {
+		const isProcess = await confirm({
+			title: "정말 삭제하시겠습니까?",
+			description: "삭제 시, 해당 팀에 대한 접근 권한이 사라집니다.",
+		});
+
+		if (!isProcess) {
+			return;
+		}
+
+		try {
+			const res = await apiClient.DELETE(
+				"/api/v1/teams/team-users/{teamUserId}",
+				{
+					params: {
+						path: {
+							teamUserId,
+						},
+					},
+				},
+			);
+
+			if (!res.data?.isSuccess) {
+				throw new Error("User delete failed");
+			}
+
+			notify.info(`${name}님을 삭제했습니다.`);
+			refetch();
+		} catch {
+			notify.error("유저 삭제에 실패했습니다.");
+		}
+	};
+
 	return {
 		makers,
 		players,
 		handleListOrderChange,
 		handleRoleUpdate,
+		handleUserDelete,
 		isLoading: isPending,
 	};
 };

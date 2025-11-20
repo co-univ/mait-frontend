@@ -11,6 +11,7 @@ import TeamManagementUsersPanel from "../../components/users/TeamManagementUsers
 interface TeamManagementUsersPlayerPanelProps {
 	isLoading: boolean;
 	players?: JoinedTeamUserApiResponse[];
+	onUserDelete: (teamUserId: number, name: string) => Promise<void>;
 }
 
 //
@@ -20,6 +21,7 @@ interface TeamManagementUsersPlayerPanelProps {
 const TeamManagementUsersPlayerPanel = ({
 	isLoading,
 	players,
+	onUserDelete,
 }: TeamManagementUsersPlayerPanelProps) => {
 	return (
 		<TeamManagementUsersPanel icon={<UsersRound />} title="플레이어">
@@ -43,7 +45,10 @@ const TeamManagementUsersPlayerPanel = ({
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
 									>
-										<TeamManagementUsersBox user={user} />
+										<TeamManagementUsersBox
+											user={user}
+											onUserDelete={onUserDelete}
+										/>
 									</div>
 								)}
 							</Draggable>

@@ -26,6 +26,7 @@ const TeamManagementUsers = () => {
 		players,
 		handleListOrderChange,
 		handleRoleUpdate,
+		handleUserDelete,
 		isLoading,
 	} = useTeamManagementUsers({ teamId });
 
@@ -87,12 +88,14 @@ const TeamManagementUsers = () => {
 					<TeamManagementUsersMakerPanel
 						isLoading={isLoading}
 						makers={localMakers}
+						onUserDelete={handleUserDelete}
 					/>
 				</div>
 				<div className="flex-1">
 					<TeamManagementUsersPlayerPanel
 						isLoading={isLoading}
 						players={localPlayers}
+						onUserDelete={handleUserDelete}
 					/>
 				</div>
 			</DragDropContext>
