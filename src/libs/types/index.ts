@@ -83,6 +83,7 @@ export type OrderingQuestionSubmitAnswer = components["schemas"]["OrderingQuesti
 export type OrderingQuestionSubmitApiRequest = components["schemas"]["OrderingQuestionSubmitApiRequest"];
 export type OrderingUpdateAnswerPayload = components["schemas"]["OrderingUpdateAnswerPayload"];
 export type ParticipantCorrectAnswerResponse = components["schemas"]["ParticipantCorrectAnswerResponse"];
+export type ParticipantDto = components["schemas"]["ParticipantDto"];
 export type ParticipantInfoApiResponse = components["schemas"]["ParticipantInfoApiResponse"];
 export type ParticipantStatus = components["schemas"]["ParticipantStatus"];
 export type ParticipantsByStatusApiResponse = components["schemas"]["ParticipantsByStatusApiResponse"];

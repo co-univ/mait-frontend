@@ -1063,15 +1063,59 @@ export interface components {
              */
             answerCount: number;
         });
+        ParticipantDto: {
+            /** Format: int64 */
+            participantId?: number;
+            /** Format: int64 */
+            userId?: number;
+            participantName?: string;
+            userNickname?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "ELIMINATED";
+        };
         UpdateActiveParticipantsRequest: {
-            activeUserIds?: number[];
+            activeParticipants?: components["schemas"]["ParticipantDto"][];
+            eliminatedParticipants?: components["schemas"]["ParticipantDto"][];
+        };
+        ApiResponseParticipantsByStatusApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["ParticipantsByStatusApiResponse"];
+        };
+        /** @description 현재 풀이가 불가능한 인원 목록 조회 */
+        ParticipantInfoApiResponse: {
+            /**
+             * Format: int64
+             * @description 진출 유저 ID
+             */
+            userId: number;
+            /**
+             * Format: int64
+             * @description 참여자 ID
+             */
+            participantId: number;
+            /** @description 참여자 이름 */
+            participantName: string;
+            /** @description 유저 닉네임 */
+            userNickname?: string;
+            status: components["schemas"]["ParticipantStatus"];
+        };
+        /**
+         * @description 진행 상태
+         * @enum {string}
+         */
+        ParticipantStatus: "ACTIVE" | "ELIMINATED";
+        ParticipantsByStatusApiResponse: {
+            /** @description 현재 진행 중인 문제 풀이에 풀이가 가능한 인원 */
+            activeParticipants: components["schemas"]["ParticipantInfoApiResponse"][];
+            /** @description 현재 풀이가 불가능한 인원 목록 조회 */
+            eliminatedParticipants: components["schemas"]["ParticipantInfoApiResponse"][];
+        };
+        CreateTeamApiRequest: {
+            name: string;
         };
         ApiResponseVoid: {
             isSuccess?: boolean;
             data?: Record<string, never>;
-        };
-        CreateTeamApiRequest: {
-            name: string;
         };
         CreateTeamInviteApiRequest: {
             /** @enum {string} */
@@ -1728,41 +1772,9 @@ export interface components {
             /** Format: int64 */
             correctAnswerCount?: number;
         };
-        ParticipantInfoApiResponse: {
-            /**
-             * Format: int64
-             * @description 진출 유저 ID
-             */
-            userId: number;
-            /**
-             * Format: int64
-             * @description 참여자 ID
-             */
-            participantId: number;
-            /** @description 참여자 이름 */
-            participantName: string;
-            /** @description 유저 닉네임 */
-            userNickname?: string;
-            status: components["schemas"]["ParticipantStatus"];
-        };
-        /**
-         * @description 진행 상태
-         * @enum {string}
-         */
-        ParticipantStatus: "ACTIVE" | "ELIMINATED";
         ParticipantsCorrectAnswerRankResponse: {
             activeParticipants?: components["schemas"]["ParticipantCorrectAnswerResponse"][];
             eliminatedParticipants?: components["schemas"]["ParticipantCorrectAnswerResponse"][];
-        };
-        ApiResponseParticipantsByStatusApiResponse: {
-            isSuccess?: boolean;
-            data?: components["schemas"]["ParticipantsByStatusApiResponse"];
-        };
-        ParticipantsByStatusApiResponse: {
-            /** @description 현재 진행 중인 문제 풀이에 풀이가 가능한 인원 */
-            activeParticipants: components["schemas"]["ParticipantInfoApiResponse"][];
-            /** @description 현재 풀이가 불가능한 인원 목록 조회 */
-            eliminatedParticipants: components["schemas"]["ParticipantInfoApiResponse"][];
         };
         ApiResponseCurrentQuestionApiResponse: {
             isSuccess?: boolean;
@@ -2061,7 +2073,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseVoid"];
+                    "*/*": components["schemas"]["ApiResponseParticipantsByStatusApiResponse"];
                 };
             };
         };
