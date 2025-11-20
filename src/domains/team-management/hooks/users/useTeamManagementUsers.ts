@@ -13,6 +13,7 @@ interface UseTeamManagementUsersProps {
 }
 
 interface UseTeamManagementUsersReturn {
+	owners?: JoinedTeamUserApiResponse[];
 	makers?: JoinedTeamUserApiResponse[];
 	players?: JoinedTeamUserApiResponse[];
 	handleListOrderChange: (
@@ -45,6 +46,11 @@ const useTeamManagementUsers = ({
 				},
 			},
 		},
+	);
+
+	const owners = useMemo(
+		() => data?.data?.filter((user) => user.role === "OWNER"),
+		[data],
 	);
 
 	const makers = useMemo(
@@ -142,6 +148,7 @@ const useTeamManagementUsers = ({
 	};
 
 	return {
+		owners,
 		makers,
 		players,
 		handleListOrderChange,

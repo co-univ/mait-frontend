@@ -8,8 +8,9 @@ import type { JoinedTeamUserApiResponse } from "@/libs/types";
 //
 
 interface TeamManagementUsersBoxProps {
+	draggable?: boolean;
 	user: JoinedTeamUserApiResponse;
-	onUserDelete: (teamUserId: number, name: string) => Promise<void>;
+	onUserDelete?: (teamUserId: number, name: string) => Promise<void>;
 }
 
 //
@@ -17,6 +18,7 @@ interface TeamManagementUsersBoxProps {
 //
 
 const TeamManagementUsersBox = ({
+	draggable = false,
 	user,
 	onUserDelete,
 }: TeamManagementUsersBoxProps) => {
@@ -30,12 +32,12 @@ const TeamManagementUsersBox = ({
 			className={clsx(
 				"flex items-center gap-gap-4 p-padding-6 border border-color-gray-10 rounded-radius-medium1 typo-body-small",
 				{
-					"bg-color-primary-5 border-color-primary-5": isMouseOver,
+					"bg-color-primary-5 border-color-primary-5": draggable && isMouseOver,
 				},
 			)}
 		>
 			<span className="w-[112px] flex items-center gap-gap-5">
-				{isMouseOver && (
+				{isMouseOver && onUserDelete && (
 					<DeleteCheckBox
 						size={20}
 						onClick={() => onUserDelete(user.teamUserId, user.name)}

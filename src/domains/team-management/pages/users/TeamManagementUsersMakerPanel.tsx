@@ -10,6 +10,7 @@ import TeamManagementUsersPanel from "../../components/users/TeamManagementUsers
 
 interface TeamManagementUsersMakerPanelProps {
 	isLoading: boolean;
+	owners?: JoinedTeamUserApiResponse[];
 	makers?: JoinedTeamUserApiResponse[];
 	onUserDelete: (teamUserId: number, name: string) => Promise<void>;
 }
@@ -20,11 +21,17 @@ interface TeamManagementUsersMakerPanelProps {
 
 const TeamManagementUsersMakerPanel = ({
 	isLoading,
+	owners,
 	makers,
 	onUserDelete,
 }: TeamManagementUsersMakerPanelProps) => {
 	return (
 		<TeamManagementUsersPanel icon={<UserRound />} title="메이커">
+			<div className="flex flex-col gap-gap-5">
+				{owners?.map((user) => (
+					<TeamManagementUsersBox key={user.teamUserId} user={user} />
+				))}
+			</div>
 			<Droppable droppableId="droppable-maker">
 				{(provided) => (
 					<div
@@ -46,6 +53,7 @@ const TeamManagementUsersMakerPanel = ({
 										{...provided.dragHandleProps}
 									>
 										<TeamManagementUsersBox
+											draggable={!isLoading}
 											user={user}
 											onUserDelete={onUserDelete}
 										/>

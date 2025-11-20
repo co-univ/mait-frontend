@@ -46,6 +46,7 @@ const TeamManagementUsersPlayerPanel = ({
 										{...provided.dragHandleProps}
 									>
 										<TeamManagementUsersBox
+											draggable={!isLoading}
 											user={user}
 											onUserDelete={onUserDelete}
 										/>

@@ -22,6 +22,7 @@ const TeamManagementUsers = () => {
 	const { activeTeam } = useTeams();
 
 	const {
+		owners,
 		makers,
 		players,
 		handleListOrderChange,
@@ -87,6 +88,7 @@ const TeamManagementUsers = () => {
 				<div className="flex-1">
 					<TeamManagementUsersMakerPanel
 						isLoading={isLoading}
+						owners={owners}
 						makers={localMakers}
 						onUserDelete={handleUserDelete}
 					/>
