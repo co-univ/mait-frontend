@@ -9,6 +9,7 @@ import useActiveTeamIdStore from "@/stores/useActiveTeamIdStore";
 interface UseTeamsReturn {
 	teams?: TeamApiResponse[];
 	activeTeam?: TeamApiResponse;
+	refetch: () => void;
 	isLoading: boolean;
 }
 
@@ -19,7 +20,10 @@ interface UseTeamsReturn {
 const useTeams = (): UseTeamsReturn => {
 	const { activeTeamId } = useActiveTeamIdStore();
 
-	const { data, isPending } = apiHooks.useQuery("get", "/api/v1/teams/joined");
+	const { data, isPending, refetch } = apiHooks.useQuery(
+		"get",
+		"/api/v1/teams/joined",
+	);
 
 	const teams = data?.data;
 	const activeTeam = teams?.find((team) => team.teamId === activeTeamId);
@@ -27,6 +31,7 @@ const useTeams = (): UseTeamsReturn => {
 	return {
 		teams,
 		activeTeam,
+		refetch,
 		isLoading: isPending,
 	};
 };

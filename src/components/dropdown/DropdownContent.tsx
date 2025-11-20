@@ -49,7 +49,7 @@ const DropdownContent = ({ children, className }: DropdownContentProps) => {
 	return createPortal(
 		<div
 			className={clsx(
-				"z-50 bg-color-alpha-white100 flex flex-col items-start py-padding-2 rounded-radius-medium1 border border-color-gray-20 shadow-m",
+				"z-50 bg-color-alpha-white100 flex flex-col items-start pt-padding-2 rounded-radius-medium1 border border-color-gray-20 shadow-m",
 				className,
 			)}
 			style={position}
