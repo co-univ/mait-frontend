@@ -1,5 +1,19 @@
+import Lottie from "react-lottie";
 import { useNavigate } from "react-router-dom";
-import logo from "@/assets/images/mait-logo.svg";
+import logoSpin from "@/assets/lotties/mait-logo-spin.json";
+
+//
+//
+//
+
+const OPTIONS = {
+	loop: true,
+	autoplay: true,
+	animationData: logoSpin,
+	rendererSettings: {
+		preserveAspectRatio: "xMidYMid slice",
+	},
+};
 
 //
 //
@@ -14,7 +28,7 @@ const AuthAccountCreationSuccess = () => {
 
 	return (
 		<div className="fixed inset-0 flex flex-col justify-center items-center">
-			<img src={logo} alt="Mait Logo" className="w-[150px] h-auto mb-[2rem]" />
+			<Lottie options={OPTIONS} width={150} height={150} />
 			<h2
 				className="text-center typo-heading-xlarge mb-[1rem]"
 				style={{
