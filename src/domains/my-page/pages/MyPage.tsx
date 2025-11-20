@@ -15,7 +15,7 @@ const MyPage = () => {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [editedNickname, setEditedNickname] = useState("");
 
-	const { data: userInfo, isLoading } = apiHooks.useQuery(
+	const { data: userInfo, isLoading, refetch } = apiHooks.useQuery(
 		"get",
 		"/api/v1/users/me",
 	);
@@ -26,6 +26,7 @@ const MyPage = () => {
 		{
 			onSuccess: () => {
 				setIsEditMode(false);
+				refetch();
 			},
 		},
 	);
