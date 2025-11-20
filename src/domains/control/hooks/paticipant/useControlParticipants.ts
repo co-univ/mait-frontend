@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { useConfirm } from "@/components/confirm";
+import { notify } from "@/components/Toast";
 import { apiHooks } from "@/libs/api";
 import type { ParticipantInfoApiResponse } from "@/libs/types";
 import useControlParticipantStore from "../../stores/participant/useControlParticipantStore";
@@ -21,8 +23,10 @@ interface UseControlParticipantsReturn {
 	handleDeleteActiveParticipant: (
 		participant: ParticipantInfoApiResponse[],
 	) => void;
+	handleSumbitParticipants: () => void;
 	isEditing: boolean;
 	isLoading: boolean;
+	isMutating: boolean;
 }
 
 //
@@ -41,7 +45,11 @@ const useControlParticipants = ({
 		setEliminatedParticipants,
 	} = useControlParticipantStore();
 
-	const { data, isPending } = apiHooks.useQuery(
+	const {
+		data,
+		isPending: isFetchPending,
+		refetch,
+	} = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/live-status/participants",
 		{
@@ -52,6 +60,23 @@ const useControlParticipants = ({
 			},
 		},
 	);
+
+	const { mutate: putMutate, isPending: isParticipantSubmitPending } =
+		apiHooks.useMutation(
+			"put",
+			"/api/v1/question-sets/{questionSetId}/live-status/participants",
+			{
+				onSuccess: () => {
+					notify.success("다음진출자가 확정되었습니다.");
+					refetch();
+				},
+				onError: () => {
+					notify.error("다음진출자 확정에 실패했습니다. 다시 시도해주세요.");
+				},
+			},
+		);
+
+	const { confirm } = useConfirm();
 
 	/**
 	 *
@@ -106,11 +131,37 @@ const useControlParticipants = ({
 		setEliminatedParticipants(updatedEliminatedParticipants);
 	};
 
+	/**
+	 *
+	 */
+	const handleSumbitParticipants = async () => {
+		const isConfirmed = await confirm({
+			title: "진출자 확정",
+			description: `${activeParticipants?.length}명의 진출자를 확정하시겠습니까?`,
+		});
+
+		if (!isConfirmed) {
+			return;
+		}
+
+		putMutate({
+			params: {
+				path: {
+					questionSetId,
+				},
+			},
+			body: {
+				activeParticipants,
+				eliminatedParticipants,
+			},
+		});
+	};
+
 	//
 	//
 	//
 	useEffect(() => {
-		if (data && !isPending) {
+		if (data && !isFetchPending) {
 			const fetchedActiveParticipants = data.data?.activeParticipants;
 			const fetchedEliminatedParticipants = data.data?.eliminatedParticipants;
 
@@ -119,7 +170,7 @@ const useControlParticipants = ({
 				fetchedEliminatedParticipants,
 			);
 		}
-	}, [data, isPending, initParticipants]);
+	}, [data, isFetchPending, initParticipants]);
 
 	return {
 		activeParticipants,
@@ -127,8 +178,10 @@ const useControlParticipants = ({
 		checkIsActiveParticipant,
 		handleAddActiveParticipant,
 		handleDeleteActiveParticipant,
+		handleSumbitParticipants,
 		isEditing,
-		isLoading: isPending,
+		isLoading: isFetchPending,
+		isMutating: isParticipantSubmitPending,
 	};
 };
 
