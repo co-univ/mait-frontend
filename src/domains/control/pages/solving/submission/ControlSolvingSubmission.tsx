@@ -37,7 +37,7 @@ const ControlSolvingSubmission = ({
 
 	const { data: scorerData } = apiHooks.useQuery(
 		"get",
-		"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorer",
+		"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorers",
 		{
 			params: {
 				path: {

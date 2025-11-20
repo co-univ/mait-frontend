@@ -90,6 +90,7 @@ const ControlSolvingQuestionOrdering = ({
 								)}
 							</Draggable>
 						))}
+						{provided.placeholder}
 					</div>
 				)}
 			</Droppable>
