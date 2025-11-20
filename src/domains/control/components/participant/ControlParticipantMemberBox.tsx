@@ -7,6 +7,7 @@ import type { ParticipantInfoApiResponse } from "@/libs/types";
 
 interface ControlParticipantMemberBoxProps {
 	member: ParticipantInfoApiResponse;
+	onMemeberDelete: (participantId: number) => void;
 }
 
 //
@@ -15,13 +16,14 @@ interface ControlParticipantMemberBoxProps {
 
 const ControlParticipantMemberBox = ({
 	member,
+	onMemeberDelete,
 }: ControlParticipantMemberBoxProps) => {
 	return (
 		<div className="flex justify-between p-padding-8 rounded-radius-medium1 border border-color-gray-10">
 			<span className="typo-heading-small">
 				{member.participantName}({member.userNickname})
 			</span>
-			<DeleteCheckBox />
+			<DeleteCheckBox onClick={() => onMemeberDelete(member.participantId)} />
 		</div>
 	);
 };

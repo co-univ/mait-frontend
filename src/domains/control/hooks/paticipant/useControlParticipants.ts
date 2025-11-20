@@ -15,6 +15,12 @@ interface UseControlParticipantsReturn {
 	activeParticipants?: ParticipantInfoApiResponse[];
 	eliminatedParticipants?: ParticipantInfoApiResponse[];
 	checkIsActiveParticipant: (userId: number) => boolean;
+	handleAddActiveParticipant: (
+		participant: ParticipantInfoApiResponse[],
+	) => void;
+	handleDeleteActiveParticipant: (
+		participant: ParticipantInfoApiResponse[],
+	) => void;
 	isEditing: boolean;
 	isLoading: boolean;
 }
@@ -58,6 +64,48 @@ const useControlParticipants = ({
 		);
 	};
 
+	/**
+	 *
+	 */
+	const handleAddActiveParticipant = (
+		participant: ParticipantInfoApiResponse[],
+	) => {
+		const updatedActiveParticipants = [
+			...(activeParticipants ?? []),
+			...participant,
+		];
+		const updatedEliminatedParticipants =
+			eliminatedParticipants?.filter(
+				(eliminated) =>
+					!participant.some((active) => active.userId === eliminated.userId),
+			) ?? [];
+
+		setActiveParticipants(updatedActiveParticipants);
+		setEliminatedParticipants(updatedEliminatedParticipants);
+	};
+
+	/**
+	 *
+	 */
+	const handleDeleteActiveParticipant = (
+		participant: ParticipantInfoApiResponse[],
+	) => {
+		const updatedEliminatedParticipants = [
+			...(eliminatedParticipants ?? []),
+			...participant,
+		];
+		const updatedActiveParticipants =
+			activeParticipants?.filter(
+				(active) =>
+					!participant.some(
+						(eliminated) => eliminated.userId === active.userId,
+					),
+			) ?? [];
+
+		setActiveParticipants(updatedActiveParticipants);
+		setEliminatedParticipants(updatedEliminatedParticipants);
+	};
+
 	//
 	//
 	//
@@ -77,6 +125,8 @@ const useControlParticipants = ({
 		activeParticipants,
 		eliminatedParticipants,
 		checkIsActiveParticipant,
+		handleAddActiveParticipant,
+		handleDeleteActiveParticipant,
 		isEditing,
 		isLoading: isPending,
 	};
