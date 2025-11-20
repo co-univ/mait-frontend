@@ -31,7 +31,6 @@ const ControlSolvingSubmission = ({
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
@@ -102,7 +101,7 @@ const ControlSolvingSubmission = ({
 	 */
 	const handlePariticipantButtonClick = () => {
 		navigate(
-			`/control/participant/team/${teamId}/question-set/${questionSetId}/question/${questionId}`,
+			`/control/participant/question-set/${questionSetId}/question/${questionId}`,
 		);
 	};
 

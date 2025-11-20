@@ -1,6 +1,6 @@
-import { SwitchLabel } from './SwitchLabel';
-import { SwitchRoot } from './SwitchRoot';
-import { SwitchToggle } from './SwitchToggle';
+import { SwitchLabel } from "./SwitchLabel";
+import { SwitchRoot } from "./SwitchRoot";
+import { SwitchToggle } from "./SwitchToggle";
 
 /**
  * Switch component with compound component pattern
@@ -53,7 +53,7 @@ import { SwitchToggle } from './SwitchToggle';
  * ```
  */
 export const Switch = {
-  Root: SwitchRoot,
-  Toggle: SwitchToggle,
-  Label: SwitchLabel,
+	Root: SwitchRoot,
+	Toggle: SwitchToggle,
+	Label: SwitchLabel,
 };

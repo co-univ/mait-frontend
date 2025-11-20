@@ -9,7 +9,6 @@ import useCreationQuestions from "@/domains/creation/hooks/question/useCreationQ
 const CreationRedirect = () => {
 	const navigate = useNavigate();
 
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
 	const { questions, isLoading } = useCreationQuestions({ questionSetId });
@@ -22,7 +21,7 @@ const CreationRedirect = () => {
 			const firstQuestionId = questions[0]?.id ?? 0;
 
 			navigate(
-				`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${firstQuestionId}`,
+				`/creation/question/question-set/${questionSetId}/question/${firstQuestionId}`,
 				{ replace: true },
 			);
 		}

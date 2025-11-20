@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { DropdownContext } from "@/components/dropdown/DropdownContext";
 
 //
@@ -57,6 +57,7 @@ const DropdownRoot = ({
 }: DropdownRootProps) => {
 	const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
 	const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
+	const triggerRef = useRef<HTMLElement>(null);
 
 	const isOpenControlled = controlledOpen !== undefined;
 	const isValueControlled = controlledValue !== undefined;
@@ -93,6 +94,7 @@ const DropdownRoot = ({
 				onOpenChange: handleOpenChange,
 				value,
 				onValueChange: handleValueChange,
+				triggerRef,
 			}}
 		>
 			<div className={clsx("relative", className)}>{children}</div>

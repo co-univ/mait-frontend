@@ -8,11 +8,11 @@ import ManagementRedirect from "./pages/common/ManagementRedirect";
 
 export const managementRoutes: RouteObject[] = [
 	{
-		path: "/management/team/:teamId",
+		path: "/management",
 		element: <Management />,
 	},
 	{
-		path: "/management",
+		path: "/management/redirect",
 		element: <ManagementRedirect />,
 	},
 ];

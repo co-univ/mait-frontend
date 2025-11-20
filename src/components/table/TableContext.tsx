@@ -4,9 +4,7 @@ import { createContext, useContext } from "react";
 //
 //
 
-interface TableContextValue {
-	/** Optional context values for table state management */
-}
+type TableContextValue = {};
 
 const TableContext = createContext<TableContextValue | undefined>(undefined);
 

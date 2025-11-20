@@ -111,7 +111,7 @@ const ConfirmDialog = ({
 		<div className="fixed inset-0 z-50 bg-color-alpha-black25">
 			<div
 				ref={dialogRef}
-				className="absolute left-1/2 -translate-x-1/2 top-5 bg-color-alpha-white100 flex flex-col gap-gap-11 items-start p-padding-11 rounded-radius-medium1 shadow-m max-w-[512px]"
+				className="absolute left-1/2 -translate-x-1/2 top-5 bg-color-alpha-white100 flex flex-col gap-gap-11 items-start p-padding-11 rounded-radius-medium1 shadow-m min-w-[512px]"
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby={titleId}

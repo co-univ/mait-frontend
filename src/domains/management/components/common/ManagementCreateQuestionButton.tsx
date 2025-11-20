@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 
 //
@@ -9,13 +9,11 @@ import Button from "@/components/Button";
 const ManagementCreateQuestionButton = () => {
 	const navigate = useNavigate();
 
-	const teamId = Number(useParams().teamId);
-
 	/**
 	 *
 	 */
 	const handleButtonClick = () => {
-		navigate(`/creation/new/team/${teamId}`);
+		navigate("/creation/new");
 	};
 
 	return (
