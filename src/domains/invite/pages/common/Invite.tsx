@@ -109,6 +109,14 @@ const Invite = () => {
 		return <InviteNotLogin teamName={inviteInfo.teamName} />;
 	}
 
+	// pending approval
+	if (
+		inviteInfo?.applicationStatus === "PENDING" ||
+		joinedImmediate === false
+	) {
+		return <InvitePending />;
+	}
+
 	// not approved user
 	if (inviteInfo?.applicationStatus === "NOT_APPLIED") {
 		return (
@@ -118,14 +126,6 @@ const Invite = () => {
 				onClick={handleApplyButtonClick}
 			/>
 		);
-	}
-
-	// pending approval
-	if (
-		inviteInfo?.applicationStatus === "PENDING" ||
-		joinedImmediate === false
-	) {
-		return <InvitePending />;
 	}
 
 	return <div>로딩</div>;
