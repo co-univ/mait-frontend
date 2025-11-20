@@ -32,8 +32,7 @@ const GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS = [
 ];
 
 const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE = {
-	background:
-		"background: linear-gradient(180deg, #FFF 0%, var(--color-primary-5, #ECF2FE) 89.42%, #ECF2FE 100%);",
+	background: "linear-gradient(180deg, #FFF 0%, #ECF2FE 89.42%, #ECF2FE 100%)",
 };
 
 const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/invite"];
