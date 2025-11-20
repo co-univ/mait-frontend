@@ -9,8 +9,6 @@ import { apiHooks } from "@/libs/api";
  * @returns user data, loading state, and error state
  */
 const useUser = () => {
-	const token = localStorage.getItem("token");
-
 	const {
 		data: userData,
 		isPending,
@@ -20,7 +18,6 @@ const useUser = () => {
 		"/api/v1/users/me",
 		{},
 		{
-			enabled: !!token,
 			staleTime: 1000 * 60 * 60,
 			retry: 0,
 		},

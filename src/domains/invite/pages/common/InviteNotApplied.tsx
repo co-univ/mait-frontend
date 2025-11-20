@@ -10,6 +10,7 @@ import InviteLayout from "../../layouts/common/InviteLayout";
 //
 
 interface InviteNotAppliedProps {
+	isApplying: boolean;
 	teamName: string;
 	onClick: () => void;
 }
@@ -18,7 +19,11 @@ interface InviteNotAppliedProps {
 //
 //
 
-const InviteNotApplied = ({ teamName, onClick }: InviteNotAppliedProps) => {
+const InviteNotApplied = ({
+	isApplying,
+	teamName,
+	onClick,
+}: InviteNotAppliedProps) => {
 	return (
 		<InviteLayout>
 			<InviteBlueLetter />
@@ -29,7 +34,10 @@ const InviteNotApplied = ({ teamName, onClick }: InviteNotAppliedProps) => {
 				<b className="typo-body-large">'참여하기'</b>를 눌러 팀 참여를
 				진행해주세요.
 			</InviteBody>
-			<InviteButton item="참여하기" onClick={onClick} />
+			<InviteButton
+				item={isApplying ? "신청 중..." : "참여하기"}
+				onClick={onClick}
+			/>
 		</InviteLayout>
 	);
 };

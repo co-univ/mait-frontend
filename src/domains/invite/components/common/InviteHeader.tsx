@@ -12,7 +12,8 @@ const InviteHeader = ({ isDefault = false, title }: InviteHeaderProps) => {
 		<h2 className="typo-heading-large">
 			{isDefault ? (
 				<>
-					<b>MAIT</b>"초대 링크로 접속하셨습니다!"
+					<b className="text-primary-50 font-lexend">MAIT</b> 초대 링크로
+					접속하셨습니다!
 				</>
 			) : (
 				title
