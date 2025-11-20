@@ -5,6 +5,7 @@
 
 import type { components } from "./api.d.ts";
 
+export type AddTeamUserApiRequest = components["schemas"]["AddTeamUserApiRequest"];
 export type AiRequestStatus = components["schemas"]["AiRequestStatus"];
 export type AiRequestStatusApiResponse = components["schemas"]["AiRequestStatusApiResponse"];
 export type AnswerRankApiResponse = components["schemas"]["AnswerRankApiResponse"];
@@ -21,7 +22,10 @@ export type ApiResponseListQuestionApiResponse = components["schemas"]["ApiRespo
 export type ApiResponseListQuestionScorerApiResponse = components["schemas"]["ApiResponseListQuestionScorerApiResponse"];
 export type ApiResponseListQuestionValidationApiResponse = components["schemas"]["ApiResponseListQuestionValidationApiResponse"];
 export type ApiResponseListTeamApiResponse = components["schemas"]["ApiResponseListTeamApiResponse"];
+export type ApiResponseListTeamInvitationLinksApiResponse = components["schemas"]["ApiResponseListTeamInvitationLinksApiResponse"];
 export type ApiResponseListUnconfirmedPoliciesApiResponse = components["schemas"]["ApiResponseListUnconfirmedPoliciesApiResponse"];
+export type ApiResponseListUserInfoApiResponse = components["schemas"]["ApiResponseListUserInfoApiResponse"];
+export type ApiResponseObject = components["schemas"]["ApiResponseObject"];
 export type ApiResponseParticipantsByStatusApiResponse = components["schemas"]["ApiResponseParticipantsByStatusApiResponse"];
 export type ApiResponseParticipantsCorrectAnswerRankResponse = components["schemas"]["ApiResponseParticipantsCorrectAnswerRankResponse"];
 export type ApiResponseQuestionAnswerSubmitApiResponse = components["schemas"]["ApiResponseQuestionAnswerSubmitApiResponse"];
@@ -123,12 +127,14 @@ export type ShortQuestionApiResponse = components["schemas"]["ShortQuestionApiRe
 export type ShortQuestionSubmitAnswer = components["schemas"]["ShortQuestionSubmitAnswer"];
 export type ShortQuestionSubmitApiRequest = components["schemas"]["ShortQuestionSubmitApiRequest"];
 export type ShortUpdateAnswerPayload = components["schemas"]["ShortUpdateAnswerPayload"];
+export type SignUpApiRequest = components["schemas"]["SignUpApiRequest"];
 export type SubmitAnswerDtoFillBlankSubmitAnswer = components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"];
 export type SubmitAnswerDtoLong = components["schemas"]["SubmitAnswerDtoLong"];
 export type SubmitAnswerDtoObject = components["schemas"]["SubmitAnswerDtoObject"];
 export type SubmitAnswerDtoString = components["schemas"]["SubmitAnswerDtoString"];
 export type TeamApiResponse = components["schemas"]["TeamApiResponse"];
 export type TeamInvitationApplyApiResponse = components["schemas"]["TeamInvitationApplyApiResponse"];
+export type TeamInvitationLinksApiResponse = components["schemas"]["TeamInvitationLinksApiResponse"];
 export type TeamInviteApiResponse = components["schemas"]["TeamInviteApiResponse"];
 export type UnconfirmedPoliciesApiResponse = components["schemas"]["UnconfirmedPoliciesApiResponse"];
 export type UpdateActiveParticipantsRequest = components["schemas"]["UpdateActiveParticipantsRequest"];
@@ -146,5 +152,6 @@ export type UpdateQuestionSetFieldApiRequest = components["schemas"]["UpdateQues
 export type UpdateQuestionStatusApiRequest = components["schemas"]["UpdateQuestionStatusApiRequest"];
 export type UpdateShortQuestionApiRequest = components["schemas"]["UpdateShortQuestionApiRequest"];
 export type UpdateTeamUserRoleApiRequest = components["schemas"]["UpdateTeamUserRoleApiRequest"];
+export type UpdateWinnerApiRequest = components["schemas"]["UpdateWinnerApiRequest"];
 export type UserApiResponse = components["schemas"]["UserApiResponse"];
 export type UserInfoApiResponse = components["schemas"]["UserInfoApiResponse"];

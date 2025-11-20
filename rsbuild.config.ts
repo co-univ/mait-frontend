@@ -1,11 +1,20 @@
 import { defineConfig, type PostCSSPlugin } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
+import { pluginSvgr } from "@rsbuild/plugin-svgr";
 import autoprefixer from "autoprefixer";
 // import * as dotenv from "dotenv";
 import tailwindcss from "tailwindcss";
 
 export default defineConfig({
-	plugins: [pluginReact()],
+	plugins: [
+		pluginReact(),
+		pluginSvgr({
+			svgrOptions: {
+				exportType: "default",
+				svgo: false,
+			},
+		}),
+	],
 	resolve: {
 		alias: {
 			"@": "./src",
