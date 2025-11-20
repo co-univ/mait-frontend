@@ -101,7 +101,11 @@ const Invite = () => {
 	}
 
 	// not logged in user
-	if (!user && !isUserLoading && inviteInfo) {
+	if (
+		!user &&
+		!isUserLoading &&
+		inviteInfo?.applicationStatus === "NOT_APPLIED"
+	) {
 		return <InviteNotLogin teamName={inviteInfo.teamName} />;
 	}
 
