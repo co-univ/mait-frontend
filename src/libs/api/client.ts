@@ -4,8 +4,8 @@ import type { paths } from "@/libs/types/api";
 const authMiddleware: Middleware = {
 	async onRequest({ request }) {
 		if (request.url.includes("/auth/access-token")) {
-      return request;
-    }
+			return request;
+		}
 
 		const token = localStorage.getItem("token");
 

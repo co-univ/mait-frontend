@@ -1,8 +1,9 @@
 import { SquarePen } from "lucide-react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
+import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
 import ManagementLiveTime from "./ManagementLiveTime";
@@ -23,12 +24,12 @@ const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
 //
 
 const Management = () => {
-	const teamId = Number(useParams().teamId);
+	const { activeTeam } = useTeams();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "making";
 
 	const { questionSetList, questionSetGroup } = useQuestionSets({
-		teamId,
+		teamId: activeTeam?.teamId ?? 0,
 		mode: QUESTION_SET_MODES[mode],
 	});
 

@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import useUser from "src/hooks/useUser";
-import useLoginModalOpenStore from "src/stores/useLoginModalOpenStore";
 import book from "../../assets/images/book.png";
 import cube from "../../assets/images/cube.png";
 
@@ -10,8 +9,6 @@ import cube from "../../assets/images/cube.png";
 //
 
 const Home = () => {
-	const { openLoginModal } = useLoginModalOpenStore();
-
 	const { user } = useUser();
 
 	const navigate = useNavigate();
@@ -24,7 +21,6 @@ const Home = () => {
 		if (user) {
 			navigate(`/solving/${process.env.PUBLIC_QUESTION_ID}`);
 		} else {
-			// openLoginModal();
 			navigate("/login");
 		}
 	};

@@ -19,7 +19,6 @@ import ControlSolvingSubmission from "./submission/ControlSolvingSubmission";
 //
 
 const ControlSolving = () => {
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
@@ -50,7 +49,7 @@ const ControlSolving = () => {
 	 */
 	const handleQuestionNavigationClick = (questionId: number) => {
 		navigate(
-			`/control/solving/team/${teamId}/question-set/${questionSetId}/question/${questionId}`,
+			`/control/solving/question-set/${questionSetId}/question/${questionId}`,
 			{
 				replace: true,
 			},

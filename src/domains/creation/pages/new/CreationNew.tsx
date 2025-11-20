@@ -1,9 +1,10 @@
 import { ChevronRight, PencilLine, Puzzle } from "lucide-react";
 import { useReducer, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Badge from "@/components/Badge";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
+import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
 import type { QuestionCount } from "@/libs/types";
@@ -22,13 +23,13 @@ import CreationNewRightPanel from "./CreationNewRightPanel";
 const CreationNew = () => {
 	const navigate = useNavigate();
 
-	const teamId = Number(useParams().teamId);
+	const { activeTeam } = useTeams();
 
 	const [isFileUploading, setIsFileUploading] = useState(false);
 
 	const [questionSet, dispatch] = useReducer(
 		creationNewQuestionSetReducer,
-		creationNewQuestionSetInitialState(teamId),
+		creationNewQuestionSetInitialState(activeTeam?.teamId ?? 0),
 	);
 
 	const disabledCreateQuestionSet = [
@@ -166,13 +167,11 @@ const CreationNew = () => {
 		const questionSetId = res.data?.data?.questionSetId;
 
 		if (questionSet.creationType === "AI_GENERATED") {
-			navigate(
-				`/creation/new/loading/team/${teamId}/question-set/${questionSetId}`,
-			);
+			navigate(`/creation/new/loading/question-set/${questionSetId}`);
 			return;
 		}
 
-		navigate(`/creation/question/team/${teamId}/question-set/${questionSetId}`);
+		navigate(`/creation/question/question-set/${questionSetId}`);
 	};
 
 	return (

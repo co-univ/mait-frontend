@@ -31,13 +31,12 @@ const ControlSolvingSubmission = ({
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
 	const { data: scorerData } = apiHooks.useQuery(
 		"get",
-		"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorer",
+		"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorers",
 		{
 			params: {
 				path: {
@@ -102,7 +101,7 @@ const ControlSolvingSubmission = ({
 	 */
 	const handlePariticipantButtonClick = () => {
 		navigate(
-			`/control/participant/team/${teamId}/question-set/${questionSetId}/question/${questionId}`,
+			`/control/participant/question-set/${questionSetId}/question/${questionId}`,
 		);
 	};
 

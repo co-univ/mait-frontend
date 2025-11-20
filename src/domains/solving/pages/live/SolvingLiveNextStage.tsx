@@ -22,7 +22,10 @@ interface SolvingLiveNextStageProps {
 //
 //
 
-const SolvingLiveNextStage = ({ activeParticipants, open }: SolvingLiveNextStageProps) => {
+const SolvingLiveNextStage = ({
+	activeParticipants,
+	open,
+}: SolvingLiveNextStageProps) => {
 	return (
 		<SolvingFullModalLayout open={open}>
 			<div className="flex justify-center w-full h-full px-[172px] pb-[84px]">

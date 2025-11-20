@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
 import useQuestionSets from "@/hooks/useQuestionSets";
+import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
@@ -19,10 +20,11 @@ import CreationPublishRightPanel from "./CreationPublishRightPanel";
 //
 
 const CreationPublish = () => {
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
 	const navigate = useNavigate();
+
+	const { activeTeam } = useTeams();
 
 	const [questionSet, dispatch] = useReducer(
 		creationPublishQuestionSetReducer,
@@ -43,12 +45,12 @@ const CreationPublish = () => {
 
 	const { invalidateQuestionSetsQuery: invalidateMakingQuery } =
 		useQuestionSets({
-			teamId,
+			teamId: activeTeam?.teamId ?? 0,
 			mode: "MAKING",
 		});
 	const { invalidateQuestionSetsQuery: invalidateLiveTimeQuery } =
 		useQuestionSets({
-			teamId,
+			teamId: activeTeam?.teamId ?? 0,
 			mode: "LIVE_TIME",
 		});
 
@@ -97,7 +99,7 @@ const CreationPublish = () => {
 	 */
 	const handlePublishButtonClick = async () => {
 		try {
-			const res = await apiClient.PUT("/api/v1/question-sets/{questionSetId}", {
+			await apiClient.PUT("/api/v1/question-sets/{questionSetId}", {
 				params: {
 					path: {
 						questionSetId,
@@ -111,9 +113,7 @@ const CreationPublish = () => {
 			invalidateMakingQuery();
 			invalidateLiveTimeQuery();
 
-			const teamId = res.data?.data?.teamId;
-
-			navigate(`/management/team/${teamId}`);
+			navigate("/management");
 		} catch {
 			notify.error("문제 셋 생성에 실패했습니다.");
 		}

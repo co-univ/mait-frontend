@@ -97,7 +97,7 @@ const ControlSolvingQuestion = ({
 			queryClient.invalidateQueries({
 				queryKey: apiHooks.queryOptions(
 					"get",
-					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorer",
+					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorers",
 					{
 						params: {
 							path: {

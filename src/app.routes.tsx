@@ -4,8 +4,9 @@ import { authRoutes } from "@/domains/auth";
 import { controlRoutes } from "@/domains/control/Control.routes";
 import { creationRoutes } from "@/domains/creation/creation.routes";
 import { homeRoutes } from "@/domains/home";
+import { managementRoutes } from "@/domains/management/Management.routes";
 import { solvingRoutes } from "@/domains/solving/solving.routes";
-import { managementRoutes } from "./domains/management/Management.routes";
+import { teamManagementRoutes } from "@/domains/team-management/TeamManagement.routes";
 
 const router = createBrowserRouter([
 	{
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
 			...solvingRoutes,
 			...creationRoutes,
 			...managementRoutes,
+			...teamManagementRoutes,
 		],
 	},
 ]);

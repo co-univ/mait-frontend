@@ -11,6 +11,7 @@ import {
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
+import SideBarDropdown from "./SideBarDropdown";
 import SidebarItem from "./SidebarItem";
 
 //
@@ -39,8 +40,8 @@ const NAVIGATION_ITEMS = [
 	{
 		icon: <Users />,
 		label: "팀 관리",
-		path: "/team-manage",
-		activePaths: ["/team-manage"],
+		path: "/team-management",
+		activePaths: ["/team-management"],
 	},
 ];
 
@@ -89,7 +90,7 @@ const SideBar = () => {
 	return (
 		<aside
 			className={clsx(
-				"py-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed z-50",
+				"p-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed z-50",
 				SIDEBAR_TRANSITION,
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",
@@ -99,18 +100,19 @@ const SideBar = () => {
 			)}
 			style={{
 				width: isSidebarOpenWithUser ? SIDEBAR_WIDTH : "0",
+				padding: isSidebarOpenWithUser ? undefined : "0",
 				height: getSidebarHeight(),
 				top: HEADER_HEIGHT,
 			}}
 		>
-			<nav className="flex flex-col items-center">
+			<nav className="w-[216px] flex flex-col items-center">
 				<SidebarItem>
-					<div>코테이토 11기 교육팀</div>
+					<SideBarDropdown />
 				</SidebarItem>
 
 				<div className="h-size-height-1" />
 
-				<div className="flex flex-col gap-gap-5">
+				<div className="w-full flex flex-col gap-gap-5">
 					{NAVIGATION_ITEMS.map((item) => (
 						<SidebarItem
 							key={item.path}
