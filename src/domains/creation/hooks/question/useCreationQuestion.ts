@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
@@ -48,8 +48,6 @@ const useCreationQuestion = ({
 	questionSetId,
 	questionId,
 }: UseQuestionProps): UseQuestionReturn => {
-	const teamId = useParams().teamId;
-
 	const { questions, editQuestion } = useCreationQuestionsStore();
 
 	const queryClient = useQueryClient();
@@ -128,7 +126,7 @@ const useCreationQuestion = ({
 
 				if (targetQuestionId) {
 					navigate(
-						`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${targetQuestionId}`,
+						`/creation/question/question-set/${questionSetId}/question/${targetQuestionId}`,
 						{ replace: true },
 					);
 				}

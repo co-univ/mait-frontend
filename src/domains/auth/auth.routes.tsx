@@ -1,8 +1,8 @@
 import PublicOnlyRoute from "@/ProtectedRoute";
 import AuthOAuthCallback from "./components/AuthOAuthCallback";
+import AuthAccountCreationSuccess from "./pages/AuthAccountCreationSuccess";
 import AuthCreateAccount from "./pages/AuthCreateAccount";
 import Login from "./pages/AuthLogin";
-import AuthAccountCreationSuccess from "./pages/AuthAccountCreationSuccess";
 
 export const authRoutes = [
 	{
@@ -23,6 +23,6 @@ export const authRoutes = [
 	},
 	{
 		path: "/account/create/success",
-		element: <AuthAccountCreationSuccess />
-	}
+		element: <AuthAccountCreationSuccess />,
+	},
 ];

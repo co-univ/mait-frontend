@@ -1,6 +1,6 @@
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import useTeams from "@/hooks/useTeams";
 import type { JoinedTeamUserApiResponse } from "@/libs/types";
 import useTeamManagementUsers from "../../hooks/users/useTeamManagementUsers";
 import TeamManagementUsersMakerPanel from "./TeamManagementUsersMakerPanel";
@@ -19,7 +19,7 @@ const TeamManagementUsers = () => {
 	const [localPlayers, setLocalPlayers] =
 		useState<JoinedTeamUserApiResponse[]>();
 
-	const teamId = Number(useParams().teamId);
+	const { activeTeam } = useTeams();
 
 	const {
 		makers,
@@ -28,7 +28,7 @@ const TeamManagementUsers = () => {
 		handleRoleUpdate,
 		handleUserDelete,
 		isLoading,
-	} = useTeamManagementUsers({ teamId });
+	} = useTeamManagementUsers({ teamId: activeTeam?.teamId ?? 0 });
 
 	/**
 	 *

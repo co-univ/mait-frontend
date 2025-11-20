@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Field } from "@/components/field";
 import Modal from "@/components/modal/Modal";
 import { Radio } from "@/components/radio";
 import { notify } from "@/components/Toast";
+import useTeams from "@/hooks/useTeams";
 import { apiClient } from "@/libs/api";
 import type { CreateTeamInviteApiRequest } from "@/libs/types";
 import { getInviteUrl } from "@/utils/get-invite-url";
@@ -38,7 +38,7 @@ const TeamManagementLinkCreateModal = ({
 	const [linkCode, setLinkCode] = useState<string>();
 	const [isCreating, setIsCreating] = useState(false);
 
-	const teamId = Number(useParams().teamId);
+	const { activeTeam } = useTeams();
 
 	/**
 	 *
@@ -79,7 +79,7 @@ const TeamManagementLinkCreateModal = ({
 			const res = await apiClient.POST("/api/v1/teams/{teamId}/invitation", {
 				params: {
 					path: {
-						teamId,
+						teamId: activeTeam?.teamId ?? 0,
 					},
 					query: {
 						requiresApproval: approval === "NECCESSARY",

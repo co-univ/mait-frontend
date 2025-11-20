@@ -1,13 +1,13 @@
 import clsx from "clsx";
 import { Dices } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { apiClient } from "@/libs/api";
 import type { LatestPoliciesApiResponse, PolicyType } from "@/libs/types";
 import AuthCard from "../components/AuthCard";
 import AuthTermDetail from "../components/AuthTermDetail";
 import AuthTerms from "../components/AuthTerms";
-import { useNavigate } from "react-router-dom";
 
 //
 //
@@ -135,7 +135,7 @@ const AuthCreateAccount = () => {
 			]);
 
 			if (userNickname?.data?.isSuccess && agreementStatus?.data?.isSuccess) {
-				navigate('success');
+				navigate("success");
 			}
 		} catch (error) {
 			console.error("계정 생성하기 실패: ", error);

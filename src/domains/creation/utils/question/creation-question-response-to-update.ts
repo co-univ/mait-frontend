@@ -1,7 +1,4 @@
-import type {
-	QuestionResponseType,
-	QuestionUpdateType,
-} from "@/app.constants";
+import type { QuestionResponseType, QuestionUpdateType } from "@/app.constants";
 import type {
 	FillBlankQuestionApiResponse,
 	QuestionType,

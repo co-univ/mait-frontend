@@ -1,8 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { notify } from "@/components/Toast";
+import { useNavigate } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
+import { notify } from "@/components/Toast";
 import type { QuestionResponseTypeWithIsEditing } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import { apiClient, apiHooks } from "@/libs/api";
@@ -32,8 +32,6 @@ interface UseQuestionsReturn {
 const useCreationQuestions = ({
 	questionSetId,
 }: UseQuestionsProps): UseQuestionsReturn => {
-	const teamId = useParams().teamId;
-
 	const { questions, invalidQuestions, initQuestions, setInvalidQuestions } =
 		useCreationQuestionsStore();
 
@@ -63,7 +61,7 @@ const useCreationQuestions = ({
 				notify.success(`${questions.length + 1}번 문제가 추가되었습니다.`);
 
 				navigate(
-					`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${newQuestion.id}`,
+					`/creation/question/question-set/${questionSetId}/question/${newQuestion.id}`,
 					{ replace: true },
 				);
 

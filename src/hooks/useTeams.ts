@@ -1,18 +1,14 @@
-import React from "react";
 import { apiHooks } from "@/libs/api";
 import type { TeamApiResponse } from "@/libs/types";
+import useActiveTeamIdStore from "@/stores/useActiveTeamIdStore";
 
 //
 //
 //
-
-interface UseTeamsProps {
-	teamId?: number;
-}
 
 interface UseTeamsReturn {
 	teams?: TeamApiResponse[];
-	selectedTeam?: TeamApiResponse;
+	activeTeam?: TeamApiResponse;
 	isLoading: boolean;
 }
 
@@ -20,15 +16,17 @@ interface UseTeamsReturn {
 //
 //
 
-const useTeams = ({ teamId }: UseTeamsProps): UseTeamsReturn => {
+const useTeams = (): UseTeamsReturn => {
+	const { activeTeamId } = useActiveTeamIdStore();
+
 	const { data, isPending } = apiHooks.useQuery("get", "/api/v1/teams/joined");
 
 	const teams = data?.data;
-	const selectedTeam = teams?.find((team) => team.teamId === teamId);
+	const activeTeam = teams?.find((team) => team.teamId === activeTeamId);
 
 	return {
 		teams,
-		selectedTeam,
+		activeTeam,
 		isLoading: isPending,
 	};
 };

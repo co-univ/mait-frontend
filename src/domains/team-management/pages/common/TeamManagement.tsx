@@ -1,6 +1,5 @@
 import { NotebookPen } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
@@ -16,9 +15,7 @@ const TeamManagement = () => {
 	const [isLinkCreateModalOpen, setIsLinkCreateModalOpen] = useState(false);
 	const [isLinkManageModalOpen, setIsLinkManageModalOpen] = useState(false);
 
-	const teamId = Number(useParams().teamId);
-
-	const { selectedTeam } = useTeams({ teamId });
+	const { activeTeam } = useTeams();
 
 	/**
 	 *
@@ -51,7 +48,7 @@ const TeamManagement = () => {
 		<>
 			<LabeledPageLayout
 				icon={<NotebookPen />}
-				label={selectedTeam?.teamName ?? ""}
+				label={activeTeam?.teamName ?? ""}
 				rightContent={renderInviteButtons()}
 			>
 				<TeamManagementUsers />

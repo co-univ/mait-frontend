@@ -15,7 +15,6 @@ import {
 const CreationQuestionAdditionalButtons = () => {
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
@@ -38,7 +37,7 @@ const CreationQuestionAdditionalButtons = () => {
 		const questionId = res?.data?.id;
 
 		navigate(
-			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${questionId}`,
+			`/creation/question/question-set/${questionSetId}/question/${questionId}`,
 		);
 	};
 
@@ -61,7 +60,7 @@ const CreationQuestionAdditionalButtons = () => {
 			return;
 		}
 
-		navigate(`/creation/publish/team/${teamId}/question-set/${questionSetId}`);
+		navigate(`/creation/publish/question-set/${questionSetId}`);
 	};
 
 	//
