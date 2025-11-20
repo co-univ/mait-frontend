@@ -38,7 +38,7 @@ const CopyButton = ({ value }: CopyButtonProps) => {
 		<Button
 			icon={isCopied ? <Check size={16} /> : <Copy size={16} />}
 			onClick={handleCopyLink}
-			className="border-none p-padding-2"
+			className="border-none !p-padding-2"
 		/>
 	);
 };
