@@ -35,7 +35,7 @@ const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE = {
 	background: "linear-gradient(180deg, #FFF 0%, #ECF2FE 89.42%, #ECF2FE 100%)",
 };
 
-const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/invite"];
+const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/", "/invite"];
 
 //
 //
