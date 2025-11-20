@@ -2,6 +2,7 @@ import { NotebookPen } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
+import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import TeamManagementUsers from "../users/TeamManagementUsers";
 import TeamManagementLinkCreateModal from "./TeamManagementLinkCreateModal";
@@ -16,6 +17,8 @@ const TeamManagement = () => {
 	const [isLinkManageModalOpen, setIsLinkManageModalOpen] = useState(false);
 
 	const teamId = Number(useParams().teamId);
+
+	const { selectedTeam } = useTeams({ teamId });
 
 	/**
 	 *
@@ -48,7 +51,7 @@ const TeamManagement = () => {
 		<>
 			<LabeledPageLayout
 				icon={<NotebookPen />}
-				label="조원영의 문제세상"
+				label={selectedTeam?.teamName ?? ""}
 				rightContent={renderInviteButtons()}
 			>
 				<TeamManagementUsers />
