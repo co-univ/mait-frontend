@@ -2,7 +2,7 @@ import { Square } from "lucide-react";
 import DeleteCheckBox from "@/components/DeleteCheckBox";
 import Modal from "@/components/modal/Modal";
 import { Table } from "@/components/table";
-import CopyButton from "../../components/common/CopyButton";
+import CopyButton from "../../../../components/CopyButton";
 
 //
 //

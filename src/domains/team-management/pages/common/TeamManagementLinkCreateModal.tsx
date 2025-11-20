@@ -8,7 +8,7 @@ import { notify } from "@/components/Toast";
 import { apiClient } from "@/libs/api";
 import type { CreateTeamInviteApiRequest } from "@/libs/types";
 import { getInviteUrl } from "@/utils/get-invite-url";
-import CopyButton from "../../components/common/CopyButton";
+import CopyButton from "../../../../components/CopyButton";
 
 //
 //
