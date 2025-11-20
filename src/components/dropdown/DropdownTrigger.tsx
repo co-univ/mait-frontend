@@ -31,10 +31,11 @@ const DropdownTrigger = ({
 	children,
 	icon,
 }: DropdownTriggerProps) => {
-	const { open, onOpenChange, value } = useDropdownContext();
+	const { open, onOpenChange, value, triggerRef } = useDropdownContext();
 
 	return (
 		<button
+			ref={triggerRef as React.RefObject<HTMLButtonElement>}
 			type="button"
 			onClick={() => onOpenChange?.(!open)}
 			className={clsx(

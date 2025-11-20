@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import { createContext, useContext } from "react";
 
 //
@@ -13,6 +14,8 @@ interface DropdownContextValue {
 	value?: string;
 	/** Function to update the selected value */
 	onValueChange?: (value: string) => void;
+	/** Reference to the trigger element for positioning */
+	triggerRef?: RefObject<HTMLElement | null>;
 }
 
 const DropdownContext = createContext<DropdownContextValue | undefined>(
