@@ -1,7 +1,7 @@
-import { RadioGroup } from './RadioGroup';
-import { RadioInput } from './RadioInput';
-import { RadioItem } from './RadioItem';
-import { RadioLabel } from './RadioLabel';
+import { RadioGroup } from "./RadioGroup";
+import { RadioInput } from "./RadioInput";
+import { RadioItem } from "./RadioItem";
+import { RadioLabel } from "./RadioLabel";
 
 /**
  * Radio component with compound component pattern
@@ -105,8 +105,8 @@ import { RadioLabel } from './RadioLabel';
  * ```
  */
 export const Radio = {
-  Group: RadioGroup,
-  Item: RadioItem,
-  Input: RadioInput,
-  Label: RadioLabel,
+	Group: RadioGroup,
+	Item: RadioItem,
+	Input: RadioInput,
+	Label: RadioLabel,
 };

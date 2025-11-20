@@ -42,7 +42,7 @@ const SolvingSubmitResult = ({
 			className="absolute top-20 left-1/2 transform -translate-x-1/2 flex flex-col items-center justify-center z-50 pointer-events-none"
 		>
 			<motion.img
-				src={correct ? quizCorrect  : quizIncorrect}
+				src={correct ? quizCorrect : quizIncorrect}
 				alt={correct ? "Quiz Success" : "Quiz Fail"}
 				className="h-[95px] aspect-square"
 				initial={{ scale: 0, rotate: -180 }}

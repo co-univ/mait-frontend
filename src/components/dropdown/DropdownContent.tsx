@@ -1,5 +1,7 @@
 import clsx from "clsx";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDropdownContext } from "@/components/dropdown/DropdownContext";
 
 //
@@ -25,21 +27,36 @@ interface DropdownContentProps {
  * </Dropdown.Content>
  */
 const DropdownContent = ({ children, className }: DropdownContentProps) => {
-	const { open } = useDropdownContext();
+	const { open, triggerRef } = useDropdownContext();
+	const [position, setPosition] = useState<CSSProperties>({});
+
+	useEffect(() => {
+		if (open && triggerRef?.current) {
+			const triggerRect = triggerRef.current.getBoundingClientRect();
+			setPosition({
+				position: "fixed",
+				top: `${triggerRect.bottom + 2}px`,
+				left: `${triggerRect.left}px`,
+				width: `${triggerRect.width}px`,
+			});
+		}
+	}, [open, triggerRef]);
 
 	if (!open) {
 		return null;
 	}
 
-	return (
+	return createPortal(
 		<div
 			className={clsx(
-				"absolute z-50 bg-color-alpha-white100 flex flex-col items-start py-padding-2 rounded-radius-medium1 w-full border border-color-gray-20 shadow-m",
+				"z-50 bg-color-alpha-white100 flex flex-col items-start pt-padding-2 rounded-radius-medium1 border border-color-gray-20 shadow-m",
 				className,
 			)}
+			style={position}
 		>
 			{children}
-		</div>
+		</div>,
+		document.body,
 	);
 };
 

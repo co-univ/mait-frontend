@@ -1,6 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { apiHooks } from "@/libs/api";
-import type { DeliveryMode, QuestionSetGroup, QuestionSetList } from "@/libs/types";
+import type {
+	DeliveryMode,
+	QuestionSetGroup,
+	QuestionSetList,
+} from "@/libs/types";
 
 //
 //
@@ -18,7 +22,6 @@ interface UseQuestionSetsReturn {
 	isLoading: boolean;
 	error: Error | null;
 }
-
 
 //
 //

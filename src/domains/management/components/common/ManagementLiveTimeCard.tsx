@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import type { QuestionSetDto } from "@/libs/types";
 
@@ -19,22 +19,18 @@ const ManagementLiveTimeCard = ({
 }: ManagementLiveTimeCardProps) => {
 	const navigate = useNavigate();
 
-	const teamId = Number(useParams().teamId);
-
 	/**
 	 *
 	 */
 	const handleCreationButtonClick = () => {
-		navigate(
-			`/creation/question/team/${teamId}/question-set/${questionSet.id}`,
-		);
+		navigate(`/creation/question/question-set/${questionSet.id}`);
 	};
 
 	/**
 	 *
 	 */
 	const handleControlButtonClick = () => {
-		navigate(`/control/solving/team/${teamId}/question-set/${questionSet.id}`);
+		navigate(`/control/solving/question-set/${questionSet.id}`);
 	};
 
 	return (

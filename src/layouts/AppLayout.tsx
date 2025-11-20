@@ -10,7 +10,7 @@ import {
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
 import Header from "@/components/header/Header";
-import Sidebar from "@/components/sidebar/SideBar";
+import Sidebar from "@/components/side-bar/SideBar";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";

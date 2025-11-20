@@ -22,7 +22,6 @@ const POLLING_INTERVAL = 10 * 1000;
 //
 
 const CreationNewLoading = () => {
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
 	const navigate = useNavigate();
@@ -62,7 +61,7 @@ const CreationNewLoading = () => {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: checkStatus only needs to run on mount
 	useEffect(() => {
 		if (!questionSetId) {
-			navigate(`/management/team/${teamId}`, { replace: true });
+			navigate("/management", { replace: true });
 		}
 
 		const checkStatus = async () => {
@@ -85,12 +84,9 @@ const CreationNewLoading = () => {
 				const status = res.data?.data?.status;
 
 				if (status === "COMPLETED") {
-					navigate(
-						`/creation/question/team/${teamId}/question-set/${questionSetId}`,
-						{
-							replace: true,
-						},
-					);
+					navigate(`/creation/question/question-set/${questionSetId}`, {
+						replace: true,
+					});
 				}
 
 				if (status === "FAILED" || status === "NOT_FOUND") {
@@ -98,7 +94,7 @@ const CreationNewLoading = () => {
 				}
 			} catch {
 				notify.error("AI 문제 생성에 실패했습니다.");
-				navigate(`/creation/new/team/${teamId}`, { replace: true });
+				navigate("/creation/new", { replace: true });
 			}
 		};
 

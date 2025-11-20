@@ -12,7 +12,7 @@ const ManagementRedirect = () => {
 	//
 	//
 	useEffect(() => {
-		navigate("/management/team/1?mode=making", { replace: true });
+		navigate("/management?mode=making", { replace: true });
 	}, [navigate]);
 
 	return null;

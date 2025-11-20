@@ -9,15 +9,15 @@ import ControlSolving from "./pages/solving/ControlSolving";
 
 export const controlRoutes: RouteObject[] = [
 	{
-		path: "/control/solving/team/:teamId/question-set/:questionSetId/question/:questionId",
+		path: "/control/solving/question-set/:questionSetId/question/:questionId",
 		element: <ControlSolving />,
 	},
 	{
-		path: "/control/participant/team/:teamId/question-set/:questionSetId/question/:questionId",
+		path: "/control/participant/question-set/:questionSetId/question/:questionId",
 		element: <ControlParticipant />,
 	},
 	{
-		path: "/control/solving/team/:teamId/question-set/:questionSetId",
+		path: "/control/solving/question-set/:questionSetId",
 		element: <ControlRedirect />,
 	},
 ];
