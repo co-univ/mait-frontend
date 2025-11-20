@@ -1,2 +1,2 @@
 export * from "./home.routes";
-export { default } from "./pages/common/Home";
+export { default } from "./pages/common/HomeFirst";

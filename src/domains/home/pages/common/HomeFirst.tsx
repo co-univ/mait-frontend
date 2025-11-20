@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Lottie from "react-lottie";
 import { useNavigate } from "react-router-dom";
 import kv from "@/assets/lotties/home1-kv.json";
+import Button from "@/components/Button";
 import useUser from "@/hooks/useUser";
 
 //
@@ -21,7 +22,7 @@ const LOTTIE_OPTIONS = {
 //
 //
 
-const Home = () => {
+const HomeFirst = () => {
 	const [width, setWidth] = useState(window.innerWidth);
 
 	const { user } = useUser();
@@ -52,29 +53,27 @@ const Home = () => {
 	}, []);
 
 	return (
-		<div className="w-full h-full flex flex-col items-center absolute left-0">
-			<div className="flex flex-col gap-[2rem] items-center mt-11">
-				<div className="flex flex-col gap-[10px] items-center">
+		<div className="w-full h-full flex flex-col items-center justify-center absolute inset-0">
+			<div className="h-full mb-[45vh] flex flex-col gap-gap-11 items-center justify-center">
+				<div className="flex flex-col gap-gap-5 items-center">
 					<h1 className="typo-heading-xlarge">
 						문제 제작은 자동으로, 학습은 함께
 					</h1>
-					<h4 className="text-[24px] leading-lineheights-0 font-paperlogy">
+					<h4 className="typo-heading-medium !font-medium text-[#4D4D4D]">
 						메잇으로 더 똑똑하게 학습하세요!
 					</h4>
 				</div>
-				<button
-					type="button"
+				<Button
+					item="바로 시작하기"
+					className="py-padding-6 px-padding-11 border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50"
 					onClick={handleButtonClick}
-					className="w-fit h-[50px] flex items-center justify-center py-gap-6 px-gap-10 rounded-radius-medium1 typo-heading-xsmall bg-color-primary-5 text-primary-50"
-				>
-					바로 시작하기
-				</button>
+				/>
 			</div>
-			<div className="mt-[-23rem] w-full flex justify-center">
+			<div className="absolute inset-0 pointer-events-none">
 				<Lottie options={LOTTIE_OPTIONS} width={width} />
 			</div>
 		</div>
 	);
 };
 
-export default Home;
+export default HomeFirst;
