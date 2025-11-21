@@ -1,11 +1,11 @@
 import SolvingQuestionTitle from "src/domains/solving/components/common/quiz-title";
 import { QuestionType } from "src/enums/solving.enum";
-import type { QuestionApiResponse } from "@/types";
+import type { QuestionApiResponse } from "@/libs/types";
+import SolvingQuizImage from "../SolvingQuizImage";
 import SolvingQuizContentBlankAnswer from "./SolvingQuizContentBlankAnswer";
 import SolvingQuizContentMultipleAnswers from "./SolvingQuizContentMultipleAnswers";
 import SolvingQuizContentOrderAnswers from "./SolvingQuizContentOrderAnswers";
 import SolvingQuizContentShortAnswer from "./SolvingQuizContentShortAnswer";
-import SolvingQuizImage from "../SolvingQuizImage";
 
 //
 //
@@ -38,7 +38,9 @@ const SolvingQuizContent = ({
 				questionInfo={questionInfo}
 				userAnswers={userAnswers}
 			/>
-			<SolvingQuizImage src={questionInfo?.imageUrl} />
+			{questionInfo?.imageUrl && (
+				<SolvingQuizImage src={questionInfo?.imageUrl} />
+			)}
 			<div className="flex-grow h-size-height-5" />
 			{type === QuestionType.SHORT && (
 				<SolvingQuizContentShortAnswer
