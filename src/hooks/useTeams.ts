@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { apiHooks } from "@/libs/api";
 import type { TeamApiResponse } from "@/libs/types";
 import useActiveTeamIdStore from "@/stores/useActiveTeamIdStore";
+import useUser from "./useUser";
 
 //
 //
@@ -19,6 +21,8 @@ interface UseTeamsReturn {
 //
 
 const useTeams = (): UseTeamsReturn => {
+	const { user } = useUser();
+
 	const { activeTeamId, setActiveTeamId } = useActiveTeamIdStore();
 
 	const { data, isPending, refetch } = apiHooks.useQuery(
@@ -35,6 +39,20 @@ const useTeams = (): UseTeamsReturn => {
 	const handleActiveTeamChange = (teamId: number) => {
 		setActiveTeamId(teamId);
 	};
+
+	//
+	//
+	//
+	useEffect(() => {
+		const refetchTeams = async () => {
+			await refetch();
+			setActiveTeamId(teams && teams?.length > 0 ? (teams[0].teamId ?? 0) : 0);
+		};
+
+		if (user) {
+			refetchTeams();
+		}
+	}, [user, refetch, setActiveTeamId, teams]);
 
 	return {
 		teams,

@@ -228,7 +228,7 @@ const TeamManagementLinkCreateModal = ({
 		}
 
 		return (
-			<div className="flex gap-gap-4">
+			<div className="flex gap-gap-4 items-center">
 				<input
 					readOnly
 					value={getInviteUrl(linkCode)}

@@ -1,8 +1,9 @@
 import { NotebookPen } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Button from "@/components/Button";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
+import TeamManagementAccountAddCard from "../../components/common/TeamManagementAccountAddCard";
 import TeamManagementUsers from "../users/TeamManagementUsers";
 import TeamManagementLinkCreateModal from "./TeamManagementLinkCreateModal";
 import TeamManagementLinkManageModal from "./TeamManagementLinkManageModal";
@@ -14,6 +15,9 @@ import TeamManagementLinkManageModal from "./TeamManagementLinkManageModal";
 const TeamManagement = () => {
 	const [isLinkCreateModalOpen, setIsLinkCreateModalOpen] = useState(false);
 	const [isLinkManageModalOpen, setIsLinkManageModalOpen] = useState(false);
+	const [isAccountAddCardOpen, setIsAccountAddCardOpen] = useState(false);
+
+	const accountAddButtonRef = useRef<HTMLButtonElement>(null);
 
 	const { activeTeam } = useTeams();
 
@@ -37,8 +41,10 @@ const TeamManagement = () => {
 					onClick={() => setIsLinkCreateModalOpen(true)}
 				/>
 				<Button
+					ref={accountAddButtonRef}
 					item="계정 추가"
 					className="border-none bg-color-primary-5 text-color-primary-50 !typo-heading-xsmall"
+					onClick={() => setIsAccountAddCardOpen(true)}
 				/>
 			</div>
 		);
@@ -61,6 +67,11 @@ const TeamManagement = () => {
 			<TeamManagementLinkManageModal
 				open={isLinkManageModalOpen}
 				onClose={() => setIsLinkManageModalOpen(false)}
+			/>
+			<TeamManagementAccountAddCard
+				open={isAccountAddCardOpen}
+				onClose={() => setIsAccountAddCardOpen(false)}
+				anchorEl={accountAddButtonRef.current}
 			/>
 		</>
 	);

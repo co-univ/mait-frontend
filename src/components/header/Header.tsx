@@ -8,20 +8,20 @@ import HeaderInfoSection from "./HeaderInfoSection";
 //
 
 interface HeaderProps {
-	isAccountPage: boolean;
+	isTransparentBackground: boolean;
 }
 
 //
 //
 //
 
-const Header = ({ isAccountPage }: HeaderProps) => {
+const Header = ({ isTransparentBackground }: HeaderProps) => {
 	return (
 		<div
 			className={clsx(
 				"fixed top-0 z-10 flex w-full justify-between items-center bg-color-alpha-white100 px-padding-12",
 				{
-					"bg-transparent": isAccountPage,
+					"bg-transparent": isTransparentBackground,
 				},
 			)}
 			style={{
@@ -29,7 +29,7 @@ const Header = ({ isAccountPage }: HeaderProps) => {
 			}}
 		>
 			<HeaderBrandSection />
-			<HeaderInfoSection isHide={isAccountPage} />
+			<HeaderInfoSection isHide={isTransparentBackground} />
 		</div>
 	);
 };

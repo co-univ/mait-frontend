@@ -1,6 +1,9 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { UserRound } from "lucide-react";
+import useTeams from "@/hooks/useTeams";
+import { apiHooks } from "@/libs/api";
 import type { JoinedTeamUserApiResponse } from "@/libs/types";
+import TeamManagementPendingBox from "../../components/common/TeamManagementPendingBox";
 import TeamManagementUsersBox from "../../components/users/TeamManagementUsersBox";
 import TeamManagementUsersPanel from "../../components/users/TeamManagementUsersPanel";
 
@@ -25,8 +28,27 @@ const TeamManagementUsersMakerPanel = ({
 	makers,
 	onUserDelete,
 }: TeamManagementUsersMakerPanelProps) => {
+	const { activeTeam } = useTeams();
+
+	const { data } = apiHooks.useQuery(
+		"get",
+		"/api/v1/teams/{teamId}/applicants",
+		{
+			params: {
+				path: { teamId: activeTeam?.teamId ?? 0 },
+			},
+		},
+	);
+
+	const applicants = data?.data;
+
 	return (
 		<TeamManagementUsersPanel icon={<UserRound />} title="메이커">
+			<div className="flex flex-col gap-gap-5">
+				{applicants?.map((user) => (
+					<TeamManagementPendingBox key={user.id} user={user} />
+				))}
+			</div>
 			<div className="flex flex-col gap-gap-5">
 				{owners?.map((user) => (
 					<TeamManagementUsersBox key={user.teamUserId} user={user} />
