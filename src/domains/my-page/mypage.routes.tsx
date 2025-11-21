@@ -1,5 +1,7 @@
+import { lazy } from "react";
 import { ProtectedRoute } from "@/ProtectedRoute";
-import MyPage from "./pages/MyPage";
+
+const MyPage = lazy(() => import("./pages/MyPage"));
 
 export const myPageRoutes = [
 	{

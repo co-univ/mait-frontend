@@ -1,9 +1,11 @@
+import { lazy } from "react";
 import PublicOnlyRoute from "@/ProtectedRoute";
-import AuthAccountCreationSuccess from "./pages/AuthAccountCreationSuccess";
-import AuthCreateAccount from "./pages/AuthCreateAccount";
-import Login from "./pages/AuthLogin";
-import AuthOAuthCallback from "./pages/AuthOAuthCallback";
-import AuthOAuthSignUp from "./pages/AuthOAuthSignUp";
+
+const AuthAccountCreationSuccess = lazy(() => import("./pages/AuthAccountCreationSuccess"));
+const AuthCreateAccount = lazy(() => import("./pages/AuthCreateAccount"));
+const Login = lazy(() => import("./pages/AuthLogin"));
+const AuthOAuthCallback = lazy(() => import("./pages/AuthOAuthCallback"));
+const AuthOAuthSignUp = lazy(() => import("./pages/AuthOAuthSignUp"));
 
 export const authRoutes = [
 	{
