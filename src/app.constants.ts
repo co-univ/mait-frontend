@@ -9,7 +9,7 @@ import type {
 	UpdateShortQuestionApiRequest,
 } from "./libs/types";
 
-export const SMALL_PAGE_MARGIN_PATHS = ["/creation"];
+export const SMALL_PAGE_MARGIN_PATHS = ["/creation", "/"];
 export const SMALL_PAGE_MARGIN = 32;
 export const LARGE_PAGE_MARGIN = 172;
 

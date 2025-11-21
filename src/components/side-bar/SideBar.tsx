@@ -9,6 +9,7 @@ import {
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
 import useUser from "@/hooks/useUser";
+import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
 import SideBarDropdown from "./SideBarDropdown";
@@ -24,24 +25,28 @@ const NAVIGATION_ITEMS = [
 		label: "문제 관리",
 		path: "/management",
 		activePaths: ["/management", "/creation", "/control"],
+		isMakerOnly: true,
 	},
 	{
 		icon: <Puzzle />,
 		label: "문제 풀기",
 		path: "/solving",
 		activePaths: ["/solving"],
+		isMakerOnly: false,
 	},
-	{
-		icon: <LayoutDashboard />,
-		label: "풀이 결과 대시보드",
-		path: "/dashboard",
-		activePaths: ["/dashboard"],
-	},
+	// {
+	// 	icon: <LayoutDashboard />,
+	// 	label: "풀이 결과 대시보드",
+	// 	path: "/dashboard",
+	// 	activePaths: ["/dashboard"],
+	// 	isMakerOnly: false,
+	// },
 	{
 		icon: <Users />,
 		label: "팀 관리",
 		path: "/team-management",
 		activePaths: ["/team-management"],
+		isMakerOnly: false,
 	},
 ];
 
@@ -52,6 +57,7 @@ const NAVIGATION_ITEMS = [
 const SideBar = () => {
 	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
+
 	const location = useLocation();
 
 	const sidebarVariant: "default" | "elevation" = hasValidPath(
@@ -62,6 +68,10 @@ const SideBar = () => {
 		: "default";
 
 	const isSidebarOpenWithUser = isSidebarOpen && user;
+	const isGradationSecondaryRadialPage =
+		GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS.some((path) =>
+			hasValidPath([path], location.pathname),
+		);
 
 	/**
 	 *
@@ -86,6 +96,15 @@ const SideBar = () => {
 			toggleSidebarOpen();
 		}
 	}, [sidebarVariant]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (isGradationSecondaryRadialPage && isSidebarOpen) {
+			toggleSidebarOpen();
+		}
+	}, [isGradationSecondaryRadialPage, isSidebarOpen, toggleSidebarOpen]);
 
 	return (
 		<aside
