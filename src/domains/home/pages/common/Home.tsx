@@ -1,6 +1,7 @@
 import HomeSlide from "../../components/common/HomeSlide";
 import HomeFirst from "./HomeFirst";
 import HomeSecond from "./HomeSecond";
+import HomeThird from "./HomeThird";
 
 //
 //
@@ -17,6 +18,9 @@ const Home = () => {
 			</HomeSlide>
 			<HomeSlide>
 				<HomeSecond />
+			</HomeSlide>
+			<HomeSlide>
+				<HomeThird />
 			</HomeSlide>
 		</div>
 	);
