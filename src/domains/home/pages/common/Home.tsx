@@ -1,5 +1,6 @@
 import HomeSlide from "../../components/common/HomeSlide";
 import HomeFirst from "./HomeFirst";
+import HomeSecond from "./HomeSecond";
 
 //
 //
@@ -8,11 +9,14 @@ import HomeFirst from "./HomeFirst";
 const Home = () => {
 	return (
 		<div
-			className="w-full h-full overflow-y-scroll snap-mandatory snap-y"
+			className="w-full h-screen overflow-y-scroll snap-mandatory snap-y"
 			style={{ scrollbarWidth: "none" }}
 		>
 			<HomeSlide>
 				<HomeFirst />
+			</HomeSlide>
+			<HomeSlide>
+				<HomeSecond />
 			</HomeSlide>
 		</div>
 	);

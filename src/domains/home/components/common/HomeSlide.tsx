@@ -13,7 +13,7 @@ interface HomeSlideProps {
 //
 
 const HomeSlide = ({ children }: HomeSlideProps) => {
-	return <section className="h-full snap-center">{children}</section>;
+	return <section className="h-screen snap-center">{children}</section>;
 };
 
 export default HomeSlide;

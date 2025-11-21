@@ -35,7 +35,7 @@ const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE = {
 	background: "linear-gradient(180deg, #FFF 0%, #ECF2FE 89.42%, #ECF2FE 100%)",
 };
 
-const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/", "/invite"];
+const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/invite"];
 
 //
 //
@@ -71,7 +71,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 		};
 
 		if (location.pathname === "/") {
-			return `${ret.top}px ${ret.right}px ${ret.bottom}px ${ret.left}px`;
+			return "0px";
 		}
 
 		const isSmallMarginPage = hasValidPath(
@@ -131,7 +131,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			className="flex flex-col min-w-screen min-h-screen"
 			style={getBackgroundStyle()}
 		>
-			<Header isTransparentBackground={isGradationSecondaryRadialPage} />
+			{location.pathname === "/" ? null : (
+				<Header isTransparentBackground={isGradationSecondaryRadialPage} />
+			)}
 			<div className="relative flex flex-1">
 				<Sidebar />
 				<main
