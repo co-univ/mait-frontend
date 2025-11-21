@@ -77,7 +77,7 @@ const AuthOAuthCallback = () => {
 
 				if (data?.data) {
 					localStorage.setItem("token", data.data);
-					handlePostLoginRedirect();
+					navigate("/");
 				}
 			} catch (error) {
 				console.error("Access Token 발급 실패: ", error);
