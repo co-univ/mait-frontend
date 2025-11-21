@@ -106,7 +106,7 @@ const AuthCreateAccount = () => {
 
 			const accessToken = response.response.headers.get("Authorization");
 			if (accessToken) {
-				localStorage.setItem("accessToken", accessToken);
+				localStorage.setItem("token", accessToken);
 			}
 
 			if (response.data?.isSuccess) {
