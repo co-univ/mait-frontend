@@ -70,6 +70,10 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			right: 0,
 		};
 
+		if (location.pathname === "/") {
+			return "0px";
+		}
+
 		const isSmallMarginPage = hasValidPath(
 			SMALL_PAGE_MARGIN_PATHS,
 			location.pathname,
@@ -127,7 +131,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			className="flex flex-col min-w-screen min-h-screen"
 			style={getBackgroundStyle()}
 		>
-			<Header isTransparentBackground={isGradationSecondaryRadialPage} />
+			{location.pathname === "/" ? null : (
+				<Header isTransparentBackground={isGradationSecondaryRadialPage} />
+			)}
 			<div className="relative flex flex-1">
 				<Sidebar />
 				<main
