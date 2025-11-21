@@ -1,3 +1,12 @@
-import type { FillBlankUpdateAnswerPayload, MultipleChoiceUpdateAnswerPayload, OrderingUpdateAnswerPayload, ShortUpdateAnswerPayload } from "@/libs/types";
+import type {
+	FillBlankUpdateAnswerPayload,
+	MultipleChoiceUpdateAnswerPayload,
+	OrderingUpdateAnswerPayload,
+	ShortUpdateAnswerPayload,
+} from "@/libs/types";
 
-export type QuestionUpdatePayload = MultipleChoiceUpdateAnswerPayload | ShortUpdateAnswerPayload | OrderingUpdateAnswerPayload | FillBlankUpdateAnswerPayload
+export type QuestionUpdatePayload =
+	| MultipleChoiceUpdateAnswerPayload
+	| ShortUpdateAnswerPayload
+	| OrderingUpdateAnswerPayload
+	| FillBlankUpdateAnswerPayload;

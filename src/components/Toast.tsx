@@ -122,7 +122,7 @@ const toastWithMessage = (type: ToastType, message: string) => {
 		progressClassName: colorClasses.bg,
 		closeButton: false,
 		className:
-			"min-w-[720px] relative flex w-full items-center justify-between pt-padding-6 pb-padding-4 px-padding-8",
+			"min-w-[450px] relative flex w-full items-center justify-between pt-padding-6 pb-padding-4 px-padding-8",
 	};
 
 	toast(<ToastBody />, options);

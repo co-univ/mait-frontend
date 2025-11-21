@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useLocation } from "react-router-dom";
 import { HEADER_HEIGHT } from "@/app.constants";
 import HeaderBrandSection from "./HeaderBrandSection";
 import HeaderInfoSection from "./HeaderInfoSection";
@@ -8,20 +9,25 @@ import HeaderInfoSection from "./HeaderInfoSection";
 //
 
 interface HeaderProps {
-	isAccountPage: boolean;
+	isTransparentBackground?: boolean;
 }
 
 //
 //
 //
 
-const Header = ({ isAccountPage }: HeaderProps) => {
+const Header = ({ isTransparentBackground }: HeaderProps) => {
+	const location = useLocation();
+
+	const isHomePage = location.pathname === "/";
+
 	return (
 		<div
 			className={clsx(
 				"fixed top-0 z-10 flex w-full justify-between items-center bg-color-alpha-white100 px-padding-12",
 				{
-					"bg-transparent": isAccountPage,
+					"bg-transparent": isTransparentBackground,
+					absolute: isHomePage,
 				},
 			)}
 			style={{
@@ -29,7 +35,7 @@ const Header = ({ isAccountPage }: HeaderProps) => {
 			}}
 		>
 			<HeaderBrandSection />
-			<HeaderInfoSection isHide={isAccountPage} />
+			<HeaderInfoSection isHide={isTransparentBackground} />
 		</div>
 	);
 };

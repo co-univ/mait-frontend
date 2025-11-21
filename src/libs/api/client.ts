@@ -4,8 +4,8 @@ import type { paths } from "@/libs/types/api";
 const authMiddleware: Middleware = {
 	async onRequest({ request }) {
 		if (request.url.includes("/auth/access-token")) {
-      return request;
-    }
+			return request;
+		}
 
 		const token = localStorage.getItem("token");
 
@@ -19,6 +19,7 @@ const authMiddleware: Middleware = {
 
 const apiClient = createClient<paths>({
 	baseUrl: process.env.PUBLIC_BASE_URL || "",
+	credentials: "include",
 });
 
 apiClient.use(authMiddleware);

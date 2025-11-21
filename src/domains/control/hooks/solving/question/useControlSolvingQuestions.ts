@@ -27,6 +27,9 @@ const useControlSolvingQuestions = ({
 		{
 			params: {
 				path: { questionSetId },
+				query: {
+					mode: "MANAGING",
+				},
 			},
 		},
 	);

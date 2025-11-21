@@ -1,8 +1,11 @@
+import { lazy } from "react";
 import PublicOnlyRoute from "@/ProtectedRoute";
-import AuthOAuthCallback from "./components/AuthOAuthCallback";
-import AuthCreateAccount from "./pages/AuthCreateAccount";
-import Login from "./pages/AuthLogin";
-import AuthAccountCreationSuccess from "./pages/AuthAccountCreationSuccess";
+
+const AuthAccountCreationSuccess = lazy(() => import("./pages/AuthAccountCreationSuccess"));
+const AuthCreateAccount = lazy(() => import("./pages/AuthCreateAccount"));
+const Login = lazy(() => import("./pages/AuthLogin"));
+const AuthOAuthCallback = lazy(() => import("./pages/AuthOAuthCallback"));
+const AuthOAuthSignUp = lazy(() => import("./pages/AuthOAuthSignUp"));
 
 export const authRoutes = [
 	{
@@ -18,11 +21,15 @@ export const authRoutes = [
 		element: <AuthOAuthCallback />,
 	},
 	{
+		path: "/oauth/signup",
+		element: <AuthOAuthSignUp />,
+	},
+	{
 		path: "/account/create",
 		element: <AuthCreateAccount />,
 	},
 	{
 		path: "/account/create/success",
-		element: <AuthAccountCreationSuccess />
-	}
+		element: <AuthAccountCreationSuccess />,
+	},
 ];

@@ -7,7 +7,6 @@ import useControlSolvings from "../../hooks/solving/question/useControlSolvingQu
 //
 
 const ControlRedirect = () => {
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 
 	const { questions, isLoading } = useControlSolvings({ questionSetId });
@@ -23,14 +22,14 @@ const ControlRedirect = () => {
 
 			if (firstQuestionId) {
 				navigate(
-					`/control/solving/team/${teamId}/question-set/${questionSetId}/question/${firstQuestionId}?submit-type=all`,
+					`/control/solving/question-set/${questionSetId}/question/${firstQuestionId}?submit-type=all`,
 					{
 						replace: true,
 					},
 				);
 			}
 		}
-	}, [questions, isLoading, navigate, teamId, questionSetId]);
+	}, [questions, isLoading, navigate, questionSetId]);
 
 	return null;
 };

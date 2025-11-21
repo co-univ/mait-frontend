@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import AuthCard from "../components/AuthCard";
 import AuthEmailLogin from "../components/AuthEmailLogin";
 import AuthGoogleLogin from "../components/AuthGoogleLogin";
@@ -7,6 +9,18 @@ import AuthGoogleLogin from "../components/AuthGoogleLogin";
 //
 
 const AuthLogin = () => {
+	const [searchParams] = useSearchParams();
+
+	//
+	//
+	//
+	useEffect(() => {
+		const redirectUrl = searchParams.get("redirect");
+		if (redirectUrl) {
+			localStorage.setItem("redirectAfterLogin", redirectUrl);
+		}
+	}, [searchParams]);
+
 	return (
 		<AuthCard title="MAIT 로그인">
 			<AuthGoogleLogin />

@@ -10,7 +10,7 @@ import {
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
 import Header from "@/components/header/Header";
-import Sidebar from "@/components/sidebar/SideBar";
+import Sidebar from "@/components/side-bar/SideBar";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
@@ -20,10 +20,22 @@ import { SIDEBAR_TRANSITION } from "../app.constants";
 //
 //
 
-const ACCOUNT_BACKGROUND_STYLE = {
+const GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE = {
 	background:
 		"radial-gradient(100% 100% at 50% 0%, #F2ECFE 6.94%, #D8E5FD 46.15%, #ECF2FE 70.19%, #FFF 100%)",
 };
+
+export const GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS = [
+	"/login",
+	"/account",
+	"/mypage",
+];
+
+const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE = {
+	background: "linear-gradient(180deg, #FFF 0%, #ECF2FE 89.42%, #ECF2FE 100%)",
+};
+
+const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/invite"];
 
 //
 //
@@ -38,7 +50,11 @@ interface AppLayoutProps {
 //
 
 const AppLayout = ({ children }: AppLayoutProps) => {
-	const [isAccountPage, setIsAccountPage] = useState(false);
+	const [isGradationSecondaryRadialPage, setIsGradationSecondaryRadialPage] =
+		useState(false);
+	const [isGradationPrimaryLinearPage, setIsGradationPrimaryLinearPage] =
+		useState(false);
+
 	const location = useLocation();
 	const { isSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
@@ -53,6 +69,10 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			left: 0,
 			right: 0,
 		};
+
+		if (location.pathname === "/") {
+			return "0px";
+		}
 
 		const isSmallMarginPage = hasValidPath(
 			SMALL_PAGE_MARGIN_PATHS,
@@ -76,25 +96,48 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 		return `${ret.top}px ${ret.right}px ${ret.bottom}px ${ret.left}px`;
 	};
 
+	/**
+	 *
+	 */
+	const getBackgroundStyle = () => {
+		if (isGradationSecondaryRadialPage) {
+			return GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE;
+		}
+
+		if (isGradationPrimaryLinearPage) {
+			return GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE;
+		}
+
+		return {};
+	};
+
 	//
 	useEffect(() => {
-		const isAccountPage = ["/login", "/account"].some((path) =>
-			location.pathname.startsWith(path),
-		);
+		const isGradationSecondaryRadialPage =
+			GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS.some((path) =>
+				location.pathname.startsWith(path),
+			);
+		const isGradationPrimaryLinearPage =
+			GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS.some((path) =>
+				location.pathname.startsWith(path),
+			);
 
-		setIsAccountPage(isAccountPage);
+		setIsGradationSecondaryRadialPage(isGradationSecondaryRadialPage);
+		setIsGradationPrimaryLinearPage(isGradationPrimaryLinearPage);
 	}, [location]);
 
 	return (
 		<div
 			className="flex flex-col min-w-screen min-h-screen"
-			style={isAccountPage ? ACCOUNT_BACKGROUND_STYLE : {}}
+			style={getBackgroundStyle()}
 		>
-			<Header isAccountPage={isAccountPage} />
+			{location.pathname === "/" ? null : (
+				<Header isTransparentBackground={isGradationSecondaryRadialPage} />
+			)}
 			<div className="relative flex flex-1">
 				<Sidebar />
 				<main
-					className={clsx("flex-1", SIDEBAR_TRANSITION)}
+					className={clsx("flex-1 relative", SIDEBAR_TRANSITION)}
 					style={{
 						margin: getPageMargin(),
 					}}

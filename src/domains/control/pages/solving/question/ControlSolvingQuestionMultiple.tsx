@@ -9,7 +9,7 @@ import useControlSolvingQuestionMultiple from "@/domains/control/hooks/solving/q
 
 interface ControlSolvingQuestionMultipleProps {
 	readOnly: boolean;
-	onRegisterSubmit: (handler: (() => Promise<boolean>)) => void;
+	onRegisterSubmit: (handler: () => Promise<boolean>) => void;
 }
 
 //
@@ -23,10 +23,11 @@ const ControlSolvingQuestionMultiple = ({
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { choices, handleCheckChoice, handleAnswerAdd } = useControlSolvingQuestionMultiple({
-		questionSetId,
-		questionId,
-	});
+	const { choices, handleCheckChoice, handleAnswerAdd } =
+		useControlSolvingQuestionMultiple({
+			questionSetId,
+			questionId,
+		});
 
 	//
 	//

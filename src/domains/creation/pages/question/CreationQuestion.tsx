@@ -31,7 +31,6 @@ const CreationQuestion = () => {
 	const navigate = useNavigate();
 	const questionNavigationRef = useRef<QuestionNavigationRef>(null);
 
-	const teamId = Number(useParams().teamId);
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
@@ -72,7 +71,7 @@ const CreationQuestion = () => {
 		handleUpdateQuestion();
 
 		navigate(
-			`/creation/question/team/${teamId}/question-set/${questionSetId}/question/${newQuestionId}`,
+			`/creation/question/question-set/${questionSetId}/question/${newQuestionId}`,
 			{ replace: true },
 		);
 	};

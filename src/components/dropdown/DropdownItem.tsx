@@ -60,9 +60,6 @@ const DropdownItem = ({
 		<div
 			className={clsx(
 				"box-border flex items-center px-padding-4 w-full",
-				{
-					"pb-padding-1": isHeader,
-				},
 				className,
 			)}
 		>
@@ -71,7 +68,7 @@ const DropdownItem = ({
 				onClick={handleClick}
 				disabled={disabled || isHeader}
 				className={clsx(
-					"flex items-center relative py-padding-2 px-padding-4 rounded-sm w-full",
+					"flex items-center relative py-padding-2 px-padding-4 mb-padding-2 rounded-sm w-full",
 					{
 						"bg-color-primary-5": isSelected && !isHeader,
 						"cursor-pointer hover:bg-color-primary-5": !disabled && !isHeader,
@@ -87,14 +84,14 @@ const DropdownItem = ({
 					{checkIcon}
 				</div>
 
-				<div className="flex gap-gap-5 items-center grow">
+				<div
+					className={clsx("flex gap-gap-5 items-center grow", {
+						"text-color-gray-30": (disabled || !isSelected) && !isHeader,
+						"text-black": !disabled,
+					})}
+				>
 					{icon && <div className="flex items-center">{icon}</div>}
-					<p
-						className={clsx("typo-body-small text-nowrap whitespace-pre", {
-							"text-color-gray-30": disabled,
-							"text-black": !disabled,
-						})}
-					>
+					<p className="typo-body-small text-nowrap whitespace-pre">
 						{children}
 					</p>
 				</div>

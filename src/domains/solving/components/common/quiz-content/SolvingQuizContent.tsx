@@ -1,6 +1,7 @@
-import { QuestionType } from "src/enums/solving.enum";
 import SolvingQuestionTitle from "src/domains/solving/components/common/quiz-title";
-import type { QuestionApiResponse } from "@/types";
+import { QuestionType } from "src/enums/solving.enum";
+import type { QuestionApiResponse } from "@/libs/types";
+import SolvingQuizImage from "../SolvingQuizImage";
 import SolvingQuizContentBlankAnswer from "./SolvingQuizContentBlankAnswer";
 import SolvingQuizContentMultipleAnswers from "./SolvingQuizContentMultipleAnswers";
 import SolvingQuizContentOrderAnswers from "./SolvingQuizContentOrderAnswers";
@@ -37,7 +38,9 @@ const SolvingQuizContent = ({
 				questionInfo={questionInfo}
 				userAnswers={userAnswers}
 			/>
-			{/* <SolvingQuizImage src="https://cotatos3.s3.ap-northeast-2.amazonaws.com/session/c71fff82-b7f9-4f9c-87aa-48f1b22bcc5f.jpeg" /> */}
+			{questionInfo?.imageUrl && (
+				<SolvingQuizImage src={questionInfo?.imageUrl} />
+			)}
 			<div className="flex-grow h-size-height-5" />
 			{type === QuestionType.SHORT && (
 				<SolvingQuizContentShortAnswer

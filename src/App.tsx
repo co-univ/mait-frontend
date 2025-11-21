@@ -1,22 +1,17 @@
+import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import LoginModal from "@/components/auth/LoginModal";
 import AppLayout from "@/layouts/AppLayout";
 import Toast from "./components/Toast";
-import useLoginModalOpenStore from "./stores/useLoginModalOpenStore";
-
-//
-//
-//
+import Loading from "./pages/Loading";
 
 const App = () => {
-	const { isLoginModalOpen, closeLoginModal } = useLoginModalOpenStore();
-
 	return (
 		<>
 			<AppLayout>
-				<Outlet />
+				<Suspense fallback={<Loading />}>
+					<Outlet />
+				</Suspense>
 			</AppLayout>
-			<LoginModal open={isLoginModalOpen} onClose={closeLoginModal} />
 			<Toast />
 		</>
 	);

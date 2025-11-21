@@ -35,7 +35,7 @@ const HeaderInfoSection = ({ isHide }: HeaderInfoSectionProps) => {
 
 		if (user) {
 			// Handle user click
-			// TODO: navigate to my page
+			navigate("/mypage");
 		} else {
 			// Handle guest click
 			navigate("/login");

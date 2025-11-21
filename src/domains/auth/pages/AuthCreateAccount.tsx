@@ -1,13 +1,13 @@
 import clsx from "clsx";
 import { Dices } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { apiClient } from "@/libs/api";
 import type { LatestPoliciesApiResponse, PolicyType } from "@/libs/types";
 import AuthCard from "../components/AuthCard";
 import AuthTermDetail from "../components/AuthTermDetail";
 import AuthTerms from "../components/AuthTerms";
-import { useNavigate } from "react-router-dom";
 
 //
 //
@@ -67,22 +67,6 @@ const AuthCreateAccount = () => {
 	/**
 	 *
 	 */
-	const updateNickname = () => {
-		try {
-			const response = apiClient.PATCH("/api/v1/users/nickname", {
-				body: {
-					nickname: nickname,
-				},
-			});
-			return response;
-		} catch (error) {
-			console.error("닉네임 업데이트 실패:", error);
-		}
-	};
-
-	/**
-	 *
-	 */
 	const getAgreementList = async () => {
 		try {
 			const response = await apiClient.GET("/api/v1/policies", {
@@ -111,31 +95,22 @@ const AuthCreateAccount = () => {
 	/**
 	 *
 	 */
-	const registerAgreement = () => {
+	const handleButtonClick = async () => {
 		try {
-			const response = apiClient.POST("/api/v1/policies/check", {
+			const response = await apiClient.POST("/api/v1/users/sign-up", {
 				body: {
+					nickname: nickname,
 					policyChecks: termChecks,
 				},
 			});
-			return response;
-		} catch (error) {
-			console.error("약관 동의 등록 실패:", error);
-		}
-	};
 
-	/**
-	 *
-	 */
-	const handleButtonClick = async () => {
-		try {
-			const [userNickname, agreementStatus] = await Promise.all([
-				updateNickname(),
-				registerAgreement(),
-			]);
+			const accessToken = response.response.headers.get("Authorization");
+			if (accessToken) {
+				localStorage.setItem("token", accessToken);
+			}
 
-			if (userNickname?.data?.isSuccess && agreementStatus?.data?.isSuccess) {
-				navigate('success');
+			if (response.data?.isSuccess) {
+				navigate("success");
 			}
 		} catch (error) {
 			console.error("계정 생성하기 실패: ", error);

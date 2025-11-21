@@ -4,6 +4,7 @@ import { createContext, useContext } from "react";
 import { useRadioItem } from "./useRadio";
 
 export interface RadioItemProps {
+	disabled?: boolean;
 	/** The value of this radio item */
 	value: string;
 	/** Additional CSS class names */
