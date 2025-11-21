@@ -53,7 +53,7 @@ const Home = () => {
 
 	return (
 		<div className="w-full h-full flex flex-col items-center absolute left-0">
-			<div className="flex flex-col gap-[2rem] items-center mt-11">
+			<div className="flex flex-col gap-[2rem] items-center mt-11 z-10">
 				<div className="flex flex-col gap-[10px] items-center">
 					<h1 className="typo-heading-xlarge">
 						문제 제작은 자동으로, 학습은 함께
@@ -70,7 +70,7 @@ const Home = () => {
 					바로 시작하기
 				</button>
 			</div>
-			<div className="mt-[-23rem] w-full flex justify-center">
+			<div className="mt-[-23rem] w-full flex justify-center z-0 user-select-none pointer-events-none">
 				<Lottie options={LOTTIE_OPTIONS} width={width} />
 			</div>
 		</div>
