@@ -113,6 +113,10 @@
 		"pretendard": {
 			"value": "Pretendard",
 			"type": "fontFamilies"
+		},
+		"lexend": {
+			"value": "Lexend",
+			"type": "fontFamilies"
 		}
 	},
 	"lineHeights": {

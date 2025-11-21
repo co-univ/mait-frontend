@@ -81,7 +81,11 @@ const CloseButton = ({
 }) => {
 	const colorClass = SHARED_COLOR_CLASSES[type].text;
 	return (
-		<button type="button" onClick={closeToast} className="self-start p-[4px]">
+		<button
+			type="button"
+			onClick={closeToast}
+			className="absolute right-padding-8 top-padding-8"
+		>
 			<X size={16} className={`${colorClass} hover:opacity-80`} />
 		</button>
 	);
@@ -100,7 +104,7 @@ const toastWithMessage = (type: ToastType, message: string) => {
 	}: {
 		closeToast?: (e: React.MouseEvent<HTMLElement>) => void;
 	}) => (
-		<div className="flex h-full w-full items-center justify-between px-[1rem] py-[0.75rem] font-paperlogy">
+		<>
 			<div className="flex items-start">
 				<div className="mr-padding-8 flex-shrink-0 p-[4px]">{icon}</div>
 				<div className="flex flex-col gap-padding-2">
@@ -109,7 +113,7 @@ const toastWithMessage = (type: ToastType, message: string) => {
 				</div>
 			</div>
 			<CloseButton closeToast={closeToast} type={type} />
-		</div>
+		</>
 	);
 
 	const options: ToastOptions = {
@@ -117,7 +121,8 @@ const toastWithMessage = (type: ToastType, message: string) => {
 		type: type,
 		progressClassName: colorClasses.bg,
 		closeButton: false,
-		className: "w-[720px] h-[72px] rounded-md p-0",
+		className:
+			"min-w-[450px] relative flex w-full items-center justify-between pt-padding-6 pb-padding-4 px-padding-8",
 	};
 
 	toast(<ToastBody />, options);

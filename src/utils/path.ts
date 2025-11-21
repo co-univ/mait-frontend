@@ -4,9 +4,8 @@
  * @param currentPath - The current path to check.
  * @returns True if a match is found, false otherwise.
  */
-export const hasFirstValidPath = (
-	candidates: string[],
-	currentPath: string,
-) => {
-	return candidates.some((path) => path === currentPath.split("/")[1] || "");
+export const hasValidPath = (candidates: string[], currentPath: string) => {
+	return candidates.some(
+		(path) => path.split("/")[1] === currentPath.split("/")[1],
+	);
 };
