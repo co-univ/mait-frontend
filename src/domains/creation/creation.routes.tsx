@@ -1,9 +1,11 @@
+import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import CreationRedirect from "@/domains/creation/pages/common/CreationRedirect";
-import CreationNew from "@/domains/creation/pages/new/CreationNew";
-import CreationQuestion from "@/domains/creation/pages/question/CreationQuestion";
-import CreationNewLoading from "./pages/new/CreationNewLoading";
-import CreationPublish from "./pages/publish/CreationPublish";
+
+const CreationRedirect = lazy(() => import("@/domains/creation/pages/common/CreationRedirect"));
+const CreationNew = lazy(() => import("@/domains/creation/pages/new/CreationNew"));
+const CreationQuestion = lazy(() => import("@/domains/creation/pages/question/CreationQuestion"));
+const CreationNewLoading = lazy(() => import("./pages/new/CreationNewLoading"));
+const CreationPublish = lazy(() => import("./pages/publish/CreationPublish"));
 
 export const creationRoutes: RouteObject[] = [
 	{

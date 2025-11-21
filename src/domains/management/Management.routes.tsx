@@ -1,10 +1,8 @@
+import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import Management from "./pages/common/Management";
-import ManagementRedirect from "./pages/common/ManagementRedirect";
 
-//
-//
-//
+const Management = lazy(() => import("./pages/common/Management"));
+const ManagementRedirect = lazy(() => import("./pages/common/ManagementRedirect"));
 
 export const managementRoutes: RouteObject[] = [
 	{

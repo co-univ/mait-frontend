@@ -1255,31 +1255,12 @@ export interface components {
             nickname: string;
             policyChecks: components["schemas"]["PolicyCheckRequest"][];
         };
-        ApiResponseUserInfoApiResponse: {
-            isSuccess?: boolean;
-            data?: components["schemas"]["UserInfoApiResponse"];
-        };
-        UserInfoApiResponse: {
-            /**
-             * Format: int64
-             * @description 사용자 ID
-             */
-            id?: number;
-            /** @description 사용자 이름 */
-            name?: string;
-            /** @description 사용자 이메일 */
-            email?: string;
-            /** @description 사용자 닉네임 */
-            nickname?: string;
-            /** @description 사용자 전체 닉네임 */
-            fullNickname?: string;
-        };
-        CreateTeamApiRequest: {
-            name: string;
-        };
         ApiResponseVoid: {
             isSuccess?: boolean;
             data?: Record<string, never>;
+        };
+        CreateTeamApiRequest: {
+            name: string;
         };
         AddTeamUserApiRequest: {
             /** Format: int64 */
@@ -1615,6 +1596,25 @@ export interface components {
             /** @description 랜덤 닉네임 */
             nickname: string;
         };
+        ApiResponseUserInfoApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["UserInfoApiResponse"];
+        };
+        UserInfoApiResponse: {
+            /**
+             * Format: int64
+             * @description 사용자 ID
+             */
+            id?: number;
+            /** @description 사용자 이름 */
+            name?: string;
+            /** @description 사용자 이메일 */
+            email?: string;
+            /** @description 사용자 닉네임 */
+            nickname?: string;
+            /** @description 사용자 전체 닉네임 */
+            fullNickname?: string;
+        };
         ApiResponseListUserInfoApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["UserInfoApiResponse"][];
@@ -1687,9 +1687,18 @@ export interface components {
             data?: components["schemas"]["TeamApiResponse"][];
         };
         TeamApiResponse: {
-            /** Format: int64 */
-            teamId?: number;
-            teamName?: string;
+            /**
+             * Format: int64
+             * @description 팀 pk
+             */
+            teamId: number;
+            /** @description 팀 이름 */
+            teamName: string;
+            /**
+             * @description 팀 내 유저 역할
+             * @enum {string}
+             */
+            role: "MAKER" | "OWNER" | "PLAYER";
         };
         ApiResponseTeamInviteApiResponse: {
             isSuccess?: boolean;
@@ -2291,7 +2300,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseUserInfoApiResponse"];
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };

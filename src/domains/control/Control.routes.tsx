@@ -1,11 +1,9 @@
+import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import ControlRedirect from "./pages/common/ControlRedirect";
-import ControlParticipant from "./pages/participant/ControlParticipant";
-import ControlSolving from "./pages/solving/ControlSolving";
 
-//
-//
-//
+const ControlRedirect = lazy(() => import("./pages/common/ControlRedirect"));
+const ControlParticipant = lazy(() => import("./pages/participant/ControlParticipant"));
+const ControlSolving = lazy(() => import("./pages/solving/ControlSolving"));
 
 export const controlRoutes: RouteObject[] = [
 	{

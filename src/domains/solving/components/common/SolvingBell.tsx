@@ -32,7 +32,7 @@ const SolvingBell = ({ open }: SolvingBellProps) => {
 	}
 
 	return (
-		<div className="absolute top-[6rem] z-10">
+		<div className="absolute left-1/2 -translate-x-1/2 top-[6rem] z-10">
 			<Lottie options={OPTIONS} />
 		</div>
 	);

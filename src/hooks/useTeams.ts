@@ -49,10 +49,19 @@ const useTeams = (): UseTeamsReturn => {
 			setActiveTeamId(teams && teams?.length > 0 ? (teams[0].teamId ?? 0) : 0);
 		};
 
-		if (user) {
+		if (user && !activeTeamId) {
 			refetchTeams();
 		}
-	}, [user, refetch, setActiveTeamId, teams]);
+	}, [user, refetch, activeTeamId, setActiveTeamId, teams]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (teams && teams.length > 0 && !activeTeamId) {
+			setActiveTeamId(teams[0].teamId ?? 0);
+		}
+	}, [teams, activeTeamId, setActiveTeamId]);
 
 	return {
 		teams,

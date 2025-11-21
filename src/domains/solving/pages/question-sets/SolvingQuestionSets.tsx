@@ -6,15 +6,13 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
-import ManagementLiveTime from "./ManagementLiveTime";
-import ManagementMaking from "./ManagementMaking";
+import SolvingQuestionSetsLiveTime from "./SolvingQuestionSetsLiveTime";
 
 //
 //
 //
 
 const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
-	making: "MAKING",
 	"live-time": "LIVE_TIME",
 	review: "REVIEW",
 };
@@ -23,10 +21,10 @@ const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
 //
 //
 
-const Management = () => {
+const SolvingQuestionSets = () => {
 	const { activeTeam } = useTeams();
 	const [searchParams, setSearchParams] = useSearchParams();
-	const mode = searchParams.get("mode") || "making";
+	const mode = searchParams.get("mode") || "live-time";
 
 	const { questionSetList, questionSetGroup } = useQuestionSets({
 		teamId: activeTeam?.teamId ?? 0,
@@ -45,28 +43,25 @@ const Management = () => {
 	};
 
 	return (
-		<LabeledPageLayout icon={<SquarePen />} label="문제 관리">
+		<LabeledPageLayout icon={<SquarePen />} label="문제 풀기">
 			<Tabs.Root
 				value={mode}
 				onValueChange={handleModeChange}
 				className="flex flex-col gap-gap-11"
 			>
-				<QuestionSetsTabs modes={["making", "live-time", "review"]} />
-
-				<Tabs.Content value="making">
-					<ManagementMaking questionSets={questionSetList ?? []} />
-				</Tabs.Content>
+				<QuestionSetsTabs modes={["live-time", "review"]} />
 
 				<Tabs.Content value="live-time">
-					<ManagementLiveTime questionSetGroup={questionSetGroup} />
+					<SolvingQuestionSetsLiveTime questionSetGroup={questionSetGroup} />
 				</Tabs.Content>
 
 				<Tabs.Content value="review">
-					<ManagementMaking questionSets={questionSetList ?? []} />
+					<div />
+					{/* <ManagementLiveTime questionSetGroup={questionSetGroup} /> */}
 				</Tabs.Content>
 			</Tabs.Root>
 		</LabeledPageLayout>
 	);
 };
 
-export default Management;
+export default SolvingQuestionSets;

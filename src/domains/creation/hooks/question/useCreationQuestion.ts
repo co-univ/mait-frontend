@@ -260,11 +260,14 @@ const useCreationQuestion = ({
 			return;
 		}
 
-		const targetQuestion = questions.find((q) => q.id === deleteQuestionId);
+		const targetQuestionNumber = creationQuestionFindNumber(
+			questions,
+			deleteQuestionId,
+		);
 
 		const result = await confirm({
 			title: "정말 삭제하시겠습니까?",
-			description: `${targetQuestion?.number}번 문제를 삭제하실 경우, 원하시는 상태로 복구가 어렵습니다.`,
+			description: `${targetQuestionNumber}번 문제를 삭제하실 경우, 원하시는 상태로 복구가 어렵습니다.`,
 			cancelText: "취소",
 			confirmText: "확인",
 		});

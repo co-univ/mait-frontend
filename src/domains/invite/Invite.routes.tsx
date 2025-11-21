@@ -1,9 +1,7 @@
+import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import Invite from "./pages/common/Invite";
 
-//
-//
-//
+const Invite = lazy(() => import("./pages/common/Invite"));
 
 export const inviteRoutes: RouteObject[] = [
 	{

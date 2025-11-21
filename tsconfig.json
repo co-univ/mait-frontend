@@ -25,7 +25,8 @@
 			"@/utils/*": ["./src/utils/*"],
 			"@/apis/*": ["./src/apis/*"],
 			"@/assets/*": ["./src/assets/*"],
-			"@/libs/*": ["./src/libs/*"]
+			"@/libs/*": ["./src/libs/*"],
+			"@/pages/*": ["./src/pages/*"]
 		},
 
 		/* type checking */

@@ -25,7 +25,7 @@ const GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE = {
 		"radial-gradient(100% 100% at 50% 0%, #F2ECFE 6.94%, #D8E5FD 46.15%, #ECF2FE 70.19%, #FFF 100%)",
 };
 
-const GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS = [
+export const GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS = [
 	"/login",
 	"/account",
 	"/mypage",
@@ -137,7 +137,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			<div className="relative flex flex-1">
 				<Sidebar />
 				<main
-					className={clsx("flex-1", SIDEBAR_TRANSITION)}
+					className={clsx("flex-1 relative", SIDEBAR_TRANSITION)}
 					style={{
 						margin: getPageMargin(),
 					}}

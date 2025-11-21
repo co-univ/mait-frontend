@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import { FILL_BLANK_PATTERN } from "@/app.constants";
 import SolvingQuizTitleBlankInput from "./SolvingQuizTitleBlankInput";
 
 //
@@ -35,37 +36,41 @@ const SolvingQuizTitle = ({
 			return line;
 		}
 
-		const blankPattern = /___+/g;
-		const parts = line.split(blankPattern);
-		const blanks = line.match(blankPattern) || [];
+		const parts: (string | JSX.Element)[] = [];
+		let lastIndex = 0;
 
-		if (blanks.length === 0) {
-			return line;
-		}
+		// Reset the regex lastIndex
+		const pattern = new RegExp(FILL_BLANK_PATTERN.source, FILL_BLANK_PATTERN.flags);
 
-		const result: (string | JSX.Element)[] = [];
-		let blankIndex = 0;
-
-		for (let i = 0; i < parts.length; i++) {
-			if (parts[i]) {
-				result.push(parts[i]);
+		let match = pattern.exec(line);
+		while (match !== null) {
+			// Add text before the match
+			if (match.index > lastIndex) {
+				parts.push(line.slice(lastIndex, match.index));
 			}
 
-			if (i < blanks.length) {
-				result.push(
-					<SolvingQuizTitleBlankInput
-						key={`${lineIndex}-${blankIndex}`}
-						number={blankIndex + 1}
-						index={blankIndex}
-						questionInfo={questionInfo}
-						userAnswers={userAnswers}
-					/>,
-				);
-				blankIndex++;
-			}
+			// Add the blank input
+			const blankNumber = Number.parseInt(match[1], 10);
+			parts.push(
+				<SolvingQuizTitleBlankInput
+					key={`${lineIndex}-${blankNumber}`}
+					number={blankNumber}
+					index={blankNumber - 1}
+					questionInfo={questionInfo}
+					userAnswers={userAnswers}
+				/>,
+			);
+
+			lastIndex = pattern.lastIndex;
+			match = pattern.exec(line);
 		}
 
-		return result;
+		// Add remaining text
+		if (lastIndex < line.length) {
+			parts.push(line.slice(lastIndex));
+		}
+
+		return parts.length > 0 ? parts : line;
 	};
 
 	return (
