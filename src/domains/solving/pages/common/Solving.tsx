@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Solving = () => {
 	const navigate = useNavigate();
 
-	const questionId = 7;
+	const questionId = 14;
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
