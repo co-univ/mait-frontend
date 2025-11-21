@@ -51,7 +51,7 @@ const HomeThird = () => {
 						<div
 							// biome-ignore lint/suspicious/noArrayIndexKey: static list for publishing purpose
 							key={index}
-							className="h-[264px] rounded-radius-xlarge1 p-padding-8 flex flex-col justify-between"
+							className="h-[200px] relative rounded-radius-xlarge1 p-padding-8 flex flex-col justify-between"
 							style={{
 								background:
 									"radial-gradient(circle at 178px 80px, rgba(255,255,255,1) 0%, rgba(248,251,255,1) 100%)",
@@ -68,11 +68,11 @@ const HomeThird = () => {
 							</div>
 
 							{/* Image Placeholder */}
-							<div className="flex justify-end">
+							<div className="absolute bottom-[12px] right-[12px]">
 								<img
 									src={feature.image}
 									alt={feature.title}
-									className="w-[120px]"
+									className="w-[112px]"
 								/>
 							</div>
 						</div>
