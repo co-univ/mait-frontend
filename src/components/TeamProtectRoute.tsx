@@ -22,8 +22,7 @@ const TeamProtectRoute = ({ children }: TeamProtectRouteProps) => {
 		return <Loading />;
 	}
 
-	// TODO: check memer role in team
-	if (!activeTeam) {
+	if (activeTeam.role === "PLAYER") {
 		return <ErrorDetect />;
 	}
 

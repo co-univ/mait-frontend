@@ -8,6 +8,7 @@ import {
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
+import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
 import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
@@ -46,7 +47,7 @@ const NAVIGATION_ITEMS = [
 		label: "팀 관리",
 		path: "/team-management",
 		activePaths: ["/team-management"],
-		isMakerOnly: false,
+		isMakerOnly: true,
 	},
 ];
 
@@ -57,6 +58,7 @@ const NAVIGATION_ITEMS = [
 const SideBar = () => {
 	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
+	const { activeTeam } = useTeams();
 
 	const location = useLocation();
 
@@ -132,7 +134,10 @@ const SideBar = () => {
 				<div className="h-size-height-1" />
 
 				<div className="w-full flex flex-col gap-gap-5">
-					{NAVIGATION_ITEMS.map((item) => (
+					{NAVIGATION_ITEMS.filter(
+						(item) =>
+							!item.isMakerOnly || (activeTeam && activeTeam.role !== "PLAYER"),
+					).map((item) => (
 						<SidebarItem
 							key={item.path}
 							className={clsx("text-color-gray-30", {
