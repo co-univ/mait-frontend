@@ -2,7 +2,7 @@
 
 본 문서는 mait-frontend 프로젝트의 API 통신을 위한 `apiClient`와 `apiHooks`의 사용법을 안내합니다. 
 
-**API 명세서가 변경**되면, **`pnpm generate:types` 명령어를 실행**하여 `src/lib/types/api.d.ts` 파일을 최신 상태로 업데이트해야 합니다. 
+mait-backend의 API 명세서가 변경되면 `update-api-spec.yml`이 실행되고, 변경된 항목에 대해서 **자동으로 Pull Request가 생성**됩니다. Pull Request를 merge한 이후 **develop 브랜치를 작업 브랜치로 merge**하여 변경 사항을 업데이트합니다.
 
 이를 통해 **모든 API 요청과 응답에 대한 타입스크립트의 자동 완성 및 타입 검사** 혜택을 받을 수 있습니다.
 
