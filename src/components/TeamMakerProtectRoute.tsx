@@ -7,7 +7,7 @@ import Loading from "@/pages/Loading";
 //
 //
 
-interface TeamProtectRouteProps {
+interface TeamMakerProtectRouteProps {
 	children: React.ReactNode;
 }
 
@@ -15,18 +15,18 @@ interface TeamProtectRouteProps {
 //
 //
 
-const TeamProtectRoute = ({ children }: TeamProtectRouteProps) => {
+const TeamMakerProtectRoute = ({ children }: TeamMakerProtectRouteProps) => {
 	const { activeTeam } = useTeams();
 
 	if (!activeTeam) {
 		return <Loading />;
 	}
 
-	if (activeTeam.role === "PLAYER") {
+	if (activeTeam.role !== "MAKER" && activeTeam.role !== "OWNER") {
 		return <ErrorDetect />;
 	}
 
 	return <>{children}</>;
 };
 
-export default TeamProtectRoute;
+export default TeamMakerProtectRoute;

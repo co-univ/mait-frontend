@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import TeamProtectRoute from "@/components/TeamProtectRoute";
+import TeamMakerProtectRoute from "@/components/TeamMakerProtectRoute";
 
 const TeamManagement = lazy(() => import("./pages/common/TeamManagement"));
 const TeamManagementRedirect = lazy(() => import("./pages/common/TeamManagementRedirect"));
@@ -8,10 +8,10 @@ const TeamManagementRedirect = lazy(() => import("./pages/common/TeamManagementR
 export const teamManagementRouter: RouteObject[] = [
 	{
 		path: "/team-management",
-		element: <TeamProtectRoute><TeamManagement /></TeamProtectRoute>,
+		element: <TeamMakerProtectRoute><TeamManagement /></TeamMakerProtectRoute>,
 	},
 	{
 		path: "/team-management/redirect",
-		element: <TeamProtectRoute><TeamManagementRedirect /></TeamProtectRoute>,
+		element: <TeamMakerProtectRoute><TeamManagementRedirect /></TeamMakerProtectRoute>,
 	},
 ];
