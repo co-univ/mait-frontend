@@ -1,18 +1,16 @@
-import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
 import { authRouter } from "@/domains/auth";
-import { controlRouter } from "@/domains/control/Control.routes";
+import { controlRouter } from "@/domains/control/control.routes";
 import { creationRouter } from "@/domains/creation/creation.routes";
 import { homeRouter } from "@/domains/home";
-import { inviteRouter } from "@/domains/invite/Invite.routes";
-import { managementRouter } from "@/domains/management/Management.routes";
+import { inviteRouter } from "@/domains/invite/invite.routes";
+import { managementRouter } from "@/domains/management/management.routes";
 import { myPageRouter } from "@/domains/my-page";
 import { solvingRouter } from "@/domains/solving/solving.routes";
-import { teamManagementRouter } from "@/domains/team-management/TeamManagement.routes";
+import { teamManagementRouter } from "@/domains/team-management/team-management.routes";
 import TeamProtectRoute from "./components/TeamProtectRoute";
-
-const NotFound = lazy(() => import("@/pages/NotFound"));
+import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
 	{
