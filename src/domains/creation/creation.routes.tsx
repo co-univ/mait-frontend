@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
+import TeamProtectRoute from "@/components/TeamProtectRoute";
 
 const CreationRedirect = lazy(() => import("@/domains/creation/pages/common/CreationRedirect"));
 const CreationNew = lazy(() => import("@/domains/creation/pages/new/CreationNew"));
@@ -10,22 +11,22 @@ const CreationPublish = lazy(() => import("./pages/publish/CreationPublish"));
 export const creationRouter: RouteObject[] = [
 	{
 		path: "/creation/question/question-set/:questionSetId/question/:questionId",
-		element: <CreationQuestion />,
+		element: <TeamProtectRoute><CreationQuestion /></TeamProtectRoute>,
 	},
 	{
 		path: "/creation/new",
-		element: <CreationNew />,
+		element: <TeamProtectRoute><CreationNew /></TeamProtectRoute>,
 	},
 	{
 		path: "/creation/new/loading/question-set/:questionSetId",
-		element: <CreationNewLoading />,
+		element: <TeamProtectRoute><CreationNewLoading /></TeamProtectRoute>,
 	},
 	{
 		path: "/creation/publish/question-set/:questionSetId",
-		element: <CreationPublish />,
+		element: <TeamProtectRoute><CreationPublish /></TeamProtectRoute>,
 	},
 	{
 		path: "/creation/question/question-set/:questionSetId",
-		element: <CreationRedirect />,
+		element: <TeamProtectRoute><CreationRedirect /></TeamProtectRoute>,
 	},
 ];

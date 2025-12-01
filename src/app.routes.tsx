@@ -9,7 +9,6 @@ import { managementRouter } from "@/domains/management/management.routes";
 import { myPageRouter } from "@/domains/my-page";
 import { solvingRouter } from "@/domains/solving/solving.routes";
 import { teamManagementRouter } from "@/domains/team-management/team-management.routes";
-import TeamProtectRoute from "./components/TeamProtectRoute";
 import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
@@ -19,24 +18,12 @@ const router = createBrowserRouter([
 		children: [
 			...homeRouter,
 			...authRouter,
-			...controlRouter.map((route) => ({
-				...route,
-				element: <TeamProtectRoute>{route.element}</TeamProtectRoute>,
-			})),
+			...controlRouter,
 			...solvingRouter,
-			...creationRouter.map((route) => ({
-				...route,
-				element: <TeamProtectRoute>{route.element}</TeamProtectRoute>,
-			})),
-			...managementRouter.map((route) => ({
-				...route,
-				element: <TeamProtectRoute>{route.element}</TeamProtectRoute>,
-			})),
+			...creationRouter,
+			...managementRouter,
 			...myPageRouter,
-			...teamManagementRouter.map((route) => ({
-				...route,
-				element: <TeamProtectRoute>{route.element}</TeamProtectRoute>,
-			})),
+			...teamManagementRouter,
 			...inviteRouter,
 			{
 				path: "*",
