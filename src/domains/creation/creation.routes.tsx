@@ -7,7 +7,7 @@ const CreationQuestion = lazy(() => import("@/domains/creation/pages/question/Cr
 const CreationNewLoading = lazy(() => import("./pages/new/CreationNewLoading"));
 const CreationPublish = lazy(() => import("./pages/publish/CreationPublish"));
 
-export const creationRoutes: RouteObject[] = [
+export const creationRouter: RouteObject[] = [
 	{
 		path: "/creation/question/question-set/:questionSetId/question/:questionId",
 		element: <CreationQuestion />,

@@ -4,7 +4,7 @@ import type { RouteObject } from "react-router-dom";
 const Management = lazy(() => import("./pages/common/Management"));
 const ManagementRedirect = lazy(() => import("./pages/common/ManagementRedirect"));
 
-export const managementRoutes: RouteObject[] = [
+export const managementRouter: RouteObject[] = [
 	{
 		path: "/management",
 		element: <Management />,

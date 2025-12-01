@@ -3,7 +3,7 @@ import { ProtectedRoute } from "@/ProtectedRoute";
 
 const MyPage = lazy(() => import("./pages/MyPage"));
 
-export const myPageRoutes = [
+export const myPageRouter = [
 	{
 		path: "/mypage",
 		element: (

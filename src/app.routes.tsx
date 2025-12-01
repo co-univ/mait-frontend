@@ -1,15 +1,15 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
-import { authRoutes } from "@/domains/auth";
-import { controlRoutes } from "@/domains/control/Control.routes";
-import { creationRoutes } from "@/domains/creation/creation.routes";
-import { homeRoutes } from "@/domains/home";
-import { inviteRoutes } from "@/domains/invite/Invite.routes";
-import { managementRoutes } from "@/domains/management/Management.routes";
-import { myPageRoutes } from "@/domains/my-page";
-import { solvingRoutes } from "@/domains/solving/solving.routes";
-import { teamManagementRoutes } from "@/domains/team-management/TeamManagement.routes";
+import { authRouter } from "@/domains/auth";
+import { controlRouter } from "@/domains/control/Control.routes";
+import { creationRouter } from "@/domains/creation/creation.routes";
+import { homeRouter } from "@/domains/home";
+import { inviteRouter } from "@/domains/invite/Invite.routes";
+import { managementRouter } from "@/domains/management/Management.routes";
+import { myPageRouter } from "@/domains/my-page";
+import { solvingRouter } from "@/domains/solving/solving.routes";
+import { teamManagementRouter } from "@/domains/team-management/TeamManagement.routes";
 import TeamProtectRoute from "./components/TeamProtectRoute";
 
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -19,27 +19,27 @@ const router = createBrowserRouter([
 		path: "/",
 		element: <App />,
 		children: [
-			...homeRoutes,
-			...authRoutes,
-			...controlRoutes.map((route) => ({
+			...homeRouter,
+			...authRouter,
+			...controlRouter.map((route) => ({
 				...route,
 				element: <TeamProtectRoute>{route.element}</TeamProtectRoute>,
 			})),
-			...solvingRoutes,
-			...creationRoutes.map((route) => ({
+			...solvingRouter,
+			...creationRouter.map((route) => ({
 				...route,
 				element: <TeamProtectRoute>{route.element}</TeamProtectRoute>,
 			})),
-			...managementRoutes.map((route) => ({
+			...managementRouter.map((route) => ({
 				...route,
 				element: <TeamProtectRoute>{route.element}</TeamProtectRoute>,
 			})),
-			...myPageRoutes,
-			...teamManagementRoutes.map((route) => ({
+			...myPageRouter,
+			...teamManagementRouter.map((route) => ({
 				...route,
 				element: <TeamProtectRoute>{route.element}</TeamProtectRoute>,
 			})),
-			...inviteRoutes,
+			...inviteRouter,
 			{
 				path: "*",
 				element: <NotFound />,

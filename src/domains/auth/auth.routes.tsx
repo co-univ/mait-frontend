@@ -7,7 +7,7 @@ const Login = lazy(() => import("./pages/AuthLogin"));
 const AuthOAuthCallback = lazy(() => import("./pages/AuthOAuthCallback"));
 const AuthOAuthSignUp = lazy(() => import("./pages/AuthOAuthSignUp"));
 
-export const authRoutes = [
+export const authRouter = [
 	{
 		path: "/login",
 		element: (
