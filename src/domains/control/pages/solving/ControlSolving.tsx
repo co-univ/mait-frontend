@@ -9,6 +9,8 @@ import type { QuestionNavigationButtonRenderProps } from "@/components/question-
 import { notify } from "@/components/Toast";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient, apiHooks } from "@/libs/api";
+import { createPath } from "@/utils/create-path";
+import { CONTROL_ROUTE_PATH } from "../../control.routes";
 import useControlSolvingQuestion from "../../hooks/solving/question/useControlSolvingQuestion";
 import useControlSolvingQuestions from "../../hooks/solving/question/useControlSolvingQuestions";
 import ControlSolvingQuestion from "./question/ControlSolvingQuestion";
@@ -49,7 +51,10 @@ const ControlSolving = () => {
 	 */
 	const handleQuestionNavigationClick = (questionId: number) => {
 		navigate(
-			`/control/solving/question-set/${questionSetId}/question/${questionId}`,
+			createPath(CONTROL_ROUTE_PATH.SOLVING, {
+				questionSetId,
+				questionId,
+			}),
 			{
 				replace: true,
 			},
