@@ -1,3 +1,4 @@
+import { AUTH_ROUTE_PATH } from "@/domains/auth";
 import InviteBlueLetter from "../../components/common/InviteBlueLetter";
 import InviteBody from "../../components/common/InviteBody";
 import InviteDescriptions from "../../components/common/InviteDescriptions";
@@ -20,7 +21,6 @@ interface InviteNotLoginProps {
 
 const InviteNotLogin = ({ teamName }: InviteNotLoginProps) => {
 	const currentUrl = window.location.href;
-	const loginUrl = `/login?redirect=${encodeURIComponent(currentUrl)}`;
 
 	return (
 		<InviteLayout>
@@ -32,7 +32,10 @@ const InviteNotLogin = ({ teamName }: InviteNotLoginProps) => {
 				<br />
 				로그인 또는 회원가입을 완료한 후 팀 참여를 진행해주세요.
 			</InviteBody>
-			<InviteLink link={loginUrl} label="로그인하고 참여하기" />
+			<InviteLink
+				link={`${AUTH_ROUTE_PATH.LOGIN}?redirect=${encodeURIComponent(currentUrl)}`}
+				label="로그인하고 참여하기"
+			/>
 			<InviteDescriptions
 				descriptions={[
 					"초대받은 이메일 계정으로 로그인해 주세요.",

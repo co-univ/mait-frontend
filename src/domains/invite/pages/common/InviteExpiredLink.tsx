@@ -1,3 +1,4 @@
+import { HOME_ROUTE_PATH } from "@/domains/home";
 import InviteBody from "../../components/common/InviteBody";
 import InviteDescriptions from "../../components/common/InviteDescriptions";
 import InviteHeader from "../../components/common/InviteHeader";
@@ -19,7 +20,7 @@ const InviteExpiredLink = () => {
 				<br />
 				팀에 참여하려면 관리자에게 새로운 초대 링크를 요청해주세요.
 			</InviteBody>
-			<InviteLink link="/" label="홈으로 이동" />
+			<InviteLink link={HOME_ROUTE_PATH.ROOT} label="홈으로 이동" />
 			<InviteDescriptions
 				descriptions={[
 					"이미 가입된 계정이 있다면 로그인해 보실 수 있어요.",
