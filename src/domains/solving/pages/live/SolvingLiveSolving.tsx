@@ -11,6 +11,7 @@ import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
 import type { QuestionSetApiResponse } from "@/types";
 import SolvingQuiz from "../../components/common/SolvingQuiz";
+import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
 
 //
@@ -148,7 +149,7 @@ const SolvingLiveSolving = () => {
 					break;
 				}
 				case CommandType.LIVE_END: {
-					navigate("/solving");
+					navigate(SOLVING_ROUTE_PATH.ROOT);
 					setShowWinner(false);
 					setIsFailed(false);
 					break;
