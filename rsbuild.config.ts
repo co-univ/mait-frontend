@@ -28,6 +28,7 @@ export default defineConfig({
 			"@/assets": "./src/assets",
 			"@/libs": "./src/libs",
 			"@/pages": "./src/pages",
+			"@/guards": "./src/guards",
 		},
 	},
 	tools: {

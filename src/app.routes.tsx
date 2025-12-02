@@ -25,6 +25,7 @@ const router = createBrowserRouter([
 			...myPageRouter,
 			...teamManagementRouter,
 			...inviteRouter,
+
 			{
 				path: "*",
 				element: <NotFound />,
