@@ -1,32 +1,65 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import TeamMakerProtectRoute from "@/components/TeamMakerProtectRoute";
+import TeamMakerProtectRoute from "@/guards/TeamMakerProtectRoute";
 
-const CreationRedirect = lazy(() => import("@/domains/creation/pages/common/CreationRedirect"));
-const CreationNew = lazy(() => import("@/domains/creation/pages/new/CreationNew"));
-const CreationQuestion = lazy(() => import("@/domains/creation/pages/question/CreationQuestion"));
+const CreationRedirect = lazy(
+	() => import("@/domains/creation/pages/common/CreationRedirect"),
+);
+const CreationNew = lazy(
+	() => import("@/domains/creation/pages/new/CreationNew"),
+);
+const CreationQuestion = lazy(
+	() => import("@/domains/creation/pages/question/CreationQuestion"),
+);
 const CreationNewLoading = lazy(() => import("./pages/new/CreationNewLoading"));
 const CreationPublish = lazy(() => import("./pages/publish/CreationPublish"));
 
+//
+//
+//
+
+/**
+ * @property {string} ROOT `/creation/question-set/:questionSetId`
+ * @property {string} NEW `/creation/new`
+ * @property {string} NEW_LOADING `/creation/new/loading/question-set/:questionSetId`
+ * @property {string} QUESTION `/creation/question/question-set/:questionSetId/question/:questionId`
+ * @property {string} PUBLISH `/creation/publish/question-set/:questionSetId`
+ */
+export const CREATION_ROUTE_PATH = {
+	ROOT: "/creation/question-set/:questionSetId",
+	NEW: "/creation/new",
+	NEW_LOADING: "/creation/new/loading/question-set/:questionSetId",
+	QUESTION:
+		"/creation/question/question-set/:questionSetId/question/:questionId",
+	PUBLISH: "/creation/publish/question-set/:questionSetId",
+};
+
+//
+//
+//
+
 export const creationRouter: RouteObject[] = [
 	{
-		path: "/creation/question/question-set/:questionSetId/question/:questionId",
-		element: <TeamMakerProtectRoute><CreationQuestion /></TeamMakerProtectRoute>,
+		path: CREATION_ROUTE_PATH.NEW_LOADING,
+		element: <CreationNewLoading />,
 	},
 	{
-		path: "/creation/new",
-		element: <TeamMakerProtectRoute><CreationNew /></TeamMakerProtectRoute>,
+		path: CREATION_ROUTE_PATH.NEW,
+		element: <CreationNew />,
 	},
 	{
-		path: "/creation/new/loading/question-set/:questionSetId",
-		element: <TeamMakerProtectRoute><CreationNewLoading /></TeamMakerProtectRoute>,
+		path: CREATION_ROUTE_PATH.QUESTION,
+		element: <CreationQuestion />,
 	},
 	{
-		path: "/creation/publish/question-set/:questionSetId",
-		element: <TeamMakerProtectRoute><CreationPublish /></TeamMakerProtectRoute>,
+		path: CREATION_ROUTE_PATH.PUBLISH,
+		element: <CreationPublish />,
 	},
 	{
-		path: "/creation/question/question-set/:questionSetId",
-		element: <TeamMakerProtectRoute><CreationRedirect /></TeamMakerProtectRoute>,
+		path: CREATION_ROUTE_PATH.ROOT,
+		element: <CreationRedirect />,
 	},
-];
+].map((route) => ({
+	...route,
+	element: <TeamMakerProtectRoute>{route.element}</TeamMakerProtectRoute>,
+}));
