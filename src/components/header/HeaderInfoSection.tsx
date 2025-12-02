@@ -1,9 +1,9 @@
 import { Bell, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { AUTH_ROUTE_PATH } from "@/domains/auth/auth.routes";
+import { MYPAGE_ROUTE_PATH } from "@/domains/my-page/mypage.routes";
 import useUser from "@/hooks/useUser";
 import HeaderInfoSectionSearchInput from "./HeaderInfoSectionSearchInput";
-import { MYPAGE_ROUTE_PATH } from "@/domains/my-page/mypage.routes";
-import { AUTH_ROUTE_PATH } from "@/domains/auth/auth.routes";
 
 //
 //
@@ -33,13 +33,9 @@ const HeaderInfoSection = ({ isHide }: HeaderInfoSectionProps) => {
 	 *
 	 */
 	const handleUserMenuClick = () => {
-		// TODO: Implement user menu click handler
-
 		if (user) {
-			// Handle user click
 			navigate(MYPAGE_ROUTE_PATH.ROOT);
 		} else {
-			// Handle guest click
 			navigate(AUTH_ROUTE_PATH.LOGIN);
 		}
 	};

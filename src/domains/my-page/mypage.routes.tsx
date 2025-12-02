@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import PublicOnlyGuard from "@/guards/PublicOnlyGuard";
+import AuthGuard from "@/guards/AuthGuard";
 
 const MyPage = lazy(() => import("./pages/MyPage"));
 
@@ -22,9 +22,9 @@ export const myPageRouter = [
 	{
 		path: MYPAGE_ROUTE_PATH.ROOT,
 		element: (
-			<PublicOnlyGuard>
+			<AuthGuard>
 				<MyPage />
-			</PublicOnlyGuard>
+			</AuthGuard>
 		),
 	},
 ];
