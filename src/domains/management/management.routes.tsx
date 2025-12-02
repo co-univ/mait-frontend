@@ -1,17 +1,31 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import TeamMakerProtectRoute from "@/components/TeamMakerProtectRoute";
+import TeamMakerProtectRoute from "@/guards/TeamMakerProtectRoute";
 
 const Management = lazy(() => import("./pages/common/Management"));
-const ManagementRedirect = lazy(() => import("./pages/common/ManagementRedirect"));
+
+//
+//
+//
+
+/**
+ * @property {string} ROOT `/management`
+ */
+export const MANAGEMENT_ROUTE_PATH = {
+	ROOT: "/management",
+};
+
+//
+//
+//
 
 export const managementRouter: RouteObject[] = [
 	{
-		path: "/management",
-		element: <TeamMakerProtectRoute><Management /></TeamMakerProtectRoute>,
-	},
-	{
-		path: "/management/redirect",
-		element: <TeamMakerProtectRoute><ManagementRedirect /></TeamMakerProtectRoute>,
+		path: MANAGEMENT_ROUTE_PATH.ROOT,
+		element: (
+			<TeamMakerProtectRoute>
+				<Management />
+			</TeamMakerProtectRoute>
+		),
 	},
 ];
