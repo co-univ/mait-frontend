@@ -3,8 +3,10 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Table } from "@/components/table";
 import { Tabs } from "@/components/tabs";
+import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { apiHooks } from "@/libs/api";
 import type { UpdateQuestionStatusApiRequest } from "@/libs/types";
+import { createPath } from "@/utils/create-path";
 import ControlSolvingSubmissionScorerSideDialog from "./ControlSolvingSubmissionScorerSideDialog";
 import ControlSolvingSubmissionTableBody from "./ControlSolvingSubmissionTableBody";
 import ControlSolvingSubmissionTableHeader from "./ControlSolvingSubmissionTableHeader";
@@ -101,7 +103,10 @@ const ControlSolvingSubmission = ({
 	 */
 	const handlePariticipantButtonClick = () => {
 		navigate(
-			`/control/participant/question-set/${questionSetId}/question/${questionId}`,
+			createPath(CONTROL_ROUTE_PATH.PARTICIPANT, {
+				questionSetId,
+				questionId,
+			}),
 		);
 	};
 
