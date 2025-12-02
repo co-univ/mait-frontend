@@ -2,6 +2,8 @@ import { Bell, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useUser from "@/hooks/useUser";
 import HeaderInfoSectionSearchInput from "./HeaderInfoSectionSearchInput";
+import { MYPAGE_ROUTE_PATH } from "@/domains/my-page/mypage.routes";
+import { AUTH_ROUTE_PATH } from "@/domains/auth/auth.routes";
 
 //
 //
@@ -35,10 +37,10 @@ const HeaderInfoSection = ({ isHide }: HeaderInfoSectionProps) => {
 
 		if (user) {
 			// Handle user click
-			navigate("/mypage");
+			navigate(MYPAGE_ROUTE_PATH.ROOT);
 		} else {
 			// Handle guest click
-			navigate("/login");
+			navigate(AUTH_ROUTE_PATH.LOGIN);
 		}
 	};
 
