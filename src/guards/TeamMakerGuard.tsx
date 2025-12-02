@@ -8,7 +8,7 @@ import Loading from "@/pages/Loading";
 //
 //
 
-interface TeamMakerProtectRouteProps {
+interface TeamMakerGuardProps {
 	children: React.ReactNode;
 }
 
@@ -16,7 +16,7 @@ interface TeamMakerProtectRouteProps {
 //
 //
 
-const TeamMakerProtectRoute = ({ children }: TeamMakerProtectRouteProps) => {
+const TeamMakerGuard = ({ children }: TeamMakerGuardProps) => {
 	const { activeTeam, isLoading } = useTeams();
 
 	const navigate = useNavigate();
@@ -41,4 +41,4 @@ const TeamMakerProtectRoute = ({ children }: TeamMakerProtectRouteProps) => {
 	return <>{children}</>;
 };
 
-export default TeamMakerProtectRoute;
+export default TeamMakerGuard;

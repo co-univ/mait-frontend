@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import TeamMakerProtectRoute from "@/guards/TeamMakerProtectRoute";
+import TeamMakerGuard from "@/guards/TeamMakerGuard";
 
 const Management = lazy(() => import("./pages/common/Management"));
 
@@ -23,9 +23,9 @@ export const managementRouter: RouteObject[] = [
 	{
 		path: MANAGEMENT_ROUTE_PATH.ROOT,
 		element: (
-			<TeamMakerProtectRoute>
+			<TeamMakerGuard>
 				<Management />
-			</TeamMakerProtectRoute>
+			</TeamMakerGuard>
 		),
 	},
 ];

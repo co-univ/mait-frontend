@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import TeamMakerProtectRoute from "@/guards/TeamMakerProtectRoute";
+import TeamMakerGuard from "@/guards/TeamMakerGuard";
 
 const ControlRedirect = lazy(() => import("./pages/common/ControlRedirect"));
 const ControlParticipant = lazy(
@@ -43,5 +43,5 @@ export const controlRouter: RouteObject[] = [
 	},
 ].map((route) => ({
 	...route,
-	element: <TeamMakerProtectRoute>{route.element}</TeamMakerProtectRoute>,
+	element: <TeamMakerGuard>{route.element}</TeamMakerGuard>,
 }));
