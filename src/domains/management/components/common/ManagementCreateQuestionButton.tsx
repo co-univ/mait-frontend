@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
+import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 
 //
 //
@@ -13,7 +14,7 @@ const ManagementCreateQuestionButton = () => {
 	 *
 	 */
 	const handleButtonClick = () => {
-		navigate("/creation/new");
+		navigate(CREATION_ROUTE_PATH.NEW);
 	};
 
 	return (

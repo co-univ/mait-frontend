@@ -1,6 +1,7 @@
 import Lottie from "react-lottie";
 import { useNavigate } from "react-router-dom";
 import logoSpin from "@/assets/lotties/mait-logo-spin.json";
+import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 
 //
 //
@@ -23,7 +24,7 @@ const AuthAccountCreationSuccess = () => {
 	const navigate = useNavigate();
 
 	setTimeout(() => {
-		navigate("/");
+		navigate(HOME_ROUTE_PATH.ROOT);
 	}, 3000);
 
 	return (

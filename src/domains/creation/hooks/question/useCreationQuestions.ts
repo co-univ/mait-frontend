@@ -6,6 +6,8 @@ import { notify } from "@/components/Toast";
 import type { QuestionResponseTypeWithIsEditing } from "@/domains/creation/creation.constant";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import { apiClient, apiHooks } from "@/libs/api";
+import { createPath } from "@/utils/create-path";
+import { CREATION_ROUTE_PATH } from "../../creation.routes";
 
 //
 //
@@ -61,8 +63,13 @@ const useCreationQuestions = ({
 				notify.success(`${questions.length + 1}번 문제가 추가되었습니다.`);
 
 				navigate(
-					`/creation/question/question-set/${questionSetId}/question/${newQuestion.id}`,
-					{ replace: true },
+					createPath(CREATION_ROUTE_PATH.QUESTION, {
+						questionSetId,
+						questionId: newQuestion.id,
+					}),
+					{
+						replace: true,
+					},
 				);
 
 				queryClient.invalidateQueries({

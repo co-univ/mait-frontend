@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import notFoundImage from "@/assets/images/not-found-image.png";
+import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 
 //
 //
@@ -16,7 +17,7 @@ const NotFound = () => {
 				주소가 잘못되었거나 페이지가 삭제되었을 수 있어요.
 			</span>
 			<Link
-				to="/"
+				to={HOME_ROUTE_PATH.ROOT}
 				className="typo-heading-xsmall text-color-primary-50 underline"
 			>
 				홈으로 이동

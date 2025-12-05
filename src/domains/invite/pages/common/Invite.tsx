@@ -4,6 +4,7 @@ import { notify } from "@/components/Toast";
 import useUser from "@/hooks/useUser";
 import { apiClient, apiHooks } from "@/libs/api";
 import InviteExpiredLink from "./InviteExpiredLink";
+import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 import InviteNotApplied from "./InviteNotApplied";
 import InviteNotLogin from "./InviteNotLogin";
 import InvitePending from "./InvitePending";
@@ -87,7 +88,7 @@ const Invite = () => {
 	useEffect(() => {
 		// biome-ignore lint/suspicious/noExplicitAny: error type is not defined
 		if ((error && (error as any).code === "C-007") || joinedImmediate) {
-			navigate("/");
+			navigate(HOME_ROUTE_PATH.ROOT);
 		}
 	}, [error, navigate, joinedImmediate]);
 

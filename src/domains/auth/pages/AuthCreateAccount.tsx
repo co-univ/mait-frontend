@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { apiClient } from "@/libs/api";
 import type { LatestPoliciesApiResponse, PolicyType } from "@/libs/types";
+import { AUTH_ROUTE_PATH } from "../auth.routes";
 import AuthCard from "../components/AuthCard";
 import AuthTermDetail from "../components/AuthTermDetail";
 import AuthTerms from "../components/AuthTerms";
@@ -110,7 +111,7 @@ const AuthCreateAccount = () => {
 			}
 
 			if (response.data?.isSuccess) {
-				navigate("success");
+				navigate(AUTH_ROUTE_PATH.ACCOUNT_CREATE_SUCCESS);
 			}
 		} catch (error) {
 			console.error("계정 생성하기 실패: ", error);

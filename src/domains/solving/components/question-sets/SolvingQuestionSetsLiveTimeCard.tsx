@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import type { QuestionSetDto } from "@/libs/types";
+import { createPath } from "@/utils/create-path";
+import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
 //
 //
@@ -23,7 +25,7 @@ const SolvingQuestionSetsLiveTimeCard = ({
 	 *
 	 */
 	const handleSolveButtonClick = () => {
-		navigate(`/solving/${questionSet.id}`);
+		navigate(createPath(SOLVING_ROUTE_PATH.LIVE, { id: questionSet.id ?? 0 }));
 	};
 
 	return (

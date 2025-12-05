@@ -12,6 +12,8 @@ import type {
 	ApiResponseQuestionApiResponse,
 	QuestionType,
 } from "@/libs/types";
+import { createPath } from "@/utils/create-path";
+import { CREATION_ROUTE_PATH } from "../../creation.routes";
 import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
 
 //
@@ -126,7 +128,10 @@ const useCreationQuestion = ({
 
 				if (targetQuestionId) {
 					navigate(
-						`/creation/question/question-set/${questionSetId}/question/${targetQuestionId}`,
+						createPath(CREATION_ROUTE_PATH.QUESTION, {
+							questionSetId,
+							questionId: targetQuestionId,
+						}),
 						{ replace: true },
 					);
 				}

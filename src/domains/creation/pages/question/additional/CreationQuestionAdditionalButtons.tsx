@@ -3,10 +3,12 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
+import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import {
 	useCreationQuestion,
 	useCreationQuestions,
 } from "@/domains/creation/hooks/question";
+import { createPath } from "@/utils/create-path";
 
 //
 //
@@ -34,10 +36,13 @@ const CreationQuestionAdditionalButtons = () => {
 	 */
 	const handleUpdateButtonClick = async () => {
 		const res = await handleUpdateQuestion();
-		const questionId = res?.data?.id;
+		const newQuestionId = res?.data?.id;
 
 		navigate(
-			`/creation/question/question-set/${questionSetId}/question/${questionId}`,
+			createPath(CREATION_ROUTE_PATH.QUESTION, {
+				questionSetId,
+				questionId: newQuestionId ?? 0,
+			}),
 		);
 	};
 
@@ -60,7 +65,11 @@ const CreationQuestionAdditionalButtons = () => {
 			return;
 		}
 
-		navigate(`/creation/publish/question-set/${questionSetId}`);
+		navigate(
+			createPath(CREATION_ROUTE_PATH.PUBLISH, {
+				questionSetId: questionSetId,
+			}),
+		);
 	};
 
 	//

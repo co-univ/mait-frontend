@@ -21,7 +21,9 @@ import {
 import CreationQuestionLayout from "@/domains/creation/layouts/question/CreationQuestionLayout";
 import CreationQuestionAdditional from "@/domains/creation/pages/question/additional/CreationQuestionAdditional";
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
+import { createPath } from "@/utils/create-path";
 import type { QuestionNavigationButtonRenderProps } from "../../../../components/question-navigation/QuestionNavigationList";
+import { CREATION_ROUTE_PATH } from "../../creation.routes";
 
 //
 //
@@ -71,8 +73,13 @@ const CreationQuestion = () => {
 		handleUpdateQuestion();
 
 		navigate(
-			`/creation/question/question-set/${questionSetId}/question/${newQuestionId}`,
-			{ replace: true },
+			createPath(CREATION_ROUTE_PATH.QUESTION, {
+				questionSetId,
+				questionId: newQuestionId,
+			}),
+			{
+				replace: true,
+			},
 		);
 	};
 
