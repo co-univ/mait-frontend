@@ -30,7 +30,7 @@ const AuthAccountCreationSuccess = () => {
 		<div className="fixed inset-0 flex flex-col justify-center items-center">
 			<Lottie options={OPTIONS} width={150} height={150} />
 			<h2
-				className="text-center typo-heading-xlarge mb-[1rem]"
+				className="text-center typo-heading-large mb-[1rem]"
 				style={{
 					background:
 						"linear-gradient(90deg, var(--color-text-Primary, #256EF4) 0%, var(--color-text-Secondary, #6325F4) 100%)",
