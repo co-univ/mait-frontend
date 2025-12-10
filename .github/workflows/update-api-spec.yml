@@ -46,6 +46,8 @@ jobs:
         run: .github/scripts/generate-timestamp.sh
 
       - name: Update API spec files
+        env:
+          PUBLIC_API_DOCS_URL: ${{ secrets.PUBLIC_API_DOCS_URL_DEV }}
         run: pnpm generate:types
 
       - name: Check for changes
