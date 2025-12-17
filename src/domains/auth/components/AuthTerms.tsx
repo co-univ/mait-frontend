@@ -1,6 +1,11 @@
-import { ChevronRight } from "lucide-react";
 import type React from "react";
 import CheckBox from "@/components/CheckBox";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/shadcn-ui/accordion";
 import type { LatestPoliciesApiResponse } from "@/libs/types";
 import type { TERM_CHECK_TYPE } from "../pages/AuthCreateAccount";
 
@@ -12,19 +17,13 @@ interface AuthTermsProps {
 	terms: LatestPoliciesApiResponse[];
 	termChecks: TERM_CHECK_TYPE[];
 	setTermChecks: React.Dispatch<React.SetStateAction<TERM_CHECK_TYPE[]>>;
-	onDetailClick: (term: LatestPoliciesApiResponse) => void;
 }
 
 //
 //
 //
 
-const AuthTerms = ({
-	terms,
-	termChecks,
-	setTermChecks,
-	onDetailClick,
-}: AuthTermsProps) => {
+const AuthTerms = ({ terms, termChecks, setTermChecks }: AuthTermsProps) => {
 	/**
 	 *
 	 */
@@ -53,36 +52,44 @@ const AuthTerms = ({
 		return term?.isChecked ?? false;
 	};
 
-	/**
-	 *
-	 */
-	const handleDetailClick = (policyId: number) => {
-		const term = terms.find((term) => term.id === policyId);
-		if (term) {
-			onDetailClick(term);
-		}
-	};
-
 	return (
-		<div className="flex flex-col gap-gap-5">
+		<Accordion
+			type="single"
+			collapsible
+			className="w-full flex flex-col gap-gap-5"
+		>
 			{terms.map((term) => (
-				<div key={term.id} className="flex items-center gap-gap-4">
-					<CheckBox
-						checked={getCheckedState(term.id)}
-						size={20}
-						onChange={(isChecked) => handleCheckboxChange(term.id, isChecked)}
-					/>
-					<p className="typo-body-small text-gray-50">
-						<span>[{getType(term.policyType)}] </span>
-						{term.title}
-					</p>
-					<ChevronRight
-						className="w-[20px] h-[20px] text-gray-50 ml-auto cursor-pointer"
-						onClick={() => handleDetailClick(term.id)}
-					/>
-				</div>
+				<AccordionItem
+					key={term.id}
+					value={String(term.id)}
+					className="flex flex-col gap-gap-4"
+				>
+					<div className="flex items-center w-full justify-between border-0 h-fit">
+						<div className="flex items-center gap-gap-4">
+							<CheckBox
+								checked={getCheckedState(term.id)}
+								size={20}
+								onChange={(isChecked) =>
+									handleCheckboxChange(term.id, isChecked)
+								}
+							/>
+							<p className="typo-body-small font-pretendard text-gray-50">
+								<span>[{getType(term.policyType)}] </span>
+								{term.title}
+							</p>
+						</div>
+						<AccordionTrigger className="text-gray-50" />
+					</div>
+					<AccordionContent className="bg-color-gray-5 rounded-radius-medium1 p-padding-8">
+						<span className="typo-body-small-bold font-pretendard">
+							[{getType(term.policyType)}] {term.title}
+						</span>
+						<p>&nbsp;</p>
+						<p>{term.content}</p>
+					</AccordionContent>
+				</AccordionItem>
 			))}
-		</div>
+		</Accordion>
 	);
 };
 
