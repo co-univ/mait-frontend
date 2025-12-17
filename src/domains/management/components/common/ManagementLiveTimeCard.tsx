@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
+import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
+import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import type { QuestionSetDto } from "@/libs/types";
+import { createPath } from "@/utils/create-path";
 
 //
 //
@@ -23,14 +26,22 @@ const ManagementLiveTimeCard = ({
 	 *
 	 */
 	const handleCreationButtonClick = () => {
-		navigate(`/creation/question/question-set/${questionSet.id}`);
+		navigate(
+			createPath(CREATION_ROUTE_PATH.ROOT, {
+				questionSetId: questionSet.id ?? 0,
+			}),
+		);
 	};
 
 	/**
 	 *
 	 */
 	const handleControlButtonClick = () => {
-		navigate(`/control/solving/question-set/${questionSet.id}`);
+		navigate(
+			createPath(CONTROL_ROUTE_PATH.ROOT, {
+				questionSetId: questionSet.id ?? 0,
+			}),
+		);
 	};
 
 	return (

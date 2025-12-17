@@ -102,11 +102,11 @@ const AuthCreateAccount = () => {
 
 			const accessToken = response.response.headers.get("Authorization");
 			if (accessToken) {
-				localStorage.setItem("accessToken", accessToken);
+				localStorage.setItem("token", accessToken);
 			}
 
 			if (response.data?.isSuccess) {
-				navigate("success");
+				navigate(AUTH_ROUTE_PATH.ACCOUNT_CREATE_SUCCESS);
 			}
 		} catch (error) {
 			console.error("계정 생성하기 실패: ", error);

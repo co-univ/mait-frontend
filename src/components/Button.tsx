@@ -27,11 +27,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				type="button"
 				className={clsx(
 					"p-padding-6 flex gap-gap-5 rounded-medium1 border border-color-gray-10 typo-body-medium",
-					className,
 					variant === "primary" &&
 						"hover:bg-color-primary-50 hover:border-color-primary-50 hover:text-color-alpha-white100",
 					variant === "secondary" &&
 						"hover:bg-color-secondary-50 hover:border-color-secondary-50 hover:text-color-alpha-white100",
+					className,
 				)}
 				onClick={onClick}
 				{...props}

@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingView from "@/components/LoadingView";
+import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 import { apiClient } from "@/libs/api";
+import { AUTH_ROUTE_PATH } from "../auth.routes";
 
 //
 //
@@ -42,7 +44,7 @@ const AuthOAuthCallback = () => {
 
 				if (data?.data) {
 					localStorage.setItem("token", data.data);
-					navigate("/");
+					navigate(HOME_ROUTE_PATH.ROOT);
 				}
 			} catch (error) {
 				console.error("Access Token 발급 실패: ", error);

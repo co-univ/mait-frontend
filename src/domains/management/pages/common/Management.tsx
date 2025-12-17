@@ -51,7 +51,7 @@ const Management = () => {
 				onValueChange={handleModeChange}
 				className="flex flex-col gap-gap-11"
 			>
-				<QuestionSetsTabs />
+				<QuestionSetsTabs modes={["making", "live-time", "review"]} />
 
 				<Tabs.Content value="making">
 					<ManagementMaking questionSets={questionSetList ?? []} />

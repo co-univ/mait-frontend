@@ -8,6 +8,8 @@ import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
 import type { QuestionCount } from "@/libs/types";
+import { createPath } from "@/utils/create-path";
+import { CREATION_ROUTE_PATH } from "../../creation.routes";
 import {
 	type CreationNewQuestionSetState,
 	creationNewQuestionSetInitialState,
@@ -164,14 +166,21 @@ const CreationNew = () => {
 			return;
 		}
 
-		const questionSetId = res.data?.data?.questionSetId;
+		const questionSetId = res.data?.data?.questionSetId ?? 0;
 
 		if (questionSet.creationType === "AI_GENERATED") {
-			navigate(`/creation/new/loading/question-set/${questionSetId}`);
+			navigate(
+				createPath(CREATION_ROUTE_PATH.NEW_LOADING, {
+					questionSetId: questionSetId,
+				}),
+			);
+
 			return;
 		}
 
-		navigate(`/creation/question/question-set/${questionSetId}`);
+		navigate(
+			createPath(CREATION_ROUTE_PATH.ROOT, { questionSetId: questionSetId }),
+		);
 	};
 
 	return (

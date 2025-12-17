@@ -1,8 +1,25 @@
-import Home from "./pages/common/Home";
+import { lazy } from "react";
 
-export const homeRoutes = [
+const Home = lazy(() => import("./pages/common/Home"));
+
+//
+//
+//
+
+/**
+ * @property {string} ROOT `/`
+ */
+export const HOME_ROUTE_PATH = {
+	ROOT: "/",
+};
+
+//
+//
+//
+
+export const homeRouter = [
 	{
-		path: "/",
+		path: HOME_ROUTE_PATH.ROOT,
 		element: <Home />,
 	},
 ];

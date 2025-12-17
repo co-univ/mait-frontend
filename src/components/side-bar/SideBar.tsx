@@ -8,7 +8,12 @@ import {
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
+import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
+import { TEAM_MANAGEMENT_ROUTE_PATH } from "@/domains/team-management/team-management.routes";
+import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
+import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
 import SideBarDropdown from "./SideBarDropdown";
@@ -22,26 +27,30 @@ const NAVIGATION_ITEMS = [
 	{
 		icon: <SquarePen />,
 		label: "문제 관리",
-		path: "/management",
+		path: MANAGEMENT_ROUTE_PATH.ROOT,
 		activePaths: ["/management", "/creation", "/control"],
+		isMakerOnly: true,
 	},
 	{
 		icon: <Puzzle />,
 		label: "문제 풀기",
-		path: "/solving",
+		path: SOLVING_ROUTE_PATH.ROOT,
 		activePaths: ["/solving"],
+		isMakerOnly: false,
 	},
-	{
-		icon: <LayoutDashboard />,
-		label: "풀이 결과 대시보드",
-		path: "/dashboard",
-		activePaths: ["/dashboard"],
-	},
+	// {
+	// 	icon: <LayoutDashboard />,
+	// 	label: "풀이 결과 대시보드",
+	// 	path: "/dashboard",
+	// 	activePaths: ["/dashboard"],
+	// 	isMakerOnly: false,
+	// },
 	{
 		icon: <Users />,
 		label: "팀 관리",
-		path: "/team-management",
+		path: TEAM_MANAGEMENT_ROUTE_PATH.ROOT,
 		activePaths: ["/team-management"],
+		isMakerOnly: true,
 	},
 ];
 
@@ -52,6 +61,8 @@ const NAVIGATION_ITEMS = [
 const SideBar = () => {
 	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
+	const { activeTeam } = useTeams();
+
 	const location = useLocation();
 
 	const sidebarVariant: "default" | "elevation" = hasValidPath(
@@ -62,6 +73,10 @@ const SideBar = () => {
 		: "default";
 
 	const isSidebarOpenWithUser = isSidebarOpen && user;
+	const isGradationSecondaryRadialPage =
+		GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS.some((path) =>
+			hasValidPath([path], location.pathname),
+		);
 
 	/**
 	 *
@@ -86,6 +101,15 @@ const SideBar = () => {
 			toggleSidebarOpen();
 		}
 	}, [sidebarVariant]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (isGradationSecondaryRadialPage && isSidebarOpen) {
+			toggleSidebarOpen();
+		}
+	}, [isGradationSecondaryRadialPage, isSidebarOpen, toggleSidebarOpen]);
 
 	return (
 		<aside
@@ -113,7 +137,10 @@ const SideBar = () => {
 				<div className="h-size-height-1" />
 
 				<div className="w-full flex flex-col gap-gap-5">
-					{NAVIGATION_ITEMS.map((item) => (
+					{NAVIGATION_ITEMS.filter(
+						(item) =>
+							!item.isMakerOnly || (activeTeam && activeTeam.role !== "PLAYER"),
+					).map((item) => (
 						<SidebarItem
 							key={item.path}
 							className={clsx("text-color-gray-30", {

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CheckBox from "@/components/CheckBox";
 import { useLogin } from "@/hooks/useAuth";
+import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 
 //
 //
@@ -42,7 +43,7 @@ const AuthEmailLogin = () => {
 				localStorage.removeItem("redirectAfterLogin");
 				window.location.href = redirectUrl;
 			} else {
-				navigate("/");
+				navigate(HOME_ROUTE_PATH.ROOT);
 			}
 		} catch (error) {
 			console.error("로그인 실패:", error);

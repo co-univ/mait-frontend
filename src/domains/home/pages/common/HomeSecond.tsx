@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import generateImage from "@/assets/images/home-second-generate.png";
 import questionImage from "@/assets/images/home-second-question.png";
 import SolvingBell from "@/domains/solving/components/common/SolvingBell";
+import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 
 //
 //
 //
 
 const HomeSecond = () => {
+	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
+
 	const [isVisible, setIsVisible] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 
@@ -15,6 +18,10 @@ const HomeSecond = () => {
 		const observer = new IntersectionObserver(
 			([entry]) => {
 				setIsVisible(entry.isIntersecting);
+
+				if (entry.isIntersecting && isSidebarOpen) {
+					toggleSidebarOpen();
+				}
 			},
 			{
 				threshold: 0.5, // 50% 이상 보일 때 활성화
@@ -30,7 +37,7 @@ const HomeSecond = () => {
 				observer.unobserve(containerRef.current);
 			}
 		};
-	}, []);
+	}, [isSidebarOpen, toggleSidebarOpen]);
 
 	return (
 		<div
@@ -94,7 +101,7 @@ const HomeSecond = () => {
 								alt="문제셋 저장과 문제 풀이 이미지"
 								className="w-[360px]"
 							/>
-							<div className="absolute -top-1/2 left-1/2 -translate-x-1/2 w-[120px] h-[120px] z-10">
+							<div className="absolute -top-1/2 left-1/2 -translate-x-1/2 size-[200px] z-10">
 								<SolvingBell open={isVisible} />
 							</div>
 						</div>

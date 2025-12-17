@@ -15,7 +15,10 @@ interface UseSolvingLiveWebSocketProps {
 	onMessage: (message: WebSocketMessage) => void;
 }
 
-export const useSolvingLiveWebSocket = ({ questionSetId, onMessage }: UseSolvingLiveWebSocketProps) => {
+export const useSolvingLiveWebSocket = ({
+	questionSetId,
+	onMessage,
+}: UseSolvingLiveWebSocketProps) => {
 	const clientRef = useRef<StompJs.Client | null>(null);
 
 	const connect = () => {

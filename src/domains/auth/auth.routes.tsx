@@ -1,33 +1,60 @@
-import PublicOnlyRoute from "@/ProtectedRoute";
-import AuthAccountCreationSuccess from "./pages/AuthAccountCreationSuccess";
-import AuthCreateAccount from "./pages/AuthCreateAccount";
-import Login from "./pages/AuthLogin";
-import AuthOAuthCallback from "./pages/AuthOAuthCallback";
-import AuthOAuthSignUp from "./pages/AuthOAuthSignUp";
+import { lazy } from "react";
+import PublicOnlyGuard from "@/guards/PublicOnlyGuard";
 
-export const authRoutes = [
+const AuthAccountCreationSuccess = lazy(
+	() => import("./pages/AuthAccountCreationSuccess"),
+);
+const AuthCreateAccount = lazy(() => import("./pages/AuthCreateAccount"));
+const Login = lazy(() => import("./pages/AuthLogin"));
+const AuthOAuthCallback = lazy(() => import("./pages/AuthOAuthCallback"));
+const AuthOAuthSignUp = lazy(() => import("./pages/AuthOAuthSignUp"));
+
+//
+//
+//
+
+/**
+ * @property {string} LOGIN `/login`
+ * @property {string} OAUTH_SUCCESS `/oauth/success`
+ * @property {string} OAUTH_SIGNUP `/oauth/signup`
+ * @property {string} ACCOUNT_CREATE `/account/create`
+ * @property {string} ACCOUNT_CREATE_SUCCESS `/account/create/success`
+ */
+export const AUTH_ROUTE_PATH = {
+	LOGIN: "/login",
+	OAUTH_SUCCESS: "/oauth/success",
+	OAUTH_SIGNUP: "/oauth/signup",
+	ACCOUNT_CREATE: "/account/create",
+	ACCOUNT_CREATE_SUCCESS: "/account/create/success",
+};
+
+//
+//
+//
+
+export const authRouter = [
 	{
-		path: "/login",
+		path: AUTH_ROUTE_PATH.LOGIN,
 		element: (
-			<PublicOnlyRoute>
+			<PublicOnlyGuard>
 				<Login />
-			</PublicOnlyRoute>
+			</PublicOnlyGuard>
 		),
 	},
 	{
-		path: "/oauth/success",
+		path: AUTH_ROUTE_PATH.OAUTH_SUCCESS,
 		element: <AuthOAuthCallback />,
 	},
 	{
-		path: "/oauth/signup",
+		path: AUTH_ROUTE_PATH.OAUTH_SIGNUP,
 		element: <AuthOAuthSignUp />,
 	},
 	{
-		path: "/account/create",
+		path: AUTH_ROUTE_PATH.ACCOUNT_CREATE,
 		element: <AuthCreateAccount />,
 	},
 	{
-		path: "/account/create/success",
+		path: AUTH_ROUTE_PATH.ACCOUNT_CREATE_SUCCESS,
 		element: <AuthAccountCreationSuccess />,
 	},
 ];

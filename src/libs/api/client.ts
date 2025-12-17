@@ -19,6 +19,7 @@ const authMiddleware: Middleware = {
 
 const apiClient = createClient<paths>({
 	baseUrl: process.env.PUBLIC_BASE_URL || "",
+	credentials: "include",
 });
 
 apiClient.use(authMiddleware);

@@ -1,0 +1,112 @@
+name: Update API Spec
+on:
+  repository_dispatch:
+    types: [backend-develop-push]
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Make scripts executable
+        run: |
+          chmod +x .github/scripts/*.sh
+
+      - name: Prepare short SHA
+        id: short_sha
+        run: |
+          FULL_SHA="${{ github.event.client_payload.sha }}"
+          SHORT_SHA="${FULL_SHA:0:7}"
+          echo "full=$FULL_SHA" >> $GITHUB_OUTPUT
+          echo "short=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "Full SHA: $FULL_SHA"
+          echo "Short SHA: $SHORT_SHA"
+
+      - name: Generate timestamp
+        id: time
+        run: .github/scripts/generate-timestamp.sh
+
+      - name: Update API spec files
+        env:
+          PUBLIC_API_DOCS_URL: ${{ secrets.PUBLIC_API_DOCS_URL_DEV }}
+        run: pnpm generate:types
+
+      - name: Check for changes
+        id: check_changes
+        run: .github/scripts/check-changes.sh
+
+      - name: Exit if no changes
+        if: steps.check_changes.outputs.has_changes == 'false'
+        run: |
+          echo "No API spec changes detected. Exiting workflow."
+          exit 0
+
+      - name: Check for existing PR
+        if: steps.check_changes.outputs.has_changes == 'true'
+        id: check_pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: .github/scripts/check-existing-pr.sh
+
+      - name: Prepare PR body
+        if: steps.check_changes.outputs.has_changes == 'true'
+        id: pr_body
+        env:
+          REPOSITORY: ${{ github.event.client_payload.repository }}
+          PR_EXISTS: ${{ steps.check_pr.outputs.exists }}
+          EXISTING_BODY: ${{ steps.check_pr.outputs.body }}
+          SHORT_SHA: ${{ steps.short_sha.outputs.short }}
+          FULL_SHA: ${{ steps.short_sha.outputs.full }}
+          COMMIT_MESSAGE: ${{ github.event.client_payload.commit_message }}
+          DATE: ${{ steps.time.outputs.date }}
+          TIME: ${{ steps.time.outputs.time }}
+        run: |
+          .github/scripts/prepare-pr-body.sh \
+            "$REPOSITORY" \
+            "$PR_EXISTS" \
+            "$EXISTING_BODY" \
+            "$SHORT_SHA" \
+            "$FULL_SHA" \
+            "$COMMIT_MESSAGE" \
+            "$DATE" \
+            "$TIME"
+
+      - name: Create or Update Pull Request
+        if: steps.check_changes.outputs.has_changes == 'true'
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'chore(types): update API spec from backend@${{ steps.short_sha.outputs.short }}'
+          base: develop
+          branch: chore/update-api-spec
+          delete-branch: true
+          add-paths: src/libs/types/**
+          title: '[chore] Update API Spec (${{ steps.time.outputs.date }} ${{ steps.time.outputs.time }})'
+          body: ${{ steps.pr_body.outputs.content }}
+          labels: api
+          draft: false
+
+      - name: PR Info
+        if: steps.cpr.outputs.pull-request-number
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
