@@ -70,6 +70,7 @@ export type FillBlankQuestionSubmitApiRequest = components["schemas"]["FillBlank
 export type FillBlankSubmitAnswer = components["schemas"]["FillBlankSubmitAnswer"];
 export type FillBlankUpdateAnswerPayload = components["schemas"]["FillBlankUpdateAnswerPayload"];
 export type JoinedTeamUserApiResponse = components["schemas"]["JoinedTeamUserApiResponse"];
+export type LastViewedQuestionApiRequest = components["schemas"]["LastViewedQuestionApiRequest"];
 export type LatestPoliciesApiResponse = components["schemas"]["LatestPoliciesApiResponse"];
 export type LoginApiRequest = components["schemas"]["LoginApiRequest"];
 export type MaterialDto = components["schemas"]["MaterialDto"];

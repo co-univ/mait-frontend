@@ -54,6 +54,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/questions/last-viewed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 마지막으로 풀이한 문제 조회 API
+         * @description 복습 모드에서 해당 문제 셋에 마지막으로 조회한 문제를 반환하고 없으면 1번 문제를 반환
+         */
+        get: operations["getLastViewedQuestion"];
+        /**
+         * 마지막으로 풀이한 문제 업데이트 API
+         * @description 복습 모드에서 사용자가 마지막으로 조회한 문제를 업데이트
+         */
+        put: operations["updateLastViewedQuestion"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/live-status/participants": {
         parameters: {
             query?: never;
@@ -476,6 +500,26 @@ export interface paths {
         head?: never;
         /** 팀 유저 역할 변경 API */
         patch: operations["updateTeamUserRole"];
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 종료된 문제를 복습 상태로 전환
+         * @description 종료된 학습/실시간 모드의 문제를 복습 상태로 전환한다.
+         */
+        patch: operations["updateToReviewMode"];
         trace?: never;
     };
     "/api/v1/question-sets/{questionSetId}/questions/{questionId}/status": {
@@ -1185,6 +1229,14 @@ export interface components {
              */
             answerCount: number;
         });
+        LastViewedQuestionApiRequest: {
+            /** Format: int64 */
+            questionId: number;
+        };
+        ApiResponseVoid: {
+            isSuccess?: boolean;
+            data?: Record<string, never>;
+        };
         ParticipantDto: {
             /** Format: int64 */
             participantId?: number;
@@ -1254,10 +1306,6 @@ export interface components {
         SignUpApiRequest: {
             nickname: string;
             policyChecks: components["schemas"]["PolicyCheckRequest"][];
-        };
-        ApiResponseVoid: {
-            isSuccess?: boolean;
-            data?: Record<string, never>;
         };
         CreateTeamApiRequest: {
             name: string;
@@ -2207,6 +2255,54 @@ export interface operations {
             };
         };
     };
+    getLastViewedQuestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionApiResponse"];
+                };
+            };
+        };
+    };
+    updateLastViewedQuestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LastViewedQuestionApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
     getParticipants: {
         parameters: {
             query?: never;
@@ -2847,6 +2943,28 @@ export interface operations {
                 "application/json": components["schemas"]["UpdateTeamUserRoleApiRequest"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    updateToReviewMode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
