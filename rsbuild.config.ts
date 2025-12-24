@@ -44,6 +44,14 @@ export default defineConfig({
 	html: {
 		title: "MAIT",
 		favicon: "./src/assets/favicon.svg",
+		meta: {
+			"og:title": "MAIT | AI 문제 제작",
+			"og:description": "문제 제작은 자동으로, 학습은 함께\n메잇으로 더 똑똑하게 학습하세요!",
+			"og:type": "website",
+			"og:url": "https://mait.kr/",
+			"og:image": "https://mait-prod.s3.ap-northeast-2.amazonaws.com/assets/og-image.png",
+			"og:locale": "ko_KR"
+		}
 	},
 	server: {
 		port: 3000,
