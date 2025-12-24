@@ -3,19 +3,19 @@ import type { ReactNode } from "react";
 import type { RadioContextValue } from "./RadioContext";
 import { RadioContext } from "./RadioContext";
 
-export interface RadioGroupProps {
+export interface RadioGroupProps<T = string> {
 	/** Whether all radio inputs in this group are disabled */
 	disabled?: boolean;
 	/** The name attribute for all radio inputs in this group */
 	name?: string;
 	/** The currently selected value */
-	value?: string;
+	value?: T;
 	/** Additional CSS class names */
 	className?: string;
 	/** The radio items */
 	children: ReactNode;
 	/** Callback when the selected value changes */
-	onChange?: (value: string) => void;
+	onChange?: (value: T) => void;
 }
 
 /**
@@ -48,17 +48,17 @@ export interface RadioGroupProps {
  * </Radio.Group>
  * ```
  */
-export const RadioGroup = ({
+export const RadioGroup = <T = string>({
 	disabled = false,
 	name,
 	value,
 	className,
 	children,
 	onChange,
-}: RadioGroupProps) => {
-	const contextValue: RadioContextValue = {
+}: RadioGroupProps<T>) => {
+	const contextValue: RadioContextValue<unknown> = {
 		value,
-		onChange,
+		onChange: onChange as ((value: unknown) => void) | undefined,
 		name,
 		disabled,
 	};
