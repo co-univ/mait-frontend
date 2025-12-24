@@ -29,11 +29,15 @@ const Management = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "making";
 
-	const { questionSetList, questionSetGroup, invalidateQuestionSetsQuery } =
-		useQuestionSets({
-			teamId: activeTeam?.teamId ?? 0,
-			mode: QUESTION_SET_MODES[mode],
-		});
+	const {
+		questionSetList,
+		questionSetGroup,
+		invalidateQuestionSetsQuery,
+		isLoading,
+	} = useQuestionSets({
+		teamId: activeTeam?.teamId ?? 0,
+		mode: QUESTION_SET_MODES[mode],
+	});
 
 	/**
 	 *
@@ -56,18 +60,25 @@ const Management = () => {
 				<QuestionSetsTabs modes={["making", "live-time", "review"]} />
 
 				<Tabs.Content value="making">
-					<ManagementMaking questionSets={questionSetList ?? []} />
+					<ManagementMaking
+						questionSets={questionSetList ?? []}
+						isLoading={isLoading}
+					/>
 				</Tabs.Content>
 
 				<Tabs.Content value="live-time">
 					<ManagementLiveTime
 						questionSetGroup={questionSetGroup}
 						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+						isLoading={isLoading}
 					/>
 				</Tabs.Content>
 
 				<Tabs.Content value="review">
-					<ManagementReview questionSets={questionSetList ?? []} />
+					<ManagementReview
+						questionSets={questionSetList ?? []}
+						isLoading={isLoading}
+					/>
 				</Tabs.Content>
 			</Tabs.Root>
 		</LabeledPageLayout>

@@ -16,6 +16,7 @@ interface ManagementLiveTimeProps {
 		teamId?: number;
 		mode?: DeliveryMode;
 	}) => void;
+	isLoading: boolean;
 }
 
 //
@@ -25,6 +26,7 @@ interface ManagementLiveTimeProps {
 const ManagementLiveTime = ({
 	questionSetGroup,
 	invalidateQuestionSetsQuery,
+	isLoading,
 }: ManagementLiveTimeProps) => {
 	const [reviewStatusModalOpen, setReviewStatusModalOpen] = useState(false);
 	const [selectedQuestionSetId, setSelectedQuestionSetId] = useState<
@@ -38,6 +40,8 @@ const ManagementLiveTime = ({
 	const hasOngoingQuestionSets = ongoingQuestionSets.length > 0;
 	const hasBeforeQuestionSets = beforeQuestionSets.length > 0;
 	const hasAfterQuestionSets = afterQuestionSets.length > 0;
+	const hasAnyQuestionSets =
+		hasOngoingQuestionSets || hasBeforeQuestionSets || hasAfterQuestionSets;
 
 	/**
 	 *
@@ -55,16 +59,24 @@ const ManagementLiveTime = ({
 		setSelectedQuestionSetId(null);
 	};
 
+	if (isLoading) {
+		return null;
+	}
+
+	if (!hasAnyQuestionSets) {
+		return <QuestionSetsCardsLayout isLoading={false} />;
+	}
+
 	return (
 		<>
-			<div className="flex flex-col gap-gap-11">
+			<div className="h-full flex flex-col gap-gap-11">
 				{hasOngoingQuestionSets && (
 					<div className="flex flex-col gap-gap-11">
 						<div className="flex justify-between items-center">
 							<QuestionSetsLable label="풀이 중" variant="secondary" />
 							<ManagementCreateQuestionButton />
 						</div>
-						<QuestionSetsCardsLayout>
+						<QuestionSetsCardsLayout isLoading={false}>
 							{ongoingQuestionSets.map((questionSet) => (
 								<ManagementLiveTimeCard
 									key={questionSet.id}
@@ -82,7 +94,7 @@ const ManagementLiveTime = ({
 
 							{!hasOngoingQuestionSets && <ManagementCreateQuestionButton />}
 						</div>
-						<QuestionSetsCardsLayout>
+						<QuestionSetsCardsLayout isLoading={false}>
 							{beforeQuestionSets.map((questionSet) => (
 								<ManagementLiveTimeCard
 									key={questionSet.id}
@@ -102,7 +114,7 @@ const ManagementLiveTime = ({
 								<ManagementCreateQuestionButton />
 							)}
 						</div>
-						<QuestionSetsCardsLayout>
+						<QuestionSetsCardsLayout isLoading={false}>
 							{afterQuestionSets.map((questionSet) => (
 								<ManagementLiveTimeCard
 									key={questionSet.id}

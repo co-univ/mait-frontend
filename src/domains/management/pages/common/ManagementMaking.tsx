@@ -10,21 +10,25 @@ import ManagementMakingCard from "../../components/common/ManagementMakingCard";
 
 interface ManagementMakingProps {
 	questionSets: QuestionSetDto[];
+	isLoading: boolean;
 }
 
 //
 //
 //
 
-const ManagementMaking = ({ questionSets }: ManagementMakingProps) => {
+const ManagementMaking = ({
+	questionSets,
+	isLoading,
+}: ManagementMakingProps) => {
 	return (
-		<div className="flex flex-col gap-gap-11">
+		<div className="h-full flex flex-col gap-gap-11">
 			<div className="flex justify-between items-center">
 				<QuestionSetsLable label="제작 중" />
 				<ManagementCreateQuestionButton />
 			</div>
 
-			<QuestionSetsCardsLayout minGridWidth={280}>
+			<QuestionSetsCardsLayout isLoading={isLoading} minGridWidth={280}>
 				{questionSets.map((questionSet) => (
 					<ManagementMakingCard
 						key={questionSet.id}

@@ -1,12 +1,12 @@
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
 import type { QuestionSetDto } from "@/libs/types";
-import ManagementReviewCard from "../../components/common/ManagementReviewCard";
+import SolvingQuestionSetsReviewCard from "../../components/question-sets/SolvingQuestionSetsReviewCard";
 
 //
 //
 //
 
-interface ManagementReviewProps {
+interface SolvingQuestionSetsReviewProps {
 	questionSets: QuestionSetDto[];
 	isLoading: boolean;
 }
@@ -15,12 +15,12 @@ interface ManagementReviewProps {
 //
 //
 
-const ManagementReview = ({
+const SolvingQuestionSetsReview = ({
 	questionSets,
 	isLoading,
-}: ManagementReviewProps) => {
+}: SolvingQuestionSetsReviewProps) => {
 	return (
-		<div className="h-full flex flex-col gap-gap-11">
+		<div className="flex flex-col gap-gap-11 h-full">
 			<div className="flex justify-between items-center">
 				{/*
 				 *
@@ -29,7 +29,7 @@ const ManagementReview = ({
 
 			<QuestionSetsCardsLayout isLoading={isLoading}>
 				{questionSets.map((questionSet) => (
-					<ManagementReviewCard
+					<SolvingQuestionSetsReviewCard
 						key={questionSet.id}
 						questionSet={questionSet}
 					/>
@@ -39,4 +39,4 @@ const ManagementReview = ({
 	);
 };
 
-export default ManagementReview;
+export default SolvingQuestionSetsReview;
