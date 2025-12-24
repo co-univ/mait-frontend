@@ -150,6 +150,7 @@ export type UpdateQuestionApiRequest = components["schemas"]["UpdateQuestionApiR
 export type UpdateQuestionOrderApiRequest = components["schemas"]["UpdateQuestionOrderApiRequest"];
 export type UpdateQuestionSetApiRequest = components["schemas"]["UpdateQuestionSetApiRequest"];
 export type UpdateQuestionSetFieldApiRequest = components["schemas"]["UpdateQuestionSetFieldApiRequest"];
+export type UpdateQuestionSetReviewApiRequest = components["schemas"]["UpdateQuestionSetReviewApiRequest"];
 export type UpdateQuestionStatusApiRequest = components["schemas"]["UpdateQuestionStatusApiRequest"];
 export type UpdateShortQuestionApiRequest = components["schemas"]["UpdateShortQuestionApiRequest"];
 export type UpdateTeamUserRoleApiRequest = components["schemas"]["UpdateTeamUserRoleApiRequest"];

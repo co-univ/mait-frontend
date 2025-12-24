@@ -1620,6 +1620,10 @@ export interface components {
         UpdateQuestionSetFieldApiRequest: {
             title: string;
         };
+        UpdateQuestionSetReviewApiRequest: {
+            /** @enum {string} */
+            visibility: "PUBLIC" | "GROUP" | "PRIVATE";
+        };
         UpdateQuestionStatusApiRequest: {
             /** @enum {string} */
             statusType?: "NOT_OPEN" | "ACCESS_PERMISSION" | "SOLVE_PERMISSION";
@@ -2964,7 +2968,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateQuestionSetReviewApiRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
