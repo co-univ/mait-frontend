@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useEffect } from "react";
 import Lottie from "react-lottie";
 import {
@@ -10,7 +9,10 @@ import {
 import logoSpin from "@/assets/lotties/mait-logo-spin.json";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
 import { apiClient } from "@/libs/api";
+import { createPath } from "@/utils/create-path";
+import { CREATION_ROUTE_PATH } from "../../creation.routes";
 
 //
 //
@@ -44,7 +46,7 @@ const CreationNewLoading = () => {
 	});
 
 	const blocker = useBlocker(({ nextLocation }) => {
-		return !nextLocation.pathname.startsWith("/creation/question");
+		return !nextLocation.state?.passBlocker;
 	});
 
 	//
@@ -71,7 +73,12 @@ const CreationNewLoading = () => {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: checkStatus only needs to run on mount
 	useEffect(() => {
 		if (!questionSetId) {
-			navigate("/management", { replace: true });
+			navigate(MANAGEMENT_ROUTE_PATH.ROOT, {
+				replace: true,
+				state: {
+					passBlocker: true,
+				},
+			});
 		}
 
 		const checkStatus = async () => {
@@ -94,9 +101,17 @@ const CreationNewLoading = () => {
 				const status = res.data?.data?.status;
 
 				if (status === "COMPLETED") {
-					navigate(`/creation/question/question-set/${questionSetId}`, {
-						replace: true,
-					});
+					navigate(
+						createPath(CREATION_ROUTE_PATH.ROOT, {
+							questionSetId: questionSetId,
+						}),
+						{
+							replace: true,
+							state: {
+								passBlocker: true,
+							},
+						},
+					);
 				}
 
 				if (status === "FAILED" || status === "NOT_FOUND") {
@@ -104,7 +119,13 @@ const CreationNewLoading = () => {
 				}
 			} catch {
 				notify.error("AI 문제 생성에 실패했습니다.");
-				navigate("/creation/new", { replace: true });
+
+				navigate(CREATION_ROUTE_PATH.NEW, {
+					replace: true,
+					state: {
+						passBlocker: true,
+					},
+				});
 			}
 		};
 

@@ -1,3 +1,4 @@
+import { HOME_ROUTE_PATH } from "@/domains/home";
 import InviteDescriptions from "../../components/common/InviteDescriptions";
 import InviteHeader from "../../components/common/InviteHeader";
 import InviteLink from "../../components/common/InviteLink";
@@ -13,7 +14,7 @@ const InviteRejected = () => {
 		<InviteLayout>
 			<InviteRedLetter />
 			<InviteHeader title="팀 초대가 승인되지 않았습니다." />
-			<InviteLink link="/" label="홈으로 이동" />
+			<InviteLink link={HOME_ROUTE_PATH.ROOT} label="홈으로 이동" />
 			<InviteDescriptions
 				descriptions={["문의가 필요하신 경우, 팀 관리자에게 연락해주세요"]}
 			/>

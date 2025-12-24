@@ -1,3 +1,4 @@
+import { HOME_ROUTE_PATH } from "@/domains/home";
 import InviteBlueLetter from "../../components/common/InviteBlueLetter";
 import InviteBody from "../../components/common/InviteBody";
 import InviteHeader from "../../components/common/InviteHeader";
@@ -18,7 +19,7 @@ const InvitePending = () => {
 				<br />
 				승인 완료 시 알림을 통해 안내드릴게요.
 			</InviteBody>
-			<InviteLink link="/" label="홈으로 이동" />
+			<InviteLink link={HOME_ROUTE_PATH.ROOT} label="홈으로 이동" />
 		</InviteLayout>
 	);
 };

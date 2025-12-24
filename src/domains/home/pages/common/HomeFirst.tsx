@@ -6,6 +6,8 @@ import Button from "@/components/Button";
 import Header from "@/components/header/Header";
 import useUser from "@/hooks/useUser";
 import yeah from "./yeah.png";
+import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
+import { AUTH_ROUTE_PATH } from "@/domains/auth/auth.routes";
 
 //
 //
@@ -36,9 +38,9 @@ const HomeFirst = () => {
 	 */
 	const handleButtonClick = () => {
 		if (user) {
-			navigate("/solving");
+			navigate(SOLVING_ROUTE_PATH.ROOT);
 		} else {
-			navigate("/login");
+			navigate(AUTH_ROUTE_PATH.LOGIN);
 		}
 	};
 

@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingView from "@/components/LoadingView";
+import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 import { apiClient } from "@/libs/api";
+import { AUTH_ROUTE_PATH } from "../auth.routes";
 
 //
 //
@@ -42,12 +44,12 @@ const AuthOAuthCallback = () => {
 			const redirectUrl = localStorage.getItem("redirectAfterLogin");
 
 			if (await isInitialLogin()) {
-				navigate("/account/create");
+				navigate(AUTH_ROUTE_PATH.ACCOUNT_CREATE);
 			} else if (redirectUrl) {
 				localStorage.removeItem("redirectAfterLogin");
 				window.location.href = redirectUrl;
 			} else {
-				navigate("/");
+				navigate(HOME_ROUTE_PATH.ROOT);
 			}
 		};
 
@@ -77,7 +79,7 @@ const AuthOAuthCallback = () => {
 
 				if (data?.data) {
 					localStorage.setItem("token", data.data);
-					navigate("/");
+					navigate(HOME_ROUTE_PATH.ROOT);
 				}
 			} catch (error) {
 				console.error("Access Token 발급 실패: ", error);

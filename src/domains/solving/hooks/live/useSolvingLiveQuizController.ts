@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import { apiClient } from "src/apis/solving.api";
+import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
+import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
 
 interface CurrentQuestionStatus {
 	questionSetId: number;
@@ -20,8 +21,11 @@ export const useSolvingLiveQuizController = (questionSetId?: string) => {
 	const [questionInfo, setQuestionInfo] = useState<unknown>(null);
 	const [isSubmitAllowed, setIsSubmitAllowed] = useState(false);
 	const [showQualifierView, setShowQualifierView] = useState(false);
-	const [activeParticipants, setActiveParticipants] = useState<ActiveParticipant[]>([]);
-	const [currentQuestionStatus, setCurrentQuestionStatus] = useState<CurrentQuestionStatus | null>(null);
+	const [activeParticipants, setActiveParticipants] = useState<
+		ActiveParticipant[]
+	>([]);
+	const [currentQuestionStatus, setCurrentQuestionStatus] =
+		useState<CurrentQuestionStatus | null>(null);
 	const [isFailed, setIsFailed] = useState(false);
 	const [showWinner, setShowWinner] = useState(false);
 
@@ -69,7 +73,8 @@ export const useSolvingLiveQuizController = (questionSetId?: string) => {
 					setShowQualifierView(true);
 
 					const isQualified = participants.some(
-						(participant: ActiveParticipant) => participant.userId === userIdRef.current,
+						(participant: ActiveParticipant) =>
+							participant.userId === userIdRef.current,
 					);
 					if (!isQualified) {
 						console.log("탈락!!!!");
@@ -84,7 +89,7 @@ export const useSolvingLiveQuizController = (questionSetId?: string) => {
 					break;
 				}
 				case CommandType.LIVE_END: {
-					navigate("/quiz-solving");
+					navigate(SOLVING_ROUTE_PATH.ROOT);
 					setShowWinner(false);
 					setIsFailed(false);
 					break;

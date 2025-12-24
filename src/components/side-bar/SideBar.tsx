@@ -8,6 +8,9 @@ import {
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
+import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
+import { TEAM_MANAGEMENT_ROUTE_PATH } from "@/domains/team-management/team-management.routes";
 import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
 import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
@@ -24,14 +27,14 @@ const NAVIGATION_ITEMS = [
 	{
 		icon: <SquarePen />,
 		label: "문제 관리",
-		path: "/management",
+		path: MANAGEMENT_ROUTE_PATH.ROOT,
 		activePaths: ["/management", "/creation", "/control"],
 		isMakerOnly: true,
 	},
 	{
 		icon: <Puzzle />,
 		label: "문제 풀기",
-		path: "/solving",
+		path: SOLVING_ROUTE_PATH.ROOT,
 		activePaths: ["/solving"],
 		isMakerOnly: false,
 	},
@@ -45,7 +48,7 @@ const NAVIGATION_ITEMS = [
 	{
 		icon: <Users />,
 		label: "팀 관리",
-		path: "/team-management",
+		path: TEAM_MANAGEMENT_ROUTE_PATH.ROOT,
 		activePaths: ["/team-management"],
 		isMakerOnly: true,
 	},

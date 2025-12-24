@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
 //
 //
@@ -10,7 +11,9 @@ const SolvingRedirect = () => {
 
 	//
 	useEffect(() => {
-		navigate("/solving/question-sets?mode=live-time");
+		navigate(SOLVING_ROUTE_PATH.QUESTION_SETS, {
+			replace: true,
+		});
 	}, [navigate]);
 
 	return null;

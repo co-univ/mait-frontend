@@ -1,5 +1,7 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { replace, useNavigate, useParams } from "react-router-dom";
+import { createPath } from "@/utils/create-path";
+import { CONTROL_ROUTE_PATH } from "../../control.routes";
 import useControlSolvings from "../../hooks/solving/question/useControlSolvingQuestions";
 
 //
@@ -22,10 +24,11 @@ const ControlRedirect = () => {
 
 			if (firstQuestionId) {
 				navigate(
-					`/control/solving/question-set/${questionSetId}/question/${firstQuestionId}?submit-type=all`,
-					{
-						replace: true,
-					},
+					createPath(CONTROL_ROUTE_PATH.SOLVING, {
+						questionSetId,
+						questionId: firstQuestionId,
+					}),
+					{ replace: true },
 				);
 			}
 		}

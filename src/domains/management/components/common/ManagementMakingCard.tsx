@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
+import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import type { QuestionSetDto } from "@/libs/types";
+import { createPath } from "@/utils/create-path";
 
 //
 //
@@ -21,7 +23,11 @@ const ManagementMakingCard = ({ questionSet }: ManagementMakingCardProps) => {
 	 *
 	 */
 	const handleButtonClick = () => {
-		navigate(`/creation/question/question-set/${questionSet.id}`);
+		navigate(
+			createPath(CREATION_ROUTE_PATH.ROOT, {
+				questionSetId: questionSet.id ?? 0,
+			}),
+		);
 	};
 
 	return (

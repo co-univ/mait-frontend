@@ -8,6 +8,7 @@ import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
 import {
 	CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	creationPublishQuestionSetReducer,
@@ -113,7 +114,7 @@ const CreationPublish = () => {
 			invalidateMakingQuery();
 			invalidateLiveTimeQuery();
 
-			navigate("/management");
+			navigate(MANAGEMENT_ROUTE_PATH.ROOT);
 		} catch {
 			notify.error("문제 셋 생성에 실패했습니다.");
 		}

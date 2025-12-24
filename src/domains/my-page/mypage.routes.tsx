@@ -1,15 +1,30 @@
 import { lazy } from "react";
-import { ProtectedRoute } from "@/ProtectedRoute";
+import AuthGuard from "@/guards/AuthGuard";
 
 const MyPage = lazy(() => import("./pages/MyPage"));
 
-export const myPageRoutes = [
+//
+//
+//
+
+/**
+ * @property {string} ROOT `/mypage`
+ */
+export const MYPAGE_ROUTE_PATH = {
+	ROOT: "/mypage",
+};
+
+//
+//
+//
+
+export const myPageRouter = [
 	{
-		path: "/mypage",
+		path: MYPAGE_ROUTE_PATH.ROOT,
 		element: (
-			<ProtectedRoute>
+			<AuthGuard>
 				<MyPage />
-			</ProtectedRoute>
+			</AuthGuard>
 		),
 	},
 ];
