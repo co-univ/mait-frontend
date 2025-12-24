@@ -8,6 +8,7 @@ import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
 import ManagementLiveTime from "./ManagementLiveTime";
 import ManagementMaking from "./ManagementMaking";
+import ManagementReview from "./ManagementReview";
 
 //
 //
@@ -28,10 +29,11 @@ const Management = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "making";
 
-	const { questionSetList, questionSetGroup } = useQuestionSets({
-		teamId: activeTeam?.teamId ?? 0,
-		mode: QUESTION_SET_MODES[mode],
-	});
+	const { questionSetList, questionSetGroup, invalidateQuestionSetsQuery } =
+		useQuestionSets({
+			teamId: activeTeam?.teamId ?? 0,
+			mode: QUESTION_SET_MODES[mode],
+		});
 
 	/**
 	 *
@@ -58,11 +60,14 @@ const Management = () => {
 				</Tabs.Content>
 
 				<Tabs.Content value="live-time">
-					<ManagementLiveTime questionSetGroup={questionSetGroup} />
+					<ManagementLiveTime
+						questionSetGroup={questionSetGroup}
+						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+					/>
 				</Tabs.Content>
 
 				<Tabs.Content value="review">
-					<ManagementMaking questionSets={questionSetList ?? []} />
+					<ManagementReview questionSets={questionSetList ?? []} />
 				</Tabs.Content>
 			</Tabs.Root>
 		</LabeledPageLayout>
