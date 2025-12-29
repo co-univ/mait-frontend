@@ -5,6 +5,7 @@ import useSolvingReviewQuestion from "../../hooks/review/useSolvingReviewQuestio
 import useSolvingReviewQuestions from "../../hooks/review/useSolvingReviewQuestions";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import SolvingReviewControl from "./SolvingReviewControl";
+import SolvingReviewMultipleAnswers from "./SolvingReviewMultipleAnswers";
 
 //
 //
@@ -30,7 +31,12 @@ const SolvingReview = () => {
 
 		switch (type) {
 			case "MULTIPLE":
-				return <div>Multiple Choice Answers Placeholder</div>;
+				return (
+					<SolvingReviewMultipleAnswers
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "SHORT":
 				return <div>Short Answer Placeholder</div>;
 			case "ORDERING":
@@ -52,8 +58,9 @@ const SolvingReview = () => {
 			/>
 			<QuestionContent content={content} className="typo-heading-small" />
 			{imageUrl && <SolvingQuizImage src={imageUrl} />}
-			<div className="flex-grow h-size-height-5" />
-			{renderQuestionAnswers()}
+			<div className="h-full flex flex-col justify-end">
+				{renderQuestionAnswers()}
+			</div>
 		</SolvingLayout>
 	);
 };

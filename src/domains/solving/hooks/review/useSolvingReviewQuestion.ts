@@ -1,3 +1,4 @@
+import { apiHooks } from "@/libs/api";
 import type { QuestionType } from "@/libs/types";
 import useSolvingReviewQuestions from "./useSolvingReviewQuestions";
 
@@ -26,16 +27,30 @@ const useSolvingReviewQuestion = ({
 	questionSetId,
 	questionId,
 }: UseSolvingReviewQuestionProps): UseSolvingReviewQuestionReturn => {
-	const { questions, isLoading } = useSolvingReviewQuestions({ questionSetId });
+	const { data, isPending } = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
+		{
+			params: {
+				path: {
+					questionSetId,
+					questionId,
+				},
+				query: {
+					mode: "REVIEW",
+				},
+			},
+		},
+	);
 
-	const question = questions.find((q) => q.id === questionId);
+	const question = data?.data;
 
 	return {
 		content: question?.content,
 		number: question?.number,
 		imageUrl: question?.imageUrl,
 		type: question?.type as QuestionType,
-		isLoading,
+		isLoading: isPending,
 	};
 };
 

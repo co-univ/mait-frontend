@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { apiHooks } from "@/libs/api";
 import ErrorDetect from "@/pages/ErrorDetect";
 import Loading from "@/pages/Loading";
+import { createPath } from "@/utils/create-path";
+import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
 //
 //
@@ -25,16 +27,23 @@ const SolvingReviewRedirect = () => {
 
 	const navigate = useNavigate();
 
+	const lastViewedQuestionId = data?.data?.id;
+
 	//
 	//
 	//
 	useEffect(() => {
-		if (!data) {
+		if (!lastViewedQuestionId) {
 			return;
 		}
 
-		navigate();
-	}, [data, questionSetId]);
+		navigate(
+			createPath(SOLVING_ROUTE_PATH.REVIEW, {
+				questionSetId,
+				questionId: lastViewedQuestionId,
+			}),
+		);
+	}, [lastViewedQuestionId, questionSetId, navigate]);
 
 	if (isPending) {
 		return <Loading />;

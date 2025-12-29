@@ -1,0 +1,53 @@
+import clsx from "clsx";
+import AdjustableTextarea from "@/components/AdjustableTextarea";
+
+//
+//
+//
+
+const ANSWER_HEIGHT = 94;
+
+interface SolvingReviewAnswerProps {
+	readOnly?: boolean;
+	variation?: "default" | "focused" | "correct" | "incorrect";
+	content: string;
+}
+
+//
+//
+//
+
+const SolvingReviewAnswer = ({
+	readOnly = false,
+	variation = "default",
+	content,
+}: SolvingReviewAnswerProps) => {
+	return (
+		<div
+			className={clsx(
+				"w-full px-padding-12 flex items-center border rounded-radius-medium1",
+				{
+					"bg-color-gray-5 border-none typo-body-medium":
+						variation === "default",
+					"bg-color-primary-5 border-color-primary-50 typo-heading-xsmall text-color-primary-50":
+						variation === "focused",
+					"bg-color-success-5 border-color-success-50 typo-heading-xsmall text-color-success-50":
+						variation === "correct",
+					"bg-color-point-5 border-color-point-50 typo-heading-xsmall text-color-point-50":
+						variation === "incorrect",
+				},
+			)}
+			style={{ minHeight: ANSWER_HEIGHT }}
+		>
+			<AdjustableTextarea
+				readOnly={readOnly}
+				value={content}
+				className={clsx("w-full", {
+					"cursor-pointer": readOnly,
+				})}
+			/>
+		</div>
+	);
+};
+
+export default SolvingReviewAnswer;
