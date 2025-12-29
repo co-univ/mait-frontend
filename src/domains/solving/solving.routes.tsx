@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
+import SolvingReview from "./pages/review/SolvingReview";
 
 const SolvingRedirect = lazy(() => import("./pages/common/SolvingRedirect"));
 const SolvingLiveSolving = lazy(
@@ -20,12 +21,14 @@ const SolvingReviewRedirect = lazy(
  * @property {string} ROOT `/solving`
  * @property {string} LIVE `/solving/live/:id`
  * @property {string} QUESTION_SETS `/solving/question-sets`
+ * @property {string} REVIEW `/solving/review/question-sets/:questionSetId/question/:questionId`
  * @property {string} REVIEW_REDIRECT `/solving/review/question-sets/:questionSetId`
  */
 export const SOLVING_ROUTE_PATH = {
 	ROOT: "/solving",
 	LIVE: "/solving/live/:id",
 	QUESTION_SETS: "/solving/question-sets",
+	REVIEW: "/solving/review/question-sets/:questionSetId/question/:questionId",
 	REVIEW_REDIRECT: "/solving/review/question-sets/:questionSetId",
 };
 
@@ -33,6 +36,7 @@ export const SOLVING_ROUTE_PATH = {
 //
 //
 
+// TODO: Guard TeamPlayerGuard
 export const solvingRouter: RouteObject[] = [
 	{
 		path: SOLVING_ROUTE_PATH.QUESTION_SETS,
@@ -45,6 +49,10 @@ export const solvingRouter: RouteObject[] = [
 	{
 		path: SOLVING_ROUTE_PATH.ROOT,
 		element: <SolvingRedirect />,
+	},
+	{
+		path: SOLVING_ROUTE_PATH.REVIEW,
+		element: <SolvingReview />,
 	},
 	{
 		path: SOLVING_ROUTE_PATH.REVIEW_REDIRECT,

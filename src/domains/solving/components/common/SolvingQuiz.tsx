@@ -223,7 +223,6 @@ const SolvingQuiz = ({
 				onSubmit={handleSubmitAnswer}
 				disabled={isSubmitDisabled}
 			/>
-			<div className="h-size-height-5" />
 			<SolvingQuizContent
 				questionInfo={questionInfo}
 				userAnswers={userAnswers}
