@@ -277,6 +277,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 복습 문제 정답 제출 API
+         * @description 복습 시 푼 문제 정답을 제출하고 정오답 여부를 응답 받는 API
+         */
+        post: operations["submitReviewAnswer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/questions/{questionId}/control/solve": {
         parameters: {
             query?: never;
@@ -2640,6 +2660,33 @@ export interface operations {
             path: {
                 questionSetId: number;
                 questionId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FillBlankQuestionSubmitApiRequest"] | components["schemas"]["MultipleQuestionSubmitApiRequest"] | components["schemas"]["OrderingQuestionSubmitApiRequest"] | components["schemas"]["ShortQuestionSubmitApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionAnswerSubmitApiResponse"];
+                };
+            };
+        };
+    };
+    submitReviewAnswer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionId: number;
+                questionSetId: number;
             };
             cookie?: never;
         };
