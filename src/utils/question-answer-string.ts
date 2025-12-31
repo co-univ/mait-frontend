@@ -14,7 +14,7 @@ import type {
 /**
  * Get a string representation of the correct answers for display purposes
  */
-const CreationQuestionAnswerString = (question: QuestionResponseType) => {
+const QuestionAnswerString = (question: QuestionResponseType) => {
 	switch (question.type as QuestionType) {
 		case "MULTIPLE": {
 			const choices = (question as MultipleQuestionApiResponse).choices;
@@ -34,7 +34,7 @@ const CreationQuestionAnswerString = (question: QuestionResponseType) => {
 				answers
 					?.filter((answer) => answer.isMain)
 					.map((answer) => answer.answer)
-					.join("\n") || ""
+					.join(", ") || ""
 			);
 		}
 
@@ -56,7 +56,7 @@ const CreationQuestionAnswerString = (question: QuestionResponseType) => {
 				answers
 					?.filter((answer) => answer.isMain)
 					.map((answer) => answer.answer)
-					.join("\n") || ""
+					.join(", ") || ""
 			);
 		}
 
@@ -65,4 +65,4 @@ const CreationQuestionAnswerString = (question: QuestionResponseType) => {
 	}
 };
 
-export default CreationQuestionAnswerString;
+export default QuestionAnswerString;
