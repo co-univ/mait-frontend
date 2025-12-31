@@ -15,9 +15,11 @@ interface UseSolvingReviewMultipleQuestionProps {
 }
 
 interface UseSolvingReviewMultipleQuestionReturn {
+	isSubmitted: boolean;
+	isCorrect: boolean | null;
 	choices: MultipleChoiceApiResponse[];
-	selectedChoices: number[];
-	handleChoiceChange: (id: number) => void;
+	userAnswers: number[];
+	handleChoiceChange: (choiceNumber: number) => void;
 	isLoading: boolean;
 }
 
@@ -45,31 +47,35 @@ const useSolvingReviewMultipleQuestion = ({
 		},
 	);
 
-	const { selectedAnswers, setSelectedAnswers } =
+	const { getUserAnswers, getIsSubmitted, getIsCorrect, setUserAnswers } =
 		useSolvingReviewAnswerResultStore();
 
 	const question = data?.data as MultipleQuestionApiResponse | undefined;
 
-	const selectedChoices = selectedAnswers as number[];
+	const userAnswers = getUserAnswers(questionId) as number[];
 
 	/**
 	 *
 	 */
-	const handleChoiceChange = (id: number) => {
-		let updatedChoices: number[] = [];
+	const handleChoiceChange = (choiceNumber: number) => {
+		let newUserAnswers = [];
 
-		if (selectedChoices.includes(id)) {
-			updatedChoices = selectedChoices.filter((choiceId) => choiceId !== id);
+		if (userAnswers.includes(choiceNumber)) {
+			newUserAnswers = userAnswers.filter(
+				(answerId) => answerId !== choiceNumber,
+			);
 		} else {
-			updatedChoices = [...selectedChoices, id];
+			newUserAnswers = [...userAnswers, choiceNumber];
 		}
 
-		setSelectedAnswers(updatedChoices);
+		setUserAnswers(questionId, newUserAnswers);
 	};
 
 	return {
+		isSubmitted: getIsSubmitted(questionId),
+		isCorrect: getIsCorrect(questionId),
 		choices: question?.choices ?? [],
-		selectedChoices,
+		userAnswers,
 		handleChoiceChange,
 		isLoading: isPending,
 	};

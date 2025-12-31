@@ -15,10 +15,14 @@ import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 //
 
 interface SolvingReviewControlProps {
+	isSubmitted: boolean;
+	isCorrect: boolean | null;
 	questionSetId: number;
 	questionId: number;
 	number?: number;
 	questions?: QuestionResponseType[];
+	handleAnswerSubmit: () => void;
+	showExplanation: () => void;
 }
 
 //
@@ -26,10 +30,14 @@ interface SolvingReviewControlProps {
 //
 
 const SolvingReviewControl = ({
+	isSubmitted,
+	isCorrect,
 	questionSetId,
 	questionId,
 	number,
 	questions,
+	handleAnswerSubmit,
+	showExplanation,
 }: SolvingReviewControlProps) => {
 	const navigate = useNavigate();
 
@@ -46,6 +54,17 @@ const SolvingReviewControl = ({
 				replace: true,
 			},
 		);
+	};
+
+	/**
+	 *
+	 */
+	const getBadgeColor = () => {
+		if (!isSubmitted) {
+			return "primary";
+		}
+
+		return isCorrect ? "success" : "point";
 	};
 
 	/**
@@ -85,8 +104,27 @@ const SolvingReviewControl = ({
 				renderQuestionNavigationButton={renderQuestionNavigationButton}
 			/>
 			<div className="flex justify-between items-center">
-				<SolvingBadge icon={<Puzzle />} lable={`Q${number}`} />
-				<SolvingButton icon={<ChevronRight />} lable="제출하기" />
+				<SolvingBadge
+					color={getBadgeColor()}
+					icon={<Puzzle />}
+					lable={`Q${number ?? ""}`}
+				/>
+				{!isSubmitted && (
+					<SolvingButton
+						color={getBadgeColor()}
+						icon={<ChevronRight />}
+						lable="제출하기"
+						onClick={handleAnswerSubmit}
+					/>
+				)}
+				{isSubmitted && (
+					<SolvingButton
+						color={getBadgeColor()}
+						icon={<ChevronRight />}
+						lable="해설보기"
+						onClick={showExplanation}
+					/>
+				)}
 			</div>
 		</div>
 	);

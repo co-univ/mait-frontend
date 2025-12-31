@@ -1,18 +1,35 @@
 import { create } from "zustand";
+import type { FillBlankSubmitAnswer, QuestionType } from "@/libs/types";
 
 //
 //
 //
+
+export type AnswersType = number[] | string[] | FillBlankSubmitAnswer[];
 
 interface SolvingReviewAnswerResultState {
-	selectedAnswers: Array<number | string>;
+	result: Record<
+		number,
+		{
+			isSubmitted: boolean;
+			isCorrect: boolean | null;
+			isExplanationShown: boolean;
+			type: QuestionType;
+			userAnswers: AnswersType;
+		}
+	>;
 }
 
 interface SolvingReviewAnswerResultActions {
-	setSelectedAnswers: (
-		selectedAnswers: SolvingReviewAnswerResultState["selectedAnswers"],
-	) => void;
-	reset: () => void;
+	getUserAnswers: (questionId: number) => AnswersType;
+	getIsSubmitted: (questionId: number) => boolean;
+	getIsCorrect: (questionId: number) => boolean | null;
+	getIsExplanationShown: (questionId: number) => boolean;
+
+	setAnswerInitInfo: (questionId: number, type: QuestionType) => void;
+	setUserAnswers: (questionId: number, answers: AnswersType) => void;
+	setAnswerSubmitted: (questionId: number, isCorrect: boolean) => void;
+	setIsExplanationShown: (questionId: number, isShown: boolean) => void;
 }
 
 //
@@ -21,11 +38,80 @@ interface SolvingReviewAnswerResultActions {
 
 const useSolvingReviewAnswerResultStore = create<
 	SolvingReviewAnswerResultState & SolvingReviewAnswerResultActions
->((set) => ({
-	selectedAnswers: [],
+>((set, get) => ({
+	result: {},
 
-	setSelectedAnswers: (selectedAnswers) => set(() => ({ selectedAnswers })),
-	reset: () => set(() => ({ selectedAnswers: [] })),
+	getUserAnswers: (questionId: number) => {
+		return get().result[questionId]?.userAnswers ?? [];
+	},
+
+	getIsSubmitted: (questionId: number) => {
+		return get().result[questionId]?.isSubmitted ?? false;
+	},
+
+	getIsCorrect: (questionId: number) => {
+		return get().result[questionId]?.isCorrect ?? null;
+	},
+
+	getIsExplanationShown: (questionId: number) => {
+		return get().result[questionId]?.isExplanationShown ?? false;
+	},
+
+	setAnswerInitInfo: (questionId: number, type: QuestionType) => {
+		if (get().result[questionId]?.type) {
+			return;
+		}
+
+		set((state) => ({
+			result: {
+				...state.result,
+				[questionId]: {
+					type,
+					isSubmitted: false,
+					isCorrect: null,
+					isExplanationShown: false,
+					userAnswers: [],
+				},
+			},
+		}));
+	},
+
+	setUserAnswers: (questionId: number, answers: AnswersType) => {
+		set((state) => ({
+			result: {
+				...state.result,
+				[questionId]: {
+					...state.result[questionId],
+					userAnswers: answers,
+				},
+			},
+		}));
+	},
+
+	setAnswerSubmitted: (questionId: number, isCorrect: boolean) => {
+		set((state) => ({
+			result: {
+				...state.result,
+				[questionId]: {
+					...state.result[questionId],
+					isSubmitted: true,
+					isCorrect,
+				},
+			},
+		}));
+	},
+
+	setIsExplanationShown: (questionId: number, isShown: boolean) => {
+		set((state) => ({
+			result: {
+				...state.result,
+				[questionId]: {
+					...state.result[questionId],
+					isExplanationShown: isShown,
+				},
+			},
+		}));
+	},
 }));
 
 export default useSolvingReviewAnswerResultStore;

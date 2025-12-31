@@ -18,7 +18,7 @@ const SolvingReviewMultipleAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewMultipleAnswersProps) => {
-	const { choices, selectedChoices, handleChoiceChange } =
+	const { isSubmitted, isCorrect, choices, userAnswers, handleChoiceChange } =
 		useSolvingReviewMultipleQuestion({
 			questionSetId,
 			questionId,
@@ -27,8 +27,18 @@ const SolvingReviewMultipleAnswers = ({
 	/**
 	 *
 	 */
-	const getAnswerVariation = (choiceId: number): "default" | "focused" => {
-		return selectedChoices.includes(choiceId) ? "focused" : "default";
+	const getAnswerVariation = (
+		choiceNumber: number,
+	): "default" | "focused" | "correct" | "incorrect" => {
+		if (!isSubmitted) {
+			return userAnswers.includes(choiceNumber) ? "focused" : "default";
+		}
+
+		if (isCorrect) {
+			return userAnswers.includes(choiceNumber) ? "correct" : "default";
+		}
+
+		return userAnswers.includes(choiceNumber) ? "incorrect" : "default";
 	};
 
 	return (
@@ -37,11 +47,11 @@ const SolvingReviewMultipleAnswers = ({
 				<button
 					key={choice.id}
 					type="button"
-					onClick={() => handleChoiceChange(choice.id)}
+					onClick={() => handleChoiceChange(choice.number)}
 				>
 					<SolvingReviewAnswer
 						readOnly
-						variation={getAnswerVariation(choice.id)}
+						variation={getAnswerVariation(choice.number)}
 						content={choice ? `${choice.number}. ${choice.content}` : ""}
 					/>
 				</button>
