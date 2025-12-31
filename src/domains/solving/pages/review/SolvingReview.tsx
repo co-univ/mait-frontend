@@ -9,6 +9,7 @@ import SolvingLayout from "../../layouts/common/SolvingLayout";
 import SolvingReviewControl from "./SolvingReviewControl";
 import SolvingReviewExplanation from "./SolvingReviewExplanation";
 import SolvingReviewMultipleAnswers from "./SolvingReviewMultipleAnswers";
+import SolvingReviewOrderingAnswers from "./SolvingReviewOrderingAnswers";
 import SolvingReviewShortAnswers from "./SolvingReviewShortAnswers";
 
 //
@@ -79,7 +80,12 @@ const SolvingReview = () => {
 					/>
 				);
 			case "ORDERING":
-				return <div>Ordering Answers Placeholder</div>;
+				return (
+					<SolvingReviewOrderingAnswers
+						questoinSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "FILL_BLANK":
 				return <div>Fill in the Blank Answers Placeholder</div>;
 			default:

@@ -43,15 +43,16 @@ const SolvingReviewAnswer = ({
 			)}
 			style={{ minHeight: ANSWER_HEIGHT }}
 		>
-			<AdjustableTextarea
-				readOnly={readOnly}
-				placeholder={placeholder}
-				value={content}
-				onChange={(e) => onChange?.(e.target.value)}
-				className={clsx("w-full", {
-					"cursor-pointer": readOnly,
-				})}
-			/>
+			{readOnly ? (
+				<p className="w-full text-left">{content}</p>
+			) : (
+				<AdjustableTextarea
+					placeholder={placeholder}
+					value={content}
+					onChange={(e) => onChange?.(e.target.value)}
+					className="w-full"
+				/>
+			)}
 		</div>
 	);
 };
