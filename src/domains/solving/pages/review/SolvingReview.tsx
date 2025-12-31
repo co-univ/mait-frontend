@@ -8,6 +8,7 @@ import useSolvingReviewQuestions from "../../hooks/review/useSolvingReviewQuesti
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import SolvingReviewControl from "./SolvingReviewControl";
 import SolvingReviewExplanation from "./SolvingReviewExplanation";
+import SolvingReviewFillBlankAnswers from "./SolvingReviewFillBlankAnswers";
 import SolvingReviewMultipleAnswers from "./SolvingReviewMultipleAnswers";
 import SolvingReviewOrderingAnswers from "./SolvingReviewOrderingAnswers";
 import SolvingReviewShortAnswers from "./SolvingReviewShortAnswers";
@@ -87,7 +88,12 @@ const SolvingReview = () => {
 					/>
 				);
 			case "FILL_BLANK":
-				return <div>Fill in the Blank Answers Placeholder</div>;
+				return (
+					<SolvingReviewFillBlankAnswers
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			default:
 				return null;
 		}

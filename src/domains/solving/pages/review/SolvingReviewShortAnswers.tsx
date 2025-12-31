@@ -1,5 +1,5 @@
 import SolvingReviewAnswer from "../../components/review/SolvingReviewAnswer";
-import UseSolvingReviewShortQuestion from "../../hooks/review/useSolvingReviewShortQuestion";
+import useSolvingReviewShortQuestion from "../../hooks/review/useSolvingReviewShortQuestion";
 
 //
 //
@@ -18,8 +18,8 @@ const SolvingReviewShortAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewShortAnswersProps) => {
-	const { isSubmitted, isCorrect, userAnswer, handleAnswerChange } =
-		UseSolvingReviewShortQuestion({
+	const { isSubmitted, isCorrect, userAnswers, handleAnswerChange } =
+		useSolvingReviewShortQuestion({
 			questionSetId,
 			questionId,
 		});
@@ -36,15 +36,16 @@ const SolvingReviewShortAnswers = ({
 			return "incorrect";
 		}
 
-		return userAnswer[index] === "" ? "default" : "focused";
+		return userAnswers[index] === "" ? "default" : "focused";
 	};
 
 	return (
 		<div className="flex flex-col w-full gap-gap-11">
-			{userAnswer.map((answer, index) => (
+			{userAnswers.map((answer, index) => (
 				<SolvingReviewAnswer
 					// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
 					key={index}
+					readOnly={isSubmitted}
 					variation={getVariation(index)}
 					content={answer}
 					onChange={(value) => handleAnswerChange(index, value)}

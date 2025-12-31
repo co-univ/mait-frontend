@@ -15,8 +15,8 @@ interface UseSolvingReviewShortQuestionProps {
 interface UseSolvingReviewShortQuestionReturn {
 	isSubmitted: boolean;
 	isCorrect: boolean | null;
-	userAnswer: string[];
-	handleAnswerChange: (number: number, answer: string) => void;
+	userAnswers: string[];
+	handleAnswerChange: (index: number, answer: string) => void;
 	isLoading: boolean;
 }
 
@@ -24,7 +24,7 @@ interface UseSolvingReviewShortQuestionReturn {
 //
 //
 
-const UseSolvingReviewShortQuestion = ({
+const useSolvingReviewShortQuestion = ({
 	questionSetId,
 	questionId,
 }: UseSolvingReviewShortQuestionProps): UseSolvingReviewShortQuestionReturn => {
@@ -79,10 +79,10 @@ const UseSolvingReviewShortQuestion = ({
 	return {
 		isSubmitted: getIsSubmitted(questionId),
 		isCorrect: getIsCorrect(questionId),
-		userAnswer: userAnswers,
+		userAnswers,
 		handleAnswerChange,
 		isLoading: isPending,
 	};
 };
 
-export default UseSolvingReviewShortQuestion;
+export default useSolvingReviewShortQuestion;
