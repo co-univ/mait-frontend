@@ -9,8 +9,10 @@ const ANSWER_HEIGHT = 94;
 
 interface SolvingReviewAnswerProps {
 	readOnly?: boolean;
+	placeholder?: string;
 	variation?: "default" | "focused" | "correct" | "incorrect";
 	content: string;
+	onChange?: (value: string) => void;
 }
 
 //
@@ -19,13 +21,15 @@ interface SolvingReviewAnswerProps {
 
 const SolvingReviewAnswer = ({
 	readOnly = false,
+	placeholder = "답안을 입력하세요.",
 	variation = "default",
 	content,
+	onChange,
 }: SolvingReviewAnswerProps) => {
 	return (
 		<div
 			className={clsx(
-				"w-full px-padding-12 flex items-center border rounded-radius-medium1",
+				"w-full px-padding-12 py-padding-6 flex items-center border rounded-radius-medium1",
 				{
 					"bg-color-gray-5 border-none typo-body-medium":
 						variation === "default",
@@ -41,7 +45,9 @@ const SolvingReviewAnswer = ({
 		>
 			<AdjustableTextarea
 				readOnly={readOnly}
+				placeholder={placeholder}
 				value={content}
+				onChange={(e) => onChange?.(e.target.value)}
 				className={clsx("w-full", {
 					"cursor-pointer": readOnly,
 				})}

@@ -9,6 +9,7 @@ import SolvingLayout from "../../layouts/common/SolvingLayout";
 import SolvingReviewControl from "./SolvingReviewControl";
 import SolvingReviewExplanation from "./SolvingReviewExplanation";
 import SolvingReviewMultipleAnswers from "./SolvingReviewMultipleAnswers";
+import SolvingReviewShortAnswers from "./SolvingReviewShortAnswers";
 
 //
 //
@@ -71,7 +72,12 @@ const SolvingReview = () => {
 					/>
 				);
 			case "SHORT":
-				return <div>Short Answer Placeholder</div>;
+				return (
+					<SolvingReviewShortAnswers
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "ORDERING":
 				return <div>Ordering Answers Placeholder</div>;
 			case "FILL_BLANK":
