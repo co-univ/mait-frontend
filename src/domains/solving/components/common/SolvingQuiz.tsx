@@ -1,5 +1,4 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
-import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useAnswerSubmit } from "src/domains/solving/hooks/common/useAnswerSubmit";
 import useSolvingCorrectStore from "src/stores/useSolvingCorrectStore";
@@ -7,7 +6,7 @@ import { notify } from "@/components/Toast";
 import type { QuestionApiResponse } from "@/types";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import SolvingQuizContent from "./quiz-content";
-import SolvingQuizCorrect from "./SolvingSubmitResult";
+import SolvingSubmitResult from "./SolvingSubmitResult";
 import SolvingTopBar from "./topbar";
 
 //
@@ -207,15 +206,11 @@ const SolvingQuiz = ({
 
 	return (
 		<SolvingLayout>
-			<AnimatePresence mode="wait">
-				{showCorrect && (
-					<SolvingQuizCorrect
-						correct={isCorrected}
-						show={showCorrect}
-						onAnimationComplete={handleAnimationComplete}
-					/>
-				)}
-			</AnimatePresence>
+			<SolvingSubmitResult
+				correct={isCorrected}
+				show={showCorrect}
+				onAnimationComplete={handleAnimationComplete}
+			/>
 			<SolvingTopBar
 				questionNum={questionInfo?.number as number}
 				quizTitle={quizTitle}
