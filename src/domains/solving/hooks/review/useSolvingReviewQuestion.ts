@@ -26,8 +26,9 @@ interface UseSolvingReviewQuestionReturn {
 	number?: number;
 	imageUrl?: string;
 	type?: QuestionType;
-	handleAnswerSubmit: () => void;
+	handleAnswersSubmit: () => void;
 	showExplanation: () => void;
+	hideExplanation: () => void;
 	isLoading: boolean;
 }
 
@@ -67,7 +68,7 @@ const useSolvingReviewQuestion = ({
 		setIsExplanationShown,
 	} = useSolvingReviewAnswerResultStore();
 
-	const { mutate: submitAnswer, isPending: isSubmitting } =
+	const { mutateAsync: submitAnswersAsync, isPending: isSubmitting } =
 		apiHooks.useMutation(
 			"post",
 			"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit/review",
@@ -85,9 +86,9 @@ const useSolvingReviewQuestion = ({
 	/**
 	 *
 	 */
-	const handleAnswerSubmit = () => {
+	const handleAnswersSubmit = async (): Promise<boolean> => {
 		if (isSubmitting || !user?.id || !question) {
-			return;
+			return false;
 		}
 
 		const { isValid, errorMessage } = solvingReviewAnswersValidation(
@@ -97,10 +98,10 @@ const useSolvingReviewQuestion = ({
 
 		if (!isValid) {
 			notify.warn(errorMessage || "답안을 입력해주세요.");
-			return;
+			return false;
 		}
 
-		submitAnswer({
+		const res = await submitAnswersAsync({
 			params: {
 				path: {
 					questionSetId,
@@ -115,13 +116,30 @@ const useSolvingReviewQuestion = ({
 				submitAnswers: getUserAnswers(questionId) as any,
 			},
 		});
+
+		return res.isSuccess || false;
 	};
 
 	/**
 	 *
 	 */
-	const showExplanation = () => {
+	const showExplanation = async () => {
+		if (!getIsSubmitted(questionId)) {
+			const isAnswersSubmitted = await handleAnswersSubmit();
+
+			if (!isAnswersSubmitted) {
+				return;
+			}
+		}
+
 		setIsExplanationShown(questionId, true);
+	};
+
+	/**
+	 *
+	 */
+	const hideExplanation = () => {
+		setIsExplanationShown(questionId, false);
 	};
 
 	//
@@ -145,8 +163,9 @@ const useSolvingReviewQuestion = ({
 		number: question?.number,
 		imageUrl: question?.imageUrl,
 		type: question?.type as QuestionType,
-		handleAnswerSubmit,
+		handleAnswersSubmit,
 		showExplanation,
+		hideExplanation,
 		isLoading: isPending,
 	};
 };

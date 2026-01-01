@@ -36,12 +36,17 @@ const SolvingReview = () => {
 		number,
 		imageUrl,
 		type,
-		handleAnswerSubmit,
+		handleAnswersSubmit,
 		showExplanation,
+		hideExplanation,
 	} = useSolvingReviewQuestion({
 		questionSetId,
 		questionId,
 	});
+
+	/**
+	 *
+	 */
 
 	/**
 	 *
@@ -104,12 +109,14 @@ const SolvingReview = () => {
 			<SolvingReviewControl
 				isSubmitted={isSubmitted}
 				isCorrect={isCorrect}
+				isExplanationShown={isExplanationShown}
 				questionSetId={questionSetId}
 				questionId={questionId}
 				number={number}
 				questions={questions}
-				handleAnswerSubmit={handleAnswerSubmit}
+				handleAnswersSubmit={handleAnswersSubmit}
 				showExplanation={showExplanation}
+				hideExplanation={hideExplanation}
 			/>
 
 			<QuestionContent content={content} className="typo-heading-small" />

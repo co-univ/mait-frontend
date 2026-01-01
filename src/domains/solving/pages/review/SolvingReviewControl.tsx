@@ -1,4 +1,4 @@
-import { ChevronRight, Puzzle } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronUp, Puzzle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
 import QuestionNavigation, {
@@ -17,12 +17,14 @@ import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 interface SolvingReviewControlProps {
 	isSubmitted: boolean;
 	isCorrect: boolean | null;
+	isExplanationShown: boolean;
 	questionSetId: number;
 	questionId: number;
 	number?: number;
 	questions?: QuestionResponseType[];
-	handleAnswerSubmit: () => void;
+	handleAnswersSubmit: () => void;
 	showExplanation: () => void;
+	hideExplanation: () => void;
 }
 
 //
@@ -32,12 +34,14 @@ interface SolvingReviewControlProps {
 const SolvingReviewControl = ({
 	isSubmitted,
 	isCorrect,
+	isExplanationShown,
 	questionSetId,
 	questionId,
 	number,
 	questions,
-	handleAnswerSubmit,
+	handleAnswersSubmit,
 	showExplanation,
+	hideExplanation,
 }: SolvingReviewControlProps) => {
 	const navigate = useNavigate();
 
@@ -109,22 +113,32 @@ const SolvingReviewControl = ({
 					icon={<Puzzle />}
 					lable={`Q${number ?? ""}`}
 				/>
-				{!isSubmitted && (
-					<SolvingButton
-						color={getBadgeColor()}
-						icon={<ChevronRight />}
-						lable="제출하기"
-						onClick={handleAnswerSubmit}
-					/>
-				)}
-				{isSubmitted && (
-					<SolvingButton
-						color={getBadgeColor()}
-						icon={<ChevronRight />}
-						lable="해설보기"
-						onClick={showExplanation}
-					/>
-				)}
+				<div className="flex gap-gap-5">
+					{!isExplanationShown && (
+						<SolvingButton
+							color={getBadgeColor()}
+							icon={<ChevronDown />}
+							lable="해설보기"
+							onClick={showExplanation}
+						/>
+					)}
+					{isExplanationShown && (
+						<SolvingButton
+							color={getBadgeColor()}
+							icon={<ChevronUp />}
+							lable="해설닫기"
+							onClick={hideExplanation}
+						/>
+					)}
+					{!isSubmitted && (
+						<SolvingButton
+							color={getBadgeColor()}
+							icon={<ChevronRight />}
+							lable="제출하기"
+							onClick={handleAnswersSubmit}
+						/>
+					)}
+				</div>
 			</div>
 		</div>
 	);
