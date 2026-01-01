@@ -93,7 +93,7 @@ const ManagementLiveTimeCard = ({
 	 *
 	 */
 	const renderFirstButton = () => {
-		if (questionSetStatus === "ONGOING" || questionSetStatus === "BEFORE") {
+		if (questionSetStatus === "BEFORE") {
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
