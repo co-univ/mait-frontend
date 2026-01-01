@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { notify } from "@/components/Toast";
 import useUser from "@/hooks/useUser";
@@ -42,6 +43,8 @@ const useSolvingReviewQuestion = ({
 }: UseSolvingReviewQuestionProps): UseSolvingReviewQuestionReturn => {
 	const { user } = useUser();
 
+	const queryClient = useQueryClient();
+
 	const { data, isPending } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
@@ -80,6 +83,28 @@ const useSolvingReviewQuestion = ({
 				},
 			},
 		);
+
+	const { mutate: updateLastViewedQuestion } = apiHooks.useMutation(
+		"put",
+		"/api/v1/question-sets/{questionSetId}/questions/last-viewed",
+		{
+			onSuccess: () => {
+				queryClient.removeQueries({
+					queryKey: apiHooks.queryOptions(
+						"get",
+						"/api/v1/question-sets/{questionSetId}/questions/last-viewed",
+						{
+							params: {
+								path: {
+									questionSetId,
+								},
+							},
+						},
+					).queryKey,
+				});
+			},
+		},
+	);
 
 	const question = data?.data;
 
@@ -151,7 +176,23 @@ const useSolvingReviewQuestion = ({
 		}
 
 		setAnswerInitInfo(questionId, question.type as QuestionType);
-	}, [questionId, question, setAnswerInitInfo]);
+		updateLastViewedQuestion({
+			params: {
+				path: {
+					questionSetId,
+				},
+			},
+			body: {
+				questionId,
+			},
+		});
+	}, [
+		questionSetId,
+		questionId,
+		question,
+		setAnswerInitInfo,
+		updateLastViewedQuestion,
+	]);
 
 	return {
 		isSubmitted: getIsSubmitted(questionId),

@@ -46,7 +46,7 @@ const SolvingReviewMultipleAnswers = ({
 		}
 
 		if (isCorrect) {
-			return userAnswers.includes(choiceNumber) ? "correct" : "incorrect";
+			return userAnswers.includes(choiceNumber) ? "correct" : "default";
 		}
 
 		return userAnswers.includes(choiceNumber) ? "incorrect" : "default";
