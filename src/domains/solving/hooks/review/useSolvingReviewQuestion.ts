@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+import { notify } from "@/components/Toast";
 import useUser from "@/hooks/useUser";
 import { apiHooks } from "@/libs/api";
 import type { QuestionType } from "@/libs/types";
 import QuestionAnswerString from "@/utils/question-answer-string";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
+import { solvingReviewAnswersValidation } from "../../utils/solving-review-answers-validation";
 
 //
 //
@@ -85,6 +87,16 @@ const useSolvingReviewQuestion = ({
 	 */
 	const handleAnswerSubmit = () => {
 		if (isSubmitting || !user?.id || !question) {
+			return;
+		}
+
+		const { isValid, errorMessage } = solvingReviewAnswersValidation(
+			getUserAnswers(questionId),
+			question.type as QuestionType,
+		);
+
+		if (!isValid) {
+			notify.warn(errorMessage || "답안을 입력해주세요.");
 			return;
 		}
 
