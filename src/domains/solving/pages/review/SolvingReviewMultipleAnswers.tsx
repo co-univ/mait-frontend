@@ -27,6 +27,17 @@ const SolvingReviewMultipleAnswers = ({
 	/**
 	 *
 	 */
+	const handleChoiceClick = (choiceNumber: number) => {
+		if (isSubmitted) {
+			return;
+		}
+
+		handleChoiceChange(choiceNumber);
+	};
+
+	/**
+	 *
+	 */
 	const getAnswerVariation = (
 		choiceNumber: number,
 	): "default" | "focused" | "correct" | "incorrect" => {
@@ -35,7 +46,7 @@ const SolvingReviewMultipleAnswers = ({
 		}
 
 		if (isCorrect) {
-			return userAnswers.includes(choiceNumber) ? "correct" : "default";
+			return userAnswers.includes(choiceNumber) ? "correct" : "incorrect";
 		}
 
 		return userAnswers.includes(choiceNumber) ? "incorrect" : "default";
@@ -47,7 +58,7 @@ const SolvingReviewMultipleAnswers = ({
 				<button
 					key={choice.id}
 					type="button"
-					onClick={() => handleChoiceChange(choice.number)}
+					onClick={() => handleChoiceClick(choice.number)}
 				>
 					<SolvingReviewAnswer
 						readOnly

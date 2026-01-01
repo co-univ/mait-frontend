@@ -77,7 +77,11 @@ const SolvingReviewOrderingAnswers = ({
 								<span className="typo-heading-xsmall">
 									{String.fromCharCode(65 + index)}
 								</span>
-								<Draggable draggableId={`${index}-${content}`} index={index}>
+								<Draggable
+									isDragDisabled={isSubmitted}
+									draggableId={`${index}-${content}`}
+									index={index}
+								>
 									{(provided, snapshot) => (
 										<div
 											ref={provided.innerRef}
