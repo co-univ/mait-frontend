@@ -69,6 +69,7 @@ const useSolvingReviewQuestion = ({
 		setAnswerInitInfo,
 		setAnswerSubmitted,
 		setIsExplanationShown,
+		reset: resetAnswerResultStore,
 	} = useSolvingReviewAnswerResultStore();
 
 	const { mutateAsync: submitAnswersAsync, isPending: isSubmitting } =
@@ -193,6 +194,13 @@ const useSolvingReviewQuestion = ({
 		setAnswerInitInfo,
 		updateLastViewedQuestion,
 	]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		return () => resetAnswerResultStore();
+	}, [resetAnswerResultStore]);
 
 	return {
 		isSubmitted: getIsSubmitted(questionId),

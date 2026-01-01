@@ -30,6 +30,7 @@ interface SolvingReviewAnswerResultActions {
 	setUserAnswers: (questionId: number, answers: AnswersType) => void;
 	setAnswerSubmitted: (questionId: number, isCorrect: boolean) => void;
 	setIsExplanationShown: (questionId: number, isShown: boolean) => void;
+	reset: () => void;
 }
 
 //
@@ -112,6 +113,11 @@ const useSolvingReviewAnswerResultStore = create<
 			},
 		}));
 	},
+
+	reset: () =>
+		set(() => ({
+			result: {},
+		})),
 }));
 
 export default useSolvingReviewAnswerResultStore;
