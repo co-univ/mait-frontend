@@ -69,35 +69,33 @@ const SolvingReviewOrderingAnswers = ({
 						{...provided.droppableProps}
 						className="w-full flex flex-col gap-gap-11"
 					>
-						{options.map((content, index) => (
-							<div
-								key={`${index}-${content}`}
-								className="w-full flex items-center gap-gap-9"
+						{options.map(({ id, content, originOrder }, index) => (
+							<Draggable
+								key={id}
+								isDragDisabled={isSubmitted}
+								draggableId={`${originOrder}-${content}`}
+								index={index}
 							>
-								<span className="typo-heading-xsmall">
-									{String.fromCharCode(65 + index)}
-								</span>
-								<Draggable
-									isDragDisabled={isSubmitted}
-									draggableId={`${index}-${content}`}
-									index={index}
-								>
-									{(provided, snapshot) => (
-										<div
-											ref={provided.innerRef}
-											{...provided.draggableProps}
-											{...provided.dragHandleProps}
-											className="w-full"
-										>
+								{(provided, snapshot) => (
+									<div
+										ref={provided.innerRef}
+										{...provided.draggableProps}
+										{...provided.dragHandleProps}
+										className="w-full flex items-center gap-gap-9"
+									>
+										<span className="typo-heading-xsmall">
+											{String.fromCharCode(65 - 1 + originOrder)}
+										</span>
+										<div className="w-full">
 											<SolvingReviewAnswer
 												readOnly
 												variation={getVariation(snapshot.isDragging)}
-												content={content}
+												content={content ?? ""}
 											/>
 										</div>
-									)}
-								</Draggable>
-							</div>
+									</div>
+								)}
+							</Draggable>
 						))}
 						{provided.placeholder}
 					</div>

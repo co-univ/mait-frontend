@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { apiHooks } from "@/libs/api";
-import type { OrderingQuestionApiResponse } from "@/libs/types";
+import type {
+	OrderingOptionApiResponse,
+	OrderingQuestionApiResponse,
+} from "@/libs/types";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
@@ -16,7 +19,7 @@ interface useSolvingReviewOrderingQuestionReturn {
 	isSubmitted: boolean;
 	isCorrect: boolean | null;
 	userAnswers: number[];
-	options: string[];
+	options: OrderingOptionApiResponse[];
 	handleAnswerChange: (sourceIndex: number, destinationIndex: number) => void;
 	isLoading: boolean;
 }
@@ -52,10 +55,17 @@ const useSolvingReviewOrderingQuestion = ({
 
 	const userAnswers = getUserAnswers(questionId) as number[];
 
-	const options = userAnswers.map(
-		(order) =>
-			question?.options.find((opt) => opt.originOrder === order)?.content || "",
-	);
+	// const options = userAnswers.map(
+	// 	(order) =>
+	// 		question?.options.find((opt) => opt.originOrder === order)?.content || "",
+	// );
+	const options = userAnswers
+		.map((userAnswer) =>
+			question?.options.find((option) => option.originOrder === userAnswer),
+		)
+		.filter(
+			(option): option is OrderingOptionApiResponse => option !== undefined,
+		);
 
 	/**
 	 *
