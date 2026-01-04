@@ -1,4 +1,4 @@
-import type React from "react";
+import { Children } from "react";
 import chartClipImage from "@/assets/images/chart-clip.png";
 
 //
@@ -38,7 +38,7 @@ const QuestionSetsCardsLayout = ({
 		return null;
 	}
 
-	if (!children) {
+	if (!children || Children.count(children) === 0) {
 		return renderEmptyState();
 	}
 
