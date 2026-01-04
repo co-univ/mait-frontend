@@ -71,7 +71,7 @@ const useSolvingReviewAnswerResultStore = create<
 					isSubmitted: false,
 					isCorrect: null,
 					isExplanationShown: false,
-					userAnswers: [],
+					userAnswers: state.result[questionId]?.userAnswers ?? [],
 				},
 			},
 		}));
