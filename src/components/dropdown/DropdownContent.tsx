@@ -9,8 +9,9 @@ import { useDropdownContext } from "@/components/dropdown/DropdownContext";
 //
 
 interface DropdownContentProps {
-	children: ReactNode;
+	autoWidth?: boolean;
 	className?: string;
+	children: ReactNode;
 }
 
 //
@@ -26,21 +27,30 @@ interface DropdownContentProps {
  *   <Dropdown.Item value="option2">Option 2</Dropdown.Item>
  * </Dropdown.Content>
  */
-const DropdownContent = ({ children, className }: DropdownContentProps) => {
+const DropdownContent = ({
+	children,
+	className,
+	autoWidth = false,
+}: DropdownContentProps) => {
 	const { open, triggerRef } = useDropdownContext();
 	const [position, setPosition] = useState<CSSProperties>({});
 
 	useEffect(() => {
 		if (open && triggerRef?.current) {
 			const triggerRect = triggerRef.current.getBoundingClientRect();
-			setPosition({
+			const positionStyle: CSSProperties = {
 				position: "fixed",
 				top: `${triggerRect.bottom + 2}px`,
 				left: `${triggerRect.left}px`,
-				width: `${triggerRect.width}px`,
-			});
+			};
+
+			if (!autoWidth) {
+				positionStyle.width = `${triggerRect.width}px`;
+			}
+
+			setPosition(positionStyle);
 		}
-	}, [open, triggerRef]);
+	}, [open, triggerRef, autoWidth]);
 
 	if (!open) {
 		return null;
