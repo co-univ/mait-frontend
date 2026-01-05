@@ -77,6 +77,7 @@ const Management = () => {
 				<Tabs.Content value="review">
 					<ManagementReview
 						questionSets={questionSetList ?? []}
+						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 						isLoading={isLoading}
 					/>
 				</Tabs.Content>

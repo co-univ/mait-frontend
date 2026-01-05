@@ -1,9 +1,12 @@
 import { QuestionSetsCard } from "@/components/question-sets/card";
-import {
-	DEFAULT_VISIBILITY_ICON_SIZE,
-	QUESTION_SET_VISIBILITY_CONFIG,
-} from "@/components/question-sets/question-sets.constants";
-import type { QuestionSetDto } from "@/libs/types";
+import { notify } from "@/components/Toast";
+import ManagementReviewCardVisibilityDropdown from "@/domains/management/components/common/ManagementReviewCardVisibilityDropdown";
+import apiHooks from "@/libs/api/hooks";
+import type {
+	DeliveryMode,
+	QuestionSetDto,
+	QuestionSetVisibility,
+} from "@/libs/types";
 
 //
 //
@@ -11,24 +14,54 @@ import type { QuestionSetDto } from "@/libs/types";
 
 interface ManagementReviewCardProps {
 	questionSet: QuestionSetDto;
+	invalidateQuestionSetsQuery: (params?: {
+		teamId?: number;
+		mode?: DeliveryMode;
+	}) => void;
 }
 
 //
 //
 //
 
-const ManagementReviewCard = ({ questionSet }: ManagementReviewCardProps) => {
-	const { Icon, label } =
-		QUESTION_SET_VISIBILITY_CONFIG[questionSet.visibility ?? "PUBLIC"];
+const ManagementReviewCard = ({
+	questionSet,
+	invalidateQuestionSetsQuery,
+}: ManagementReviewCardProps) => {
+	const currentVisibility = questionSet.visibility ?? "PUBLIC";
+
+	const { mutate } = apiHooks.useMutation(
+		"patch",
+		"/api/v1/question-sets/{questionSetId}/review",
+		{
+			onSuccess: () => {
+				notify.success("문제 셋 공개 범위가 변경되었습니다.");
+				invalidateQuestionSetsQuery();
+			},
+		},
+	);
+
+	const handleVisibilityChange = (value: QuestionSetVisibility) => {
+		mutate({
+			params: {
+				path: {
+					questionSetId: questionSet.id ?? 0,
+				},
+			},
+			body: {
+				visibility: value,
+			},
+		});
+	};
 
 	return (
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.subject} />
-				<div className="flex gap-gap-5 items-center">
-					<Icon size={DEFAULT_VISIBILITY_ICON_SIZE} />
-					<span className="typo-body-xsmall">{label}</span>
-				</div>
+				<ManagementReviewCardVisibilityDropdown
+					currentVisibility={currentVisibility}
+					onVisibilityChange={handleVisibilityChange}
+				/>
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>

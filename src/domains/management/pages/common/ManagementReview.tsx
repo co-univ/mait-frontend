@@ -1,7 +1,7 @@
 import QuestionSetsFilter from "@/components/question-sets/QuestionSetsFilter";
 import useQuestionSetsFilter from "@/components/question-sets/useQuestionSetsFilter";
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
-import type { QuestionSetDto } from "@/libs/types";
+import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import ManagementReviewCard from "../../components/common/ManagementReviewCard";
 
 //
@@ -10,6 +10,10 @@ import ManagementReviewCard from "../../components/common/ManagementReviewCard";
 
 interface ManagementReviewProps {
 	questionSets: QuestionSetDto[];
+	invalidateQuestionSetsQuery: (params?: {
+		teamId?: number;
+		mode?: DeliveryMode;
+	}) => void;
 	isLoading: boolean;
 }
 
@@ -19,6 +23,7 @@ interface ManagementReviewProps {
 
 const ManagementReview = ({
 	questionSets,
+	invalidateQuestionSetsQuery,
 	isLoading,
 }: ManagementReviewProps) => {
 	const { getIsVisibilityFiltered } = useQuestionSetsFilter();
@@ -38,6 +43,7 @@ const ManagementReview = ({
 						<ManagementReviewCard
 							key={questionSet.id}
 							questionSet={questionSet}
+							invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 						/>
 					))}
 			</QuestionSetsCardsLayout>
