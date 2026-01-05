@@ -9,6 +9,7 @@ import SolvingQuestionSetsLiveTimeCard from "../../components/question-sets/Solv
 
 interface SolvingQuestionSetsLiveTimeProps {
 	questionSetGroup?: QuestionSetGroup["questionSets"];
+	isLoading: boolean;
 }
 
 //
@@ -17,6 +18,7 @@ interface SolvingQuestionSetsLiveTimeProps {
 
 const SolvingQuestionSetsLiveTime = ({
 	questionSetGroup,
+	isLoading,
 }: SolvingQuestionSetsLiveTimeProps) => {
 	const ongoingQuestionSets = questionSetGroup?.ONGOING ?? [];
 	const beforeQuestionSets = questionSetGroup?.BEFORE ?? [];
@@ -25,15 +27,25 @@ const SolvingQuestionSetsLiveTime = ({
 	const hasOngoingQuestionSets = ongoingQuestionSets.length > 0;
 	const hasBeforeQuestionSets = beforeQuestionSets.length > 0;
 	const hasAfterQuestionSets = afterQuestionSets.length > 0;
+	const hasAnyQuestionSets =
+		hasOngoingQuestionSets || hasBeforeQuestionSets || hasAfterQuestionSets;
+
+	if (isLoading) {
+		return null;
+	}
+
+	if (!hasAnyQuestionSets) {
+		return <QuestionSetsCardsLayout isLoading={false} />;
+	}
 
 	return (
-		<div className="flex flex-col gap-gap-11">
+		<div className="h-full flex flex-col gap-gap-11">
 			{hasOngoingQuestionSets && (
 				<div className="flex flex-col gap-gap-11">
 					<div className="flex justify-between items-center">
-						<QuestionSetsLable label="진행중" variant="secondary" />
+						<QuestionSetsLable label="풀이 중" variant="secondary" />
 					</div>
-					<QuestionSetsCardsLayout minGridWidth={280}>
+					<QuestionSetsCardsLayout isLoading={false} minGridWidth={280}>
 						{ongoingQuestionSets.map((questionSet) => (
 							<SolvingQuestionSetsLiveTimeCard
 								key={questionSet.id}
@@ -47,9 +59,9 @@ const SolvingQuestionSetsLiveTime = ({
 			{hasBeforeQuestionSets && (
 				<div className="flex flex-col gap-gap-11">
 					<div className="flex justify-between items-center">
-						<QuestionSetsLable label="진행 예정" variant="secondary" />
+						<QuestionSetsLable label="풀이 전" variant="secondary" />
 					</div>
-					<QuestionSetsCardsLayout minGridWidth={280}>
+					<QuestionSetsCardsLayout isLoading={false} minGridWidth={280}>
 						{beforeQuestionSets.map((questionSet) => (
 							<SolvingQuestionSetsLiveTimeCard
 								key={questionSet.id}
@@ -63,9 +75,9 @@ const SolvingQuestionSetsLiveTime = ({
 			{hasAfterQuestionSets && (
 				<div className="flex flex-col gap-gap-11">
 					<div className="flex justify-between items-center">
-						<QuestionSetsLable label="종료" variant="secondary" />
+						<QuestionSetsLable label="풀이 완료" variant="secondary" />
 					</div>
-					<QuestionSetsCardsLayout minGridWidth={280}>
+					<QuestionSetsCardsLayout isLoading={false} minGridWidth={280}>
 						{afterQuestionSets.map((questionSet) => (
 							<SolvingQuestionSetsLiveTimeCard
 								key={questionSet.id}

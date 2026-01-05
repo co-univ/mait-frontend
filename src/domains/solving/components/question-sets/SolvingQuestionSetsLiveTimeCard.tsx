@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import type { QuestionSetDto } from "@/libs/types";
@@ -21,6 +22,8 @@ const SolvingQuestionSetsLiveTimeCard = ({
 }: SolvingQuestionSetsLiveTimeCardProps) => {
 	const navigate = useNavigate();
 
+	const questionSetStatus = questionSet.ongoingStatus;
+
 	/**
 	 *
 	 */
@@ -29,20 +32,29 @@ const SolvingQuestionSetsLiveTimeCard = ({
 	};
 
 	return (
-		<QuestionSetsCard.Root>
+		<QuestionSetsCard.Root
+			className={clsx({
+				"text-color-gray-20 pointer-events-none":
+					questionSetStatus !== "ONGOING",
+			})}
+		>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.subject} />
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>
-				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />
+				<QuestionSetsCard.Footer.Date
+					date={questionSet.updatedAt}
+					className={clsx({
+						"!text-color-gray-20": questionSetStatus !== "ONGOING",
+					})}
+				/>
 				<div className="flex gap-gap-5">
 					<QuestionSetsCard.Footer.Button
 						disabled={questionSet.ongoingStatus !== "ONGOING"}
 						variant="secondary"
 						item="문제 풀기"
 						onClick={handleSolveButtonClick}
-						className="disabled:bg-color-gray-5 disabled:border-color-gray-5 disabled:text-color-gray-30"
 					/>
 				</div>
 			</QuestionSetsCard.Footer>
