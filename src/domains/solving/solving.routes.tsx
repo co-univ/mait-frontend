@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
+import AuthGuard from "@/guards/AuthGuard";
 import SolvingReview from "./pages/review/SolvingReview";
 
 const SolvingRedirect = lazy(() => import("./pages/common/SolvingRedirect"));
@@ -36,7 +37,6 @@ export const SOLVING_ROUTE_PATH = {
 //
 //
 
-// TODO: Guard TeamPlayerGuard
 export const solvingRouter: RouteObject[] = [
 	{
 		path: SOLVING_ROUTE_PATH.QUESTION_SETS,
@@ -58,4 +58,7 @@ export const solvingRouter: RouteObject[] = [
 		path: SOLVING_ROUTE_PATH.REVIEW_REDIRECT,
 		element: <SolvingReviewRedirect />,
 	},
-];
+].map((route) => ({
+	...route,
+	element: <AuthGuard>{route.element}</AuthGuard>,
+}));
