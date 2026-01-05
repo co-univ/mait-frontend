@@ -44,6 +44,14 @@ export default defineConfig({
 	html: {
 		title: "MAIT",
 		favicon: "./src/assets/favicon.svg",
+		tags: [
+			{ tag: "meta", attrs: { property: "og:title", content: "MAIT | AI 문제 제작" } },
+			{ tag: "meta", attrs: { property: "og:description", content: "문제 제작은 자동으로, 학습은 함께\n메잇으로 더 똑똑하게 학습하세요!" } },
+			{ tag: "meta", attrs: { property: "og:type", content: "website" } },
+			{ tag: "meta", attrs: { property: "og:url", content: "https://mait.kr/" } },
+			{ tag: "meta", attrs: { property: "og:image", content: "https://mait-prod.s3.ap-northeast-2.amazonaws.com/assets/og-image.png" } },
+			{ tag: "meta", attrs: { property: "og:locale", content: "ko_KR" } },
+		],
 	},
 	server: {
 		port: 3000,
