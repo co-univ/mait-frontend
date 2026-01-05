@@ -6,15 +6,15 @@ import { createContext, useContext } from "react";
 //
 //
 
-interface DropdownContextValue {
+interface DropdownContextValue<T extends string = string> {
 	/** Current open state */
 	open?: boolean;
 	/** Function to update the open state */
 	onOpenChange?: (open: boolean) => void;
 	/** Current selected value */
-	value?: string;
+	value?: T;
 	/** Function to update the selected value */
-	onValueChange?: (value: string) => void;
+	onValueChange?: (value: T) => void;
 	/** Reference to the trigger element for positioning */
 	triggerRef?: RefObject<HTMLElement | null>;
 	/** Function to set the reference element for positioning */
@@ -25,7 +25,7 @@ interface DropdownContextValue {
 	floatingStyles?: React.CSSProperties;
 }
 
-const DropdownContext = createContext<DropdownContextValue | undefined>(
+const DropdownContext = createContext<DropdownContextValue<string> | undefined>(
 	undefined,
 );
 
@@ -37,14 +37,16 @@ const DropdownContext = createContext<DropdownContextValue | undefined>(
  * Hook to access dropdown context.
  * Must be used within Dropdown.Root.
  */
-const useDropdownContext = () => {
+const useDropdownContext = <
+	T extends string = string,
+>(): DropdownContextValue<T> => {
 	const context = useContext(DropdownContext);
 
 	if (!context) {
 		throw new Error("Dropdown components must be used within Dropdown.Root");
 	}
 
-	return context;
+	return context as unknown as DropdownContextValue<T>;
 };
 
 export { DropdownContext, useDropdownContext };

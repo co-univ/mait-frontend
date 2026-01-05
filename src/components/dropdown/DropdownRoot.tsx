@@ -8,7 +8,7 @@ import { DropdownContext } from "@/components/dropdown/DropdownContext";
 //
 //
 
-interface DropdownRootProps {
+interface DropdownRootProps<T extends string = string> {
 	/** Controlled open state */
 	open?: boolean;
 	/** Default open state for uncontrolled mode */
@@ -16,13 +16,13 @@ interface DropdownRootProps {
 	/** Callback when open state changes */
 	onOpenChange?: (open: boolean) => void;
 	/** Controlled selected value */
-	value?: string;
+	value?: T;
 	/** Default value for uncontrolled mode */
-	defaultValue?: string;
+	defaultValue?: T;
 	/** Positioning strategy */
 	strategy?: "absolute" | "fixed";
 	/** Callback when value changes */
-	onValueChange?: (value: string) => void;
+	onValueChange?: (value: T) => void;
 	children: ReactNode;
 	className?: string;
 }
@@ -48,7 +48,7 @@ interface DropdownRootProps {
  *   <Dropdown.Content>...</Dropdown.Content>
  * </Dropdown.Root>
  */
-const DropdownRoot = ({
+const DropdownRoot = <T extends string = string>({
 	open: controlledOpen,
 	defaultOpen,
 	onOpenChange,
@@ -58,7 +58,7 @@ const DropdownRoot = ({
 	onValueChange,
 	children,
 	className,
-}: DropdownRootProps) => {
+}: DropdownRootProps<T>) => {
 	const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
 	const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
 
@@ -91,7 +91,7 @@ const DropdownRoot = ({
 	/**
 	 *  Handle value change for both controlled and uncontrolled modes
 	 */
-	const handleValueChange = (newValue: string) => {
+	const handleValueChange = (newValue: T) => {
 		if (!isValueControlled) {
 			setUncontrolledValue(newValue);
 		}
@@ -104,8 +104,8 @@ const DropdownRoot = ({
 			value={{
 				open,
 				onOpenChange: handleOpenChange,
-				value,
-				onValueChange: handleValueChange,
+				value: value as string,
+				onValueChange: handleValueChange as (value: string) => void,
 				triggerRef,
 				setReference: refs.setReference,
 				setFloating: refs.setFloating,
