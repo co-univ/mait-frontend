@@ -54,8 +54,9 @@ const SideBarDropdown = () => {
 	return (
 		<Dropdown.Root
 			value={activeTeam?.teamId?.toString() || ""}
-			className="w-full"
 			onValueChange={(value) => handleActiveTeamChange(Number(value))}
+			strategy="fixed"
+			className="w-full"
 		>
 			<Dropdown.Trigger
 				icon={<ChevronsUpDown size={20} />}

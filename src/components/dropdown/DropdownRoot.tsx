@@ -1,3 +1,4 @@
+import { autoUpdate, flip, offset, useFloating } from "@floating-ui/react-dom";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
@@ -18,6 +19,8 @@ interface DropdownRootProps {
 	value?: string;
 	/** Default value for uncontrolled mode */
 	defaultValue?: string;
+	/** Positioning strategy */
+	strategy?: "absolute" | "fixed";
 	/** Callback when value changes */
 	onValueChange?: (value: string) => void;
 	children: ReactNode;
@@ -51,12 +54,21 @@ const DropdownRoot = ({
 	onOpenChange,
 	value: controlledValue,
 	defaultValue,
+	strategy = "absolute",
 	onValueChange,
 	children,
 	className,
 }: DropdownRootProps) => {
 	const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
 	const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
+
+	const { refs, floatingStyles } = useFloating({
+		placement: "bottom-start",
+		middleware: [offset(2), flip()],
+		strategy,
+		whileElementsMounted: autoUpdate,
+	});
+
 	const triggerRef = useRef<HTMLElement>(null);
 
 	const isOpenControlled = controlledOpen !== undefined;
@@ -95,6 +107,9 @@ const DropdownRoot = ({
 				value,
 				onValueChange: handleValueChange,
 				triggerRef,
+				setReference: refs.setReference,
+				setFloating: refs.setFloating,
+				floatingStyles,
 			}}
 		>
 			<div className={clsx("relative", className)}>{children}</div>

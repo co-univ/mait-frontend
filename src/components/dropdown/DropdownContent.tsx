@@ -32,23 +32,16 @@ const DropdownContent = ({
 	className,
 	autoWidth = false,
 }: DropdownContentProps) => {
-	const { open, triggerRef } = useDropdownContext();
-	const [position, setPosition] = useState<CSSProperties>({});
+	const [width, setWidth] = useState<string>("auto");
+
+	const { open, triggerRef, setFloating, floatingStyles } =
+		useDropdownContext();
 
 	useEffect(() => {
-		if (open && triggerRef?.current) {
+		if (open && triggerRef?.current && !autoWidth) {
 			const triggerRect = triggerRef.current.getBoundingClientRect();
-			const positionStyle: CSSProperties = {
-				position: "fixed",
-				top: `${triggerRect.bottom + 2}px`,
-				left: `${triggerRect.left}px`,
-			};
 
-			if (!autoWidth) {
-				positionStyle.width = `${triggerRect.width}px`;
-			}
-
-			setPosition(positionStyle);
+			setWidth(`${triggerRect.width}px`);
 		}
 	}, [open, triggerRef, autoWidth]);
 
@@ -58,11 +51,12 @@ const DropdownContent = ({
 
 	return createPortal(
 		<div
+			ref={setFloating}
 			className={clsx(
 				"z-50 bg-color-alpha-white100 flex flex-col items-start pt-padding-2 rounded-radius-medium1 border border-color-gray-20 shadow-m",
 				className,
 			)}
-			style={position}
+			style={Object.assign({}, floatingStyles, { width }) as CSSProperties}
 		>
 			{children}
 		</div>,

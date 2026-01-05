@@ -1,3 +1,4 @@
+import type { ReferenceType } from "@floating-ui/react-dom";
 import type { RefObject } from "react";
 import { createContext, useContext } from "react";
 
@@ -16,6 +17,12 @@ interface DropdownContextValue {
 	onValueChange?: (value: string) => void;
 	/** Reference to the trigger element for positioning */
 	triggerRef?: RefObject<HTMLElement | null>;
+	/** Function to set the reference element for positioning */
+	setReference?: (node: ReferenceType | null) => void;
+	/** Function to set the floating element for positioning */
+	setFloating?: (node: HTMLElement | null) => void;
+	/** Styles for positioning the floating element */
+	floatingStyles?: React.CSSProperties;
 }
 
 const DropdownContext = createContext<DropdownContextValue | undefined>(
