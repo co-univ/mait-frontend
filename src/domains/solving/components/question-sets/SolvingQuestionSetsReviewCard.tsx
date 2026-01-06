@@ -42,7 +42,7 @@ const SolvingQuestionSetsReviewCard = ({
 	return (
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
-				<QuestionSetsCard.Header.Title title={questionSet.subject} />
+				<QuestionSetsCard.Header.Title title={questionSet.title} />
 				<div className="flex gap-gap-5 items-center">
 					<Icon size={DEFAULT_VISIBILITY_ICON_SIZE} />
 					<span className="typo-body-xsmall">{label}</span>

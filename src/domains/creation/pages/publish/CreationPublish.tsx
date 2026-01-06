@@ -125,8 +125,9 @@ const CreationPublish = () => {
 	//
 	useEffect(() => {
 		if (data?.data) {
-			const { subject, difficulty } = data.data;
+			const { title, subject, difficulty } = data.data;
 
+			dispatch({ type: "SET_TITLE", payload: title ?? "" });
 			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
 			dispatch({
 				type: "SET_DIFFICULTY",

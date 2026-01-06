@@ -1,6 +1,6 @@
 import QuestionSetsLable from "@/components/question-sets/QuestionSetsLable";
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
-import type { QuestionSetDto } from "@/libs/types";
+import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import ManagementCreateQuestionButton from "../../components/common/ManagementCreateQuestionButton";
 import ManagementMakingCard from "../../components/common/ManagementMakingCard";
 
@@ -10,6 +10,10 @@ import ManagementMakingCard from "../../components/common/ManagementMakingCard";
 
 interface ManagementMakingProps {
 	questionSets: QuestionSetDto[];
+	invalidateQuestionSetsQuery: (params?: {
+		teamId?: number;
+		mode?: DeliveryMode;
+	}) => void;
 	isLoading: boolean;
 }
 
@@ -19,6 +23,7 @@ interface ManagementMakingProps {
 
 const ManagementMaking = ({
 	questionSets,
+	invalidateQuestionSetsQuery,
 	isLoading,
 }: ManagementMakingProps) => {
 	return (
@@ -33,6 +38,7 @@ const ManagementMaking = ({
 					<ManagementMakingCard
 						key={questionSet.id}
 						questionSet={questionSet}
+						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 					/>
 				))}
 			</QuestionSetsCardsLayout>

@@ -62,6 +62,7 @@ const Management = () => {
 				<Tabs.Content value="making">
 					<ManagementMaking
 						questionSets={questionSetList ?? []}
+						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 						isLoading={isLoading}
 					/>
 				</Tabs.Content>

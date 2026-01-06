@@ -183,7 +183,7 @@ const ManagementLiveTimeCard = ({
 	return (
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
-				<QuestionSetsCard.Header.Title title={questionSet.subject} />
+				<QuestionSetsCard.Header.Title title={questionSet.title} />
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>

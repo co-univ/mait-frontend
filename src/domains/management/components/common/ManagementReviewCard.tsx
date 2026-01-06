@@ -57,7 +57,7 @@ const ManagementReviewCard = ({
 	return (
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
-				<QuestionSetsCard.Header.Title title={questionSet.subject} />
+				<QuestionSetsCard.Header.Title title={questionSet.title} />
 				<ManagementReviewCardVisibilityDropdown
 					currentVisibility={currentVisibility}
 					onVisibilityChange={handleVisibilityChange}
