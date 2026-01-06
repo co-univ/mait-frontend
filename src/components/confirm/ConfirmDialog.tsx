@@ -89,10 +89,20 @@ const ConfirmDialog = ({
 			}
 		};
 
+		// Prevent browser navigation
+		const preventNavigation = (e: PopStateEvent) => {
+			e.preventDefault();
+			window.history.pushState(null, "", window.location.href);
+		};
+
+		// Push a dummy state to prevent navigation
+		window.history.pushState(null, "", window.location.href);
+
 		document.addEventListener("keydown", handleKeyDown, true);
 		document.addEventListener("mousedown", preventInteraction, true);
 		document.addEventListener("touchstart", preventInteraction, true);
 		document.addEventListener("click", preventInteraction, true);
+		window.addEventListener("popstate", preventNavigation);
 
 		// Prevent scrolling on body
 		const originalOverflow = document.body.style.overflow;
@@ -103,7 +113,11 @@ const ConfirmDialog = ({
 			document.removeEventListener("mousedown", preventInteraction, true);
 			document.removeEventListener("touchstart", preventInteraction, true);
 			document.removeEventListener("click", preventInteraction, true);
+			window.removeEventListener("popstate", preventNavigation);
 			document.body.style.overflow = originalOverflow;
+
+			// Go back to remove the dummy state
+			window.history.back();
 		};
 	}, [onCancel]);
 
