@@ -107,7 +107,7 @@ const CreationQuestionContentFillBlank = () => {
 			<div className="self-end">
 				<Button
 					icon={<Plus />}
-					item="답안 추가"
+					item="빈칸 추가"
 					className="bg-color-gray-5 border-none"
 					onClick={handleAddBlank}
 				/>

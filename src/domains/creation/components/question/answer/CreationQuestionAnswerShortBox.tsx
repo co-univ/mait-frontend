@@ -86,7 +86,7 @@ const CreationQuestionAnswerShortBox = ({
 				<div className="flex gap-gap-5 items-center">
 					<Button
 						icon={<Plus />}
-						item="답안 추가"
+						item="인정 답안"
 						className="bg-color-gray-10"
 						onClick={handleSubAnswerAdd}
 					/>

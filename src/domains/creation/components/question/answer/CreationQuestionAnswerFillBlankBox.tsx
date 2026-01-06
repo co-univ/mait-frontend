@@ -81,14 +81,14 @@ const CreationQuestionAnswerFillBlankBox = ({
 					<AdjustableTextarea
 						value={mainAnswer?.answer || ""}
 						onChange={(e) => handleMainAnswerChange(e.target.value)}
-						placeholder="주관식 답안"
+						placeholder="빈칸 답안"
 						className="flex-1 typo-body-large"
 					/>
 
 					<div className="flex gap-gap-5 items-center">
 						<Button
 							icon={<Plus />}
-							item="답안 추가"
+							item="인정 추가"
 							className="bg-color-gray-10"
 							onClick={handleSubAnswerAdd}
 						/>
