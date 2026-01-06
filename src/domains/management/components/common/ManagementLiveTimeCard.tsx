@@ -3,7 +3,7 @@ import { QuestionSetsCard } from "@/components/question-sets/card";
 import { notify } from "@/components/Toast";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
-import { apiClient } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 
@@ -29,6 +29,20 @@ const ManagementLiveTimeCard = ({
 	onReviewStatusModalOpen,
 	invalidateQuestionSetsQuery,
 }: ManagementLiveTimeCardProps) => {
+	const { mutate: startLiveTime } = apiHooks.useMutation(
+		"patch",
+		"/api/v1/question-sets/{questionSetId}/live-status/start",
+		{
+			onSuccess: () => {
+				notify.success("문제 풀이가 시작되었습니다.");
+				invalidateQuestionSetsQuery?.();
+			},
+			onError: () => {
+				notify.error("문제 풀이 시작에 실패했습니다.");
+			},
+		},
+	);
+
 	const navigate = useNavigate();
 
 	const questionSetStatus = questionSet.ongoingStatus;
@@ -42,6 +56,19 @@ const ManagementLiveTimeCard = ({
 				questionSetId: questionSet.id ?? 0,
 			}),
 		);
+	};
+
+	/**
+	 *
+	 */
+	const handleStartButtonClick = () => {
+		startLiveTime({
+			params: {
+				path: {
+					questionSetId: questionSet.id ?? 0,
+				},
+			},
+		});
 	};
 
 	/**
@@ -120,12 +147,22 @@ const ManagementLiveTimeCard = ({
 	 *
 	 */
 	const renderSecondButton = () => {
-		if (questionSetStatus === "ONGOING" || questionSetStatus === "BEFORE") {
+		if (questionSetStatus === "ONGOING") {
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
 					item="풀이 관리"
 					onClick={handleControlButtonClick}
+				/>
+			);
+		}
+
+		if (questionSetStatus === "BEFORE") {
+			return (
+				<QuestionSetsCard.Footer.Button
+					variant="secondary"
+					item="시작하기"
+					onClick={handleStartButtonClick}
 				/>
 			);
 		}

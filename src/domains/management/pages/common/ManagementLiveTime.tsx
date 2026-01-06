@@ -99,6 +99,7 @@ const ManagementLiveTime = ({
 								<ManagementLiveTimeCard
 									key={questionSet.id}
 									questionSet={questionSet}
+									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 								/>
 							))}
 						</QuestionSetsCardsLayout>
