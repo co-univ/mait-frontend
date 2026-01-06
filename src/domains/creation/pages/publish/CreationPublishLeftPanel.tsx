@@ -63,7 +63,7 @@ const CreationPublishLeftPanel = ({
 					>
 						<Radio.Item value="PUBLIC" className="flex-1 min-w-[100px]">
 							<Radio.Input />
-							<Radio.Label>전채공개</Radio.Label>
+							<Radio.Label>전체공개</Radio.Label>
 						</Radio.Item>
 						<Radio.Item value="GROUP" className="flex-1 min-w-[100px]">
 							<Radio.Input />
