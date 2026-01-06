@@ -45,7 +45,7 @@ const CreationNewRightPanel = ({
 				<CreationPanelTextarea
 					disabled={readonly}
 					minRows={1}
-					placeholder="대학생 3학년/컴퓨터공학 전공자"
+					placeholder="ex. 대학생 3학년/컴퓨터공학 전공자"
 					value={difficulty}
 					onChange={(e) => onDifficultyChange(e.target.value)}
 				/>
