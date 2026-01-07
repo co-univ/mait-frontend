@@ -48,7 +48,7 @@ const CreationNewLeftPanel = ({
 		return (
 			<Field.Root className="gap-gap-9">
 				<Field.Label className="typo-body-large">문제 생성 방식</Field.Label>
-				<div className="flex justify-between py-padding-10 px-padding-12 bg-color-gray-5 rounded-radius-medium1">
+				<div className="flex justify-between py-padding-10 px-padding-11 bg-color-gray-5 rounded-radius-medium1">
 					<Radio.Group
 						value={creationType}
 						onChange={(value) =>

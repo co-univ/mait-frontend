@@ -74,7 +74,7 @@ const CreationQuestionAnswerShortBox = ({
 	};
 
 	return (
-		<div className="w-full flex flex-col px-padding-12 py-padding-9 rounded-medium1 bg-color-gray-5">
+		<div className="w-full flex flex-col px-padding-11 py-padding-9 rounded-medium1 bg-color-gray-5">
 			<div className="flex items-center gap-gap-9">
 				<AdjustableTextarea
 					value={mainAnswer?.answer || ""}
