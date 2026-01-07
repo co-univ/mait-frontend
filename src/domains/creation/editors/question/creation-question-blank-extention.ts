@@ -38,6 +38,10 @@ const CreationQuestionBlankExtension = Node.create({
 		return ["question-blank", mergeAttributes(HTMLAttributes)];
 	},
 
+	renderText({ node }) {
+		return `{{${node.attrs.number}}}`;
+	},
+
 	addNodeView() {
 		return ReactNodeViewRenderer(CreationQuestionBlankNode, { as: "span" });
 	},
