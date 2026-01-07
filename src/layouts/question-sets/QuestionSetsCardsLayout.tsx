@@ -1,5 +1,5 @@
 import { Children } from "react";
-import chartClipImage from "@/assets/images/chart-clip.png";
+import EmptyQuestion from "@/components/EmptyQuestion";
 
 //
 //
@@ -20,26 +20,12 @@ const QuestionSetsCardsLayout = ({
 	minGridWidth = 360,
 	children,
 }: QuestionSetsCardsLayoutProps) => {
-	/**
-	 *
-	 */
-	const renderEmptyState = () => {
-		return (
-			<div className="h-full flex flex-col justify-center items-center gap-gap-5">
-				<img src={chartClipImage} alt="empty state" className="size-[100px]" />
-				<span className="text-color-gray-30 typo-body-medium">
-					원하는 문제를 생성해볼래요?
-				</span>
-			</div>
-		);
-	};
-
 	if (isLoading) {
 		return null;
 	}
 
 	if (!children || Children.count(children) === 0) {
-		return renderEmptyState();
+		return <EmptyQuestion />;
 	}
 
 	return (
