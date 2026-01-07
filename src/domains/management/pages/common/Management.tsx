@@ -6,6 +6,7 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
+import ManagementCreateQuestionButton from "../../components/common/ManagementCreateQuestionButton";
 import ManagementLiveTime from "./ManagementLiveTime";
 import ManagementMaking from "./ManagementMaking";
 import ManagementReview from "./ManagementReview";
@@ -57,7 +58,10 @@ const Management = () => {
 				onValueChange={handleModeChange}
 				className="flex flex-col gap-gap-11"
 			>
-				<QuestionSetsTabs modes={["making", "live-time", "review"]} />
+				<div className="flex justify-between items-end">
+					<QuestionSetsTabs modes={["making", "live-time", "review"]} />
+					<ManagementCreateQuestionButton />
+				</div>
 
 				<Tabs.Content value="making">
 					<ManagementMaking

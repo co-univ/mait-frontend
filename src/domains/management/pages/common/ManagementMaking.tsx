@@ -1,7 +1,6 @@
 import QuestionSetsLable from "@/components/question-sets/QuestionSetsLable";
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
-import ManagementCreateQuestionButton from "../../components/common/ManagementCreateQuestionButton";
 import ManagementMakingCard from "../../components/common/ManagementMakingCard";
 
 //
@@ -28,10 +27,7 @@ const ManagementMaking = ({
 }: ManagementMakingProps) => {
 	return (
 		<div className="h-full flex flex-col gap-gap-11">
-			<div className="flex justify-between items-center">
-				<QuestionSetsLable label="제작 중" />
-				<ManagementCreateQuestionButton />
-			</div>
+			<QuestionSetsLable label="제작 중" />
 
 			<QuestionSetsCardsLayout isLoading={isLoading} minGridWidth={280}>
 				{questionSets.map((questionSet) => (
