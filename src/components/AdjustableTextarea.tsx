@@ -65,7 +65,7 @@ const AdjustableTextarea = ({
 		return () => {
 			resizeObserver.disconnect();
 		};
-	}, [ref.current]);
+	}, [ref.current, props?.value, props?.defaultValue]);
 
 	/**
 	 *
