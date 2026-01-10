@@ -55,7 +55,7 @@ const CreationNewLeftPanelCountsField = ({
 	return (
 		<Field.Root>
 			<Field.Label className="typo-body-large">문제 유형</Field.Label>
-			<div className="flex flex-col gap-gap-8 bg-color-gray-5 py-padding-10 px-padding-12 rounded-radius-medium1 typo-body-medium">
+			<div className="flex flex-col gap-gap-8 bg-color-gray-5 py-padding-10 px-padding-11 rounded-radius-medium1 typo-body-medium">
 				<div className="flex flex-wrap gap-gap-8">
 					{QUESTION_COUNT_CONFIG.slice(0, 2).map(({ type, label }) => (
 						<div

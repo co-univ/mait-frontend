@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
 import { useConfirm } from "@/components/confirm";
+import EmptyQuestion from "@/components/EmptyQuestion";
 import QuestionNavigation, {
 	QuestionNavigationButton,
 	type QuestionNavigationRef,
@@ -229,9 +230,7 @@ const CreationQuestion = () => {
 					<CreationQuestionAdditional />
 				</>
 			) : (
-				<div className="flex flex-1 justify-center items-center typo-heading-large">
-					문제를 만들어야함
-				</div>
+				<EmptyQuestion />
 			)}
 		</CreationQuestionLayout>
 	);

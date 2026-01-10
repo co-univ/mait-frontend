@@ -2,7 +2,6 @@ import { useState } from "react";
 import QuestionSetsLable from "@/components/question-sets/QuestionSetsLable";
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
 import type { DeliveryMode, QuestionSetGroup } from "@/libs/types";
-import ManagementCreateQuestionButton from "../../components/common/ManagementCreateQuestionButton";
 import ManagementLiveTimeCard from "../../components/common/ManagementLiveTimeCard";
 import ManagementReviewStatusModal from "../../components/common/ManagementReviewStatusModal";
 
@@ -72,10 +71,8 @@ const ManagementLiveTime = ({
 			<div className="h-full flex flex-col gap-gap-11">
 				{hasOngoingQuestionSets && (
 					<div className="flex flex-col gap-gap-11">
-						<div className="flex justify-between items-center">
-							<QuestionSetsLable label="풀이 중" variant="secondary" />
-							<ManagementCreateQuestionButton />
-						</div>
+						<QuestionSetsLable label="풀이 중" variant="secondary" />
+
 						<QuestionSetsCardsLayout isLoading={false}>
 							{ongoingQuestionSets.map((questionSet) => (
 								<ManagementLiveTimeCard
@@ -89,16 +86,14 @@ const ManagementLiveTime = ({
 
 				{hasBeforeQuestionSets && (
 					<div className="flex flex-col gap-gap-11">
-						<div className="flex justify-between items-center">
-							<QuestionSetsLable label="풀이 전" variant="secondary" />
+						<QuestionSetsLable label="풀이 전" variant="secondary" />
 
-							{!hasOngoingQuestionSets && <ManagementCreateQuestionButton />}
-						</div>
 						<QuestionSetsCardsLayout isLoading={false}>
 							{beforeQuestionSets.map((questionSet) => (
 								<ManagementLiveTimeCard
 									key={questionSet.id}
 									questionSet={questionSet}
+									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 								/>
 							))}
 						</QuestionSetsCardsLayout>
@@ -107,13 +102,8 @@ const ManagementLiveTime = ({
 
 				{hasAfterQuestionSets && (
 					<div className="flex flex-col gap-gap-11">
-						<div className="flex justify-between items-center">
-							<QuestionSetsLable label="풀이 완료" variant="secondary" />
+						<QuestionSetsLable label="풀이 완료" variant="secondary" />
 
-							{!hasOngoingQuestionSets && !hasBeforeQuestionSets && (
-								<ManagementCreateQuestionButton />
-							)}
-						</div>
 						<QuestionSetsCardsLayout isLoading={false}>
 							{afterQuestionSets.map((questionSet) => (
 								<ManagementLiveTimeCard

@@ -22,7 +22,7 @@ export const CREATION_PUBLISH_QUESTION_INITIAL_STATE = {
 	subject: "",
 	mode: "LIVE_TIME" as DeliveryMode,
 	difficulty: "",
-	visibility: "PUBLIC" as QuestionSetVisibility,
+	visibility: "GROUP" as QuestionSetVisibility,
 };
 
 //

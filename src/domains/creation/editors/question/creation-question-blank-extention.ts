@@ -6,7 +6,39 @@ import CreationQuestionBlankNode from "@/domains/creation/editors/question/Creat
 //
 //
 
-const CreationQuestionBlankExtension = Node.create({
+export interface QuestionBlankAttributes {
+	number: number;
+	answer: string;
+}
+
+//
+//
+//
+
+declare module "@tiptap/core" {
+	interface Commands<ReturnType> {
+		questionBlank: {
+			/**
+			 * Insert a question blank node
+			 */
+			setQuestionBlank: (
+				attributes?: Partial<QuestionBlankAttributes>,
+			) => ReturnType;
+			/**
+			 * Update question blank attributes
+			 */
+			updateQuestionBlank: (
+				attributes: Partial<QuestionBlankAttributes>,
+			) => ReturnType;
+		};
+	}
+}
+
+//
+//
+//
+
+const CreationQuestionBlankExtension = Node.create<QuestionBlankAttributes>({
 	name: "question-blank",
 
 	group: "inline",
@@ -18,10 +50,25 @@ const CreationQuestionBlankExtension = Node.create({
 	addAttributes() {
 		return {
 			number: {
-				default: 1,
+				default: undefined,
+				parseHTML: (element) => {
+					const number = element.getAttribute("data-number");
+					return Number(number);
+				},
+				renderHTML: (attributes) => {
+					return {
+						"data-number": attributes.number,
+					};
+				},
 			},
 			answer: {
 				default: "",
+				parseHTML: (element) => element.getAttribute("data-answer") || "",
+				renderHTML: (attributes) => {
+					return {
+						"data-answer": attributes.answer,
+					};
+				},
 			},
 		};
 	},
@@ -38,8 +85,31 @@ const CreationQuestionBlankExtension = Node.create({
 		return ["question-blank", mergeAttributes(HTMLAttributes)];
 	},
 
+	renderText({ node }) {
+		return `{{${node.attrs.number}}}`;
+	},
+
 	addNodeView() {
 		return ReactNodeViewRenderer(CreationQuestionBlankNode, { as: "span" });
+	},
+
+	addCommands() {
+		return {
+			setQuestionBlank:
+				(attributes) =>
+				({ commands }) => {
+					return commands.insertContent({
+						type: this.name,
+						attrs: attributes,
+					});
+				},
+
+			updateQuestionBlank:
+				(attributes) =>
+				({ commands }) => {
+					return commands.updateAttributes(this.name, attributes);
+				},
+		};
 	},
 });
 

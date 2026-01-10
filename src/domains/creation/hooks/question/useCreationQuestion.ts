@@ -182,8 +182,6 @@ const useCreationQuestion = ({
 				type,
 			);
 
-			console.log(convertedQuestion);
-
 			editQuestion(convertedQuestion);
 		}
 	};

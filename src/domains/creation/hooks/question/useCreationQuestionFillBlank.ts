@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import type { Editor } from "@tiptap/core";
+import { useCallback, useEffect, useMemo } from "react";
 import { FILL_BLANK_PATTERN, type QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
@@ -14,6 +15,7 @@ import generateTemporaryId from "@/utils/generate-temporary-id";
 
 interface UseQuestionFillBlankProps {
 	questionId: number;
+	editor?: Editor;
 }
 
 interface UseQuestionFillBlankReturn {
@@ -22,7 +24,7 @@ interface UseQuestionFillBlankReturn {
 	groupedAnswers: FillBlankAnswerApiResponse[][];
 	handleAnswerChange: (answerId: number, newAnswer: string) => void;
 	handleContentChange: (editorHtml: string) => void;
-	handleMainAnswerAdd: (editorHtml: string) => void;
+	handleMainAnswerAdd: () => void;
 	handleSubAnswerAdd: (number: number) => void;
 	handleMainAnswerDelete: (number: number) => void;
 	handleSubAnswerDelete: (answerId: number) => void;
@@ -34,6 +36,7 @@ interface UseQuestionFillBlankReturn {
 
 const useCreationQuestionFillBlank = ({
 	questionId,
+	editor,
 }: UseQuestionFillBlankProps): UseQuestionFillBlankReturn => {
 	const { questions, editQuestion } = useCreationQuestionsStore();
 
@@ -76,140 +79,215 @@ const useCreationQuestionFillBlank = ({
 		}
 
 		for (const { original, number } of replacements) {
-			const answer = question.answers?.find(
-				(ans) => ans.number === Number.parseInt(number, 10) && ans.isMain,
-			);
-
 			html = html.replace(
 				original,
-				`<question-blank number="${number}" answer="${answer?.answer || ""}"></question-blank>`,
+				`<question-blank data-number="${number}"></question-blank>`,
 			);
 		}
 
 		return html;
-	}, [question?.content, question?.answers]);
+	}, [question?.content]);
 
 	/**
-	 * Convert editor HTML to {{number}} format and update store
+	 * Handle editor content changes and synchronize blank numbers with answers.
+	 *
+	 * When blanks ({{n}}) are deleted from the editor, this function:
+	 * 1. Detects deleted blank numbers by comparing current content with existing answers
+	 * 2. Removes all answers associated with deleted blanks
+	 * 3. Renumbers remaining blanks and their answers to maintain sequential order
+	 *
+	 * @param content {string} - editor content in text format (ex: "Blank 1 is {{1}} and Blank 2 is {{2}}")
 	 */
-	const handleContentChange = (editorHtml: string) => {
-		if (!question) {
-			return;
-		}
+	const handleContentChange = useCallback(
+		(content: string) => {
+			if (!question) {
+				return;
+			}
 
-		// Detect deleted question-blank nodes
-		const previousNumbers = new Set<number>();
-		const currentNumbers = new Set<number>();
+			let updatedContent = content;
+			let updatedAnswers = question.answers;
 
-		// Extract numbers from previous content
-		const prevPattern = /<question-blank\s+number="(\d+)"/g;
-		let match = prevPattern.exec(question.content || "");
-		while (match) {
-			previousNumbers.add(Number.parseInt(match[1], 10));
-			match = prevPattern.exec(question.content || "");
-		}
+			const numbers: number[] = [];
 
-		// Extract numbers from current content
-		const currPattern = /<question-blank\s+number="(\d+)"/g;
-		match = currPattern.exec(editorHtml);
-		while (match) {
-			currentNumbers.add(Number.parseInt(match[1], 10));
-			match = currPattern.exec(editorHtml);
-		}
+			const pattern = new RegExp(
+				FILL_BLANK_PATTERN.source,
+				FILL_BLANK_PATTERN.flags,
+			);
+			let match = pattern.exec(content);
 
-		// Find deleted numbers
-		const deletedNumbers = Array.from(previousNumbers).filter(
-			(num) => !currentNumbers.has(num),
-		);
+			while (match) {
+				const number = Number(match[1]);
 
-		let updatedAnswers = question.answers;
+				if (!numbers.includes(number)) {
+					numbers.push(number);
+				}
 
-		// Remove answers for deleted question-blank nodes and renumber
-		if (deletedNumbers.length > 0) {
-			// Sort in descending order to handle deletions properly
-			deletedNumbers.sort((a, b) => b - a);
+				match = pattern.exec(content);
+			}
 
-			for (const deletedNumber of deletedNumbers) {
-				updatedAnswers = (updatedAnswers || [])
-					.filter((answer) => answer.number !== deletedNumber)
+			if (numbers.length < groupedAnswers.length) {
+				const deletedNumbers: number[] = [];
+
+				for (let i = 0; i < groupedAnswers.length; i += 1) {
+					const number = i + 1;
+
+					if (!numbers.includes(number)) {
+						deletedNumbers.push(number);
+					}
+				}
+
+				updatedAnswers = question.answers
+					?.filter((answer) => !deletedNumbers.includes(answer.number))
 					.map((answer) => {
-						if (answer.number > deletedNumber) {
-							return { ...answer, number: answer.number - 1 };
+						const shift = deletedNumbers.filter(
+							(num) => num < answer.number,
+						).length;
+
+						if (shift > 0) {
+							return { ...answer, number: answer.number - shift };
 						}
+
 						return answer;
 					});
-			}
-		}
 
-		editQuestion({
-			...question,
-			content: editorHtml,
-			answers: updatedAnswers,
-		} as QuestionResponseType);
-	};
+				updatedContent = content.replace(FILL_BLANK_PATTERN, (_, p1) => {
+					const num = Number(p1);
+					const shift = deletedNumbers.filter((dn) => dn < num).length;
+
+					if (shift > 0) {
+						return `{{${num - shift}}}`;
+					}
+
+					return `{{${num}}}`;
+				});
+			}
+
+			editQuestion({
+				...question,
+				content: updatedContent,
+				answers: updatedAnswers,
+			} as QuestionResponseType);
+		},
+		[question, editQuestion],
+	);
 
 	/**
 	 *
 	 */
 	const handleAnswerChange = (answerId: number, newAnswer: string) => {
-		const targetAnswer = question?.answers?.find(
-			(answer) => answer.id === answerId,
-		);
-
 		const updatedAnswers = question?.answers?.map((answer) =>
 			answer.id === answerId ? { ...answer, answer: newAnswer } : answer,
 		);
 
-		let updatedContent = question?.content;
-
-		// If the changed answer is main, update content's <question-blank> answer attribute
-		if (targetAnswer?.isMain && updatedContent) {
-			const number = targetAnswer.number;
-			const pattern = new RegExp(
-				`<question-blank\\s+number="${number}"\\s+answer="[^"]*"`,
-				"g",
-			);
-			updatedContent = updatedContent.replace(
-				pattern,
-				`<question-blank number="${number}" answer="${newAnswer}"`,
-			);
-		}
-
 		editQuestion({
 			...question,
 			answers: updatedAnswers,
-			content: updatedContent,
 		} as QuestionResponseType);
 	};
 
 	/**
-	 *
+	 * Add a new blank at the current cursor position.
+	 * Renumbers existing blanks and their associated answers accordingly.
 	 */
-	const handleMainAnswerAdd = (editorHtml: string) => {
+	const handleMainAnswerAdd = () => {
 		if (groupedAnswers.length === 5) {
 			notify.error("빈칸은 최대 5개까지 추가할 수 있습니다.");
 
 			return;
 		}
 
-		if (question) {
-			const newAnswer: FillBlankAnswerApiResponse = {
-				id: generateTemporaryId(),
-				answer: "",
-				isMain: true,
-				number: groupedAnswers.length + 1,
-			};
-
-			const updatedAnswers = question.answers
-				? [...question.answers, newAnswer]
-				: [newAnswer];
-
-			editQuestion({
-				...question,
-				answers: updatedAnswers,
-				content: editorHtml,
-			} as QuestionResponseType);
+		if (!editor || !question) {
+			return;
 		}
+
+		// 1. Get cursor position
+		const cursorPos = editor.state.selection.head;
+
+		// 2. Count blank nodes before cursor to determine new blank number
+		let blanksBeforeCursor = 0;
+
+		editor.state.doc.nodesBetween(0, cursorPos, (node) => {
+			if (node.type.name === "question-blank") {
+				blanksBeforeCursor += 1;
+			}
+		});
+
+		const newBlankNumber = blanksBeforeCursor + 1;
+
+		const insertPos =
+			editor.state.doc.textBetween(0, cursorPos).length +
+			Array.from({ length: blanksBeforeCursor }, (_, idx) =>
+				(idx + 1).toString(),
+			).reduce((acc, cur) => acc + cur.length + 4, 0);
+
+		// 3. Insert new blank at position in original content
+		const originalContent = question.content || "";
+		let updatedContent =
+			originalContent.slice(0, insertPos) +
+			`{{${newBlankNumber}}}` +
+			originalContent.slice(insertPos);
+
+		// 4. Find and renumber blanks that come after insertion and have number >= newBlankNumber
+		const newBlankLength = `{{${newBlankNumber}}}`.length;
+		const afterInsertPos = insertPos + newBlankLength;
+
+		// Collect blanks to renumber
+		const toRenumber: Array<{ start: number; end: number; oldNum: number }> =
+			[];
+		const pattern = new RegExp(
+			FILL_BLANK_PATTERN.source,
+			FILL_BLANK_PATTERN.flags,
+		);
+		let match = pattern.exec(updatedContent);
+
+		while (match) {
+			const matchStart = match.index;
+			const matchEnd = match.index + match[0].length;
+			const num = Number(match[1]);
+
+			// Only renumber blanks that come after our insertion and have number >= newBlankNumber
+			if (matchStart >= afterInsertPos && num >= newBlankNumber) {
+				toRenumber.push({ start: matchStart, end: matchEnd, oldNum: num });
+			}
+
+			match = pattern.exec(updatedContent);
+		}
+
+		// Renumber from end to start to avoid position shifts
+		toRenumber.reverse();
+
+		for (const { start, end, oldNum } of toRenumber) {
+			updatedContent =
+				updatedContent.slice(0, start) +
+				`{{${oldNum + 1}}}` +
+				updatedContent.slice(end);
+		}
+
+		// 5. Update answers array (increment numbers >= newBlankNumber)
+		const updatedAnswers = (question.answers || []).map((answer) => {
+			if (answer.number >= newBlankNumber) {
+				return { ...answer, number: answer.number + 1 };
+			}
+
+			return answer;
+		});
+
+		// 6. Add new main answer
+		const newMainAnswer: FillBlankAnswerApiResponse = {
+			id: generateTemporaryId(),
+			answer: "",
+			isMain: true,
+			number: newBlankNumber,
+		};
+
+		updatedAnswers.push(newMainAnswer);
+
+		// 7. Update question (this will trigger editor sync)
+		editQuestion({
+			...question,
+			content: updatedContent,
+			answers: updatedAnswers,
+		} as QuestionResponseType);
 	};
 
 	/**
@@ -244,54 +322,24 @@ const useCreationQuestionFillBlank = ({
 	};
 
 	/**
+	 * Delete {{number}} pattern from content.
+	 * The rest (answer deletion and renumbering) is delegated to handleContentChange.
 	 *
+	 * @param number - The blank number to delete
 	 */
 	const handleMainAnswerDelete = (number: number) => {
-		if (groupedAnswers.length === 1) {
-			notify.error("빈칸 답안은 한개 이상 있어야 합니다.");
-
+		if (!question?.content) {
 			return;
 		}
 
-		if (question) {
-			const updatedAnswers = (question.answers || [])
-				.filter((answer) => answer.number !== number)
-				.map((answer) => {
-					if (answer.number > number) {
-						return { ...answer, number: answer.number - 1 };
-					}
-					return answer;
-				});
+		const updatedContent = question.content.replace(
+			FILL_BLANK_PATTERN,
+			(match, capturedNumber) => {
+				return Number(capturedNumber) === number ? "" : match;
+			},
+		);
 
-			let updatedContent = question.content;
-
-			// Remove <question-blank> tag with the specified number from content
-			if (updatedContent) {
-				// Remove the question-blank tag with the specified number
-				const removePattern = new RegExp(
-					`<question-blank\\s+number="${number}"\\s+answer="[^"]*"[^>]*></question-blank>`,
-					"g",
-				);
-				updatedContent = updatedContent.replace(removePattern, "");
-
-				// Update numbers for question-blank tags with higher numbers
-				for (let i = number + 1; i <= groupedAnswers.length; i++) {
-					const updatePattern = new RegExp(
-						`<question-blank\\s+number="${i}"\\s+answer="([^"]*)"`,
-						"g",
-					);
-					updatedContent = updatedContent.replace(
-						updatePattern,
-						`<question-blank number="${i - 1}" answer="$1"`,
-					);
-				}
-			}
-			editQuestion({
-				...question,
-				answers: updatedAnswers,
-				content: updatedContent,
-			} as QuestionResponseType);
-		}
+		handleContentChange(updatedContent);
 	};
 
 	/**
@@ -309,6 +357,28 @@ const useCreationQuestionFillBlank = ({
 			} as QuestionResponseType);
 		}
 	};
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (editor) {
+			editor.on("update", () => {
+				handleContentChange(editor.getText());
+			});
+		}
+	}, [editor, handleContentChange]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (editor) {
+			if (editor.getText() !== question?.content) {
+				editor.commands.setContent(fillBlankContent);
+			}
+		}
+	}, [editor, question?.content, fillBlankContent]);
 
 	return {
 		question,
