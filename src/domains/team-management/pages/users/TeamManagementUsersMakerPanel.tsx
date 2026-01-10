@@ -1,8 +1,9 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { UserRound } from "lucide-react";
-import useTeams from "@/hooks/useTeams";
-import { apiHooks } from "@/libs/api";
-import type { JoinedTeamUserApiResponse } from "@/libs/types";
+import type {
+	ApplyTeamUserApiResponse,
+	JoinedTeamUserApiResponse,
+} from "@/libs/types";
 import TeamManagementPendingBox from "../../components/common/TeamManagementPendingBox";
 import TeamManagementUsersBox from "../../components/users/TeamManagementUsersBox";
 import TeamManagementUsersPanel from "../../components/users/TeamManagementUsersPanel";
@@ -15,7 +16,18 @@ interface TeamManagementUsersMakerPanelProps {
 	isLoading: boolean;
 	owners?: JoinedTeamUserApiResponse[];
 	makers?: JoinedTeamUserApiResponse[];
+	applicants?: ApplyTeamUserApiResponse[];
 	onUserDelete: (teamUserId: number, name: string) => Promise<void>;
+	onApproveUser: (
+		applicationId: number,
+		name: string,
+		nickname: string,
+	) => Promise<void>;
+	onRejectUser: (
+		applicationId: number,
+		name: string,
+		nickname: string,
+	) => Promise<void>;
 }
 
 //
@@ -26,27 +38,21 @@ const TeamManagementUsersMakerPanel = ({
 	isLoading,
 	owners,
 	makers,
+	applicants,
 	onUserDelete,
+	onApproveUser,
+	onRejectUser,
 }: TeamManagementUsersMakerPanelProps) => {
-	const { activeTeam } = useTeams();
-
-	const { data } = apiHooks.useQuery(
-		"get",
-		"/api/v1/teams/{teamId}/applicants",
-		{
-			params: {
-				path: { teamId: activeTeam?.teamId ?? 0 },
-			},
-		},
-	);
-
-	const applicants = data?.data;
-
 	return (
 		<TeamManagementUsersPanel icon={<UserRound />} title="메이커">
 			<div className="flex flex-col gap-gap-5">
 				{applicants?.map((user) => (
-					<TeamManagementPendingBox key={user.id} user={user} />
+					<TeamManagementPendingBox
+						key={user.id}
+						user={user}
+						onApprove={onApproveUser}
+						onReject={onRejectUser}
+					/>
 				))}
 			</div>
 			<div className="flex flex-col gap-gap-5">

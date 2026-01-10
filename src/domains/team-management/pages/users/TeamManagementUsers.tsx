@@ -25,9 +25,12 @@ const TeamManagementUsers = () => {
 		owners,
 		makers,
 		players,
+		applicants,
 		handleListOrderChange,
 		handleRoleUpdate,
 		handleUserDelete,
+		handleApproveUser,
+		handleRejectUser,
 		isLoading,
 	} = useTeamManagementUsers({ teamId: activeTeam?.teamId ?? 0 });
 
@@ -90,7 +93,10 @@ const TeamManagementUsers = () => {
 						isLoading={isLoading}
 						owners={owners}
 						makers={localMakers}
+						applicants={applicants}
 						onUserDelete={handleUserDelete}
+						onApproveUser={handleApproveUser}
+						onRejectUser={handleRejectUser}
 					/>
 				</div>
 				<div className="flex-1">
