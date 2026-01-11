@@ -91,7 +91,11 @@ const TeamManagementAccountAddPopover = ({
 	 * Handle user selection from search results
 	 */
 	const handleUserSelect = (userId: string) => {
-		setSelectedUserId(Number(userId));
+		if (selectedUserId === Number(userId)) {
+			setSelectedUserId(null);
+		} else {
+			setSelectedUserId(Number(userId));
+		}
 	};
 
 	/**
