@@ -9,6 +9,7 @@ import type { JoinedTeamUserApiResponse } from "@/libs/types";
 
 interface TeamManagementUsersBoxProps {
 	draggable?: boolean;
+	isDragging?: boolean;
 	user: JoinedTeamUserApiResponse;
 	onUserDelete?: (teamUserId: number, name: string) => Promise<void>;
 }
@@ -19,6 +20,7 @@ interface TeamManagementUsersBoxProps {
 
 const TeamManagementUsersBox = ({
 	draggable = false,
+	isDragging = false,
 	user,
 	onUserDelete,
 }: TeamManagementUsersBoxProps) => {
@@ -30,9 +32,10 @@ const TeamManagementUsersBox = ({
 			onMouseEnter={() => setIsMouseOver(true)}
 			onMouseLeave={() => setIsMouseOver(false)}
 			className={clsx(
-				"flex items-center gap-gap-4 p-padding-6 border border-color-gray-10 rounded-radius-medium1 typo-body-small",
+				"flex items-center gap-gap-4 p-padding-6 bg-color-alpha-white100 border border-color-gray-10 rounded-radius-medium1 typo-body-small",
 				{
-					"bg-color-primary-5 border-color-primary-5": draggable && isMouseOver,
+					"bg-color-primary-5 border-color-primary-5":
+						draggable && (isMouseOver || isDragging),
 				},
 			)}
 		>

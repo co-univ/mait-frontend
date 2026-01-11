@@ -15,21 +15,23 @@ import type { UserInfoApiResponse } from "@/libs/types";
 //
 //
 
-interface TeamManagementAccountAddCardProps {
+interface TeamManagementAccountAddPopoverProps {
 	open: boolean;
 	onClose: () => void;
-	anchorEl: HTMLElement | null;
+	setFloating: (node: HTMLElement | null) => void;
+	floatingStyles: React.CSSProperties;
 }
 
 //
 //
 //
 
-const TeamManagementAccountAddCard = ({
+const TeamManagementAccountAddPopover = ({
 	open,
 	onClose,
-	anchorEl,
-}: TeamManagementAccountAddCardProps) => {
+	setFloating,
+	floatingStyles,
+}: TeamManagementAccountAddPopoverProps) => {
 	const [email, setEmail] = useState("");
 	const [role, setRole] = useState<"MAKER" | "PLAYER">("MAKER");
 
@@ -89,7 +91,11 @@ const TeamManagementAccountAddCard = ({
 	 * Handle user selection from search results
 	 */
 	const handleUserSelect = (userId: string) => {
-		setSelectedUserId(Number(userId));
+		if (selectedUserId === Number(userId)) {
+			setSelectedUserId(null);
+		} else {
+			setSelectedUserId(Number(userId));
+		}
 	};
 
 	/**
@@ -159,7 +165,9 @@ const TeamManagementAccountAddCard = ({
 	// Debounce email input changes for search
 	// biome-ignore lint/correctness/useExhaustiveDependencies: searchUsersByEmail is function defined inside component
 	useEffect(() => {
-		if (!open) return;
+		if (!open) {
+			return;
+		}
 
 		const debounceTimer = setTimeout(() => {
 			searchUsersByEmail(email);
@@ -168,7 +176,7 @@ const TeamManagementAccountAddCard = ({
 		return () => clearTimeout(debounceTimer);
 	}, [email, open]);
 
-	if (!open || !anchorEl) {
+	if (!open) {
 		return null;
 	}
 
@@ -179,18 +187,6 @@ const TeamManagementAccountAddCard = ({
 	 */
 	const handleBackdropClick = () => {
 		onClose();
-	};
-
-	/**
-	 *
-	 */
-	const getCardPosition = () => {
-		const rect = anchorEl.getBoundingClientRect();
-		return {
-			top: rect.bottom + 10,
-			right: window.innerWidth - rect.right,
-			width: 480,
-		};
 	};
 
 	/**
@@ -273,8 +269,6 @@ const TeamManagementAccountAddCard = ({
 		);
 	};
 
-	const position = getCardPosition();
-
 	const cardContent = (
 		<>
 			<div
@@ -283,11 +277,11 @@ const TeamManagementAccountAddCard = ({
 				aria-hidden="true"
 			/>
 			<div
-				className="fixed z-50 bg-alpha-white100 border border-color-gray-10 rounded-radius-xlarge1 flex flex-col"
+				ref={setFloating}
+				className="z-40 bg-alpha-white100 border border-color-gray-10 rounded-radius-xlarge1 flex flex-col"
 				style={{
-					top: `${position.top}px`,
-					right: `${position.right}px`,
-					width: `${position.width}px`,
+					...floatingStyles,
+					width: "480px",
 				}}
 			>
 				<div className="px-padding-11 pt-padding-8">
@@ -302,4 +296,4 @@ const TeamManagementAccountAddCard = ({
 	return createPortal(cardContent, portalContainer);
 };
 
-export default TeamManagementAccountAddCard;
+export default TeamManagementAccountAddPopover;

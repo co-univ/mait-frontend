@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { notify } from "@/components/Toast";
+import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 import useUser from "@/hooks/useUser";
 import { apiClient, apiHooks } from "@/libs/api";
+import Loading from "@/pages/Loading";
 import InviteExpiredLink from "./InviteExpiredLink";
-import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 import InviteNotApplied from "./InviteNotApplied";
 import InviteNotLogin from "./InviteNotLogin";
 import InvitePending from "./InvitePending";
@@ -16,7 +17,6 @@ import InviteRejected from "./InviteRejected";
 
 const Invite = () => {
 	const [isApplying, setIsApplying] = useState(false);
-	const [joinedImmediate, setJoinedImmediate] = useState<boolean>();
 
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
@@ -25,17 +25,18 @@ const Invite = () => {
 
 	const { user, isLoading: isUserLoading } = useUser();
 
-	const { data, error, refetch } = apiHooks.useQuery(
-		"get",
-		"/api/v1/teams/invitation/info",
-		{
-			params: {
-				query: {
-					code: code ?? "",
-				},
+	const {
+		data,
+		error,
+		isPending: isInviteInfoLoading,
+		refetch,
+	} = apiHooks.useQuery("get", "/api/v1/teams/invitation/info", {
+		params: {
+			query: {
+				code: code ?? "",
 			},
 		},
-	);
+	});
 
 	const inviteInfo = data?.data;
 
@@ -65,7 +66,11 @@ const Invite = () => {
 				throw new Error("Failed to apply for invitation");
 			}
 
-			setJoinedImmediate(res.data.data?.joinedImmediate);
+			if (res.data.data?.joinedImmediate) {
+				navigate(HOME_ROUTE_PATH.ROOT);
+			} else {
+				refetch();
+			}
 		} catch {
 			notify.error("초대 신청에 실패했어요. 다시 시도해주세요.");
 		} finally {
@@ -83,53 +88,63 @@ const Invite = () => {
 	}, [user, isUserLoading, refetch]);
 
 	//
-	// approved user
+	// Case: approved user
 	//
 	useEffect(() => {
-		// biome-ignore lint/suspicious/noExplicitAny: error type is not defined
-		if ((error && (error as any).code === "C-007") || joinedImmediate) {
+		if (!error) {
+			return;
+		}
+
+		const reason = (error as unknown as { reasons: string[] }).reasons[0] ?? "";
+
+		if (reason === "ALREADY_MEMBER") {
 			navigate(HOME_ROUTE_PATH.ROOT);
 		}
-	}, [error, navigate, joinedImmediate]);
+	}, [error, navigate]);
 
-	if (isUserLoading) {
-		return null;
+	// Case: loading
+	if (isUserLoading || isInviteInfoLoading) {
+		return <Loading />;
 	}
 
-	// invalid link or expired link
-	if (!code) {
-		return <InviteExpiredLink />;
-	}
-
-	// not logged in user
-	if (
-		!user &&
-		!isUserLoading &&
-		inviteInfo?.applicationStatus === "NOT_APPLIED"
-	) {
+	// Case: no user info
+	if (!user && inviteInfo) {
 		return <InviteNotLogin teamName={inviteInfo.teamName} />;
 	}
 
-	// pending approval
-	if (
-		inviteInfo?.applicationStatus === "PENDING" ||
-		joinedImmediate === false
-	) {
-		return <InvitePending />;
+	if (user && inviteInfo) {
+		// Case: not applied
+		if (inviteInfo.applicationStatus === "NOT_APPLIED") {
+			return (
+				<InviteNotApplied
+					isApplying={isApplying}
+					teamName={inviteInfo.teamName}
+					onClick={handleApplyButtonClick}
+				/>
+			);
+		}
+
+		// Case: pending
+		if (inviteInfo.applicationStatus === "PENDING") {
+			return <InvitePending />;
+		}
+
+		// Case: rejected
+		if (inviteInfo.applicationStatus === "REJECTED") {
+			return <InviteRejected />;
+		}
 	}
 
-	// not approved user
-	if (inviteInfo?.applicationStatus === "NOT_APPLIED") {
-		return (
-			<InviteNotApplied
-				isApplying={isApplying}
-				teamName={inviteInfo.teamName}
-				onClick={handleApplyButtonClick}
-			/>
-		);
+	if (user && error) {
+		const reason = (error as { reasons: string[] }).reasons[0] ?? "";
+
+		// case: expired or not found code
+		if (reason === "NOT_FOUND_CODE" || reason === "EXPIRED_CODE") {
+			return <InviteExpiredLink />;
+		}
 	}
 
-	return <div>로딩</div>;
+	return null;
 };
 
 export default Invite;

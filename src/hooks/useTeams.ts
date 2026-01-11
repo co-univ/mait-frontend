@@ -28,6 +28,10 @@ const useTeams = (): UseTeamsReturn => {
 	const { data, isPending, refetch } = apiHooks.useQuery(
 		"get",
 		"/api/v1/teams/joined",
+		{},
+		{
+			enabled: !!user,
+		},
 	);
 
 	const teams = data?.data;
@@ -44,22 +48,8 @@ const useTeams = (): UseTeamsReturn => {
 	//
 	//
 	useEffect(() => {
-		const refetchTeams = async () => {
-			await refetch();
-			setActiveTeamId(teams && teams?.length > 0 ? (teams[0].teamId ?? 0) : 0);
-		};
-
-		if (user && !activeTeamId) {
-			refetchTeams();
-		}
-	}, [user, refetch, activeTeamId, setActiveTeamId, teams]);
-
-	//
-	//
-	//
-	useEffect(() => {
 		if (teams && teams.length > 0 && !activeTeamId) {
-			setActiveTeamId(teams[0].teamId ?? 0);
+			setActiveTeamId(teams[0].teamId);
 		}
 	}, [teams, activeTeamId, setActiveTeamId]);
 

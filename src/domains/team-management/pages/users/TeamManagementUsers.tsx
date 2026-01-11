@@ -1,7 +1,10 @@
-import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
-import { useEffect, useState } from "react";
+import {
+	DragDropContext,
+	type DragStart,
+	type DropResult,
+} from "@hello-pangea/dnd";
+import { useState } from "react";
 import useTeams from "@/hooks/useTeams";
-import type { JoinedTeamUserApiResponse } from "@/libs/types";
 import useTeamManagementUsers from "../../hooks/users/useTeamManagementUsers";
 import TeamManagementUsersMakerPanel from "./TeamManagementUsersMakerPanel";
 import TeamManagementUsersPlayerPanel from "./TeamManagementUsersPlayerPanel";
@@ -15,9 +18,7 @@ import TeamManagementUsersPlayerPanel from "./TeamManagementUsersPlayerPanel";
 //
 
 const TeamManagementUsers = () => {
-	const [localMakers, setLocalMakers] = useState<JoinedTeamUserApiResponse[]>();
-	const [localPlayers, setLocalPlayers] =
-		useState<JoinedTeamUserApiResponse[]>();
+	const [draggingSourceId, setDraggingSourceId] = useState<string | null>(null);
 
 	const { activeTeam } = useTeams();
 
@@ -25,16 +26,27 @@ const TeamManagementUsers = () => {
 		owners,
 		makers,
 		players,
-		handleListOrderChange,
+		applicants,
 		handleRoleUpdate,
 		handleUserDelete,
+		handleApproveUser,
+		handleRejectUser,
 		isLoading,
 	} = useTeamManagementUsers({ teamId: activeTeam?.teamId ?? 0 });
 
 	/**
 	 *
 	 */
+	const handleDragStart = (start: DragStart) => {
+		setDraggingSourceId(start.source.droppableId);
+	};
+
+	/**
+	 *
+	 */
 	const handleDragEnd = (result: DropResult) => {
+		setDraggingSourceId(null);
+
 		if (!result.destination) {
 			return;
 		}
@@ -43,60 +55,33 @@ const TeamManagementUsers = () => {
 		const sourceDroppableId = result.source.droppableId;
 		const destinationDroppableId = result.destination.droppableId;
 
-		if (sourceDroppableId === destinationDroppableId) {
-			if (sourceDroppableId === "droppable-maker" && makers) {
-				const newMakers = handleListOrderChange(
-					makers,
-					result.source.index,
-					result.destination.index,
-				);
-
-				setLocalMakers(newMakers);
-			} else if (sourceDroppableId === "droppable-player" && players) {
-				const newPlayers = handleListOrderChange(
-					players,
-					result.source.index,
-					result.destination.index,
-				);
-
-				setLocalPlayers(newPlayers);
-			}
-		} else {
+		if (sourceDroppableId !== destinationDroppableId) {
 			const newRole =
 				destinationDroppableId === "droppable-maker" ? "MAKER" : "PLAYER";
 			handleRoleUpdate(teamUserId, newRole);
 		}
 	};
 
-	//
-	//
-	//
-	useEffect(() => {
-		setLocalMakers(makers);
-	}, [makers]);
-
-	//
-	//
-	//
-	useEffect(() => {
-		setLocalPlayers(players);
-	}, [players]);
-
 	return (
 		<div className="flex gap-gap-9 w-full">
-			<DragDropContext onDragEnd={handleDragEnd}>
+			<DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
 				<div className="flex-1">
 					<TeamManagementUsersMakerPanel
 						isLoading={isLoading}
+						draggingSourceId={draggingSourceId}
 						owners={owners}
-						makers={localMakers}
+						makers={makers}
+						applicants={applicants}
 						onUserDelete={handleUserDelete}
+						onApproveUser={handleApproveUser}
+						onRejectUser={handleRejectUser}
 					/>
 				</div>
 				<div className="flex-1">
 					<TeamManagementUsersPlayerPanel
+						draggingSourceId={draggingSourceId}
 						isLoading={isLoading}
-						players={localPlayers}
+						players={players}
 						onUserDelete={handleUserDelete}
 					/>
 				</div>
