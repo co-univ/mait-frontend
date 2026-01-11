@@ -162,21 +162,19 @@ const useTeamManagementUsers = ({
 				} else if (status === "REJECTED") {
 					notify.success("가입 요청을 거절 처리했습니다.");
 				}
-
-				refetchTeamUsers();
-				refetchApplicants();
 			},
 			onError: (_error, variables) => {
 				const status = variables.body.status;
 
 				if (status === "APPROVED") {
-					notify.error("승인 처리 중 문제가 발생했습니다.");
+					notify.error("승인 처리 중 오류가 발생했습니다.");
 				} else if (status === "REJECTED") {
 					notify.error("거절 처리 중 오류가 발생했습니다.");
 				}
-
-				refetchTeamUsers();
+			},
+			onSettled: () => {
 				refetchApplicants();
+				refetchTeamUsers();
 			},
 		},
 	);
