@@ -20,11 +20,7 @@ interface UseTeamManagementUsersReturn {
 	makers?: JoinedTeamUserApiResponse[];
 	players?: JoinedTeamUserApiResponse[];
 	applicants?: ApplyTeamUserApiResponse[];
-	handleListOrderChange: (
-		list: JoinedTeamUserApiResponse[],
-		source: number,
-		destination: number,
-	) => JoinedTeamUserApiResponse[];
+
 	handleRoleUpdate: (
 		teamUserId: number,
 		role: "MAKER" | "PLAYER",
@@ -118,21 +114,6 @@ const useTeamManagementUsers = ({
 			},
 		},
 	);
-
-	/**
-	 *
-	 */
-	const handleListOrderChange = (
-		list: JoinedTeamUserApiResponse[],
-		source: number,
-		destination: number,
-	) => {
-		const updatedList = Array.from(list);
-		const [removed] = updatedList.splice(source, 1);
-		updatedList.splice(destination, 0, removed);
-
-		return updatedList;
-	};
 
 	/**
 	 *
@@ -263,7 +244,6 @@ const useTeamManagementUsers = ({
 		makers,
 		players,
 		applicants,
-		handleListOrderChange,
 		handleRoleUpdate,
 		handleUserDelete,
 		handleApproveUser,

@@ -14,6 +14,7 @@ import TeamManagementUsersPanel from "../../components/users/TeamManagementUsers
 
 interface TeamManagementUsersMakerPanelProps {
 	isLoading: boolean;
+	draggingSourceId: string | null;
 	owners?: JoinedTeamUserApiResponse[];
 	makers?: JoinedTeamUserApiResponse[];
 	applicants?: ApplyTeamUserApiResponse[];
@@ -36,6 +37,7 @@ interface TeamManagementUsersMakerPanelProps {
 
 const TeamManagementUsersMakerPanel = ({
 	isLoading,
+	draggingSourceId,
 	owners,
 	makers,
 	applicants,
@@ -60,7 +62,10 @@ const TeamManagementUsersMakerPanel = ({
 					<TeamManagementUsersBox key={user.teamUserId} user={user} />
 				))}
 			</div>
-			<Droppable droppableId="droppable-maker">
+			<Droppable
+				droppableId="droppable-maker"
+				isDropDisabled={draggingSourceId === "droppable-maker"}
+			>
 				{(provided) => (
 					<div
 						ref={provided.innerRef}
@@ -74,7 +79,7 @@ const TeamManagementUsersMakerPanel = ({
 								draggableId={user.teamUserId.toString()}
 								index={index}
 							>
-								{(provided) => (
+								{(provided, snapshot) => (
 									<div
 										ref={provided.innerRef}
 										{...provided.draggableProps}
@@ -82,6 +87,7 @@ const TeamManagementUsersMakerPanel = ({
 									>
 										<TeamManagementUsersBox
 											draggable={!isLoading}
+											isDragging={snapshot.isDragging}
 											user={user}
 											onUserDelete={onUserDelete}
 										/>
