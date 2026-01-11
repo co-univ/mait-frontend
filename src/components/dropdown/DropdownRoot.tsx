@@ -1,4 +1,4 @@
-import { autoUpdate, flip, offset, useFloating } from "@floating-ui/react-dom";
+import { flip, offset, useFloating } from "@floating-ui/react-dom";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
@@ -66,7 +66,6 @@ const DropdownRoot = <T extends string = string>({
 		placement: "bottom-start",
 		middleware: [offset(2), flip()],
 		strategy,
-		whileElementsMounted: autoUpdate,
 	});
 
 	const triggerRef = useRef<HTMLElement>(null);
