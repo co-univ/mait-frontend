@@ -34,7 +34,7 @@ const SideDialog = ({ open, onClose, children }: SideDialogProps) => {
 		// biome-ignore lint/a11y/useKeyWithClickEvents: Backdrop click is a common UX pattern for closing modals. ESC key is already handled in the hook for keyboard accessibility.
 		// biome-ignore lint/a11y/noStaticElementInteractions: This div serves as an interactive backdrop overlay that closes the dialog when clicked outside. The interaction is intentional and standard for modal dialogs.
 		<div
-			className="fixed inset-0 z-50 bg-gray-40 bg-opacity-50 transition-opacity duration-300"
+			className="fixed inset-0 z-40 bg-gray-40 bg-opacity-50 transition-opacity duration-300"
 			style={{
 				opacity: isAnimating ? 1 : 0,
 			}}

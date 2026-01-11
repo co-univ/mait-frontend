@@ -278,7 +278,7 @@ const TeamManagementAccountAddPopover = ({
 			/>
 			<div
 				ref={setFloating}
-				className="z-50 bg-alpha-white100 border border-color-gray-10 rounded-radius-xlarge1 flex flex-col"
+				className="z-40 bg-alpha-white100 border border-color-gray-10 rounded-radius-xlarge1 flex flex-col"
 				style={{
 					...floatingStyles,
 					width: "480px",

@@ -40,7 +40,7 @@ const Modal = ({ open, onClose, children }: ModalProps) => {
 		// biome-ignore lint/a11y/noStaticElementInteractions: modal backdrop needs to handle click events
 		// biome-ignore lint/a11y/useKeyWithClickEvents: modal backdrop needs to handle key events
 		<div
-			className="fixed inset-0 z-50 flex items-center justify-center bg-gray-40 bg-opacity-50"
+			className="fixed inset-0 z-40 flex items-center justify-center bg-gray-40 bg-opacity-50"
 			onClick={handleBackdropClick}
 		>
 			<div className="relative bg-alpha-white100 p-padding-11 rounded-radius-medium1 shadow-m">
