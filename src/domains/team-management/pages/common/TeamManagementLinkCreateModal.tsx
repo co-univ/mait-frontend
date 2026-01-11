@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Button from "@/components/Button";
 import { Field } from "@/components/field";
@@ -5,7 +6,7 @@ import Modal from "@/components/modal/Modal";
 import { Radio } from "@/components/radio";
 import { notify } from "@/components/Toast";
 import useTeams from "@/hooks/useTeams";
-import { apiClient } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import type { CreateTeamInviteApiRequest } from "@/libs/types";
 import { getInviteUrl } from "@/utils/get-invite-url";
 import CopyButton from "../../../../components/CopyButton";
@@ -39,6 +40,19 @@ const TeamManagementLinkCreateModal = ({
 	const [isCreating, setIsCreating] = useState(false);
 
 	const { activeTeam } = useTeams();
+
+	const queryClient = useQueryClient();
+
+	/**
+	 *
+	 */
+	const handleClose = () => {
+		setRole("MAKER");
+		setDuration("ONE_DAY");
+		setApproval("NECCESSARY");
+		setLinkCode(undefined);
+		onClose();
+	};
 
 	/**
 	 *
@@ -96,6 +110,20 @@ const TeamManagementLinkCreateModal = ({
 			}
 
 			setLinkCode(res.data.data?.token ?? "");
+
+			queryClient.invalidateQueries({
+				queryKey: apiHooks.queryOptions(
+					"get",
+					"/api/v1/teams/{teamId}/invitations",
+					{
+						params: {
+							path: {
+								teamId: activeTeam?.teamId ?? 0,
+							},
+						},
+					},
+				).queryKey,
+			});
 		} catch {
 			notify.error("초대 링크 생성에 실패했습니다. 다시 시도해주세요.");
 		} finally {
@@ -240,7 +268,7 @@ const TeamManagementLinkCreateModal = ({
 	};
 
 	return (
-		<Modal open={open} onClose={onClose}>
+		<Modal open={open} onClose={handleClose}>
 			<div className="w-[512px] flex flex-col gap-gap-8">
 				{renderRoleField()}
 				{renderDurationField()}
