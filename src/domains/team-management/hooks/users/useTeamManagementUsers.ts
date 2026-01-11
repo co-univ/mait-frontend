@@ -1,8 +1,10 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import { apiClient, apiHooks } from "@/libs/api";
 import type {
+	ApiResponseListJoinedTeamUserApiResponse,
 	ApplyTeamUserApiResponse,
 	JoinedTeamUserApiResponse,
 } from "@/libs/types";
@@ -46,6 +48,20 @@ interface UseTeamManagementUsersReturn {
 const useTeamManagementUsers = ({
 	teamId,
 }: UseTeamManagementUsersProps): UseTeamManagementUsersReturn => {
+	const queryClient = useQueryClient();
+
+	const teamUserDataQueryKey = apiHooks.queryOptions(
+		"get",
+		"/api/v1/teams/{teamId}/users",
+		{
+			params: {
+				path: {
+					teamId,
+				},
+			},
+		},
+	).queryKey;
+
 	const {
 		data: teamUsersData,
 		isPending,
@@ -65,24 +81,74 @@ const useTeamManagementUsers = ({
 			},
 		});
 
-	const owners = useMemo(
-		() => teamUsersData?.data?.filter((user) => user.role === "OWNER"),
-		[teamUsersData],
+	const { mutate: patchUserRole } = apiHooks.useMutation(
+		"patch",
+		"/api/v1/teams/team-users/{teamUserId}/role",
+		{
+			onMutate: async (variables) => {
+				const updatedTeamUserId = variables.params.path.teamUserId;
+				const updatedRole = variables.body.role;
+
+				await queryClient.cancelQueries({
+					queryKey: teamUserDataQueryKey,
+				});
+
+				const previousData =
+					queryClient.getQueryData<ApiResponseListJoinedTeamUserApiResponse>(
+						teamUserDataQueryKey,
+					);
+
+				queryClient.setQueryData<ApiResponseListJoinedTeamUserApiResponse>(
+					teamUserDataQueryKey,
+					(updater) => {
+						if (!updater?.data) {
+							return updater;
+						}
+
+						const oldUsers = updater.data.map((user) => {
+							if (user.teamUserId === updatedTeamUserId) {
+								return {
+									...user,
+									role: updatedRole,
+								};
+							}
+
+							return user;
+						});
+
+						return {
+							...updater,
+							data: oldUsers,
+						};
+					},
+				);
+
+				return { previousData };
+			},
+
+			onSuccess: () => {
+				notify.success("유저 역할이 변경되었습니다.");
+			},
+
+			onError: (_error, _variables, context) => {
+				notify.error("유저 역할 변경에 실패했습니다.");
+
+				const { previousData } = context as {
+					previousData: ApiResponseListJoinedTeamUserApiResponse | undefined;
+				};
+
+				if (previousData) {
+					queryClient.setQueryData(teamUserDataQueryKey, previousData);
+				}
+			},
+
+			onSettled: () => {
+				queryClient.invalidateQueries({
+					queryKey: teamUserDataQueryKey,
+				});
+			},
+		},
 	);
-
-	const makers = useMemo(
-		() => teamUsersData?.data?.filter((user) => user.role === "MAKER"),
-		[teamUsersData],
-	);
-
-	const players = useMemo(
-		() => teamUsersData?.data?.filter((user) => user.role === "PLAYER"),
-		[teamUsersData],
-	);
-
-	const applicants = applicantsData?.data;
-
-	const { confirm } = useConfirm();
 
 	const { mutate: postApplicantUserStatus } = apiHooks.useMutation(
 		"post",
@@ -115,6 +181,25 @@ const useTeamManagementUsers = ({
 		},
 	);
 
+	const owners = useMemo(
+		() => teamUsersData?.data?.filter((user) => user.role === "OWNER"),
+		[teamUsersData],
+	);
+
+	const makers = useMemo(
+		() => teamUsersData?.data?.filter((user) => user.role === "MAKER"),
+		[teamUsersData],
+	);
+
+	const players = useMemo(
+		() => teamUsersData?.data?.filter((user) => user.role === "PLAYER"),
+		[teamUsersData],
+	);
+
+	const applicants = applicantsData?.data;
+
+	const { confirm } = useConfirm();
+
 	/**
 	 *
 	 */
@@ -122,29 +207,14 @@ const useTeamManagementUsers = ({
 		teamUserId: number,
 		role: "MAKER" | "PLAYER",
 	) => {
-		try {
-			const res = await apiClient.PATCH(
-				"/api/v1/teams/team-users/{teamUserId}/role",
-				{
-					params: {
-						path: {
-							teamUserId: teamUserId,
-						},
-					},
-					body: {
-						role,
-					},
+		patchUserRole({
+			params: {
+				path: {
+					teamUserId,
 				},
-			);
-
-			if (!res.data?.isSuccess) {
-				throw new Error("Role update failed");
-			}
-
-			refetchTeamUsers();
-		} catch {
-			notify.error("유저 역할 변경에 실패했습니다.");
-		}
+			},
+			body: { role },
+		});
 	};
 
 	/**
