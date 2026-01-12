@@ -48,7 +48,7 @@ const SolvingReviewShortAnswers = ({
 					readOnly={isSubmitted}
 					variation={getVariation(index)}
 					answer={answer}
-					onAnswerChange={(value) => handleAnswerChange(index, value)}
+					onChange={(value) => handleAnswerChange(index, value)}
 				/>
 			))}
 		</div>

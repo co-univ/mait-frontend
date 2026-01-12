@@ -83,7 +83,6 @@ const SolvingReviewOrderingAnswers = ({
 										{...provided.dragHandleProps}
 									>
 										<SolvingAnswerOrdering
-											readOnly
 											variation={getVariation(snapshot.isDragging)}
 											option={option}
 										/>

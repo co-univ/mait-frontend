@@ -48,7 +48,11 @@ const QuestionContent = ({ content, className }: QuestionContentProps) => {
 		return parts;
 	};
 
-	return <div className={clsx(className)}>{renderContent()}</div>;
+	return (
+		<div className={clsx("typo-heading-small", className)}>
+			{renderContent()}
+		</div>
+	);
 };
 
 export default QuestionContent;
