@@ -66,7 +66,6 @@ const useCreationQuestion = ({
 			"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
 			{
 				onSuccess: () => {
-					notify.success("문제가 저장되었습니다.");
 					queryClient.invalidateQueries({
 						queryKey: apiHooks.queryOptions(
 							"get",
