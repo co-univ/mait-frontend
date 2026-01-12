@@ -44,7 +44,14 @@ const AuthOAuthCallback = () => {
 
 				if (data?.data) {
 					localStorage.setItem("token", data.data);
-					navigate(HOME_ROUTE_PATH.ROOT);
+
+					const redirectUrl = localStorage.getItem("redirectAfterLogin");
+					if (redirectUrl) {
+						localStorage.removeItem("redirectAfterLogin");
+						window.location.href = redirectUrl;
+					} else {
+						navigate(HOME_ROUTE_PATH.ROOT);
+					}
 				}
 			} catch (error) {
 				console.error("Access Token 발급 실패: ", error);

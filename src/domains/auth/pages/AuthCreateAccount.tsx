@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { apiClient } from "@/libs/api";
 import type { LatestPoliciesApiResponse } from "@/libs/types";
+import { AUTH_ROUTE_PATH } from "../auth.routes";
 import AuthCard from "../components/AuthCard";
 import AuthTerms from "../components/AuthTerms";
 
