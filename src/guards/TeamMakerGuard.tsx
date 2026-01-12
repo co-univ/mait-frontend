@@ -19,7 +19,7 @@ interface TeamMakerGuardProps {
 
 const TeamMakerGuard = ({ children }: TeamMakerGuardProps) => {
 	const { user, isLoading: isUserLoading } = useUser();
-	const { activeTeam, isLoading } = useTeams();
+	const { activeTeam, isLoading: isTeamLoading } = useTeams();
 
 	const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const TeamMakerGuard = ({ children }: TeamMakerGuardProps) => {
 	//
 	//
 	useEffect(() => {
-		if (isUserLoading || isLoading) {
+		if (isUserLoading || (user && isTeamLoading)) {
 			return;
 		}
 
@@ -37,9 +37,9 @@ const TeamMakerGuard = ({ children }: TeamMakerGuardProps) => {
 		) {
 			navigate("/");
 		}
-	}, [activeTeam, isLoading, navigate, user, isUserLoading]);
+	}, [activeTeam, isTeamLoading, navigate, user, isUserLoading]);
 
-	if (isLoading || isUserLoading) {
+	if (isTeamLoading || isUserLoading) {
 		return <Loading />;
 	}
 
