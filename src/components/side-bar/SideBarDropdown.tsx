@@ -1,8 +1,9 @@
 import { Check, ChevronsUpDown, NotebookPen } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
 import { apiClient } from "@/libs/api";
+import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { Dropdown } from "../dropdown";
 import { notify } from "../Toast";
 import SideBarDropdownAddButton from "./SideBarDropdownAddButton";
@@ -16,9 +17,11 @@ const SideBarDropdown = () => {
 	const [isAddingTeam, setIsAddingTeam] = useState(false);
 	const [addingTeamName, setAddingTeamName] = useState("");
 	const [isAddingTeamLoading, setIsAddingTeamLoading] = useState(false);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	const { user } = useUser();
 	const { teams, activeTeam, handleActiveTeamChange, refetch } = useTeams();
+	const { isSidebarOpen } = useSidebarOpenStore();
 
 	/**
 	 *
@@ -51,8 +54,19 @@ const SideBarDropdown = () => {
 		}
 	};
 
+	//
+	//
+	//
+	useEffect(() => {
+		if (!isSidebarOpen) {
+			setIsDropdownOpen(false);
+		}
+	}, [isSidebarOpen]);
+
 	return (
 		<Dropdown.Root
+			open={isDropdownOpen}
+			onOpenChange={setIsDropdownOpen}
 			value={activeTeam?.teamId?.toString() || ""}
 			onValueChange={(value) => handleActiveTeamChange(Number(value))}
 			strategy="fixed"

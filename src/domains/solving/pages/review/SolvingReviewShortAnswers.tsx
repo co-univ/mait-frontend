@@ -1,4 +1,4 @@
-import SolvingReviewAnswer from "../../components/review/SolvingReviewAnswer";
+import SolvingAnswerShort from "../../components/common/answer/SolvingAnswerShort";
 import useSolvingReviewShortQuestion from "../../hooks/review/useSolvingReviewShortQuestion";
 
 //
@@ -42,12 +42,12 @@ const SolvingReviewShortAnswers = ({
 	return (
 		<div className="flex flex-col w-full gap-gap-11">
 			{userAnswers.map((answer, index) => (
-				<SolvingReviewAnswer
+				<SolvingAnswerShort
 					// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
 					key={index}
 					readOnly={isSubmitted}
 					variation={getVariation(index)}
-					content={answer}
+					answer={answer}
 					onChange={(value) => handleAnswerChange(index, value)}
 				/>
 			))}

@@ -165,9 +165,7 @@ const TeamManagementLinkCreateModal = ({
 	const renderDurationField = () => {
 		return (
 			<Field.Root>
-				<Field.Label className="typo-heading-small">
-					초대자 권한 유형
-				</Field.Label>
+				<Field.Label className="typo-heading-small">링크 유효 기간</Field.Label>
 				<Radio.Group
 					disabled={linkCode !== undefined}
 					value={duration}

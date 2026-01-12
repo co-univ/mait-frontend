@@ -10,6 +10,7 @@ import useModal from "./useModal";
 
 interface ModalProps {
 	open: boolean;
+	showCloseButton?: boolean;
 	onClose: () => void;
 	children: ReactNode;
 }
@@ -18,7 +19,12 @@ interface ModalProps {
 //
 //
 
-const Modal = ({ open, onClose, children }: ModalProps) => {
+const Modal = ({
+	open,
+	showCloseButton = true,
+	onClose,
+	children,
+}: ModalProps) => {
 	useModal({ open, onClose });
 
 	if (!open) {
@@ -44,14 +50,16 @@ const Modal = ({ open, onClose, children }: ModalProps) => {
 			onClick={handleBackdropClick}
 		>
 			<div className="relative bg-alpha-white100 p-padding-11 rounded-radius-medium1 shadow-m">
-				<button
-					type="button"
-					onClick={onClose}
-					className="absolute right-padding-11 top-padding-11"
-					aria-label="Close modal"
-				>
-					<X size={24} />
-				</button>
+				{showCloseButton && (
+					<button
+						type="button"
+						onClick={onClose}
+						className="absolute right-padding-11 top-padding-11"
+						aria-label="Close modal"
+					>
+						<X size={24} />
+					</button>
+				)}
 				{children}
 			</div>
 		</div>

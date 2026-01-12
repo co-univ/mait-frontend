@@ -1,4 +1,4 @@
-import SolvingReviewAnswer from "../../components/review/SolvingReviewAnswer";
+import SolvingAnswerMultiple from "../../components/common/answer/SolvingAnswerMultiple";
 import useSolvingReviewMultipleQuestion from "../../hooks/review/useSolvingReviewMultipleQuestion";
 
 //
@@ -55,17 +55,12 @@ const SolvingReviewMultipleAnswers = ({
 	return (
 		<div className="flex flex-col w-full gap-gap-11">
 			{choices.map((choice) => (
-				<button
+				<SolvingAnswerMultiple
 					key={choice.id}
-					type="button"
-					onClick={() => handleChoiceClick(choice.number)}
-				>
-					<SolvingReviewAnswer
-						readOnly
-						variation={getAnswerVariation(choice.number)}
-						content={choice ? `${choice.number}. ${choice.content}` : ""}
-					/>
-				</button>
+					choice={choice}
+					onChoiceClick={handleChoiceClick}
+					variation={getAnswerVariation(choice.number)}
+				/>
 			))}
 		</div>
 	);

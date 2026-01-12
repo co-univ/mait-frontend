@@ -88,7 +88,7 @@ const SolvingReview = () => {
 			case "ORDERING":
 				return (
 					<SolvingReviewOrderingAnswers
-						questoinSetId={questionSetId}
+						questionSetId={questionSetId}
 						questionId={questionId}
 					/>
 				);
@@ -119,9 +119,9 @@ const SolvingReview = () => {
 				hideExplanation={hideExplanation}
 			/>
 
-			<QuestionContent content={content} className="typo-heading-small" />
+			<QuestionContent content={content} />
 
-			{imageUrl && <SolvingQuizImage src={imageUrl} />}
+			<SolvingQuizImage src={imageUrl} />
 
 			<div className="h-full flex flex-col justify-end">
 				{renderQuestionAnswers()}

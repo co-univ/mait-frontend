@@ -55,10 +55,6 @@ const useSolvingReviewOrderingQuestion = ({
 
 	const userAnswers = getUserAnswers(questionId) as number[];
 
-	// const options = userAnswers.map(
-	// 	(order) =>
-	// 		question?.options.find((opt) => opt.originOrder === order)?.content || "",
-	// );
 	const options = userAnswers
 		.map((userAnswer) =>
 			question?.options.find((option) => option.originOrder === userAnswer),
@@ -74,6 +70,14 @@ const useSolvingReviewOrderingQuestion = ({
 		sourceIndex: number,
 		destinationIndex: number,
 	) => {
+		if (getIsSubmitted(questionId)) {
+			return;
+		}
+
+		if (sourceIndex === destinationIndex) {
+			return;
+		}
+
 		const updatedAnswers = Array.from(userAnswers);
 		const [movedAnswer] = updatedAnswers.splice(sourceIndex, 1);
 		updatedAnswers.splice(destinationIndex, 0, movedAnswer);
