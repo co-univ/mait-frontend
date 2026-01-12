@@ -1,5 +1,5 @@
 interface SolvingQuizImageProps {
-	src: string;
+	src?: string;
 }
 
 //
@@ -7,6 +7,10 @@ interface SolvingQuizImageProps {
 //
 
 const SolvingQuizImage = ({ src }: SolvingQuizImageProps) => {
+	if (!src) {
+		return null;
+	}
+
 	return (
 		<div className="w-full max-w-full h-[400px] max-h-[400px] mt-5 rounded-medium1 flex items-center justify-center">
 			<img

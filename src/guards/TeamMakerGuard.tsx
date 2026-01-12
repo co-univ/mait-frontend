@@ -2,6 +2,7 @@ import type React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useTeams from "@/hooks/useTeams";
+import useUser from "@/hooks/useUser";
 import Loading from "@/pages/Loading";
 
 //
@@ -17,7 +18,8 @@ interface TeamMakerGuardProps {
 //
 
 const TeamMakerGuard = ({ children }: TeamMakerGuardProps) => {
-	const { activeTeam, isLoading } = useTeams();
+	const { user, isLoading: isUserLoading } = useUser();
+	const { activeTeam, isLoading: isTeamLoading } = useTeams();
 
 	const navigate = useNavigate();
 
@@ -25,16 +27,19 @@ const TeamMakerGuard = ({ children }: TeamMakerGuardProps) => {
 	//
 	//
 	useEffect(() => {
+		if (isUserLoading || (user && isTeamLoading)) {
+			return;
+		}
+
 		if (
-			!isLoading &&
-			activeTeam?.role !== "MAKER" &&
-			activeTeam?.role !== "OWNER"
+			!user ||
+			(activeTeam?.role !== "MAKER" && activeTeam?.role !== "OWNER")
 		) {
 			navigate("/");
 		}
-	}, [activeTeam, isLoading, navigate]);
+	}, [activeTeam, isTeamLoading, navigate, user, isUserLoading]);
 
-	if (isLoading) {
+	if (isTeamLoading || isUserLoading) {
 		return <Loading />;
 	}
 

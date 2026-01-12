@@ -7,6 +7,7 @@ import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
 import SolvingQuestionSetsLiveTime from "./SolvingQuestionSetsLiveTime";
+import SolvingQuestionSetsReview from "./SolvingQuestionSetsReview";
 
 //
 //
@@ -26,7 +27,7 @@ const SolvingQuestionSets = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const mode = searchParams.get("mode") || "live-time";
 
-	const { questionSetList, questionSetGroup } = useQuestionSets({
+	const { questionSetList, questionSetGroup, isLoading } = useQuestionSets({
 		teamId: activeTeam?.teamId ?? 0,
 		mode: QUESTION_SET_MODES[mode],
 	});
@@ -52,12 +53,17 @@ const SolvingQuestionSets = () => {
 				<QuestionSetsTabs modes={["live-time", "review"]} />
 
 				<Tabs.Content value="live-time">
-					<SolvingQuestionSetsLiveTime questionSetGroup={questionSetGroup} />
+					<SolvingQuestionSetsLiveTime
+						questionSetGroup={questionSetGroup}
+						isLoading={isLoading}
+					/>
 				</Tabs.Content>
 
-				<Tabs.Content value="review">
-					<div />
-					{/* <ManagementLiveTime questionSetGroup={questionSetGroup} /> */}
+				<Tabs.Content value="review" className="h-full">
+					<SolvingQuestionSetsReview
+						questionSets={questionSetList ?? []}
+						isLoading={isLoading}
+					/>
 				</Tabs.Content>
 			</Tabs.Root>
 		</LabeledPageLayout>

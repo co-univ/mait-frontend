@@ -11,14 +11,14 @@ import { RadioContext, type RadioContextValue } from "./RadioContext";
  * const { value, onChange } = useRadio();
  * ```
  */
-export const useRadio = (): RadioContextValue => {
+export const useRadio = <T = string>(): RadioContextValue<T> => {
 	const context = useContext(RadioContext);
 
 	if (!context) {
 		throw new Error("useRadio must be used within Radio.Group");
 	}
 
-	return context;
+	return context as RadioContextValue<T>;
 };
 
 /**
@@ -31,8 +31,8 @@ export const useRadio = (): RadioContextValue => {
  * const { isChecked, handleChange } = useRadioItem('option1');
  * ```
  */
-export const useRadioItem = (itemValue: string) => {
-	const { value, onChange, disabled } = useRadio();
+export const useRadioItem = <T = string>(itemValue: T) => {
+	const { value, onChange, disabled } = useRadio<T>();
 
 	const isChecked = value === itemValue;
 

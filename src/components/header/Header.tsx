@@ -22,7 +22,7 @@ const Header = ({ isTransparentBackground }: HeaderProps) => {
 	const isHomePage = location.pathname === "/";
 
 	return (
-		<div
+		<header
 			className={clsx(
 				"fixed top-0 z-10 flex w-full justify-between items-center bg-color-alpha-white100 px-padding-12",
 				{
@@ -36,7 +36,7 @@ const Header = ({ isTransparentBackground }: HeaderProps) => {
 		>
 			<HeaderBrandSection />
 			<HeaderInfoSection isHide={isTransparentBackground} />
-		</div>
+		</header>
 	);
 };
 

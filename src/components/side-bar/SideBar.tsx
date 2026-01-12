@@ -114,7 +114,7 @@ const SideBar = () => {
 	return (
 		<aside
 			className={clsx(
-				"p-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed z-50",
+				"p-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed z-40",
 				SIDEBAR_TRANSITION,
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",

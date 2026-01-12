@@ -45,7 +45,7 @@ const CreationNewRightPanel = ({
 				<CreationPanelTextarea
 					disabled={readonly}
 					minRows={1}
-					placeholder="대학생 3학년/컴퓨터공학 전공자"
+					placeholder="ex. 대학생 3학년/컴퓨터공학 전공자"
 					value={difficulty}
 					onChange={(e) => onDifficultyChange(e.target.value)}
 				/>
@@ -139,7 +139,7 @@ const CreationNewRightPanel = ({
 				<Field.Label className="typo-body-large">보충 설명</Field.Label>
 				<CreationPanelTextarea
 					disabled={readonly}
-					placeholder="이 문제에 대해서 태그 형식으로 어쩌구 저쩌구로 뭐 이렇게 해서 저렇게 해줘."
+					placeholder="AI에게 문제 생성 시 원하는 요구사항이 있다면 적어주세요."
 					value={instruction}
 					onChange={(e) => onInstructionChange(e.target.value)}
 				/>

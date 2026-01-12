@@ -21,9 +21,9 @@ const QuestionSetsCardHeaderTitle = ({
 	className,
 }: QuestionSetsCardHeaderTitleProps) => {
 	return (
-		<div className={clsx("flex gap-gap-5 items-center", className)}>
+		<div className={clsx("flex gap-gap-5 items-center min-w-0", className)}>
 			{icon}
-			<span className="typo-heading-xsmall">{title}</span>
+			<span className="typo-heading-xsmall truncate min-w-0">{title}</span>
 		</div>
 	);
 };

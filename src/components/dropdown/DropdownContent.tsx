@@ -1,22 +1,20 @@
 import clsx from "clsx";
 import type { CSSProperties, ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDropdownContext } from "@/components/dropdown/DropdownContext";
 
 //
 //
 //
-
 interface DropdownContentProps {
-	children: ReactNode;
+	autoWidth?: boolean;
 	className?: string;
+	children: ReactNode;
 }
-
 //
 //
 //
-
 /**
  * Container for dropdown items.
  *
@@ -26,21 +24,52 @@ interface DropdownContentProps {
  *   <Dropdown.Item value="option2">Option 2</Dropdown.Item>
  * </Dropdown.Content>
  */
-const DropdownContent = ({ children, className }: DropdownContentProps) => {
-	const { open, triggerRef } = useDropdownContext();
-	const [position, setPosition] = useState<CSSProperties>({});
+const DropdownContent = ({
+	children,
+	className,
+	autoWidth = false,
+}: DropdownContentProps) => {
+	const [width, setWidth] = useState<string>("auto");
 
+	const contentRef = useRef<HTMLDivElement>(null);
+
+	const { open, triggerRef, onOpenChange, setFloating, floatingStyles } =
+		useDropdownContext();
+
+	//
 	useEffect(() => {
-		if (open && triggerRef?.current) {
+		if (open && triggerRef?.current && !autoWidth) {
 			const triggerRect = triggerRef.current.getBoundingClientRect();
-			setPosition({
-				position: "fixed",
-				top: `${triggerRect.bottom + 2}px`,
-				left: `${triggerRect.left}px`,
-				width: `${triggerRect.width}px`,
-			});
+			setWidth(`${triggerRect.width}px`);
 		}
-	}, [open, triggerRef]);
+	}, [open, triggerRef, autoWidth]);
+
+	//
+	useEffect(() => {
+		if (!open) return;
+
+		const handleClickOutside = (event: MouseEvent) => {
+			const target = event.target as Node;
+
+			if (
+				contentRef.current &&
+				!contentRef.current.contains(target) &&
+				triggerRef?.current &&
+				!triggerRef.current.contains(target)
+			) {
+				onOpenChange?.(false);
+			}
+		};
+
+		const timeoutId = setTimeout(() => {
+			document.addEventListener("mousedown", handleClickOutside);
+		}, 0);
+
+		return () => {
+			clearTimeout(timeoutId);
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [open, triggerRef, onOpenChange]);
 
 	if (!open) {
 		return null;
@@ -48,16 +77,19 @@ const DropdownContent = ({ children, className }: DropdownContentProps) => {
 
 	return createPortal(
 		<div
+			ref={(node) => {
+				contentRef.current = node;
+				setFloating?.(node);
+			}}
 			className={clsx(
 				"z-50 bg-color-alpha-white100 flex flex-col items-start pt-padding-2 rounded-radius-medium1 border border-color-gray-20 shadow-m",
 				className,
 			)}
-			style={position}
+			style={Object.assign({}, floatingStyles, { width }) as CSSProperties}
 		>
 			{children}
 		</div>,
 		document.body,
 	);
 };
-
 export default DropdownContent;

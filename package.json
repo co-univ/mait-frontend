@@ -17,6 +17,7 @@
 		"generate:types": "pnpm dlx dotenv-cli -- sh -c 'openapi-typescript $PUBLIC_API_DOCS_URL -o src/libs/types/api.d.ts' && node tools/generate-types-index.js"
 	},
 	"dependencies": {
+		"@floating-ui/react-dom": "^2.1.6",
 		"@hello-pangea/dnd": "^18.0.1",
 		"@radix-ui/react-accordion": "^1.2.12",
 		"@stomp/stompjs": "^7.1.1",
