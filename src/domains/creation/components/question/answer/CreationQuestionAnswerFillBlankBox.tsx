@@ -76,19 +76,19 @@ const CreationQuestionAnswerFillBlankBox = ({
 	return (
 		<div className="flex items-center gap-gap-9">
 			<span className="typo-heading-small">({mainAnswer?.number})</span>
-			<div className="w-full flex flex-col px-padding-12 py-padding-9 rounded-medium1 bg-color-gray-5">
+			<div className="w-full flex flex-col px-padding-11 py-padding-9 rounded-medium1 bg-color-gray-5">
 				<div className="flex items-center gap-gap-9">
 					<AdjustableTextarea
 						value={mainAnswer?.answer || ""}
 						onChange={(e) => handleMainAnswerChange(e.target.value)}
-						placeholder="주관식 답안"
+						placeholder="빈칸 답안"
 						className="flex-1 typo-body-large"
 					/>
 
 					<div className="flex gap-gap-5 items-center">
 						<Button
 							icon={<Plus />}
-							item="답안 추가"
+							item="인정 답안"
 							className="bg-color-gray-10"
 							onClick={handleSubAnswerAdd}
 						/>

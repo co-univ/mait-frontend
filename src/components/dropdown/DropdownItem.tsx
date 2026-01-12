@@ -6,12 +6,12 @@ import { useDropdownContext } from "@/components/dropdown/DropdownContext";
 //
 //
 
-interface DropdownItemProps {
+interface DropdownItemProps<T extends string = string> {
 	disabled?: boolean;
 	/** Whether this is a header/label item (non-selectable) */
 	isHeader?: boolean;
 	/** Unique value identifying this item */
-	value: string;
+	value: T;
 	/** Optional icon to display before the label */
 	icon?: ReactNode;
 	/** Optional check icon to display when selected */
@@ -32,7 +32,7 @@ interface DropdownItemProps {
  *   Option 1
  * </Dropdown.Item>
  */
-const DropdownItem = ({
+const DropdownItem = <T extends string = string>({
 	value,
 	children,
 	icon,
@@ -40,12 +40,12 @@ const DropdownItem = ({
 	isHeader = false,
 	className,
 	disabled = false,
-}: DropdownItemProps) => {
+}: DropdownItemProps<T>) => {
 	const {
 		value: selectedValue,
 		onValueChange,
 		onOpenChange,
-	} = useDropdownContext();
+	} = useDropdownContext<T>();
 
 	const isSelected = value === selectedValue;
 

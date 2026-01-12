@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { Square } from "lucide-react";
+import { useConfirm } from "@/components/confirm";
 import DeleteCheckBox from "@/components/DeleteCheckBox";
 import Modal from "@/components/modal/Modal";
 import { notify } from "@/components/Toast";
@@ -51,6 +52,7 @@ const TeamManagementLinkManageModal = ({
 		"/api/v1/teams/invitations/{invitationId}",
 		{
 			onSuccess: () => {
+				notify.success("초대 링크를 삭제했습니다.");
 				refetch();
 			},
 			onError: () => {
@@ -59,10 +61,22 @@ const TeamManagementLinkManageModal = ({
 		},
 	);
 
+	const { confirm } = useConfirm();
+
 	/**
 	 *
 	 */
-	const handleDeleteInvitationLink = (invitationId: number) => {
+	const handleDeleteInvitationLink = async (invitationId: number) => {
+		const res = await confirm({
+			title: "초대 링크 삭제",
+			description:
+				"링크를 삭제하시면 이미 공유된 링크를 통해서도 접속이 불가능해집니다.",
+		});
+
+		if (!res) {
+			return;
+		}
+
 		mutate({
 			params: {
 				path: { invitationId },

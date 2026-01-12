@@ -38,6 +38,8 @@ const CreationQuestionAdditionalButtons = () => {
 		const res = await handleUpdateQuestion();
 		const newQuestionId = res?.data?.id;
 
+		notify.success("문제가 저장되었습니다.");
+
 		navigate(
 			createPath(CREATION_ROUTE_PATH.QUESTION, {
 				questionSetId,

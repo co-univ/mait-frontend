@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { apiClient } from "@/libs/api";
-import type { LatestPoliciesApiResponse, PolicyType } from "@/libs/types";
+import type { LatestPoliciesApiResponse } from "@/libs/types";
 import { AUTH_ROUTE_PATH } from "../auth.routes";
 import AuthCard from "../components/AuthCard";
-import AuthTermDetail from "../components/AuthTermDetail";
 import AuthTerms from "../components/AuthTerms";
 
 //
@@ -34,9 +33,6 @@ const AuthCreateAccount = () => {
 	const [isNicknameValid, setIsNicknameValid] = useState(true);
 	const [terms, setTerms] = useState<LatestPoliciesApiResponse[]>([]);
 	const [termChecks, setTermChecks] = useState<TERM_CHECK_TYPE[]>([]);
-	const [selectedTerm, setSelectedTerm] =
-		useState<LatestPoliciesApiResponse | null>(null);
-	const [isDetailOpen, setIsDetailOpen] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -118,31 +114,11 @@ const AuthCreateAccount = () => {
 		}
 	};
 
-	/**
-	 *
-	 */
-	const handleTermDetailClick = (term: LatestPoliciesApiResponse) => {
-		setSelectedTerm(term);
-		setIsDetailOpen(true);
-	};
-
 	//
 	useEffect(() => {
 		getRandomNickname();
 		getAgreementList();
 	}, []);
-
-	if (isDetailOpen && selectedTerm) {
-		return (
-			<AuthTermDetail
-				isOpen={isDetailOpen}
-				setIsOpen={setIsDetailOpen}
-				policyType={selectedTerm.policyType as PolicyType}
-				title={selectedTerm.title}
-				content={selectedTerm.content}
-			/>
-		);
-	}
 
 	return (
 		<AuthCard title="계정 생성하기">
@@ -195,7 +171,6 @@ const AuthCreateAccount = () => {
 				terms={terms}
 				termChecks={termChecks}
 				setTermChecks={setTermChecks}
-				onDetailClick={handleTermDetailClick}
 			/>
 			<Button
 				className="bg-primary-50 h-[50px] w-full flex justify-center text-alpha-white100"

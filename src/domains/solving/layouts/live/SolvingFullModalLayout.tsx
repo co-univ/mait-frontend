@@ -63,7 +63,7 @@ const SolvingFullModalLayout = ({
 
 	return createPortal(
 		<div
-			className={`fixed inset-0 h-screen w-screen z-50 flex items-center justify-center bg-white transition-opacity duration-300 ease-in-out ${
+			className={`fixed inset-0 h-screen w-screen z-40 flex items-center justify-center bg-white transition-opacity duration-300 ease-in-out ${
 				isVisible ? "opacity-100" : "opacity-0"
 			}`}
 		>

@@ -34,7 +34,7 @@ const CreationQuestionAnswerOriginOrderBox = ({
 				{String.fromCharCode(64 + option.originOrder)}
 			</span>
 
-			<div className="w-full flex items-center gap-gap-9 px-padding-12 py-padding-9 rounded-medium1 bg-color-gray-5">
+			<div className="w-full flex items-center gap-gap-9 px-padding-11 py-padding-9 rounded-medium1 bg-color-gray-5">
 				<AdjustableTextarea
 					value={option.content}
 					placeholder={`보기 ${option.originOrder}`}

@@ -1,8 +1,9 @@
+import { useState } from "react";
 import QuestionSetsLable from "@/components/question-sets/QuestionSetsLable";
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
-import type { QuestionSetGroup } from "@/libs/types";
-import ManagementCreateQuestionButton from "../../components/common/ManagementCreateQuestionButton";
+import type { DeliveryMode, QuestionSetGroup } from "@/libs/types";
 import ManagementLiveTimeCard from "../../components/common/ManagementLiveTimeCard";
+import ManagementReviewStatusModal from "../../components/common/ManagementReviewStatusModal";
 
 //
 //
@@ -10,13 +11,27 @@ import ManagementLiveTimeCard from "../../components/common/ManagementLiveTimeCa
 
 interface ManagementLiveTimeProps {
 	questionSetGroup?: QuestionSetGroup["questionSets"];
+	invalidateQuestionSetsQuery: (params?: {
+		teamId?: number;
+		mode?: DeliveryMode;
+	}) => void;
+	isLoading: boolean;
 }
 
 //
 //
 //
 
-const ManagementLiveTime = ({ questionSetGroup }: ManagementLiveTimeProps) => {
+const ManagementLiveTime = ({
+	questionSetGroup,
+	invalidateQuestionSetsQuery,
+	isLoading,
+}: ManagementLiveTimeProps) => {
+	const [reviewStatusModalOpen, setReviewStatusModalOpen] = useState(false);
+	const [selectedQuestionSetId, setSelectedQuestionSetId] = useState<
+		number | null
+	>(null);
+
 	const ongoingQuestionSets = questionSetGroup?.ONGOING ?? [];
 	const beforeQuestionSets = questionSetGroup?.BEFORE ?? [];
 	const afterQuestionSets = questionSetGroup?.AFTER ?? [];
@@ -24,64 +39,91 @@ const ManagementLiveTime = ({ questionSetGroup }: ManagementLiveTimeProps) => {
 	const hasOngoingQuestionSets = ongoingQuestionSets.length > 0;
 	const hasBeforeQuestionSets = beforeQuestionSets.length > 0;
 	const hasAfterQuestionSets = afterQuestionSets.length > 0;
+	const hasAnyQuestionSets =
+		hasOngoingQuestionSets || hasBeforeQuestionSets || hasAfterQuestionSets;
+
+	/**
+	 *
+	 */
+	const handleReviewStatusModalOpen = (questionSetId: number) => {
+		setReviewStatusModalOpen(true);
+		setSelectedQuestionSetId(questionSetId);
+	};
+
+	/**
+	 *
+	 */
+	const handleReviewStatusModalClose = () => {
+		setReviewStatusModalOpen(false);
+		setSelectedQuestionSetId(null);
+	};
+
+	if (isLoading) {
+		return null;
+	}
+
+	if (!hasAnyQuestionSets) {
+		return <QuestionSetsCardsLayout isLoading={false} />;
+	}
 
 	return (
-		<div className="flex flex-col gap-gap-11">
-			{hasOngoingQuestionSets && (
-				<div className="flex flex-col gap-gap-11">
-					<div className="flex justify-between items-center">
-						<QuestionSetsLable label="진행중" variant="secondary" />
-						<ManagementCreateQuestionButton />
+		<>
+			<div className="h-full flex flex-col gap-gap-11">
+				{hasOngoingQuestionSets && (
+					<div className="flex flex-col gap-gap-11">
+						<QuestionSetsLable label="풀이 중" variant="secondary" />
+
+						<QuestionSetsCardsLayout isLoading={false}>
+							{ongoingQuestionSets.map((questionSet) => (
+								<ManagementLiveTimeCard
+									key={questionSet.id}
+									questionSet={questionSet}
+								/>
+							))}
+						</QuestionSetsCardsLayout>
 					</div>
-					<QuestionSetsCardsLayout>
-						{ongoingQuestionSets.map((questionSet) => (
-							<ManagementLiveTimeCard
-								key={questionSet.id}
-								questionSet={questionSet}
-							/>
-						))}
-					</QuestionSetsCardsLayout>
-				</div>
-			)}
+				)}
 
-			{hasBeforeQuestionSets && (
-				<div className="flex flex-col gap-gap-11">
-					<div className="flex justify-between items-center">
-						<QuestionSetsLable label="진행 예정" variant="secondary" />
+				{hasBeforeQuestionSets && (
+					<div className="flex flex-col gap-gap-11">
+						<QuestionSetsLable label="풀이 전" variant="secondary" />
 
-						{!hasOngoingQuestionSets && <ManagementCreateQuestionButton />}
+						<QuestionSetsCardsLayout isLoading={false}>
+							{beforeQuestionSets.map((questionSet) => (
+								<ManagementLiveTimeCard
+									key={questionSet.id}
+									questionSet={questionSet}
+									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+								/>
+							))}
+						</QuestionSetsCardsLayout>
 					</div>
-					<QuestionSetsCardsLayout>
-						{beforeQuestionSets.map((questionSet) => (
-							<ManagementLiveTimeCard
-								key={questionSet.id}
-								questionSet={questionSet}
-							/>
-						))}
-					</QuestionSetsCardsLayout>
-				</div>
-			)}
+				)}
 
-			{hasAfterQuestionSets && (
-				<div className="flex flex-col gap-gap-11">
-					<div className="flex justify-between items-center">
-						<QuestionSetsLable label="종료" variant="secondary" />
+				{hasAfterQuestionSets && (
+					<div className="flex flex-col gap-gap-11">
+						<QuestionSetsLable label="풀이 완료" variant="secondary" />
 
-						{!hasOngoingQuestionSets && !hasBeforeQuestionSets && (
-							<ManagementCreateQuestionButton />
-						)}
+						<QuestionSetsCardsLayout isLoading={false}>
+							{afterQuestionSets.map((questionSet) => (
+								<ManagementLiveTimeCard
+									key={questionSet.id}
+									questionSet={questionSet}
+									onReviewStatusModalOpen={handleReviewStatusModalOpen}
+									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+								/>
+							))}
+						</QuestionSetsCardsLayout>
 					</div>
-					<QuestionSetsCardsLayout>
-						{afterQuestionSets.map((questionSet) => (
-							<ManagementLiveTimeCard
-								key={questionSet.id}
-								questionSet={questionSet}
-							/>
-						))}
-					</QuestionSetsCardsLayout>
-				</div>
-			)}
-		</div>
+				)}
+			</div>
+			<ManagementReviewStatusModal
+				open={reviewStatusModalOpen}
+				questionSetId={selectedQuestionSetId}
+				onClose={handleReviewStatusModalClose}
+				invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+			/>
+		</>
 	);
 };
 

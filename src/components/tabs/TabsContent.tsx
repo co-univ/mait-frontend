@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { ReactNode } from "react";
 import { useTabsContext } from "@/components/tabs/TabsContext";
 
@@ -32,7 +33,7 @@ const TabsContent = ({ value, children, className }: TabsContentProps) => {
 		return null;
 	}
 
-	return <div className={className}>{children}</div>;
+	return <div className={clsx("h-full w-full", className)}>{children}</div>;
 };
 
 export default TabsContent;

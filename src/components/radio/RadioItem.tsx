@@ -3,10 +3,10 @@ import type { KeyboardEvent, ReactNode } from "react";
 import { createContext, useContext } from "react";
 import { useRadioItem } from "./useRadio";
 
-export interface RadioItemProps {
+export interface RadioItemProps<T = string> {
 	disabled?: boolean;
 	/** The value of this radio item */
-	value: string;
+	value: T;
 	/** Additional CSS class names */
 	className?: string;
 	/** The radio input and label components */
@@ -50,7 +50,11 @@ export const useRadioItemContext = () => {
  * </Radio.Item>
  * ```
  */
-export const RadioItem = ({ value, className, children }: RadioItemProps) => {
+export const RadioItem = <T = string>({
+	value,
+	className,
+	children,
+}: RadioItemProps<T>) => {
 	const { isChecked, handleChange, disabled } = useRadioItem(value);
 
 	/**

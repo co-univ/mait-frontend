@@ -3,12 +3,12 @@ import { useEffect, useReducer } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
 import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
-import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
 import {
 	CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	creationPublishQuestionSetReducer,
@@ -125,8 +125,9 @@ const CreationPublish = () => {
 	//
 	useEffect(() => {
 		if (data?.data) {
-			const { subject, difficulty } = data.data;
+			const { title, subject, difficulty } = data.data;
 
+			dispatch({ type: "SET_TITLE", payload: title ?? "" });
 			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
 			dispatch({
 				type: "SET_DIFFICULTY",

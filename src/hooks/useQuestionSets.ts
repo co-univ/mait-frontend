@@ -18,7 +18,10 @@ interface UseQuestionSetsProps {
 interface UseQuestionSetsReturn {
 	questionSetList?: QuestionSetList["questionSets"];
 	questionSetGroup?: QuestionSetGroup["questionSets"];
-	invalidateQuestionSetsQuery: () => void;
+	invalidateQuestionSetsQuery: (params?: {
+		teamId?: number;
+		mode?: DeliveryMode;
+	}) => void;
 	isLoading: boolean;
 	error: Error | null;
 }
@@ -58,13 +61,17 @@ const useQuestionSets = ({
 	/**
 	 *
 	 */
-	const invalidateQuestionSetsQuery = () => {
+	const invalidateQuestionSetsQuery = (
+		params: { teamId?: number; mode?: DeliveryMode } = {},
+	) => {
+		const { teamId: _teamId = teamId, mode: _mode = mode } = params;
+
 		queryClient.invalidateQueries({
 			queryKey: apiHooks.queryOptions("get", "/api/v1/question-sets", {
 				params: {
 					query: {
-						teamId,
-						mode,
+						teamId: _teamId,
+						mode: _mode,
 					},
 				},
 			}).queryKey,

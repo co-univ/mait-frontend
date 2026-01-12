@@ -22,7 +22,7 @@ const LabeledPageLayout = ({
 	children,
 }: LabeledPageLayoutProps) => {
 	return (
-		<div className="flex flex-col gap-gap-11 py-padding-12">
+		<div className="h-full w-full flex flex-col gap-gap-11 py-padding-12">
 			<div className="flex gap-gap-5 items-center">
 				<span className="[&>svg]:w-5 [&>svg]:h-5">{icon}</span>
 				<h1 className="typo-heading-medium">{label}</h1>
@@ -32,7 +32,7 @@ const LabeledPageLayout = ({
 				{rightContent}
 			</div>
 
-			<div>{children}</div>
+			<div className="h-full w-full">{children}</div>
 		</div>
 	);
 };

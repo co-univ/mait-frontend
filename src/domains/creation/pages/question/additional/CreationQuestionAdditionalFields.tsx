@@ -2,7 +2,7 @@ import { ListChecks, SquareCheckBig } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { Field } from "@/components/field";
 import { useCreationQuestion } from "@/domains/creation/hooks/question";
-import CreationQuestionAnswerString from "@/domains/creation/utils/question/creation-question-answer-string";
+import QuestionAnswerString from "@/utils/question-answer-string";
 
 //
 //
@@ -28,7 +28,7 @@ const CreationQuestionAdditionalFields = () => {
 				<div className="bg-color-success-5 h-[196px] py-padding-10 px-padding-11 border border-color-success-50 rounded-medium1">
 					<textarea
 						disabled
-						value={question && CreationQuestionAnswerString(question)}
+						value={question && QuestionAnswerString(question)}
 						className="bg-inherit w-full h-full resize-none focus-visible:outline-none typo-body-large"
 					/>
 				</div>

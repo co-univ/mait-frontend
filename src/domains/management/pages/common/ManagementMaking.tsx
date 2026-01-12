@@ -1,7 +1,6 @@
 import QuestionSetsLable from "@/components/question-sets/QuestionSetsLable";
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
-import type { QuestionSetDto } from "@/libs/types";
-import ManagementCreateQuestionButton from "../../components/common/ManagementCreateQuestionButton";
+import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import ManagementMakingCard from "../../components/common/ManagementMakingCard";
 
 //
@@ -10,25 +9,32 @@ import ManagementMakingCard from "../../components/common/ManagementMakingCard";
 
 interface ManagementMakingProps {
 	questionSets: QuestionSetDto[];
+	invalidateQuestionSetsQuery: (params?: {
+		teamId?: number;
+		mode?: DeliveryMode;
+	}) => void;
+	isLoading: boolean;
 }
 
 //
 //
 //
 
-const ManagementMaking = ({ questionSets }: ManagementMakingProps) => {
+const ManagementMaking = ({
+	questionSets,
+	invalidateQuestionSetsQuery,
+	isLoading,
+}: ManagementMakingProps) => {
 	return (
-		<div className="flex flex-col gap-gap-11">
-			<div className="flex justify-between items-center">
-				<QuestionSetsLable label="제작 중" />
-				<ManagementCreateQuestionButton />
-			</div>
+		<div className="h-full flex flex-col gap-gap-11">
+			<QuestionSetsLable label="제작 중" />
 
-			<QuestionSetsCardsLayout minGridWidth={280}>
+			<QuestionSetsCardsLayout isLoading={isLoading} minGridWidth={280}>
 				{questionSets.map((questionSet) => (
 					<ManagementMakingCard
 						key={questionSet.id}
 						questionSet={questionSet}
+						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 					/>
 				))}
 			</QuestionSetsCardsLayout>

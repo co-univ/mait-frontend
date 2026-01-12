@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { TabsContext } from "@/components/tabs/TabsContext";
@@ -59,7 +60,7 @@ const TabsRoot = ({
 
 	return (
 		<TabsContext.Provider value={{ value, onValueChange: handleValueChange }}>
-			<div className={className}>{children}</div>
+			<div className={clsx("h-full w-full", className)}>{children}</div>
 		</TabsContext.Provider>
 	);
 };
