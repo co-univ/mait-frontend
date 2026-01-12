@@ -55,6 +55,10 @@ const useSolvingReviewShortQuestion = ({
 	 *
 	 */
 	const handleAnswerChange = (index: number, answer: string) => {
+		if (getIsSubmitted(questionId)) {
+			return;
+		}
+
 		const updatedAnswers = userAnswers.map((ans, idx) =>
 			idx === index ? answer : ans,
 		);

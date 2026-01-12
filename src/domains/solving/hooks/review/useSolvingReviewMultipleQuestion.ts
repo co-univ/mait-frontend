@@ -58,6 +58,10 @@ const useSolvingReviewMultipleQuestion = ({
 	 *
 	 */
 	const handleChoiceChange = (choiceNumber: number) => {
+		if (getIsSubmitted(questionId)) {
+			return;
+		}
+
 		let newUserAnswers = [];
 
 		if (userAnswers.includes(choiceNumber)) {

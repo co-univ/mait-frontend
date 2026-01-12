@@ -56,6 +56,10 @@ const useSolvingReviewFillBlankQuestion = ({
 	 *
 	 */
 	const handleAnswerChange = (number: number, answer: string) => {
+		if (getIsSubmitted(questionId)) {
+			return;
+		}
+
 		const updatedAnswers = userAnswers.map((ans) =>
 			ans.number === number ? { number, answer } : ans,
 		);

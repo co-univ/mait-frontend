@@ -7,11 +7,11 @@ import AdjustableTextarea from "@/components/AdjustableTextarea";
 
 const ANSWER_HEIGHT = 94;
 
-interface SolvingReviewAnswerProps {
+export interface SolvingAnswerProps {
 	readOnly?: boolean;
 	placeholder?: string;
 	variation?: "default" | "focused" | "correct" | "incorrect";
-	content: string;
+	content?: string;
 	onChange?: (value: string) => void;
 }
 
@@ -19,13 +19,13 @@ interface SolvingReviewAnswerProps {
 //
 //
 
-const SolvingReviewAnswer = ({
+const SolvingAnswer = ({
 	readOnly = false,
 	placeholder = "답안을 입력하세요.",
 	variation = "default",
 	content,
 	onChange,
-}: SolvingReviewAnswerProps) => {
+}: SolvingAnswerProps) => {
 	return (
 		<div
 			className={clsx(
@@ -57,4 +57,4 @@ const SolvingReviewAnswer = ({
 	);
 };
 
-export default SolvingReviewAnswer;
+export default SolvingAnswer;

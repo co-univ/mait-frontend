@@ -4,7 +4,7 @@ import {
 	Droppable,
 	type DropResult,
 } from "@hello-pangea/dnd";
-import SolvingReviewAnswer from "../../components/review/SolvingReviewAnswer";
+import SolvingAnswerOrdering from "../../components/common/answer/SolvingAnswerOrdering";
 import useSolvingReviewOrderingQuestion from "../../hooks/review/useSolvingReviewOrderingQuestion";
 
 //
@@ -12,7 +12,7 @@ import useSolvingReviewOrderingQuestion from "../../hooks/review/useSolvingRevie
 //
 
 interface SolvingReviewOrderingAnswersProps {
-	questoinSetId: number;
+	questionSetId: number;
 	questionId: number;
 }
 
@@ -21,12 +21,12 @@ interface SolvingReviewOrderingAnswersProps {
 //
 
 const SolvingReviewOrderingAnswers = ({
-	questoinSetId,
+	questionSetId,
 	questionId,
 }: SolvingReviewOrderingAnswersProps) => {
 	const { isSubmitted, isCorrect, options, handleAnswerChange } =
 		useSolvingReviewOrderingQuestion({
-			questionSetId: questoinSetId,
+			questionSetId: questionSetId,
 			questionId: questionId,
 		});
 
@@ -69,11 +69,11 @@ const SolvingReviewOrderingAnswers = ({
 						{...provided.droppableProps}
 						className="w-full flex flex-col gap-gap-11"
 					>
-						{options.map(({ id, content, originOrder }, index) => (
+						{options.map((option, index) => (
 							<Draggable
-								key={id}
+								key={option.id}
 								isDragDisabled={isSubmitted}
-								draggableId={`${originOrder}-${content}`}
+								draggableId={`${option.originOrder}-${option.content}`}
 								index={index}
 							>
 								{(provided, snapshot) => (
@@ -81,18 +81,12 @@ const SolvingReviewOrderingAnswers = ({
 										ref={provided.innerRef}
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
-										className="w-full flex items-center gap-gap-9"
 									>
-										<span className="typo-heading-xsmall">
-											{String.fromCharCode(65 - 1 + originOrder)}
-										</span>
-										<div className="w-full">
-											<SolvingReviewAnswer
-												readOnly
-												variation={getVariation(snapshot.isDragging)}
-												content={content ?? ""}
-											/>
-										</div>
+										<SolvingAnswerOrdering
+											readOnly
+											variation={getVariation(snapshot.isDragging)}
+											option={option}
+										/>
 									</div>
 								)}
 							</Draggable>

@@ -88,7 +88,7 @@ const SolvingReview = () => {
 			case "ORDERING":
 				return (
 					<SolvingReviewOrderingAnswers
-						questoinSetId={questionSetId}
+						questionSetId={questionSetId}
 						questionId={questionId}
 					/>
 				);
