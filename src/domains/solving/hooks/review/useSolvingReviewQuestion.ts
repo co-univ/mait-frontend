@@ -79,8 +79,9 @@ const useSolvingReviewQuestion = ({
 			{
 				onSuccess: (data) => {
 					const isCorrect = data.data?.isCorrect;
+					const gradedResults = data.data?.gradedResults;
 
-					setAnswerSubmitted(questionId, !!isCorrect);
+					setAnswerSubmitted(questionId, !!isCorrect, gradedResults ?? []);
 				},
 			},
 		);

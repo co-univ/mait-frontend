@@ -1,11 +1,21 @@
 import { create } from "zustand";
-import type { FillBlankSubmitAnswer, QuestionType } from "@/libs/types";
+import type {
+	FillBlankSubmitAnswer,
+	GradedAnswerFillBlankResult,
+	GradedAnswerMultipleResult,
+	GradedAnswerShortResult,
+	QuestionType,
+} from "@/libs/types";
 
 //
 //
 //
 
 export type AnswersType = number[] | string[] | FillBlankSubmitAnswer[];
+export type GradedResultType =
+	| GradedAnswerMultipleResult[]
+	| GradedAnswerShortResult[]
+	| GradedAnswerFillBlankResult[];
 
 interface SolvingReviewAnswerResultState {
 	result: Record<
@@ -16,6 +26,7 @@ interface SolvingReviewAnswerResultState {
 			isExplanationShown: boolean;
 			type: QuestionType;
 			userAnswers: AnswersType;
+			gradedResults: GradedResultType | null;
 		}
 	>;
 }
@@ -25,10 +36,15 @@ interface SolvingReviewAnswerResultActions {
 	getIsSubmitted: (questionId: number) => boolean;
 	getIsCorrect: (questionId: number) => boolean | null;
 	getIsExplanationShown: (questionId: number) => boolean;
+	getIsGradedResults: (questionId: number) => GradedResultType | null;
 
 	setAnswerInitInfo: (questionId: number, type: QuestionType) => void;
 	setUserAnswers: (questionId: number, answers: AnswersType) => void;
-	setAnswerSubmitted: (questionId: number, isCorrect: boolean) => void;
+	setAnswerSubmitted: (
+		questionId: number,
+		isCorrect: boolean,
+		gradedResults: GradedResultType,
+	) => void;
 	setIsExplanationShown: (questionId: number, isShown: boolean) => void;
 	reset: () => void;
 }
@@ -58,6 +74,10 @@ const useSolvingReviewAnswerResultStore = create<
 		return get().result[questionId]?.isExplanationShown ?? false;
 	},
 
+	getIsGradedResults: (questionId: number) => {
+		return get().result[questionId]?.gradedResults ?? null;
+	},
+
 	setAnswerInitInfo: (questionId: number, type: QuestionType) => {
 		if (get().result[questionId]?.type) {
 			return;
@@ -72,6 +92,7 @@ const useSolvingReviewAnswerResultStore = create<
 					isCorrect: null,
 					isExplanationShown: false,
 					userAnswers: state.result[questionId]?.userAnswers ?? [],
+					gradedResults: null,
 				},
 			},
 		}));
@@ -89,7 +110,11 @@ const useSolvingReviewAnswerResultStore = create<
 		}));
 	},
 
-	setAnswerSubmitted: (questionId: number, isCorrect: boolean) => {
+	setAnswerSubmitted: (
+		questionId: number,
+		isCorrect: boolean,
+		gradedResults: GradedResultType,
+	) => {
 		set((state) => ({
 			result: {
 				...state.result,
@@ -97,6 +122,7 @@ const useSolvingReviewAnswerResultStore = create<
 					...state.result[questionId],
 					isSubmitted: true,
 					isCorrect,
+					gradedResults,
 				},
 			},
 		}));
