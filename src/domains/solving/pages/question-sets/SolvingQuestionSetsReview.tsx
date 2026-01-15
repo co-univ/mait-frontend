@@ -25,13 +25,14 @@ const SolvingQuestionSetsReview = ({
 
 	return (
 		<div className="flex flex-col gap-gap-11 h-full">
-			<QuestionSetsFilter />
+			<QuestionSetsFilter visibilities={["PUBLIC", "GROUP"]} />
 
 			<QuestionSetsCardsLayout isLoading={isLoading}>
 				{questionSets
 					.filter((questionSet) =>
 						questionSet.visibility
-							? getIsVisibilityFiltered(questionSet.visibility)
+							? questionSet.visibility !== "PRIVATE" &&
+								getIsVisibilityFiltered(questionSet.visibility)
 							: false,
 					)
 					.map((questionSet) => (
