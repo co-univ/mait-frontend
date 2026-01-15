@@ -18,7 +18,7 @@ const SolvingReviewFillBlankAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewFillBlankAnswersProps) => {
-	const { isSubmitted, isCorrect, userAnswers, handleAnswerChange } =
+	const { isSubmitted, userAnswers, gradedResult, handleAnswerChange } =
 		useSolvingReviewFillBlankQuestion({
 			questionSetId,
 			questionId,
@@ -28,12 +28,10 @@ const SolvingReviewFillBlankAnswers = ({
 	 *
 	 */
 	const getVariation = (number: number) => {
-		if (isSubmitted && isCorrect) {
-			return "correct";
-		}
+		if (isSubmitted && gradedResult) {
+			const result = gradedResult.find((result) => result.number === number);
 
-		if (isSubmitted && !isCorrect) {
-			return "incorrect";
+			return result?.isCorrect ? "correct" : "incorrect";
 		}
 
 		return userAnswers.find((userAnswer) => userAnswer.number === number)
