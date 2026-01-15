@@ -542,6 +542,26 @@ export interface paths {
         patch: operations["updateToReviewMode"];
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/restart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 종료된 문제 셋을 실시간 풀이 진행중으로 변경
+         * @description 종료된 문제 셋을 다시 실시간 상태로 되돌린다.
+         */
+        patch: operations["restartQuestionSet"];
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/questions/{questionId}/status": {
         parameters: {
             query?: never;
@@ -1245,7 +1265,7 @@ export interface components {
             answers?: components["schemas"]["ShortAnswerApiResponse"][];
             /**
              * Format: int32
-             * @description 주관식 문제의 정답 개수
+             * @description 주관식 문제의 정답 그룹(number) 개수 (= main 정답 개수)
              */
             answerCount: number;
         });
@@ -1524,6 +1544,76 @@ export interface components {
             questionId: number;
             /** @description 정/오답 여부 */
             isCorrect: boolean;
+        };
+        ApiResponseQuestionAnswerReviewSubmitApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionAnswerReviewSubmitApiResponse"];
+        };
+        /** @description 빈칸 채우기 문제 채점 결과 */
+        GradedAnswerFillBlankResult: {
+            /**
+             * Format: int64
+             * @description 빈칸 번호
+             * @example 1
+             */
+            number?: number;
+            /**
+             * @description 유저가 제출한 답안
+             * @example 정답
+             */
+            answer?: string;
+            /**
+             * @description 해당 빈칸의 정답 여부
+             * @example true
+             */
+            isCorrect?: boolean;
+        };
+        /** @description 객관식 문제 채점 결과 */
+        GradedAnswerMultipleResult: {
+            /**
+             * Format: int64
+             * @description 선택지 번호
+             * @example 1
+             */
+            number?: number;
+            /**
+             * @description 해당 선택지의 정답 여부
+             * @example true
+             */
+            isCorrect?: boolean;
+        };
+        /** @description 채점된 답안 결과 */
+        GradedAnswerResult: {
+            correct?: boolean;
+        } & (components["schemas"]["GradedAnswerShortResult"] | components["schemas"]["GradedAnswerMultipleResult"] | components["schemas"]["GradedAnswerFillBlankResult"]);
+        /** @description 단답형 문제 채점 결과 */
+        GradedAnswerShortResult: {
+            /**
+             * @description 유저가 제출한 답안
+             * @example 정답
+             */
+            answer?: string;
+            /**
+             * @description 해당 답안의 정답 여부
+             * @example true
+             */
+            isCorrect?: boolean;
+        };
+        QuestionAnswerReviewSubmitApiResponse: {
+            /**
+             * Format: int64
+             * @description 유저가 제출한 문제 PK
+             */
+            questionId: number;
+            /** @description 유저가 제출한 문제 정답 여부 */
+            isCorrect: boolean;
+            /**
+             * @description 문제 유형
+             * @enum {string}
+             */
+            type?: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+            /** @description 제출한 정답에 대한 채점 결과 */
+            gradedResults?: components["schemas"]["GradedAnswerResult"][];
         };
         FillBlankUpdateAnswerPayload: Omit<components["schemas"]["UpdateAnswerPayload"], "type"> & {
             answers: components["schemas"]["FillBlankAnswerDto"][];
@@ -2702,7 +2792,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseQuestionAnswerSubmitApiResponse"];
+                    "*/*": components["schemas"]["ApiResponseQuestionAnswerReviewSubmitApiResponse"];
                 };
             };
         };
@@ -3020,6 +3110,28 @@ export interface operations {
                 "application/json": components["schemas"]["UpdateQuestionSetReviewApiRequest"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    restartQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
