@@ -287,6 +287,13 @@ const ControlSolvingQuestion = ({
 
 	//
 	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Reset edit mode on questionId change
+	useEffect(() => {
+		setIsEditing(false);
+	}, [questionId]);
+
+	//
+	//
 	//
 	useEffect(() => {
 		if (!isStatusUpdating) {
