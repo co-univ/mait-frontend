@@ -1,9 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Pencil, X } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Switch } from "@/components/switch/Switch";
+import Tooltip from "@/components/Tooltip";
 import ControlSolvingQuestionContent from "@/domains/control/components/solving/question/ControlSolvingQuestionContent";
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
 import { apiHooks } from "@/libs/api";
@@ -35,6 +36,9 @@ const ControlSolvingQuestion = ({
 	questionSetOngoingStatus,
 }: ControlSolvingQuestionProps) => {
 	const [isEditing, setIsEditing] = useState(false);
+	const [updateStatusType, setUpdateStatusType] = useState<
+		"ACCESS" | "SOLVE" | null
+	>(null);
 	const [submitHandler, setSubmitHandler] = useState<
 		(() => Promise<boolean>) | null
 	>(null);
@@ -43,6 +47,7 @@ const ControlSolvingQuestion = ({
 	const questionId = Number(useParams().questionId);
 
 	const {
+		isStatusUpdating,
 		question,
 		refetchQuestion,
 		handleAccessOpen,
@@ -129,6 +134,32 @@ const ControlSolvingQuestion = ({
 	/**
 	 *
 	 */
+	const handleAccessSwitchChange = (checked: boolean) => {
+		setUpdateStatusType("ACCESS");
+
+		if (checked) {
+			handleAccessOpen();
+		} else {
+			handleAccessClose();
+		}
+	};
+
+	/**
+	 *
+	 */
+	const handleSolveSwitchChange = (checked: boolean) => {
+		setUpdateStatusType("SOLVE");
+
+		if (checked) {
+			handleSolveOpen();
+		} else {
+			handleSolveClose();
+		}
+	};
+
+	/**
+	 *
+	 */
 	const renderQuestionControlButtons = () => {
 		const allowedAccessTypes: QuestionApiResponse["questionStatusType"][] = [
 			"ACCESS_PERMISSION",
@@ -138,33 +169,33 @@ const ControlSolvingQuestion = ({
 			"SOLVE_PERMISSION",
 		];
 
+		const isSolveSwitchLoading =
+			updateStatusType === "SOLVE" &&
+			!allowedSolveType.includes(question?.questionStatusType) &&
+			isStatusUpdating;
+
 		return (
 			<div className="flex gap-gap-9">
 				<Switch.Root
 					checked={allowedAccessTypes.includes(question?.questionStatusType)}
-					onChange={(checked) => {
-						if (checked) {
-							handleAccessOpen();
-						} else {
-							handleAccessClose();
-						}
-					}}
+					onChange={handleAccessSwitchChange}
 				>
 					<Switch.Label>문제 공개</Switch.Label>
 					<Switch.Toggle />
 				</Switch.Root>
 				<Switch.Root
 					checked={allowedSolveType.includes(question?.questionStatusType)}
-					onChange={(checked) => {
-						if (checked) {
-							handleSolveOpen();
-						} else {
-							handleSolveClose();
-						}
-					}}
+					loading={isSolveSwitchLoading}
+					onChange={handleSolveSwitchChange}
 				>
 					<Switch.Label>제출 허용</Switch.Label>
-					<Switch.Toggle />
+					<Tooltip
+						open={isSolveSwitchLoading}
+						message="제출 허용은 5초 이내에 활성화됩니다."
+						variant="primary"
+					>
+						<Switch.Toggle />
+					</Tooltip>
 				</Switch.Root>
 			</div>
 		);
@@ -253,6 +284,15 @@ const ControlSolvingQuestion = ({
 				return null;
 		}
 	};
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (!isStatusUpdating) {
+			setUpdateStatusType(null);
+		}
+	}, [isStatusUpdating]);
 
 	return (
 		<div className="flex flex-col gap-gap-11 min-w-0">

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import type { QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
 import type { QuestionUpdatePayload } from "@/domains/control/control.constant";
@@ -25,6 +25,7 @@ type UseControlSolvingQuestionReturn = {
 	handleSolveOpen: () => void;
 	handleSolveClose: () => void;
 	isLoading: boolean;
+	isStatusUpdating: boolean;
 };
 
 //
@@ -36,8 +37,6 @@ const useControlSolvingQuestion = ({
 	questionId,
 	refetchInterval,
 }: UseControlSolvingQuestionProps): UseControlSolvingQuestionReturn => {
-	const [isStatusUpdating, setIsStatusUpdating] = useState(false);
-
 	const { data: questionSetData } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}",
@@ -65,6 +64,17 @@ const useControlSolvingQuestion = ({
 			refetchInterval,
 		},
 	);
+
+	const { mutate: updateStatus, isPending: isStatusUpdating } =
+		apiHooks.useMutation(
+			"patch",
+			"/api/v1/question-sets/{questionSetId}/questions/{questionId}/status",
+			{
+				onSuccess: () => {
+					refetch();
+				},
+			},
+		);
 
 	const question = data?.data;
 
@@ -105,7 +115,7 @@ const useControlSolvingQuestion = ({
 	/**
 	 *
 	 */
-	const handleStatusUpdate = async (
+	const handleStatusUpdate = (
 		status: UpdateQuestionStatusApiRequest["statusType"],
 	) => {
 		if (isStatusUpdating) {
@@ -118,34 +128,17 @@ const useControlSolvingQuestion = ({
 			return;
 		}
 
-		try {
-			setIsStatusUpdating(true);
-
-			const res = await apiClient.PATCH(
-				"/api/v1/question-sets/{questionSetId}/questions/{questionId}/status",
-				{
-					params: {
-						path: {
-							questionSetId,
-							questionId,
-						},
-					},
-					body: {
-						statusType: status,
-					},
+		updateStatus({
+			params: {
+				path: {
+					questionSetId,
+					questionId,
 				},
-			);
-
-			if (!res.data?.isSuccess) {
-				throw new Error("Failed to update question status");
-			}
-
-			refetch();
-		} catch {
-			notify.error("문제 상태 변경에 실패했습니다.");
-		} finally {
-			setIsStatusUpdating(false);
-		}
+			},
+			body: {
+				statusType: status,
+			},
+		});
 	};
 
 	/**
@@ -199,6 +192,7 @@ const useControlSolvingQuestion = ({
 		handleSolveOpen,
 		handleSolveClose,
 		isLoading: isPending,
+		isStatusUpdating,
 	};
 };
 
