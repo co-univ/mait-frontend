@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import { Check, Pencil, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -36,6 +37,7 @@ const ControlSolvingQuestion = ({
 	questionSetOngoingStatus,
 }: ControlSolvingQuestionProps) => {
 	const [isEditing, setIsEditing] = useState(false);
+	const [isMouseOverOnEditButton, setIsMouseOverOnEditButton] = useState(false);
 	const [updateStatusType, setUpdateStatusType] = useState<
 		"ACCESS" | "SOLVE" | null
 	>(null);
@@ -232,7 +234,28 @@ const ControlSolvingQuestion = ({
 			);
 		}
 
-		return <Button icon={<Pencil />} onClick={handleEditButtonClick} />;
+		const isQuestionEditable = ["SHORT", "FILL_BLANK"].includes(
+			question?.type as QuestionType,
+		);
+
+		return (
+			<Tooltip
+				open={!isQuestionEditable && isMouseOverOnEditButton}
+				message="객관식과 순서 유형은 답안 수정이 불가합니다."
+			>
+				<Button
+					disabled={!isQuestionEditable}
+					icon={<Pencil />}
+					onClick={handleEditButtonClick}
+					onMouseOver={() => setIsMouseOverOnEditButton(true)}
+					onMouseOut={() => setIsMouseOverOnEditButton(false)}
+					className={clsx({
+						"bg-color-gray-5 border-none text-color-gray-20":
+							!isQuestionEditable,
+					})}
+				/>
+			</Tooltip>
+		);
 	};
 
 	/**

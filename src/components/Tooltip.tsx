@@ -67,7 +67,7 @@ const Tooltip = ({
 							},
 						)}
 					>
-						<p>{message}</p>
+						<p className="relative z-10">{message}</p>
 						<div
 							ref={arrowRef}
 							className="absolute size-2 bg-inherit rotate-45"
