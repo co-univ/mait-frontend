@@ -8,6 +8,7 @@ import SolvingLiveNextStage from "src/domains/solving/pages/live/SolvingLiveNext
 import SolvingLiveWinner from "src/domains/solving/pages/live/SolvingLiveWinner";
 import type { QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
+import { TOKEN } from "@/app.constants";
 import { apiClient } from "@/libs/api";
 import type { QuestionSetApiResponse } from "@/libs/types";
 import SolvingQuiz from "../../components/common/SolvingQuiz";
@@ -183,16 +184,22 @@ const SolvingLiveSolving = () => {
 			reconnectDelay: 5000,
 			heartbeatIncoming: 4000,
 			heartbeatOutgoing: 4000,
+			connectHeaders: {
+				Authorization: `Bearer ${TOKEN}}`,
+			},
 			onConnect: (frame) => {
 				// 구독 설정
-				client.subscribe(`/topic/question-sets/${questionSetId}`, (message) => {
-					if (message.body) {
-						console.log("Received message:", message.body);
+				client.subscribe(
+					`/topic/question-sets/${questionSetId}/participate`,
+					(message) => {
+						if (message.body) {
+							console.log("Received message:", message.body);
 
-						const msg = JSON.parse(message.body);
-						handleWebSocketMessage(msg);
-					}
-				});
+							const msg = JSON.parse(message.body);
+							handleWebSocketMessage(msg);
+						}
+					},
+				);
 				console.log("Connected: " + frame);
 			},
 			onStompError: (error) => {
