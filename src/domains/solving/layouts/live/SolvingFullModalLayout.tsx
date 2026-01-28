@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -68,10 +69,19 @@ const SolvingFullModalLayout = ({
 			}`}
 		>
 			<div
-				className={`w-screen h-screen bg-gradient-to-b from-color-alpha-white25 to-color-warning-5 transition-transform duration-300 ease-in-out ${
+				className={`relative w-screen h-screen bg-gradient-to-b from-color-alpha-white25 to-color-warning-5 transition-transform duration-300 ease-in-out ${
 					isVisible ? "scale-100" : "scale-95"
 				}`}
 			>
+				{onClose && (
+					<button
+						type="button"
+						onClick={onClose}
+						className="absolute top-6 right-6 z-50 p-2 rounded-full hover:bg-color-alpha-black5 transition-colors"
+					>
+						<X size={24} className="text-color-gray-60" />
+					</button>
+				)}
 				{children}
 			</div>
 		</div>,
