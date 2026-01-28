@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
+import { notify } from "@/components/Toast";
 import { useControlQuestionSubmitFillBlankAnswerStore } from "@/domains/control/stores/question/useControlQuestionSubmitAnswerStore";
 import type {
 	FillBlankAnswerApiResponse,
@@ -93,6 +94,16 @@ const useControlSolvingQuestionFillBlank = ({
 	 *
 	 */
 	const handleSubAnswerAdd = (number: number) => {
+		const questionAnswersCount = grouppedQuestionAnswers[number - 1]?.length;
+		const addedAnswersCount = grouppedAddedAnswers[number - 1]?.length;
+
+		// Answer count limit is 5 + 1 (main answer is included in questionAnswersCount)
+		if (questionAnswersCount + addedAnswersCount >= 5 + 1) {
+			notify.warn("인정 답안은 최대 5개까지 등록할 수 있습니다.");
+
+			return;
+		}
+
 		const newAddedAnswers = [
 			...addedAnswers,
 			{
