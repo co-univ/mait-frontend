@@ -18,7 +18,7 @@ const SolvingReviewShortAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewShortAnswersProps) => {
-	const { isSubmitted, isCorrect, userAnswers, handleAnswerChange } =
+	const { isSubmitted, userAnswers, gradedResult, handleAnswerChange } =
 		useSolvingReviewShortQuestion({
 			questionSetId,
 			questionId,
@@ -28,12 +28,10 @@ const SolvingReviewShortAnswers = ({
 	 *
 	 */
 	const getVariation = (index: number) => {
-		if (isSubmitted && isCorrect) {
-			return "correct";
-		}
+		if (isSubmitted && gradedResult) {
+			const result = gradedResult[index];
 
-		if (isSubmitted && !isCorrect) {
-			return "incorrect";
+			return result?.isCorrect ? "correct" : "incorrect";
 		}
 
 		return userAnswers[index] === "" ? "default" : "focused";

@@ -20,7 +20,7 @@ const ControlParticipantMemberBox = ({
 }: ControlParticipantMemberBoxProps) => {
 	return (
 		<div className="flex justify-between p-padding-8 rounded-radius-medium1 border border-color-gray-10">
-			<span className="typo-heading-small">
+			<span className="truncate typo-heading-small">
 				{member.participantName}({member.userNickname})
 			</span>
 			<DeleteCheckBox onClick={() => onMemeberDelete(member.participantId)} />

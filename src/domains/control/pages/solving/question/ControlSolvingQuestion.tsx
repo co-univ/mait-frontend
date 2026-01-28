@@ -1,17 +1,13 @@
-import { useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import { Check, Pencil, X } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Switch } from "@/components/switch/Switch";
+import Tooltip from "@/components/Tooltip";
 import ControlSolvingQuestionContent from "@/domains/control/components/solving/question/ControlSolvingQuestionContent";
 import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
-import { apiHooks } from "@/libs/api";
-import type {
-	QuestionApiResponse,
-	QuestionSetApiResponse,
-	QuestionType,
-} from "@/libs/types";
+import type { QuestionApiResponse, QuestionType } from "@/libs/types";
 import ControlSolvingQuestionFillBlank from "./ControlSolvingQuestionFillBlank";
 import ControlSolvingQuestionMultiple from "./ControlSolvingQuestionMultiple";
 import ControlSolvingQuestionOrdering from "./ControlSolvingQuestionOrdering";
@@ -21,54 +17,30 @@ import ControlSolvingQuestionShort from "./ControlSolvingQuestionShort";
 //
 //
 
-interface ControlSolvingQuestionProps {
-	questionSetOngoingStatus?: QuestionSetApiResponse["ongoingStatus"];
-}
-
-const QUESTION_POLLING_INTERVAL = 10000;
-
-//
-//
-//
-
-const ControlSolvingQuestion = ({
-	questionSetOngoingStatus,
-}: ControlSolvingQuestionProps) => {
+const ControlSolvingQuestion = () => {
 	const [isEditing, setIsEditing] = useState(false);
-	const [submitHandler, setSubmitHandler] = useState<
-		(() => Promise<boolean>) | null
+	const [isMouseOverOnEditButton, setIsMouseOverOnEditButton] = useState(false);
+	const [updateStatusType, setUpdateStatusType] = useState<
+		"ACCESS" | "SOLVE" | null
 	>(null);
 
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
 	const {
+		hasSubmitAnswerPayload,
+		isStatusUpdating,
 		question,
 		refetchQuestion,
 		handleAccessOpen,
 		handleAccessClose,
 		handleSolveOpen,
 		handleSolveClose,
+		submitAnswer,
 	} = useControlSolvingQuestion({
 		questionSetId,
 		questionId,
-		refetchInterval:
-			questionSetOngoingStatus === "ONGOING"
-				? QUESTION_POLLING_INTERVAL
-				: undefined,
 	});
-
-	const queryClient = useQueryClient();
-
-	/**
-	 *
-	 */
-	const handleRegisterSubmit = useCallback(
-		(handler: () => Promise<boolean>) => {
-			setSubmitHandler(() => handler);
-		},
-		[],
-	);
 
 	/**
 	 *
@@ -89,40 +61,36 @@ const ControlSolvingQuestion = ({
 	 *
 	 */
 	const handleCompleteButtonClick = async () => {
-		const res = await submitHandler?.();
+		const res = await submitAnswer();
 
 		if (res) {
 			setIsEditing(false);
+		}
+	};
 
-			queryClient.invalidateQueries({
-				queryKey: apiHooks.queryOptions(
-					"get",
-					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorers",
-					{
-						params: {
-							path: {
-								questionSetId,
-								questionId,
-							},
-						},
-					},
-				).queryKey,
-			});
+	/**
+	 *
+	 */
+	const handleAccessSwitchChange = (checked: boolean) => {
+		setUpdateStatusType("ACCESS");
 
-			queryClient.invalidateQueries({
-				queryKey: apiHooks.queryOptions(
-					"get",
-					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit-records",
-					{
-						params: {
-							path: {
-								questionSetId,
-								questionId,
-							},
-						},
-					},
-				).queryKey,
-			});
+		if (checked) {
+			handleAccessOpen();
+		} else {
+			handleAccessClose();
+		}
+	};
+
+	/**
+	 *
+	 */
+	const handleSolveSwitchChange = (checked: boolean) => {
+		setUpdateStatusType("SOLVE");
+
+		if (checked) {
+			handleSolveOpen();
+		} else {
+			handleSolveClose();
 		}
 	};
 
@@ -138,33 +106,33 @@ const ControlSolvingQuestion = ({
 			"SOLVE_PERMISSION",
 		];
 
+		const isSolveSwitchLoading =
+			updateStatusType === "SOLVE" &&
+			!allowedSolveType.includes(question?.questionStatusType) &&
+			isStatusUpdating;
+
 		return (
 			<div className="flex gap-gap-9">
 				<Switch.Root
 					checked={allowedAccessTypes.includes(question?.questionStatusType)}
-					onChange={(checked) => {
-						if (checked) {
-							handleAccessOpen();
-						} else {
-							handleAccessClose();
-						}
-					}}
+					onChange={handleAccessSwitchChange}
 				>
 					<Switch.Label>문제 공개</Switch.Label>
 					<Switch.Toggle />
 				</Switch.Root>
 				<Switch.Root
 					checked={allowedSolveType.includes(question?.questionStatusType)}
-					onChange={(checked) => {
-						if (checked) {
-							handleSolveOpen();
-						} else {
-							handleSolveClose();
-						}
-					}}
+					loading={isSolveSwitchLoading}
+					onChange={handleSolveSwitchChange}
 				>
 					<Switch.Label>제출 허용</Switch.Label>
-					<Switch.Toggle />
+					<Tooltip
+						open={isSolveSwitchLoading}
+						message="제출 허용은 5초 이내에 활성화됩니다."
+						variant="primary"
+					>
+						<Switch.Toggle />
+					</Tooltip>
 				</Switch.Root>
 			</div>
 		);
@@ -194,14 +162,40 @@ const ControlSolvingQuestion = ({
 		if (isEditing) {
 			return (
 				<Button
+					disabled={!hasSubmitAnswerPayload}
 					icon={<Check />}
 					item="수정 완료"
 					onClick={handleCompleteButtonClick}
+					className={clsx({
+						"border-transparent bg-color-gray-5 text-color-gray-30":
+							!hasSubmitAnswerPayload,
+					})}
 				/>
 			);
 		}
 
-		return <Button icon={<Pencil />} onClick={handleEditButtonClick} />;
+		const isQuestionEditable = ["SHORT", "FILL_BLANK"].includes(
+			question?.type as QuestionType,
+		);
+
+		return (
+			<Tooltip
+				open={!isQuestionEditable && isMouseOverOnEditButton}
+				message="객관식과 순서 유형은 답안 수정이 불가합니다."
+			>
+				<Button
+					disabled={!isQuestionEditable}
+					icon={<Pencil />}
+					onClick={handleEditButtonClick}
+					onMouseOver={() => setIsMouseOverOnEditButton(true)}
+					onMouseOut={() => setIsMouseOverOnEditButton(false)}
+					className={clsx({
+						"bg-color-gray-5 border-none text-color-gray-20":
+							!isQuestionEditable,
+					})}
+				/>
+			</Tooltip>
+		);
 	};
 
 	/**
@@ -222,37 +216,33 @@ const ControlSolvingQuestion = ({
 	const renderQuestionAnswer = () => {
 		switch (question?.type as QuestionType) {
 			case "MULTIPLE":
-				return (
-					<ControlSolvingQuestionMultiple
-						readOnly={!isEditing}
-						onRegisterSubmit={handleRegisterSubmit}
-					/>
-				);
+				return <ControlSolvingQuestionMultiple />;
 			case "SHORT":
-				return (
-					<ControlSolvingQuestionShort
-						readOnly={!isEditing}
-						onRegisterSubmit={handleRegisterSubmit}
-					/>
-				);
+				return <ControlSolvingQuestionShort isEditing={isEditing} />;
 			case "ORDERING":
-				return (
-					<ControlSolvingQuestionOrdering
-						readOnly={!isEditing}
-						onRegisterSubmit={handleRegisterSubmit}
-					/>
-				);
+				return <ControlSolvingQuestionOrdering />;
 			case "FILL_BLANK":
-				return (
-					<ControlSolvingQuestionFillBlank
-						readOnly={!isEditing}
-						onRegisterSubmit={handleRegisterSubmit}
-					/>
-				);
+				return <ControlSolvingQuestionFillBlank isEditing={isEditing} />;
 			default:
 				return null;
 		}
 	};
+
+	//
+	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Reset edit mode on questionId change
+	useEffect(() => {
+		setIsEditing(false);
+	}, [questionId]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (!isStatusUpdating) {
+			setUpdateStatusType(null);
+		}
+	}, [isStatusUpdating]);
 
 	return (
 		<div className="flex flex-col gap-gap-11 min-w-0">
@@ -260,6 +250,7 @@ const ControlSolvingQuestion = ({
 				{isEditing ? renderCancelButton() : renderQuestionControlButtons()}
 				{renderEditButton()}
 			</div>
+
 			{renderQuestionContent()}
 			{renderQuestionAnswer()}
 		</div>

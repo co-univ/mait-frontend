@@ -16,14 +16,28 @@ const ControlParticipantCorrectRanking = () => {
 	const {
 		ranking,
 		handleRankingRowParticipantsChange,
+		eliminatedParticipants,
 		checkIsAllUsersActive,
 		selectedRank,
 		handleSelectRank,
 		handleApplyRankSelection,
+		handleActivateAllParticipants,
+		handleEliminateAllParticipants,
 	} = useControlParticipantRanking({
 		questionSetId,
 		type: "CORRECT" as const,
 	});
+
+	/**
+	 *
+	 */
+	const handleHeaderCheckboxChange = (checked: boolean) => {
+		if (checked) {
+			handleActivateAllParticipants();
+		} else {
+			handleEliminateAllParticipants();
+		}
+	};
 
 	/**
 	 *
@@ -63,7 +77,7 @@ const ControlParticipantCorrectRanking = () => {
 		<ControlParticipantRankingPanel.Root>
 			<ControlParticipantRankingPanel.Header
 				icon={<Award />}
-				title="정답자 기준 등수"
+				title="정답수 기준 등수"
 			/>
 			<ControlParticipantRankingPanel.Selector
 				ranking="정답자"
@@ -72,7 +86,10 @@ const ControlParticipantCorrectRanking = () => {
 				onApplySelection={handleApplyRankSelection}
 			/>
 			<Table.Root>
-				<ControlParticipantRankingPanel.TableHeader />
+				<ControlParticipantRankingPanel.TableHeader
+					checked={eliminatedParticipants?.length === 0}
+					onChange={handleHeaderCheckboxChange}
+				/>
 				<Table.Divider />
 				<Table.Body>
 					{ranking?.map(({ users }, index) => (

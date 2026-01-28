@@ -18,11 +18,16 @@ const SolvingReviewMultipleAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewMultipleAnswersProps) => {
-	const { isSubmitted, isCorrect, choices, userAnswers, handleChoiceChange } =
-		useSolvingReviewMultipleQuestion({
-			questionSetId,
-			questionId,
-		});
+	const {
+		isSubmitted,
+		choices,
+		userAnswers,
+		gradedResults,
+		handleChoiceChange,
+	} = useSolvingReviewMultipleQuestion({
+		questionSetId,
+		questionId,
+	});
 
 	/**
 	 *
@@ -41,15 +46,19 @@ const SolvingReviewMultipleAnswers = ({
 	const getAnswerVariation = (
 		choiceNumber: number,
 	): "default" | "focused" | "correct" | "incorrect" => {
-		if (!isSubmitted) {
-			return userAnswers.includes(choiceNumber) ? "focused" : "default";
+		if (isSubmitted && gradedResults) {
+			if (!userAnswers.includes(choiceNumber)) {
+				return "default";
+			}
+
+			const result = gradedResults.find(
+				(result) => result.number === choiceNumber,
+			);
+
+			return result?.isCorrect ? "correct" : "incorrect";
 		}
 
-		if (isCorrect) {
-			return userAnswers.includes(choiceNumber) ? "correct" : "default";
-		}
-
-		return userAnswers.includes(choiceNumber) ? "incorrect" : "default";
+		return userAnswers.includes(choiceNumber) ? "focused" : "default";
 	};
 
 	return (

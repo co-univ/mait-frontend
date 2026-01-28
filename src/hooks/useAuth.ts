@@ -1,7 +1,15 @@
+import type { LoginApiRequest } from "@/libs/types";
 import { useMutation } from "@tanstack/react-query";
-import type { LoginApiRequest } from "@/types";
+
+//
+//
+//
 
 const API_BASE_URL = process.env.PUBLIC_BASE_URL || "";
+
+//
+//
+//
 
 // 로그인 API 함수
 const loginApi = async (credentials: LoginApiRequest): Promise<void> => {

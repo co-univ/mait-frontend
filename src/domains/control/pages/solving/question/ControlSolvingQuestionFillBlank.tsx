@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ControlSolvingQuestionFillBlankAnswer from "@/domains/control/components/solving/question/ControlSolvingQuestionFillBlankAnswer";
 import useControlSolvingQuestionFillBlank from "@/domains/control/hooks/solving/question/useControlSolvingQuestionFillBlank";
@@ -8,8 +7,7 @@ import useControlSolvingQuestionFillBlank from "@/domains/control/hooks/solving/
 //
 
 interface ControlSolvingQuestionFillBlankProps {
-	readOnly: boolean;
-	onRegisterSubmit: (handler: () => Promise<boolean>) => void;
+	isEditing: boolean;
 }
 
 //
@@ -17,38 +15,32 @@ interface ControlSolvingQuestionFillBlankProps {
 //
 
 const ControlSolvingQuestionFillBlank = ({
-	readOnly,
-	onRegisterSubmit,
+	isEditing,
 }: ControlSolvingQuestionFillBlankProps) => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
 	const {
-		groupedAnswers,
-		handleAnswerChange,
+		grouppedQuestionAnswers,
+		grouppedAddedAnswers,
 		handleSubAnswerAdd,
+		handleSubAnswerChange,
 		handleSubAnswerDelete,
-		handleAnswerAdd,
 	} = useControlSolvingQuestionFillBlank({
 		questionSetId,
 		questionId,
+		isEditing,
 	});
-
-	//
-	//
-	//
-	useEffect(() => {
-		onRegisterSubmit(handleAnswerAdd);
-	}, [onRegisterSubmit, handleAnswerAdd]);
 
 	return (
 		<div className="flex flex-col gap-gap-11">
-			{groupedAnswers?.map((answers) => (
+			{grouppedQuestionAnswers.map((questionAnswers, index) => (
 				<ControlSolvingQuestionFillBlankAnswer
-					key={answers[0].id}
-					readOnly={readOnly}
-					answers={answers}
-					onAnswerChange={handleAnswerChange}
+					key={questionAnswers[0]?.id}
+					questionAnswers={questionAnswers}
+					addedAnswers={grouppedAddedAnswers[index] || []}
+					isEditing={isEditing}
+					onSubAnswerChange={handleSubAnswerChange}
 					onSubAnswerAdd={handleSubAnswerAdd}
 					onSubAnswerDelete={handleSubAnswerDelete}
 				/>

@@ -3,6 +3,7 @@ import { createContext } from "react";
 export interface SwitchContextValue {
 	checked: boolean;
 	disabled?: boolean;
+	loading?: boolean;
 	onChange?: (checked: boolean) => void;
 }
 

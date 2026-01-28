@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { apiHooks } from "@/libs/api";
 import type {
 	AnswerRankApiResponse,
+	ParticipantInfoApiResponse,
 	ScorerRankApiResponse,
 	UserApiResponse,
 } from "@/libs/types";
@@ -23,8 +24,12 @@ interface UseControlParticipantRankingProps<T extends "SCORER" | "CORRECT"> {
 interface UseControlParticipantRankingReture<T extends "SCORER" | "CORRECT"> {
 	ranking?: RankingType<T>;
 	selectedRank: number;
+	activeParticipants?: ParticipantInfoApiResponse[];
+	eliminatedParticipants?: ParticipantInfoApiResponse[];
 	handleSelectRank: (rank: number) => void;
 	handleApplyRankSelection: () => void;
+	handleActivateAllParticipants: () => void;
+	handleEliminateAllParticipants: () => void;
 	checkIsAllUsersActive: (users?: UserApiResponse[]) => boolean;
 	handleRankingRowParticipantsChange: (
 		checked: boolean,
@@ -107,6 +112,28 @@ const useControlParticipantRanking = <T extends "SCORER" | "CORRECT">({
 	/**
 	 *
 	 */
+	const handleActivateAllParticipants = () => {
+		if (!eliminatedParticipants || eliminatedParticipants.length === 0) {
+			return;
+		}
+
+		handleAddActiveParticipant(eliminatedParticipants);
+	};
+
+	/**
+	 *
+	 */
+	const handleEliminateAllParticipants = () => {
+		if (!activeParticipants || activeParticipants.length === 0) {
+			return;
+		}
+
+		handleDeleteActiveParticipant(activeParticipants);
+	};
+
+	/**
+	 *
+	 */
 	const handleRankingRowParticipantsChange = (
 		checked: boolean,
 		users?: UserApiResponse[],
@@ -176,8 +203,12 @@ const useControlParticipantRanking = <T extends "SCORER" | "CORRECT">({
 	return {
 		ranking,
 		selectedRank,
+		activeParticipants,
+		eliminatedParticipants,
 		handleSelectRank,
 		handleApplyRankSelection,
+		handleActivateAllParticipants,
+		handleEliminateAllParticipants,
 		checkIsAllUsersActive,
 		handleRankingRowParticipantsChange,
 		isLoading: isPending,

@@ -72,7 +72,7 @@ const SolvingAnswerLayout = ({
 						className="typo-heading-small text-alpha-black100"
 					>
 						{prefix === "alphabet"
-							? String.fromCharCode(65 + index)
+							? String.fromCharCode(64 + answers[index].originOrder)
 							: `(${index + 1})`}
 					</span>
 				))}

@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import { useContext } from "react";
+import Lottie from "react-lottie";
+import loadingAnimation from "@/assets/lotties/loading.json";
 import { SwitchContext } from "./SwitchContext";
 
 export interface SwitchToggleProps {
@@ -34,7 +36,7 @@ export const SwitchToggle = ({ className }: SwitchToggleProps) => {
 		throw new Error("SwitchToggle must be used within Switch.Root");
 	}
 
-	const { checked, disabled } = context;
+	const { checked, disabled, loading } = context;
 
 	return (
 		<div
@@ -49,14 +51,31 @@ export const SwitchToggle = ({ className }: SwitchToggleProps) => {
 			data-switch-toggle
 		>
 			<div
+				data-switch-thumb
 				className={clsx(
 					"absolute size-2 bg-alpha-white100 rounded-full top-[2px] transition-all left-[2.5px]",
 					{
-						"translate-x-[15px]": checked,
+						"translate-x-[7.5px]": loading,
+						"translate-x-[15px]": checked && !loading,
+						"opacity-0": loading,
 					},
 				)}
-				data-switch-thumb
 			/>
+			{loading && (
+				<div
+					data-switch-spinner
+					className={clsx("w-full h-full [&_path]:stroke-[16]", {
+						"[&_path]:stroke-color-primary-50": !checked,
+						"[&_path]:stroke-color-gray-10": checked,
+					})}
+				>
+					<Lottie
+						options={{
+							animationData: loadingAnimation,
+						}}
+					/>
+				</div>
+			)}
 		</div>
 	);
 };

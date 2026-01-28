@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { apiHooks } from "@/libs/api";
-import type { ShortQuestionApiResponse } from "@/libs/types";
+import type {
+	GradedAnswerShortResult,
+	ShortQuestionApiResponse,
+} from "@/libs/types";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
@@ -17,6 +20,7 @@ interface UseSolvingReviewShortQuestionReturn {
 	isCorrect: boolean | null;
 	userAnswers: string[];
 	handleAnswerChange: (index: number, answer: string) => void;
+	gradedResult: GradedAnswerShortResult[] | null;
 	isLoading: boolean;
 }
 
@@ -44,8 +48,13 @@ const useSolvingReviewShortQuestion = ({
 		},
 	);
 
-	const { getUserAnswers, getIsSubmitted, getIsCorrect, setUserAnswers } =
-		useSolvingReviewAnswerResultStore();
+	const {
+		getUserAnswers,
+		getIsSubmitted,
+		getIsCorrect,
+		getIsGradedResults,
+		setUserAnswers,
+	} = useSolvingReviewAnswerResultStore();
 
 	const question = data?.data as ShortQuestionApiResponse | undefined;
 
@@ -84,6 +93,7 @@ const useSolvingReviewShortQuestion = ({
 		isSubmitted: getIsSubmitted(questionId),
 		isCorrect: getIsCorrect(questionId),
 		userAnswers,
+		gradedResult: getIsGradedResults(questionId),
 		handleAnswerChange,
 		isLoading: isPending,
 	};

@@ -65,7 +65,7 @@ const SolvingLiveWinner = ({
 
 						<div className="h-[34px]" />
 
-						<div className="flex gap-[10px] items-center">
+						<div className="flex flex-col gap-[10px] items-center">
 							<Award size={40} className="stroke-color-warning-60" />
 							{activeParticipants.map((user) => (
 								<div

@@ -8,6 +8,8 @@ export interface SwitchRootProps {
 	checked: boolean;
 	/** Whether the switch is disabled */
 	disabled?: boolean;
+	/** Whether the switch is in loading state */
+	loading?: boolean;
 	/** Additional CSS class names */
 	className?: string;
 	/** Callback when the switch state changes */
@@ -48,6 +50,7 @@ export interface SwitchRootProps {
 export const SwitchRoot = ({
 	checked,
 	disabled = false,
+	loading = false,
 	className,
 	onChange,
 	children,
@@ -55,6 +58,7 @@ export const SwitchRoot = ({
 	const contextValue: SwitchContextValue = {
 		checked,
 		disabled,
+		loading,
 		onChange,
 	};
 
@@ -62,7 +66,7 @@ export const SwitchRoot = ({
 	 *
 	 */
 	const handleClick = () => {
-		if (!disabled && onChange) {
+		if (!disabled && !loading && onChange) {
 			onChange(!checked);
 		}
 	};
@@ -71,7 +75,12 @@ export const SwitchRoot = ({
 	 *
 	 */
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-		if ((event.key === "Enter" || event.key === " ") && !disabled && onChange) {
+		if (
+			(event.key === "Enter" || event.key === " ") &&
+			!disabled &&
+			!loading &&
+			onChange
+		) {
 			event.preventDefault();
 			onChange(!checked);
 		}
@@ -84,6 +93,7 @@ export const SwitchRoot = ({
 					"inline-flex items-center gap-gap-5 cursor-pointer",
 					{
 						"opacity-50 cursor-not-allowed": disabled,
+						"cursor-wait": loading && !disabled,
 					},
 					className,
 				)}
@@ -91,7 +101,8 @@ export const SwitchRoot = ({
 				onKeyDown={handleKeyDown}
 				role="switch"
 				aria-checked={checked}
-				tabIndex={disabled ? -1 : 0}
+				aria-busy={loading}
+				tabIndex={disabled || loading ? -1 : 0}
 			>
 				{children}
 			</div>

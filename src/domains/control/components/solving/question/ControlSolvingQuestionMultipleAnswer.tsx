@@ -1,17 +1,16 @@
-import clsx from "clsx";
-import { useState } from "react";
-import CheckBox from "@/components/CheckBox";
-import ControlSolvingQuestionAnswerExpandButton from "./ControlSolvingQuestionAnswerExpandButton";
+import { useRef } from "react";
+import useControlSolvingQuestionAnswerContent from "@/domains/control/hooks/solving/question/answer/useControlSolvingQuestionAnswerContent";
+import ControlSolvingQuestionAnswer from "./answer/ControlSolvingQuestionAnswer";
+import ControlSolvingQuestionAnswerContent from "./answer/ControlSolvingQuestionAnswerContent";
+import ControlSolvingQuestionAnswerExpandButton from "./answer/ControlSolvingQuestionAnswerExpandButton";
 
 //
 //
 //
 
 interface ControlSolvingQuestionMultipleAnswerProps {
-	readOnly: boolean;
 	isCorrect: boolean;
 	content?: string;
-	onChange: (checked: boolean) => void;
 }
 
 //
@@ -19,45 +18,30 @@ interface ControlSolvingQuestionMultipleAnswerProps {
 //
 
 const ControlSolvingQuestionMultipleAnswer = ({
-	readOnly,
 	isCorrect,
 	content,
-	onChange,
 }: ControlSolvingQuestionMultipleAnswerProps) => {
-	const [isExpanded, setIsExpanded] = useState(false);
+	const answerContentRef = useRef<HTMLParagraphElement>(null);
 
-	/**
-	 *
-	 */
-	const handleExpandButtonClick = () => {
-		setIsExpanded((prev) => !prev);
-	};
+	const { isExpanded, isContentOverflow, toggleExpanded } =
+		useControlSolvingQuestionAnswerContent({
+			answerContentRef,
+		});
 
 	return (
-		<div
-			className={clsx(
-				"w-full flex items-start justify-between gap-gap-5 px-padding-11 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium",
-				{
-					"border border-color-primary-50 bg-color-primary-5 typo-body-medium-bold text-color-primary-50":
-						isCorrect,
-				},
-			)}
-		>
-			{!readOnly && <CheckBox checked={isCorrect} onChange={onChange} />}
-			<p
-				className={clsx("flex-1", {
-					truncate: readOnly && !isExpanded,
-				})}
-			>
-				{content}
-			</p>
-			{readOnly && (
-				<ControlSolvingQuestionAnswerExpandButton
-					isExpanded={isExpanded}
-					onClick={handleExpandButtonClick}
-				/>
-			)}
-		</div>
+		<ControlSolvingQuestionAnswer variant={isCorrect ? "focused" : "default"}>
+			<ControlSolvingQuestionAnswerContent
+				ref={answerContentRef}
+				expanded={isExpanded}
+				variant={isCorrect ? "focused" : "default"}
+				content={content ?? ""}
+			/>
+			<ControlSolvingQuestionAnswerExpandButton
+				expanded={isExpanded}
+				hide={!isContentOverflow && !isExpanded}
+				onClick={toggleExpanded}
+			/>
+		</ControlSolvingQuestionAnswer>
 	);
 };
 

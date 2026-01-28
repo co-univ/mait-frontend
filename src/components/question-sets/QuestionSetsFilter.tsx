@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useMemo } from "react";
 import type { QuestionSetVisibility } from "@/libs/types";
 import Button from "../Button";
 import {
@@ -11,32 +12,42 @@ import useQuestionSetsFilter from "./useQuestionSetsFilter";
 //
 //
 
-const FILTER_CONFIG: {
-	label: string;
-	icon: React.ReactNode;
-	visibility: QuestionSetVisibility;
-}[] = (
-	Object.entries(QUESTION_SET_VISIBILITY_CONFIG) as [
-		QuestionSetVisibility,
-		(typeof QUESTION_SET_VISIBILITY_CONFIG)[QuestionSetVisibility],
-	][]
-).map(([visibility, { Icon, label }]) => ({
-	label,
-	icon: <Icon size={DEFAULT_VISIBILITY_ICON_SIZE} />,
-	visibility,
-}));
+const DEFAULT_VISIBILITIES: QuestionSetVisibility[] = [
+	"PUBLIC",
+	"GROUP",
+	"PRIVATE",
+];
 
 //
 //
 //
 
-const QuestionSetsFilter = () => {
+interface QuestionSetsFilterProps {
+	visibilities?: QuestionSetVisibility[];
+}
+
+const QuestionSetsFilter = ({ visibilities }: QuestionSetsFilterProps = {}) => {
 	const { getIsVisibilitySelected, handleFilterClick } =
 		useQuestionSetsFilter();
 
+	//
+	const filterConfig = useMemo(() => {
+		const targetVisibilities = visibilities || DEFAULT_VISIBILITIES;
+
+		return targetVisibilities.map((visibility) => {
+			const { Icon, label } = QUESTION_SET_VISIBILITY_CONFIG[visibility];
+
+			return {
+				label,
+				icon: <Icon size={DEFAULT_VISIBILITY_ICON_SIZE} />,
+				visibility,
+			};
+		});
+	}, [visibilities]);
+
 	return (
 		<div className="flex gap-gap-9">
-			{FILTER_CONFIG.map(({ label, icon, visibility }) => (
+			{filterConfig.map(({ label, icon, visibility }) => (
 				<Button
 					key={visibility}
 					icon={<span className="[&>svg]:size-[20px]">{icon}</span>}

@@ -6,6 +6,7 @@ import LoadingView from "@/components/LoadingView";
 import { apiHooks } from "@/libs/api";
 import MyPageButton from "../components/MyPageButton";
 import MyPageInputBox from "../components/MyPageInputBox";
+import MyPageLogoutButton from "../components/MyPageLogoutButton";
 
 //
 //
@@ -15,10 +16,11 @@ const MyPage = () => {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [editedNickname, setEditedNickname] = useState("");
 
-	const { data: userInfo, isLoading, refetch } = apiHooks.useQuery(
-		"get",
-		"/api/v1/users/me",
-	);
+	const {
+		data: userInfo,
+		isLoading,
+		refetch,
+	} = apiHooks.useQuery("get", "/api/v1/users/me");
 
 	const { mutate: updateNickname } = apiHooks.useMutation(
 		"patch",
@@ -112,6 +114,9 @@ const MyPage = () => {
 					onChange={setEditedNickname}
 				/>
 				<MyPageInputBox label="비밀번호" value="-" />
+			</div>
+			<div className="w-full text-end mt-[23px]">
+				<MyPageLogoutButton />
 			</div>
 			<div className="w-full flex justify-center gap-[20px] mt-auto mb-[54px]">
 				{renderActionButtons()}

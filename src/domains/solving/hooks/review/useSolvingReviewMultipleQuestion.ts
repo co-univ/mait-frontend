@@ -1,5 +1,6 @@
 import { apiHooks } from "@/libs/api";
 import type {
+	GradedAnswerMultipleResult,
 	MultipleChoiceApiResponse,
 	MultipleQuestionApiResponse,
 } from "@/libs/types";
@@ -19,6 +20,7 @@ interface UseSolvingReviewMultipleQuestionReturn {
 	isCorrect: boolean | null;
 	choices: MultipleChoiceApiResponse[];
 	userAnswers: number[];
+	gradedResults: GradedAnswerMultipleResult[] | null;
 	handleChoiceChange: (choiceNumber: number) => void;
 	isLoading: boolean;
 }
@@ -47,8 +49,13 @@ const useSolvingReviewMultipleQuestion = ({
 		},
 	);
 
-	const { getUserAnswers, getIsSubmitted, getIsCorrect, setUserAnswers } =
-		useSolvingReviewAnswerResultStore();
+	const {
+		getUserAnswers,
+		getIsSubmitted,
+		getIsCorrect,
+		getIsGradedResults,
+		setUserAnswers,
+	} = useSolvingReviewAnswerResultStore();
 
 	const question = data?.data as MultipleQuestionApiResponse | undefined;
 
@@ -80,6 +87,7 @@ const useSolvingReviewMultipleQuestion = ({
 		isCorrect: getIsCorrect(questionId),
 		choices: question?.choices ?? [],
 		userAnswers,
+		gradedResults: getIsGradedResults(questionId),
 		handleChoiceChange,
 		isLoading: isPending,
 	};
