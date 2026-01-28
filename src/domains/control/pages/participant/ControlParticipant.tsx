@@ -1,4 +1,4 @@
-import { BellRing } from "lucide-react";
+import { BellRing, RefreshCw } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
@@ -14,7 +14,7 @@ import ControlParticipantScorerRanking from "./ControlParticipantScorerRanking";
 const ControlParticipant = () => {
 	const questionSetId = Number(useParams().questionSetId);
 
-	const { isEditing, isMutating, handleSumbitParticipants } =
+	const { refreshParticipants, handleSumbitParticipants, handleSubmitWinner } =
 		useControlParticipants({
 			questionSetId,
 		});
@@ -24,16 +24,20 @@ const ControlParticipant = () => {
 	 */
 	const renderSubmitButtons = () => {
 		return (
-			<div className="flex gap-gap-10">
+			<div className="flex gap-gap-5">
 				<Button
-					disabled={!isEditing || isMutating}
-					item="진출자 확정하기"
+					icon={<RefreshCw />}
+					onClick={refreshParticipants}
+					className="border-none text-color-gray-50"
+				/>
+				<Button
+					item="진출자 선정"
 					onClick={handleSumbitParticipants}
 					className="border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50 disabled:bg-color-gray-5 disabled:text-color-gray-20"
 				/>
 				<Button
-					disabled={!isEditing || isMutating}
 					item="우승자 선정"
+					onClick={handleSubmitWinner}
 					className="border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50 disabled:bg-color-gray-5 disabled:text-color-gray-20"
 				/>
 			</div>
