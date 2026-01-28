@@ -77,7 +77,7 @@ const ControlParticipantCorrectRanking = () => {
 		<ControlParticipantRankingPanel.Root>
 			<ControlParticipantRankingPanel.Header
 				icon={<Award />}
-				title="정답자 기준 등수"
+				title="정답수 기준 등수"
 			/>
 			<ControlParticipantRankingPanel.Selector
 				ranking="정답자"

@@ -192,11 +192,13 @@ const SolvingLiveSolving = () => {
 			<SolvingLiveNextStage
 				activeParticipants={activeParticipants}
 				open={showQualifierView}
+				onClose={() => setShowQualifierView(false)}
 			/>
 			<SolvingLiveWinner
 				open={showWinner}
 				activeParticipants={activeParticipants}
 				currentUserId={currentUserId ?? 0}
+				onClose={() => setShowWinner(false)}
 			/>
 			<SolvingBell open={isSubmitAllowed} />
 			{!showQualifierView &&
