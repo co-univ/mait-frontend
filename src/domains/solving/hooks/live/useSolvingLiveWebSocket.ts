@@ -42,7 +42,7 @@ export const useSolvingLiveWebSocket = ({
 			heartbeatIncoming: 4000,
 			heartbeatOutgoing: 4000,
 			connectHeaders: {
-				Authorization: `Bearer ${TOKEN}}`,
+				Authorization: `${TOKEN}}`,
 			},
 			onConnect: (frame) => {
 				// 구독 설정
