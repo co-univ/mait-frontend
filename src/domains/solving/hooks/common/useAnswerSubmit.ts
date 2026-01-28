@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useUser from "src/hooks/useUser";
+import Toast, { notify } from "@/components/Toast";
 import { apiClient } from "@/libs/api";
 import type { QuestionApiResponse } from "@/libs/types";
 
@@ -79,20 +80,40 @@ export const useAnswerSubmit = () => {
 					return null;
 			}
 
-			const response = await apiClient.POST("/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit", {
-				params: {
-					path: {
-						questionSetId,
-						questionId: questionInfo.id
-					}
+			// biome-ignore lint/suspicious/noExplicitAny: openapi-fetch response type is complex
+			const response: any = await apiClient.POST(
+				"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit",
+				{
+					params: {
+						path: {
+							questionSetId,
+							questionId: questionInfo.id,
+						},
+					},
+					body: submitData,
 				},
-				body: submitData
-			});
+			);
 
-			console.log("답안 제출 성공:", response);
+			if (response.error) {
+				const errCode = (response.error as any).code;
+				switch (errCode) {
+					case "QS-001":
+						notify.error("풀이 불가한 문제입니다.");
+						break;
+					case "QS-002":
+						notify.error("참여자만 답안을 제출할 수 있습니다.");
+						break;
+					case "QS-003":
+						notify.error("이미 정답 처리된 문제입니다.");
+						break;
+					default:
+						notify.error("답안 제출에 실패하였습니다.");
+						break;
+				}
+			}
 			return response;
 		} catch (error) {
-			console.error("답안 제출 실패:", error);
+			notify.error("답안 제출에 실패하였습니다.");
 			return null;
 		} finally {
 			setIsSubmitting(false);
