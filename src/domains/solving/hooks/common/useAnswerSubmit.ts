@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { apiClient } from "src/apis/solving.api";
 import useUser from "src/hooks/useUser";
 import type { QuestionApiResponse } from "@/types";
+import { apiClient } from "@/libs/api";
 
 export const useAnswerSubmit = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -79,11 +79,15 @@ export const useAnswerSubmit = () => {
 					return null;
 			}
 
-			const response = await apiClient.postQuestionSetsQuestionsSubmit(
-				questionSetId,
-				questionInfo.id,
-				submitData,
-			);
+			const response = await apiClient.POST("/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit", {
+				params: {
+					path: {
+						questionSetId,
+						questionId: questionInfo.id
+					}
+				},
+				body: submitData
+			});
 
 			console.log("답안 제출 성공:", response);
 			return response;
