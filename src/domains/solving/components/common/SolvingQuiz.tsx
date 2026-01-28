@@ -188,8 +188,9 @@ const SolvingQuiz = ({
 				questionInfo,
 				userAnswers,
 			);
-			if (response?.data) {
-				const isCorrect = response.data.isCorrect || false;
+
+			if (response?.data?.data) {
+				const isCorrect = response.data?.data?.isCorrect || false;
 
 				setIsSubmitted(true);
 				setIsCorrected(isCorrect);
