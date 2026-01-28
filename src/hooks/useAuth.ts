@@ -1,17 +1,11 @@
+import type { LoginApiRequest } from "@/libs/types";
 import { useMutation } from "@tanstack/react-query";
-import type { components } from "@/libs/types/api";
 
 //
 //
 //
 
 const API_BASE_URL = process.env.PUBLIC_BASE_URL || "";
-
-//
-//
-//
-
-type LoginApiRequest = components['schemas']['LoginApiRequest'];
 
 //
 //
