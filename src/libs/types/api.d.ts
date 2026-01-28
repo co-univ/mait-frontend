@@ -400,7 +400,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 우승자 전송 */
+        /**
+         * 우승자 전송
+         * @deprecated
+         */
         post: operations["sendWinner"];
         delete?: never;
         options?: never;
@@ -421,7 +424,7 @@ export interface paths {
          * 다음 단계 진출자 전송 API
          * @description 다음 단계 진출 예정인 사용자에게 알림을 소켓으로 전송
          */
-        post: operations["sendParticpants"];
+        post: operations["sendParticipants"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2987,7 +2990,7 @@ export interface operations {
             };
         };
     };
-    sendParticpants: {
+    sendParticipants: {
         parameters: {
             query: {
                 type: "WINNER" | "NEXT_ROUND";

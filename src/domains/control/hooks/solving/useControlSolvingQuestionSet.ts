@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { notify } from "@/components/Toast";
 import { apiHooks } from "@/libs/api";
 import type { QuestionSetApiResponse } from "@/libs/types";
@@ -92,6 +93,13 @@ const useControlSolvingQuestionSet = ({
 			},
 		});
 	};
+
+	//
+	// TODO: Combine question set data fetching logic
+	// biome-ignore lint/correctness/useExhaustiveDependencies: refetch on mount only
+	useEffect(() => {
+		refetch();
+	}, []);
 
 	return {
 		questionSet,

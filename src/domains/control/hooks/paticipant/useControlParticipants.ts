@@ -80,8 +80,8 @@ const useControlParticipants = ({
 
 	const { mutateAsync: submitWinner, isPending: isWinnerSubmitPending } =
 		apiHooks.useMutation(
-			"post",
-			"/api/v1/question-sets/{questionSetId}/live-status/winner",
+			"put",
+			"/api/v1/question-sets/{questionSetId}/live-status/participants/winners",
 		);
 
 	const { mutate: sendParticipants } = apiHooks.useMutation(
@@ -230,8 +230,7 @@ const useControlParticipants = ({
 				},
 			},
 			body: {
-				winnerUserIds:
-					activeParticipants?.map((participant) => participant.userId) ?? [],
+				winners: activeParticipants ?? [],
 			},
 		});
 

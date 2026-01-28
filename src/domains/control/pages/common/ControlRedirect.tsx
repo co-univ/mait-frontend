@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { replace, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createPath } from "@/utils/create-path";
 import { CONTROL_ROUTE_PATH } from "../../control.routes";
 import useControlSolvings from "../../hooks/solving/question/useControlSolvingQuestions";

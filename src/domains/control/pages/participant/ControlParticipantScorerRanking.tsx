@@ -15,15 +15,29 @@ const ControlParticipantScorerRanking = () => {
 
 	const {
 		ranking,
+		eliminatedParticipants,
 		handleRankingRowParticipantsChange,
 		checkIsAllUsersActive,
 		selectedRank,
 		handleSelectRank,
 		handleApplyRankSelection,
+		handleActivateAllParticipants,
+		handleEliminateAllParticipants,
 	} = useControlParticipantRanking({
 		questionSetId,
 		type: "SCORER" as const,
 	});
+
+	/**
+	 *
+	 */
+	const handleHeaderCheckboxChange = (checked: boolean) => {
+		if (checked) {
+			handleActivateAllParticipants();
+		} else {
+			handleEliminateAllParticipants();
+		}
+	};
 
 	/**
 	 *
@@ -58,7 +72,10 @@ const ControlParticipantScorerRanking = () => {
 				onApplySelection={handleApplyRankSelection}
 			/>
 			<Table.Root>
-				<ControlParticipantRankingPanel.TableHeader />
+				<ControlParticipantRankingPanel.TableHeader
+					checked={eliminatedParticipants?.length === 0}
+					onChange={handleHeaderCheckboxChange}
+				/>
 				<Table.Divider />
 				<Table.Body>
 					{ranking?.map(({ users }, index) => (
