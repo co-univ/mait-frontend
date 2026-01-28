@@ -8,11 +8,11 @@ import SolvingLiveNextStage from "src/domains/solving/pages/live/SolvingLiveNext
 import SolvingLiveWinner from "src/domains/solving/pages/live/SolvingLiveWinner";
 import type { QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
-import { TOKEN } from "@/app.constants";
 import { apiClient } from "@/libs/api";
 import type { QuestionSetApiResponse } from "@/libs/types";
 import SolvingQuiz from "../../components/common/SolvingQuiz";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
+import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
 
 //
@@ -58,7 +58,7 @@ const SolvingLiveSolving = () => {
 	const questionSetId = Number(location.pathname.split("/").pop());
 
 	/**
-	 *
+	 * 문제 셋 정보 가져오기
 	 */
 	const fetchQuestionSetInfo = async () => {
 		try {
@@ -78,7 +78,7 @@ const SolvingLiveSolving = () => {
 	};
 
 	/**
-	 *
+	 * 문제 정보 가져오기
 	 */
 	const fetchQuestionInfo = async (questionId: number) => {
 		try {
@@ -114,7 +114,7 @@ const SolvingLiveSolving = () => {
 	});
 
 	/**
-	 *
+	 * 현재 문제 상태 가져와서 처리
 	 */
 	const fetchCurrentQuestionStatus = async () => {
 		try {
@@ -144,17 +144,21 @@ const SolvingLiveSolving = () => {
 	};
 
 	/**
-	 *
+	 * 수신된 웹소켓 메시지 핸들러 (quizController 호출부)
 	 */
 	const handleWebSocketMessage = (msg: any) => {
-		// const questionSetId = msg.questionSetId; // 문제 셋 id
 		const questionId = msg.questionId; // 문제 id
 		const statusType = msg?.statusType; // 문제 풀이 상태
 		const commandType = msg?.commandType; // 명령 타입
-		const activeParticipants = msg?.activeParticipants; // 활동 참가자
+		const activeParticipants = msg?.activeParticipants; // 활성화된 참가자
 
 		quizController(questionId, statusType, commandType, activeParticipants);
 	};
+
+	const { connect, disconnect } = useSolvingLiveWebSocket({
+		questionSetId,
+		onMessage: handleWebSocketMessage,
+	});
 
 	//
 	useEffect(() => {
@@ -170,44 +174,17 @@ const SolvingLiveSolving = () => {
 
 	//
 	useEffect(() => {
-		// 문제 셋 정보 가져오기
 		fetchQuestionSetInfo();
-		// 현재 문제 상태 가져와서 처리
 		fetchCurrentQuestionStatus();
 	}, [questionSetId]);
 
 	//
 	useEffect(() => {
-		// WebSocket 연결
-		const client = new StompJs.Client({
-			webSocketFactory: () => new SockJS(process.env.PUBLIC_WS_ENDPOINT || ""),
-			reconnectDelay: 5000,
-			heartbeatIncoming: 4000,
-			heartbeatOutgoing: 4000,
-			connectHeaders: {
-				Authorization: `Bearer ${TOKEN}}`,
-			},
-			onConnect: (frame) => {
-				// 구독 설정
-				client.subscribe(
-					`/topic/question-sets/${questionSetId}/participate`,
-					(message) => {
-						if (message.body) {
-							console.log("Received message:", message.body);
+		connect(); // WebSocket 연결
 
-							const msg = JSON.parse(message.body);
-							handleWebSocketMessage(msg);
-						}
-					},
-				);
-				console.log("Connected: " + frame);
-			},
-			onStompError: (error) => {
-				console.error("Broker reported error: ", error);
-			},
-		});
-
-		client.activate();
+		return () => {
+			disconnect();
+		};
 	}, [questionSetId]);
 
 	return (

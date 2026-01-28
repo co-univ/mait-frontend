@@ -1,6 +1,11 @@
+import { TOKEN } from "@/app.constants";
 import * as StompJs from "@stomp/stompjs";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import SockJS from "sockjs-client";
+
+//
+//
+//
 
 interface WebSocketMessage {
 	questionSetId?: number;
@@ -11,9 +16,13 @@ interface WebSocketMessage {
 }
 
 interface UseSolvingLiveWebSocketProps {
-	questionSetId: string | undefined;
+	questionSetId: number | undefined;
 	onMessage: (message: WebSocketMessage) => void;
 }
+
+//
+//
+//
 
 export const useSolvingLiveWebSocket = ({
 	questionSetId,
@@ -21,6 +30,9 @@ export const useSolvingLiveWebSocket = ({
 }: UseSolvingLiveWebSocketProps) => {
 	const clientRef = useRef<StompJs.Client | null>(null);
 
+	/**
+	 *
+	 */
 	const connect = () => {
 		if (!questionSetId || clientRef.current?.connected) return;
 
@@ -29,15 +41,23 @@ export const useSolvingLiveWebSocket = ({
 			reconnectDelay: 5000,
 			heartbeatIncoming: 4000,
 			heartbeatOutgoing: 4000,
+			connectHeaders: {
+				Authorization: `Bearer ${TOKEN}}`,
+			},
 			onConnect: (frame) => {
+				// 구독 설정
+				client.subscribe(
+					`/topic/question-sets/${questionSetId}/participate`,
+					(message) => {
+						if (message.body) {
+							console.log("Received message:", message.body);
+
+							const msg = JSON.parse(message.body);
+							onMessage(msg);
+						}
+					},
+				);
 				console.log("Connected: " + frame);
-				client.subscribe(`/topic/question/${questionSetId}`, (message) => {
-					if (message.body) {
-						console.log("Received message:", message.body);
-						const msg = JSON.parse(message.body);
-						onMessage(msg);
-					}
-				});
 			},
 			onStompError: (error) => {
 				console.error("Broker reported error: ", error);
@@ -48,19 +68,14 @@ export const useSolvingLiveWebSocket = ({
 		client.activate();
 	};
 
+	/**
+	 *
+	 */
 	const disconnect = () => {
 		if (clientRef.current?.connected) {
 			clientRef.current.deactivate();
 		}
 	};
-
-	useEffect(() => {
-		connect();
-
-		return () => {
-			disconnect();
-		};
-	}, [questionSetId]);
 
 	return {
 		connect,
