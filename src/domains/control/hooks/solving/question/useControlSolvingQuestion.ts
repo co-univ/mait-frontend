@@ -1,69 +1,84 @@
-import { useCallback, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import type { QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
-import type { QuestionUpdatePayload } from "@/domains/control/control.constant";
-import { apiClient, apiHooks } from "@/libs/api";
+import useControlQuestionSubmitAnswerStore from "@/domains/control/stores/question/useControlQuestionSubmitAnswerStore";
+import { apiHooks } from "@/libs/api";
 import type { UpdateQuestionStatusApiRequest } from "@/libs/types";
 
 //
 //
 //
 
-type UseControlSolvingQuestionProps = {
+const QUESTION_POLLING_INTERVAL = 10000;
+
+export interface UseControlSolvingQuestionProps {
 	questionSetId: number;
 	questionId: number;
-	refetchInterval?: number;
-};
+}
 
-type UseControlSolvingQuestionReturn = {
-	question?: QuestionResponseType;
-	questionUpdatedAt: number;
+export interface UseControlSolvingQuestionReturn<TData> {
+	hasSubmitAnswerPayload: boolean;
+	question?: TData;
 	refetchQuestion: () => void;
-	handleAnswerAdd: (payload: QuestionUpdatePayload) => Promise<boolean>;
+	submitAnswer: () => Promise<boolean>;
 	handleAccessOpen: () => void;
 	handleAccessClose: () => void;
 	handleSolveOpen: () => void;
 	handleSolveClose: () => void;
 	isLoading: boolean;
 	isStatusUpdating: boolean;
-};
+}
 
 //
 //
 //
 
-const useControlSolvingQuestion = ({
+const useControlSolvingQuestion = <
+	TData extends QuestionResponseType = QuestionResponseType,
+>({
 	questionSetId,
 	questionId,
-	refetchInterval,
-}: UseControlSolvingQuestionProps): UseControlSolvingQuestionReturn => {
-	const { data: questionSetData } = apiHooks.useQuery(
-		"get",
-		"/api/v1/question-sets/{questionSetId}",
-		{
+}: UseControlSolvingQuestionProps): UseControlSolvingQuestionReturn<TData> => {
+	const { hasSubmitAnswerPayload, submitAnswerPayload } =
+		useControlQuestionSubmitAnswerStore();
+
+	const queryClient = useQueryClient();
+
+	const { data: questionSetData, isPending: isQuestionSetLoading } =
+		apiHooks.useQuery("get", "/api/v1/question-sets/{questionSetId}", {
 			params: {
 				path: {
 					questionSetId,
 				},
 			},
-		},
-	);
+		});
 
-	const { data, isPending, refetch, dataUpdatedAt } = apiHooks.useQuery(
+	const {
+		data: questionData,
+		isPending: isQuestionLoading,
+		refetch,
+	} = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
 		{
 			params: {
 				path: { questionSetId, questionId },
 				query: {
-					mode: "MAKING",
+					mode: "MANAGING",
 				},
 			},
 		},
 		{
-			refetchInterval,
+			refetchInterval:
+				questionSetData?.data?.ongoingStatus === "ONGOING"
+					? QUESTION_POLLING_INTERVAL
+					: undefined,
 		},
 	);
+
+	const questionSet = questionSetData?.data;
+	const question = questionData?.data;
 
 	const { mutate: updateStatus, isPending: isStatusUpdating } =
 		apiHooks.useMutation(
@@ -76,41 +91,69 @@ const useControlSolvingQuestion = ({
 			},
 		);
 
-	const question = data?.data;
+	const { mutateAsync: postAnswer } = apiHooks.useMutation(
+		"post",
+		"/api/v1/question-sets/{questionSetId}/questions/{questionId}/answers",
+		{
+			onSuccess: () => {
+				notify.success("정답이 추가됨에 따라 재채점 되었습니다.");
+
+				refetch();
+
+				queryClient.invalidateQueries({
+					queryKey: apiHooks.queryOptions(
+						"get",
+						"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorers",
+						{
+							params: {
+								path: {
+									questionSetId,
+									questionId,
+								},
+							},
+						},
+					).queryKey,
+				});
+
+				queryClient.invalidateQueries({
+					queryKey: apiHooks.queryOptions(
+						"get",
+						"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit-records",
+						{
+							params: {
+								path: {
+									questionSetId,
+									questionId,
+								},
+							},
+						},
+					).queryKey,
+				});
+			},
+			onError: () => {
+				notify.error("정답 추가에 실패했습니다.");
+			},
+		},
+	);
 
 	/**
 	 *
 	 */
-	const handleAnswerAdd = useCallback(
-		async (payload: QuestionUpdatePayload) => {
-			try {
-				const res = await apiClient.POST(
-					"/api/v1/question-sets/{questionSetId}/questions/{questionId}/answers",
-					{
-						params: {
-							path: { questionSetId, questionId },
-						},
-						body: {
-							payload,
-						},
-					},
-				);
+	const submitAnswer = async () => {
+		const res = await postAnswer({
+			params: {
+				path: {
+					questionSetId,
+					questionId,
+				},
+			},
+			body: {
+				payload: submitAnswerPayload,
+			},
+		});
 
-				if (!res.data?.isSuccess) {
-					throw new Error("Failed to update answer");
-				}
-
-				notify.success("정답이 수정됨에 따라 재채점 되었습니다.");
-
-				return true;
-			} catch {
-				notify.error("정답 수정에 실패했습니다.");
-
-				return false;
-			}
-		},
-		[questionSetId, questionId],
-	);
+		return res.isSuccess ?? false;
+	};
 
 	/**
 	 *
@@ -122,7 +165,7 @@ const useControlSolvingQuestion = ({
 			return;
 		}
 
-		if (questionSetData?.data?.ongoingStatus === "BEFORE") {
+		if (questionSet?.ongoingStatus === "BEFORE") {
 			notify.warn("문제 시작 후 문제 공개 및 제출 허용이 가능합니다.");
 
 			return;
@@ -183,15 +226,15 @@ const useControlSolvingQuestion = ({
 	}, [questionId, refetch]);
 
 	return {
-		question,
-		questionUpdatedAt: dataUpdatedAt,
+		hasSubmitAnswerPayload,
+		question: question as TData | undefined,
 		refetchQuestion: () => refetch(),
-		handleAnswerAdd,
+		submitAnswer,
 		handleAccessOpen,
 		handleAccessClose,
 		handleSolveOpen,
 		handleSolveClose,
-		isLoading: isPending,
+		isLoading: isQuestionLoading || isQuestionSetLoading,
 		isStatusUpdating,
 	};
 };

@@ -1,15 +1,15 @@
-import clsx from "clsx";
-import { useState } from "react";
+import { useRef } from "react";
+import useControlSolvingQuestionAnswerContent from "@/domains/control/hooks/solving/question/answer/useControlSolvingQuestionAnswerContent";
 import type { OrderingOptionApiResponse } from "@/libs/types";
-import ControlSolvingQuestionAnswerExpandButton from "./ControlSolvingQuestionAnswerExpandButton";
+import ControlSolvingQuestionAnswer from "./answer/ControlSolvingQuestionAnswer";
+import ControlSolvingQuestionAnswerContent from "./answer/ControlSolvingQuestionAnswerContent";
+import ControlSolvingQuestionAnswerExpandButton from "./answer/ControlSolvingQuestionAnswerExpandButton";
 
 //
 //
 //
 
 interface ControlSolvingQuestionOrderingAnswerProps {
-	readOnly: boolean;
-	isDragging: boolean;
 	option: OrderingOptionApiResponse;
 }
 
@@ -18,47 +18,32 @@ interface ControlSolvingQuestionOrderingAnswerProps {
 //
 
 const ControlSolvingQuestionOrderingAnswer = ({
-	readOnly,
-	isDragging,
 	option,
 }: ControlSolvingQuestionOrderingAnswerProps) => {
-	const [isExpanded, setIsExpanded] = useState(false);
+	const answerContentRef = useRef<HTMLParagraphElement>(null);
 
-	/**
-	 *
-	 */
-	const handleExpandButtonClick = () => {
-		setIsExpanded(!isExpanded);
-	};
+	const { isExpanded, isContentOverflow, toggleExpanded } =
+		useControlSolvingQuestionAnswerContent({
+			answerContentRef,
+		});
 
 	return (
-		<div className="flex items-center gap-gap-5">
-			<span className="typo-heading-xsmall">
+		<div className="flex items-center gap-gap-9">
+			<div className="typo-heading-xsmall">
 				{String.fromCharCode(64 + option.originOrder)}
-			</span>
-
-			<div
-				className={clsx(
-					"w-full min-w-0 flex items-start justify-between gap-gap-9 px-padding-11 py-padding-9 bg-color-gray-5 rounded-radius-medium1 typo-body-medium",
-					{
-						"bg-color-primary-5": isDragging,
-					},
-				)}
-			>
-				<p
-					className={clsx({
-						truncate: readOnly && !isExpanded,
-					})}
-				>
-					{option.content}
-				</p>
-				{readOnly && (
-					<ControlSolvingQuestionAnswerExpandButton
-						isExpanded={isExpanded}
-						onClick={handleExpandButtonClick}
-					/>
-				)}
 			</div>
+			<ControlSolvingQuestionAnswer>
+				<ControlSolvingQuestionAnswerContent
+					ref={answerContentRef}
+					expanded={isExpanded}
+					content={option.content ?? ""}
+				/>
+				<ControlSolvingQuestionAnswerExpandButton
+					expanded={isExpanded}
+					hide={!isContentOverflow && !isExpanded}
+					onClick={toggleExpanded}
+				/>
+			</ControlSolvingQuestionAnswer>
 		</div>
 	);
 };

@@ -1,29 +1,32 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import { useControlQuestionSubmitShortAnswerStore } from "@/domains/control/stores/question/useControlQuestionSubmitAnswerStore";
 import type {
 	ShortAnswerApiResponse,
+	ShortAnswerDto,
 	ShortQuestionApiResponse,
-	ShortUpdateAnswerPayload,
 } from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
-import useControlSolvingQuestion from "./useControlSolvingQuestion";
+import useControlSolvingQuestion, {
+	type UseControlSolvingQuestionProps,
+	type UseControlSolvingQuestionReturn,
+} from "./useControlSolvingQuestion";
 
 //
 //
 //
 
-interface UseControlSolvingQuestionShortProps {
-	questionSetId: number;
-	questionId: number;
+interface UseControlSolvingQuestionShortProps
+	extends UseControlSolvingQuestionProps {
+	isEditing: boolean;
 }
 
-interface UseControlSolvingQuestionShortReturn {
-	question?: ShortQuestionApiResponse;
-	groupedAnswers?: ShortAnswerApiResponse[][];
-	handleAnswerChange: (id: number, answer: string) => void;
+interface UseControlSolvingQuestionShortReturn
+	extends UseControlSolvingQuestionReturn<ShortQuestionApiResponse> {
+	grouppedQuestionAnswers: ShortAnswerApiResponse[][];
+	grouppedAddedAnswers: ShortAnswerDto[][];
 	handleSubAnswerAdd: (number: number) => void;
+	handleSubAnswerChange: (id: number, answer: string) => void;
 	handleSubAnswerDelete: (id: number) => void;
-	handleAnswerAdd: () => Promise<boolean>;
-	isLoading: boolean;
 }
 
 //
@@ -31,135 +34,140 @@ interface UseControlSolvingQuestionShortReturn {
 //
 
 const useControlSolvingQuestionShort = ({
+	isEditing,
 	questionSetId,
 	questionId,
 }: UseControlSolvingQuestionShortProps): UseControlSolvingQuestionShortReturn => {
-	const [groupedAnswers, setGroupedAnswers] =
-		useState<ShortAnswerApiResponse[][]>();
+	const { submitAnswerPayload, setSubmitAnswerPayload } =
+		useControlQuestionSubmitShortAnswerStore();
 
-	const { question, questionUpdatedAt, handleAnswerAdd, isLoading } =
-		useControlSolvingQuestion({
+	const { question, ...rest } =
+		useControlSolvingQuestion<ShortQuestionApiResponse>({
 			questionSetId,
 			questionId,
 		});
 
+	const addedAnswers = submitAnswerPayload?.shortAnswers ?? [];
+
 	/**
-	 *
+	 * Groups short answer responses by their number into a 2D array.
 	 */
-	const handleAnswerChange = (id: number, answer: string) => {
-		if (!groupedAnswers) {
-			return;
-		}
-
-		const updatedGroupedAnswers = groupedAnswers.map((answers) =>
-			answers.map((ans) => {
-				if (ans.id === id) {
-					return {
-						...ans,
-						answer,
-					};
-				}
-
-				return ans;
-			}),
+	const grouppedQuestionAnswers = useMemo(() => {
+		const grouped = Array.from(
+			{ length: question?.answerCount ?? 0 },
+			() => [] as ShortAnswerApiResponse[],
 		);
 
-		setGroupedAnswers(updatedGroupedAnswers);
-	};
+		question?.answers?.forEach((answer) => {
+			if (answer.number >= 1 && answer.number <= grouped.length) {
+				grouped[answer.number - 1].push(answer);
+			}
+		});
+
+		return grouped;
+	}, [question?.answers, question?.answerCount]);
+
+	/**
+	 * Groups added short answers by their number into a 2D array.
+	 */
+	const grouppedAddedAnswers = useMemo(() => {
+		const grouped = Array.from(
+			{ length: question?.answerCount ?? 0 },
+			() => [] as ShortAnswerDto[],
+		);
+
+		addedAnswers.forEach((answer) => {
+			if (answer.number >= 1 && answer.number <= grouped.length) {
+				grouped[answer.number - 1].push(answer);
+			}
+		});
+
+		return grouped;
+	}, [addedAnswers, question?.answerCount]);
 
 	/**
 	 *
 	 */
 	const handleSubAnswerAdd = (number: number) => {
-		if (!groupedAnswers) {
-			return;
-		}
+		const newAddedAnswers = [
+			...addedAnswers,
+			{
+				id: generateTemporaryId(),
+				answer: "",
+				main: false,
+				number,
+			},
+		];
 
-		const newGroupedAnswers = groupedAnswers.map((answers, index) => {
-			if (index + 1 === number) {
-				const newAnswer: ShortAnswerApiResponse = {
-					id: generateTemporaryId(),
-					number,
-					answer: "",
-					isMain: false,
-				};
-
-				return [...answers, newAnswer];
-			}
-
-			return answers;
+		setSubmitAnswerPayload({
+			type: "SHORT" as "ShortUpdateAnswerPayload",
+			shortAnswers: newAddedAnswers,
 		});
+	};
 
-		setGroupedAnswers(newGroupedAnswers);
+	/**
+	 *
+	 */
+	const handleSubAnswerChange = (id: number, answer: string) => {
+		const newAddedAnswers = addedAnswers.map((addedAnswer) =>
+			addedAnswer.id === id ? { ...addedAnswer, answer } : addedAnswer,
+		);
+
+		setSubmitAnswerPayload({
+			type: "SHORT" as "ShortUpdateAnswerPayload",
+			shortAnswers: newAddedAnswers,
+		});
 	};
 
 	/**
 	 *
 	 */
 	const handleSubAnswerDelete = (id: number) => {
-		if (!groupedAnswers) {
-			return;
-		}
-
-		const newGroupedAnswers = groupedAnswers.map((answers) =>
-			answers.filter((answer) => answer.id !== id),
+		const newAddedAnswers = addedAnswers.filter(
+			(addedAnswer) => addedAnswer.id !== id,
 		);
 
-		setGroupedAnswers(newGroupedAnswers);
+		setSubmitAnswerPayload({
+			type: "SHORT" as "ShortUpdateAnswerPayload",
+			shortAnswers: newAddedAnswers,
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleShortAnswerAdd = useCallback(() => {
-		if (!groupedAnswers) {
-			return Promise.resolve(false);
-		}
-
-		const payload = {
-			type: "SHORT",
-			shortAnswers: groupedAnswers.flat().map((answer) => ({
-				id: answer.id,
-				answer: answer.answer,
-				main: answer.isMain,
-				number: answer.number,
-			})),
-		} as unknown as ShortUpdateAnswerPayload;
-
-		return handleAnswerAdd(payload);
-	}, [groupedAnswers, handleAnswerAdd]);
-
-	//
-	//
-	// biome-ignore lint/correctness/useExhaustiveDependencies: when question refetched, reset answers state
-	useEffect(() => {
-		if (!question) {
-			return;
-		}
-
-		const newGroupedAnswers: ShortAnswerApiResponse[][] = [];
-
-		(question as ShortQuestionApiResponse)?.answers?.forEach((answer) => {
-			const index = answer.number - 1;
-
-			if (!newGroupedAnswers[index]) {
-				newGroupedAnswers[index] = [];
-			}
-
-			newGroupedAnswers[index].push(answer);
+	const resetAddedAnswers = useCallback(() => {
+		setSubmitAnswerPayload({
+			type: "SHORT" as "ShortUpdateAnswerPayload",
+			shortAnswers: [],
 		});
+	}, [setSubmitAnswerPayload]);
 
-		setGroupedAnswers(newGroupedAnswers);
-	}, [question, questionUpdatedAt]);
+	//
+	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: submitPayload is refreshed on selected question change
+	useEffect(() => {
+		resetAddedAnswers();
+	}, [questionId, resetAddedAnswers]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (!isEditing) {
+			resetAddedAnswers();
+		}
+	}, [isEditing, resetAddedAnswers]);
 
 	return {
-		question: question as ShortQuestionApiResponse,
-		groupedAnswers,
-		handleAnswerChange,
+		...rest,
+		question,
+		grouppedQuestionAnswers,
+		grouppedAddedAnswers,
 		handleSubAnswerAdd,
+		handleSubAnswerChange,
 		handleSubAnswerDelete,
-		handleAnswerAdd: handleShortAnswerAdd,
-		isLoading,
 	};
 };
+
 export default useControlSolvingQuestionShort;

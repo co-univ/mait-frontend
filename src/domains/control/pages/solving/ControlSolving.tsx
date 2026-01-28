@@ -195,9 +195,7 @@ const ControlSolving = () => {
 				/>
 				<div className="flex gap-gap-10 w-full">
 					<div className="flex-[2] w-0">
-						<ControlSolvingQuestion
-							questionSetOngoingStatus={questionSet?.ongoingStatus}
-						/>
+						<ControlSolvingQuestion />
 					</div>
 					<div className="flex-[3] min-w-0">
 						<ControlSolvingSubmission
