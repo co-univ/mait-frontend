@@ -5,7 +5,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 //
 
 interface ControlSolvingQuestionAnswerExpandButtonProps {
-	isExpanded: boolean;
+	expanded: boolean;
+	hide?: boolean;
 	onClick: () => void;
 }
 
@@ -14,12 +15,17 @@ interface ControlSolvingQuestionAnswerExpandButtonProps {
 //
 
 const ControlSolvingQuestionAnswerExpandButton = ({
-	isExpanded,
+	expanded,
+	hide = false,
 	onClick,
 }: ControlSolvingQuestionAnswerExpandButtonProps) => {
+	if (hide) {
+		return null;
+	}
+
 	return (
 		<button type="button" onClick={onClick}>
-			{isExpanded ? <ChevronUp /> : <ChevronDown />}
+			{expanded ? <ChevronUp /> : <ChevronDown />}
 		</button>
 	);
 };

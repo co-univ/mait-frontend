@@ -1,29 +1,33 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import { notify } from "@/components/Toast";
+import { useControlQuestionSubmitFillBlankAnswerStore } from "@/domains/control/stores/question/useControlQuestionSubmitAnswerStore";
 import type {
 	FillBlankAnswerApiResponse,
+	FillBlankAnswerDto,
 	FillBlankQuestionApiResponse,
-	FillBlankUpdateAnswerPayload,
 } from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
-import useControlSolvingQuestion from "./useControlSolvingQuestion";
+import useControlSolvingQuestion, {
+	type UseControlSolvingQuestionProps,
+	type UseControlSolvingQuestionReturn,
+} from "./useControlSolvingQuestion";
 
 //
 //
 //
 
-interface UseControlSolvingQuestionFillBlankProps {
-	questionSetId: number;
-	questionId: number;
+interface UseControlSolvingQuestionFillBlankProps
+	extends UseControlSolvingQuestionProps {
+	isEditing: boolean;
 }
 
-interface UseControlSolvingQuestionFillBlankReturn {
-	question?: FillBlankQuestionApiResponse;
-	groupedAnswers?: FillBlankAnswerApiResponse[][];
-	handleAnswerChange: (id: number, answer: string) => void;
+interface UseControlSolvingQuestionFillBlankReturn
+	extends UseControlSolvingQuestionReturn<FillBlankQuestionApiResponse> {
+	grouppedQuestionAnswers: FillBlankAnswerApiResponse[][];
+	grouppedAddedAnswers: FillBlankAnswerDto[][];
 	handleSubAnswerAdd: (number: number) => void;
+	handleSubAnswerChange: (id: number, answer: string) => void;
 	handleSubAnswerDelete: (id: number) => void;
-	handleAnswerAdd: () => Promise<boolean>;
-	isLoading: boolean;
 }
 
 //
@@ -31,135 +35,153 @@ interface UseControlSolvingQuestionFillBlankReturn {
 //
 
 const useControlSolvingQuestionFillBlank = ({
+	isEditing,
 	questionSetId,
 	questionId,
 }: UseControlSolvingQuestionFillBlankProps): UseControlSolvingQuestionFillBlankReturn => {
-	const [groupedAnswers, setGroupedAnswers] =
-		useState<FillBlankAnswerApiResponse[][]>();
+	const { submitAnswerPayload, setSubmitAnswerPayload } =
+		useControlQuestionSubmitFillBlankAnswerStore();
 
-	const { question, questionUpdatedAt, handleAnswerAdd, isLoading } =
-		useControlSolvingQuestion({
+	const { question, ...rest } =
+		useControlSolvingQuestion<FillBlankQuestionApiResponse>({
 			questionSetId,
 			questionId,
 		});
 
+	const addedAnswers = submitAnswerPayload?.answers ?? [];
+
 	/**
-	 *
+	 * Groups fill blank answer responses by their number into a 2D array.
 	 */
-	const handleAnswerChange = (id: number, answer: string) => {
-		if (!groupedAnswers) {
-			return;
-		}
-
-		const updatedGroupedAnswers = groupedAnswers.map((answers) =>
-			answers.map((ans) => {
-				if (ans.id === id) {
-					return {
-						...ans,
-						answer,
-					};
-				}
-
-				return ans;
-			}),
+	const grouppedQuestionAnswers = useMemo(() => {
+		const grouped = Array.from(
+			{ length: question?.blankCount ?? 0 },
+			() => [] as FillBlankAnswerApiResponse[],
 		);
 
-		setGroupedAnswers(updatedGroupedAnswers);
-	};
+		question?.answers?.forEach((answer) => {
+			if (answer.number >= 1 && answer.number <= grouped.length) {
+				grouped[answer.number - 1].push(answer);
+			}
+		});
+
+		return grouped;
+	}, [question?.answers, question?.blankCount]);
+
+	/**
+	 * Groups added fill blank answers by their number into a 2D array.
+	 */
+	const grouppedAddedAnswers = useMemo(() => {
+		const grouped = Array.from(
+			{ length: question?.blankCount ?? 0 },
+			() => [] as FillBlankAnswerDto[],
+		);
+
+		addedAnswers.forEach((answer) => {
+			if (
+				answer.number &&
+				answer.number >= 1 &&
+				answer.number <= grouped.length
+			) {
+				grouped[answer.number - 1].push(answer);
+			}
+		});
+
+		return grouped;
+	}, [addedAnswers, question?.blankCount]);
 
 	/**
 	 *
 	 */
 	const handleSubAnswerAdd = (number: number) => {
-		if (!groupedAnswers) {
+		const questionAnswersCount = grouppedQuestionAnswers[number - 1]?.length;
+		const addedAnswersCount = grouppedAddedAnswers[number - 1]?.length;
+
+		// Answer count limit is 5 + 1 (main answer is included in questionAnswersCount)
+		if (questionAnswersCount + addedAnswersCount >= 5 + 1) {
+			notify.warn("인정 답안은 최대 5개까지 등록할 수 있습니다.");
+
 			return;
 		}
 
-		const newGroupedAnswers = groupedAnswers.map((answers, index) => {
-			if (index + 1 === number) {
-				const newAnswer: FillBlankAnswerApiResponse = {
-					id: generateTemporaryId(),
-					number,
-					answer: "",
-					isMain: false,
-				};
+		const newAddedAnswers = [
+			...addedAnswers,
+			{
+				id: generateTemporaryId(),
+				answer: "",
+				main: false,
+				number,
+			},
+		];
 
-				return [...answers, newAnswer];
-			}
-
-			return answers;
+		setSubmitAnswerPayload({
+			type: "FILL_BLANK" as "FillBlankUpdateAnswerPayload",
+			answers: newAddedAnswers,
 		});
+	};
 
-		setGroupedAnswers(newGroupedAnswers);
+	/**
+	 *
+	 */
+	const handleSubAnswerChange = (id: number, answer: string) => {
+		const newAddedAnswers = addedAnswers.map((addedAnswer) =>
+			addedAnswer.id === id ? { ...addedAnswer, answer } : addedAnswer,
+		);
+
+		setSubmitAnswerPayload({
+			type: "FILL_BLANK" as "FillBlankUpdateAnswerPayload",
+			answers: newAddedAnswers,
+		});
 	};
 
 	/**
 	 *
 	 */
 	const handleSubAnswerDelete = (id: number) => {
-		if (!groupedAnswers) {
-			return;
-		}
-
-		const newGroupedAnswers = groupedAnswers.map((answers) =>
-			answers.filter((answer) => answer.id !== id),
+		const newAddedAnswers = addedAnswers.filter(
+			(addedAnswer) => addedAnswer.id !== id,
 		);
 
-		setGroupedAnswers(newGroupedAnswers);
+		setSubmitAnswerPayload({
+			type: "FILL_BLANK" as "FillBlankUpdateAnswerPayload",
+			answers: newAddedAnswers,
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleFillBlankAnswerAdd = useCallback(() => {
-		if (!groupedAnswers) {
-			return Promise.resolve(false);
-		}
-
-		const payload = {
-			type: "FILL_BLANK",
-			answersssss: groupedAnswers.flat().map((answer) => ({
-				id: answer.id,
-				answer: answer.answer,
-				main: answer.isMain,
-				number: answer.number,
-			})),
-		} as unknown as FillBlankUpdateAnswerPayload;
-
-		return handleAnswerAdd(payload);
-	}, [groupedAnswers, handleAnswerAdd]);
-
-	//
-	//
-	// biome-ignore lint/correctness/useExhaustiveDependencies: when question refetched, reset answers state
-	useEffect(() => {
-		if (!question) {
-			return;
-		}
-
-		const newGroupedAnswers: FillBlankAnswerApiResponse[][] = [];
-
-		(question as FillBlankQuestionApiResponse)?.answers?.forEach((answer) => {
-			const index = answer.number - 1;
-
-			if (!newGroupedAnswers[index]) {
-				newGroupedAnswers[index] = [];
-			}
-
-			newGroupedAnswers[index].push(answer);
+	const resetAddedAnswers = useCallback(() => {
+		setSubmitAnswerPayload({
+			type: "FILL_BLANK" as "FillBlankUpdateAnswerPayload",
+			answers: [],
 		});
+	}, [setSubmitAnswerPayload]);
 
-		setGroupedAnswers(newGroupedAnswers);
-	}, [question, questionUpdatedAt]);
+	//
+	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: submitPayload is refreshed on selected question change
+	useEffect(() => {
+		resetAddedAnswers();
+	}, [questionId, resetAddedAnswers]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		if (!isEditing) {
+			resetAddedAnswers();
+		}
+	}, [isEditing, resetAddedAnswers]);
 
 	return {
-		question: question as FillBlankQuestionApiResponse,
-		groupedAnswers,
-		handleAnswerChange,
+		...rest,
+		question,
+		grouppedQuestionAnswers,
+		grouppedAddedAnswers,
 		handleSubAnswerAdd,
+		handleSubAnswerChange,
 		handleSubAnswerDelete,
-		handleAnswerAdd: handleFillBlankAnswerAdd,
-		isLoading,
 	};
 };
 
