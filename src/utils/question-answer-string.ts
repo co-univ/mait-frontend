@@ -44,7 +44,7 @@ const QuestionAnswerString = (question: QuestionResponseType) => {
 			return (
 				oprtions
 					?.sort((a, b) => (a.answerOrder || 0) - (b.answerOrder || 0))
-					.map((option) => option.content)
+					.map((option) => String.fromCharCode(64 + option.originOrder))
 					.join(" → ") || ""
 			);
 		}

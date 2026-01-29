@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { apiHooks } from "@/libs/api";
-import type { FillBlankSubmitAnswer } from "@/libs/types";
+import type {
+	FillBlankSubmitAnswer,
+	GradedAnswerFillBlankResult,
+} from "@/libs/types";
 import type { FillBlankQuestionApiResponse } from "@/types";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
 
@@ -17,6 +20,7 @@ interface UseSolvingReviewFillBlankQuestionReturn {
 	isSubmitted: boolean;
 	isCorrect: boolean | null;
 	userAnswers: FillBlankSubmitAnswer[];
+	gradedResult: GradedAnswerFillBlankResult[] | null;
 	handleAnswerChange: (number: number, answer: string) => void;
 	isLoading: boolean;
 }
@@ -45,8 +49,13 @@ const useSolvingReviewFillBlankQuestion = ({
 		},
 	);
 
-	const { getUserAnswers, getIsSubmitted, getIsCorrect, setUserAnswers } =
-		useSolvingReviewAnswerResultStore();
+	const {
+		getUserAnswers,
+		getIsSubmitted,
+		getIsCorrect,
+		getIsGradedResults,
+		setUserAnswers,
+	} = useSolvingReviewAnswerResultStore();
 
 	const question = data?.data as FillBlankQuestionApiResponse | undefined;
 
@@ -89,6 +98,7 @@ const useSolvingReviewFillBlankQuestion = ({
 		isCorrect: getIsCorrect(questionId),
 		userAnswers,
 		handleAnswerChange,
+		gradedResult: getIsGradedResults(questionId),
 		isLoading: isPending,
 	};
 };

@@ -93,27 +93,27 @@ const ManagementLiveTimeCard = ({
 	 *
 	 */
 	const handleRestartButtonClick = async () => {
-		// try {
-		// 	const res = await apiClient.PATCH(
-		// 		"/api/v1/question-sets/{questionSetId}/live-status/start",
-		// 		{
-		// 			params: {
-		// 				path: {
-		// 					questionSetId: questionSet.id ?? 0,
-		// 				},
-		// 			},
-		// 		},
-		// 	);
-		// 	if (!res.data?.isSuccess) {
-		// 		throw new Error("Failed to restart question set");
-		// 	}
-		// 	invalidateQuestionSetsQuery?.({
-		// 		mode: "LIVE_TIME",
-		// 	});
-		// 	notify.success("문제셋이 재시작되었습니다.");
-		// } catch {
-		// 	notify.error("문제셋 재시작에 실패했습니다.");
-		// }
+		try {
+			const res = await apiClient.PATCH(
+				"/api/v1/question-sets/{questionSetId}/restart",
+				{
+					params: {
+						path: {
+							questionSetId: questionSet.id ?? 0,
+						},
+					},
+				},
+			);
+			if (!res.data?.isSuccess) {
+				throw new Error("Failed to restart question set");
+			}
+			invalidateQuestionSetsQuery?.({
+				mode: "LIVE_TIME",
+			});
+			notify.success("문제셋이 재시작되었습니다.");
+		} catch {
+			notify.error("문제셋 재시작에 실패했습니다.");
+		}
 	};
 
 	/**

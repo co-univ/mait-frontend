@@ -400,7 +400,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 우승자 전송 */
+        /**
+         * 우승자 전송
+         * @deprecated
+         */
         post: operations["sendWinner"];
         delete?: never;
         options?: never;
@@ -421,7 +424,7 @@ export interface paths {
          * 다음 단계 진출자 전송 API
          * @description 다음 단계 진출 예정인 사용자에게 알림을 소켓으로 전송
          */
-        post: operations["sendParticpants"];
+        post: operations["sendParticipants"];
         delete?: never;
         options?: never;
         head?: never;
@@ -462,6 +465,46 @@ export interface paths {
          * @description 여러 정책에 대해 동의 또는 미동의를 한번에 처리합니다.
          */
         post: operations["checkPolicies"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/reissue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 토큰 재발급 API
+         * @description 토큰 재발급 API
+         */
+        post: operations["reissue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 로그아웃 API
+         * @description 사용자 로그아웃 API
+         */
+        post: operations["logout"];
         delete?: never;
         options?: never;
         head?: never;
@@ -540,6 +583,26 @@ export interface paths {
          * @description 종료된 학습/실시간 모드의 문제를 복습 상태로 전환한다.
          */
         patch: operations["updateToReviewMode"];
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/restart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 종료된 문제 셋을 실시간 풀이 진행중으로 변경
+         * @description 종료된 문제 셋을 다시 실시간 상태로 되돌린다.
+         */
+        patch: operations["restartQuestionSet"];
         trace?: never;
     };
     "/api/v1/question-sets/{questionSetId}/questions/{questionId}/status": {
@@ -1245,7 +1308,7 @@ export interface components {
             answers?: components["schemas"]["ShortAnswerApiResponse"][];
             /**
              * Format: int32
-             * @description 주관식 문제의 정답 개수
+             * @description 주관식 문제의 정답 그룹(number) 개수 (= main 정답 개수)
              */
             answerCount: number;
         });
@@ -1524,6 +1587,76 @@ export interface components {
             questionId: number;
             /** @description 정/오답 여부 */
             isCorrect: boolean;
+        };
+        ApiResponseQuestionAnswerReviewSubmitApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionAnswerReviewSubmitApiResponse"];
+        };
+        /** @description 빈칸 채우기 문제 채점 결과 */
+        GradedAnswerFillBlankResult: {
+            /**
+             * Format: int64
+             * @description 빈칸 번호
+             * @example 1
+             */
+            number?: number;
+            /**
+             * @description 유저가 제출한 답안
+             * @example 정답
+             */
+            answer?: string;
+            /**
+             * @description 해당 빈칸의 정답 여부
+             * @example true
+             */
+            isCorrect?: boolean;
+        };
+        /** @description 객관식 문제 채점 결과 */
+        GradedAnswerMultipleResult: {
+            /**
+             * Format: int64
+             * @description 선택지 번호
+             * @example 1
+             */
+            number?: number;
+            /**
+             * @description 해당 선택지의 정답 여부
+             * @example true
+             */
+            isCorrect?: boolean;
+        };
+        /** @description 채점된 답안 결과 */
+        GradedAnswerResult: {
+            correct?: boolean;
+        } & (components["schemas"]["GradedAnswerShortResult"] | components["schemas"]["GradedAnswerMultipleResult"] | components["schemas"]["GradedAnswerFillBlankResult"]);
+        /** @description 단답형 문제 채점 결과 */
+        GradedAnswerShortResult: {
+            /**
+             * @description 유저가 제출한 답안
+             * @example 정답
+             */
+            answer?: string;
+            /**
+             * @description 해당 답안의 정답 여부
+             * @example true
+             */
+            isCorrect?: boolean;
+        };
+        QuestionAnswerReviewSubmitApiResponse: {
+            /**
+             * Format: int64
+             * @description 유저가 제출한 문제 PK
+             */
+            questionId: number;
+            /** @description 유저가 제출한 문제 정답 여부 */
+            isCorrect: boolean;
+            /**
+             * @description 문제 유형
+             * @enum {string}
+             */
+            type?: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+            /** @description 제출한 정답에 대한 채점 결과 */
+            gradedResults?: components["schemas"]["GradedAnswerResult"][];
         };
         FillBlankUpdateAnswerPayload: Omit<components["schemas"]["UpdateAnswerPayload"], "type"> & {
             answers: components["schemas"]["FillBlankAnswerDto"][];
@@ -2702,7 +2835,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseQuestionAnswerSubmitApiResponse"];
+                    "*/*": components["schemas"]["ApiResponseQuestionAnswerReviewSubmitApiResponse"];
                 };
             };
         };
@@ -2857,7 +2990,7 @@ export interface operations {
             };
         };
     };
-    sendParticpants: {
+    sendParticipants: {
         parameters: {
             query: {
                 type: "WINNER" | "NEXT_ROUND";
@@ -2928,6 +3061,52 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseCheckPoliciesApiResponse"];
+                };
+            };
+        };
+    };
+    reissue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie: {
+                REFRESH_TOKEN: string;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    logout: {
+        parameters: {
+            query?: never;
+            header: {
+                Authorization: string;
+            };
+            path?: never;
+            cookie: {
+                REFRESH_TOKEN: string;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };
@@ -3020,6 +3199,28 @@ export interface operations {
                 "application/json": components["schemas"]["UpdateQuestionSetReviewApiRequest"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    restartQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {

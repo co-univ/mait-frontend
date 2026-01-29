@@ -42,6 +42,7 @@ const SolvingReviewRedirect = () => {
 				questionSetId,
 				questionId: lastViewedQuestionId,
 			}),
+			{ replace: true },
 		);
 	}, [lastViewedQuestionId, questionSetId, navigate]);
 
