@@ -19,6 +19,7 @@ const loginApi = async (credentials: LoginApiRequest): Promise<void> => {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(credentials),
+		credentials: "include",                                                   
 	});
 
 	if (!response.ok) {
@@ -30,9 +31,9 @@ const loginApi = async (credentials: LoginApiRequest): Promise<void> => {
 	if (token) {
 		localStorage.setItem("token", token);
 	}
-
+             
 	return undefined;
-};
+};           
 
 // 로그인 훅
 export const useLogin = () => {
