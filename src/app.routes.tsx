@@ -9,12 +9,20 @@ import { managementRouter } from "@/domains/management/management.routes";
 import { myPageRouter } from "@/domains/my-page";
 import { solvingRouter } from "@/domains/solving/solving.routes";
 import { teamManagementRouter } from "@/domains/team-management/team-management.routes";
+import ErrorDetect from "@/pages/ErrorDetect";
+
+import AppLayout from "./layouts/AppLayout";
 import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <App />,
+		errorElement: (
+			<AppLayout>
+				<ErrorDetect />
+			</AppLayout>
+		),
 		children: [
 			...homeRouter,
 			...authRouter,
