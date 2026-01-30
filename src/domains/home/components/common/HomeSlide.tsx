@@ -5,6 +5,7 @@ import type React from "react";
 //
 
 interface HomeSlideProps {
+	id: string;
 	children: React.ReactNode;
 }
 
@@ -12,8 +13,12 @@ interface HomeSlideProps {
 //
 //
 
-const HomeSlide = ({ children }: HomeSlideProps) => {
-	return <section className="h-screen snap-center">{children}</section>;
+const HomeSlide = ({ id, children }: HomeSlideProps) => {
+	return (
+		<section id={id} className="h-screen snap-center">
+			{children}
+		</section>
+	);
 };
 
 export default HomeSlide;
