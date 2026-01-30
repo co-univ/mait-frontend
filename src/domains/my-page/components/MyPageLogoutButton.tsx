@@ -12,13 +12,11 @@ const MyPageLogoutButton = () => {
 	const handleButtonClick = async () => {
 		try {
 			const res = await apiClient.POST("/api/v1/auth/logout", {} as any);
-			console.log(res);
-			if (res.data?.isSuccess) {
-				localStorage.removeItem("token");
-				window.location.href = "/";
-			}
 		} catch (err) {
 			console.log(err);
+		} finally {
+			localStorage.removeItem("token");
+			window.location.href = "/";
 		}
 	};
 

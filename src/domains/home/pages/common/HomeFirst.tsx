@@ -4,10 +4,9 @@ import { useNavigate } from "react-router-dom";
 import homeFirstLottie from "@/assets/lotties/home-first-lottie.json";
 import Button from "@/components/Button";
 import Header from "@/components/header/Header";
-import useUser from "@/hooks/useUser";
-import yeah from "./yeah.png";
-import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
 import { AUTH_ROUTE_PATH } from "@/domains/auth/auth.routes";
+import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
+import useUser from "@/hooks/useUser";
 
 //
 //
