@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import RedBell from "@/assets/images/red-bell.svg";
 
 //
