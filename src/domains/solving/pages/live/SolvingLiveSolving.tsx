@@ -90,6 +90,9 @@ const SolvingLiveSolving = () => {
 							questionSetId,
 							questionId,
 						},
+						query: {
+							mode: "LIVE_TIME",
+						},
 					},
 				},
 			);
