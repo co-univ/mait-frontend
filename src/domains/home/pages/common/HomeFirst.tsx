@@ -78,7 +78,9 @@ const HomeFirst = () => {
 							메잇으로 더 똑똑하게 학습하세요!
 						</h4>
 					</div>
+					{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA event */}
 					<Button
+						id="main_cta"
 						item="바로 시작하기"
 						className="py-padding-6 px-padding-11 border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50"
 						onClick={handleButtonClick}
