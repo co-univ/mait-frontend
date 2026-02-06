@@ -63,6 +63,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 				head: false,
 				append: false,
 			},
+			// Beusable
+			{
+				tag: "script",
+				attrs: { type: "text/javascript" },
+				children: `(function(w, d, a){
+    w.__beusablerumclient__ = {
+        load : function(src){
+            var b = d.createElement("script");
+            b.src = src; b.async=true; b.type = "text/javascript";
+            d.getElementsByTagName("head")[0].appendChild(b);
+        }
+    };w.__beusablerumclient__.load(a + "?url=" + encodeURIComponent(d.URL));
+})(window, document, "//rum.beusable.net/load/b260130e144720u845");`,
+				head: false,
+				append: true,
+			},
 			{
 				tag: "meta",
 				attrs: { property: "og:title", content: "MAIT | AI 문제 제작" },
