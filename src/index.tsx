@@ -2,9 +2,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import * as Sentry from "@sentry/react";
 import { RouterProvider } from "react-router-dom";
 import router from "@/app.routes";
 import { ConfirmProvider } from "@/components/confirm";
+
+Sentry.init({
+	dsn: process.env.PUBLIC_SENTRY_DSN,
+	enabled: process.env.PUBLIC_MODE === "production",
+	sendDefaultPii: true,
+	enableLogs: true,
+});
 
 const queryClient = new QueryClient({
 	defaultOptions: {

@@ -1,3 +1,6 @@
+import * as Sentry from "@sentry/react";
+import { useEffect } from "react";
+import { useRouteError } from "react-router-dom";
 import RedBell from "@/assets/images/red-bell.svg";
 
 //
@@ -5,6 +8,12 @@ import RedBell from "@/assets/images/red-bell.svg";
 //
 
 const ErrorDetect = () => {
+	const error = useRouteError();
+
+	useEffect(() => {
+		Sentry.captureException(error);
+	}, [error]);
+
 	return (
 		<div className="w-full h-full flex flex-col justify-center items-center gap-gap-9">
 			<RedBell />
