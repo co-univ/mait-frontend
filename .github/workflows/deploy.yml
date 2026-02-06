@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "PUBLIC_WS_ENDPOINT=${{ secrets.PUBLIC_WS_ENDPOINT_DEV }}" > .env
           echo "PUBLIC_BASE_URL=${{ secrets.PUBLIC_BASE_URL_DEV }}" >> .env
-          echo "PUBLIC_SENTRY_DSN=${{ secrets.PUBLIC_SENTRY_DSN_DEV }}" >> .env
+          echo "PUBLIC_SENTRY_DSN=${{ secrets.PUBLIC_SENTRY_DSN }}" >> .env
           echo "PUBLIC_MODE=alpha" >> .env
           echo "PUBLIC_QUESTION_ID=${PUBLIC_QUESTION_ID}" >> .env
           echo "PUBLIC_TEAM_ID=${PUBLIC_TEAM_ID}" >> .env
