@@ -24,7 +24,7 @@ const Header = ({ isTransparentBackground }: HeaderProps) => {
 	return (
 		<header
 			className={clsx(
-				"fixed top-0 z-10 flex w-full justify-between items-center bg-color-alpha-white100 px-padding-12",
+				"fixed top-0 z-20 flex w-full justify-between items-center bg-color-alpha-white100 px-padding-12",
 				{
 					"bg-transparent": isTransparentBackground,
 					absolute: isHomePage,
