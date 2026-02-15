@@ -24,13 +24,7 @@ const AuthAccountCreationSuccess = () => {
 	const navigate = useNavigate();
 
 	setTimeout(() => {
-		const redirectUrl = localStorage.getItem("redirectAfterLogin");
-		if (redirectUrl) {
-			localStorage.removeItem("redirectAfterLogin");
-			window.location.href = redirectUrl;
-		} else {
-			navigate(HOME_ROUTE_PATH.ROOT);
-		}
+		navigate(HOME_ROUTE_PATH.ROOT);
 	}, 3000);
 
 	return (
