@@ -8,8 +8,8 @@ import type { QuestionType } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import { CREATION_ROUTE_PATH } from "../../creation.routes";
 import useCreationQuestionsStore from "../../stores/question/_useCreationQuestionStore";
+import creationQuestionConvertResponseToUpdate from "../../utils/question/creation-question-convert-response-to-update";
 import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
-import creationQuestionResponseToUpdate from "../../utils/question/creation-question-response-to-update";
 import useCreationQuestions from "./_useCreationQuestions";
 
 //
@@ -35,6 +35,7 @@ export type UseCreationQuestionReturn<
 	deleteQuestion: () => void;
 	isQuestionLoading: boolean;
 	isImageUploading: boolean;
+	isSavingQuestion: boolean;
 	isDeletingQuestion: boolean;
 };
 
@@ -223,7 +224,7 @@ const useCreationQuestion = <
 						questionId,
 					},
 				},
-				body: creationQuestionResponseToUpdate(question),
+				body: creationQuestionConvertResponseToUpdate(question),
 			},
 			{
 				onSuccess: (data) => {
@@ -289,6 +290,10 @@ const useCreationQuestion = <
 
 					let navigateToQuestionId: number | undefined;
 
+					// Determine which question to navigate to after deletion
+					// If the first question is deleted, navigate to the next question
+					// If the last question is deleted, navigate to the previous question
+					// Otherwise, navigate to the next question (which will shift up to the deleted question's position)
 					if (targetQuestionNumber === 1) {
 						navigateToQuestionId = questions?.[1]?.id;
 					} else if (targetQuestionNumber === questions?.length) {
@@ -349,6 +354,7 @@ const useCreationQuestion = <
 		deleteQuestion,
 		isQuestionLoading,
 		isImageUploading: isPostingQuestionImage,
+		isSavingQuestion: isPuttingQuestion,
 		isDeletingQuestion,
 	};
 };

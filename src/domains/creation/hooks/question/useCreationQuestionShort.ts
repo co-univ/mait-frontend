@@ -78,7 +78,7 @@ const useCreationQuestionShort = ({
 			const newAnswer: ShortAnswerApiResponse = {
 				id: generateTemporaryId(),
 				answer: "",
-				isMain: true,
+				main: true,
 				number: groupedAnswers.length + 1,
 			};
 
@@ -109,7 +109,7 @@ const useCreationQuestionShort = ({
 			const newAnswer: ShortAnswerApiResponse = {
 				id: generateTemporaryId(),
 				answer: "",
-				isMain: false,
+				main: false,
 				number,
 			};
 

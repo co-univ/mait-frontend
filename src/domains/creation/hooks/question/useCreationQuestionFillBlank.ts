@@ -276,7 +276,7 @@ const useCreationQuestionFillBlank = ({
 		const newMainAnswer: FillBlankAnswerApiResponse = {
 			id: generateTemporaryId(),
 			answer: "",
-			isMain: true,
+			main: true,
 			number: newBlankNumber,
 		};
 
@@ -306,7 +306,7 @@ const useCreationQuestionFillBlank = ({
 			const newAnswer: FillBlankAnswerApiResponse = {
 				id: generateTemporaryId(),
 				answer: "",
-				isMain: false,
+				main: false,
 				number,
 			};
 

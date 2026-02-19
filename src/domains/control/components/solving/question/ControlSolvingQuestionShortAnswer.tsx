@@ -41,8 +41,8 @@ const ControlSolvingQuestionShortAnswer = ({
 			isEditing,
 		});
 
-	const mainAnswer = questionAnswers.find((answer) => answer.isMain);
-	const subAnswers = questionAnswers.filter((answer) => !answer.isMain);
+	const mainAnswer = questionAnswers.find((answer) => answer.main);
+	const subAnswers = questionAnswers.filter((answer) => !answer.main);
 
 	const hideExpandButton = !isContentOverflow && subAnswers.length === 0;
 	const expanded = isExpanded || isEditing;

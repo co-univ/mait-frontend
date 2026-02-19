@@ -5,8 +5,7 @@ import type { QuestionResponseType } from "@/app.constants";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
-import CreationQuestionConvertQuestionType from "@/domains/creation/utils/question/creation-question-convert-question-type";
-import creationQuestionResponseToUpdate from "@/domains/creation/utils/question/creation-question-response-to-update";
+import creationQuestionResponseToUpdate from "@/domains/creation/utils/question/creation-question-convert-response-to-update";
 import { apiClient, apiHooks } from "@/libs/api";
 import type {
 	ApiResponseQuestionApiResponse,
@@ -176,10 +175,10 @@ const useCreationQuestion = ({
 	 */
 	const handleTypeChange = (type: QuestionType) => {
 		if (question) {
-			const convertedQuestion = CreationQuestionConvertQuestionType(
-				question,
+			const convertedQuestion = {
+				...question,
 				type,
-			);
+			};
 
 			editQuestion(convertedQuestion);
 		}
