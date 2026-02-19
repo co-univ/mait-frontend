@@ -30,10 +30,7 @@ type CreationQuestionStoreQuestionType =
 	};
 
 interface CreationQuestionStoreState {
-	questionRecords: Record<
-		number,
-		CreationQuestionStoreQuestionType | undefined
-	>;
+	questionRecords: Record<number, CreationQuestionStoreQuestionType>;
 }
 
 interface CreationQuestionStoreActions {
