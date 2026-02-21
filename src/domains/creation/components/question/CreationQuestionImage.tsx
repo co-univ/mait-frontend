@@ -3,13 +3,16 @@ import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie";
 import loadingAnimation from "@/assets/lotties/loading.json";
+import FileInput from "@/components/FileInput";
 
 //
 //
 //
 
 interface CreationQuestionImageProps {
+	isLoading: boolean;
 	imageUrl: string;
+	onChange: (file: File | null) => void;
 	onDelete: () => void;
 }
 
@@ -18,7 +21,9 @@ interface CreationQuestionImageProps {
 //
 
 const CreationQuestionImage = ({
+	isLoading,
 	imageUrl,
+	onChange,
 	onDelete,
 }: CreationQuestionImageProps) => {
 	const ref = useRef<HTMLImageElement>(null);
@@ -40,6 +45,18 @@ const CreationQuestionImage = ({
 			setIsImageLoading(true);
 		}
 	}, [imageUrl]);
+
+	if (!imageUrl) {
+		return (
+			<FileInput
+				text="이미지 추가"
+				accept=".jpg,.jpeg,.png,.svg"
+				file={null}
+				onChange={onChange}
+				isLoading={isLoading}
+			/>
+		);
+	}
 
 	return (
 		<div className="w-full flex justify-center">

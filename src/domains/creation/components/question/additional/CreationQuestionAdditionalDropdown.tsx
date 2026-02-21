@@ -7,9 +7,8 @@ import {
 	Table,
 } from "lucide-react";
 import type React from "react";
-import { useParams } from "react-router-dom";
 import { Dropdown } from "@/components/dropdown";
-import useCreateQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
+import useCreateQuestion from "@/domains/creation/hooks/question/_useCreationQuestion";
 import type { QuestionType } from "@/libs/types";
 
 //
@@ -43,15 +42,20 @@ const QUESTION_TYPES = [
 	icon: React.ReactNode;
 }>;
 
+interface CreationQuestionAdditionalDropdownProps {
+	questionSetId: number;
+	questionId: number;
+}
+
 //
 //
 //
 
-const CreationQuestionAdditionalDropdown = () => {
-	const questionSetId = Number(useParams().questionSetId);
-	const questionId = Number(useParams().questionId);
-
-	const { question, handleTypeChange } = useCreateQuestion({
+const CreationQuestionAdditionalDropdown = ({
+	questionSetId,
+	questionId,
+}: CreationQuestionAdditionalDropdownProps) => {
+	const { question, changeType } = useCreateQuestion({
 		questionSetId,
 		questionId,
 	});
@@ -63,7 +67,7 @@ const CreationQuestionAdditionalDropdown = () => {
 	return (
 		<Dropdown.Root
 			value={question?.type}
-			onValueChange={(value) => handleTypeChange(value as QuestionType)}
+			onValueChange={(value) => changeType(value as QuestionType)}
 		>
 			<Dropdown.Trigger icon={<ChevronDown size={16} />}>
 				{selectedType?.label}

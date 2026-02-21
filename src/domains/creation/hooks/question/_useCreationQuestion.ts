@@ -1,16 +1,16 @@
-import { useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useMemo } from "react";
+import isEqual from "react-fast-compare";
 import type { QuestionResponseType } from "@/app.constants";
-import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import { apiHooks } from "@/libs/api";
-import type { QuestionType } from "@/libs/types";
-import { createPath } from "@/utils/create-path";
-import { CREATION_ROUTE_PATH } from "../../creation.routes";
+import type {
+	ApiResponseQuestionApiResponse,
+	QuestionType,
+} from "@/libs/types";
 import useCreationQuestionsStore from "../../stores/question/_useCreationQuestionStore";
 import creationQuestionConvertResponseToUpdate from "../../utils/question/creation-question-convert-response-to-update";
-import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
-import useCreationQuestions from "./_useCreationQuestions";
+import useCreationQuestionSet from "./_useCreationQuestionSet";
 
 //
 //
@@ -26,17 +26,16 @@ export type UseCreationQuestionReturn<
 > = {
 	question?: TData;
 	setQuestion: (question: TData) => void;
-	changeQuestionContent: (content: string) => void;
-	changeQuestionExplanation: (explanation: string) => void;
-	changeQuestionType: (type: QuestionType) => void;
-	addQuestionImage: (file: File | null) => void;
-	deleteQuestionImage: () => void;
-	saveQuestion: () => void;
-	deleteQuestion: () => void;
+	changeContent: (content: string) => void;
+	changeExplanation: (explanation: string) => void;
+	changeType: (type: QuestionType) => void;
+	addImage: (file: File | null) => void;
+	deleteImage: () => void;
+	saveQuestion: () => Promise<ApiResponseQuestionApiResponse | undefined>;
+	isDirty: boolean;
 	isQuestionLoading: boolean;
 	isImageUploading: boolean;
 	isSavingQuestion: boolean;
-	isDeletingQuestion: boolean;
 };
 
 //
@@ -55,7 +54,7 @@ const useCreationQuestion = <
 		resetStore,
 	} = useCreationQuestionsStore();
 
-	const { questions, refetchQuestions } = useCreationQuestions({
+	const { refetchQuestions } = useCreationQuestionSet({
 		questionSetId,
 	});
 
@@ -82,23 +81,29 @@ const useCreationQuestion = <
 			"/api/v1/question-sets/{questionSetId}/questions/images",
 		);
 
-	const { mutate: putQuestionMutate, isPending: isPuttingQuestion } =
+	const { mutateAsync: putQuestionMutateAsync, isPending: isPuttingQuestion } =
 		apiHooks.useMutation(
 			"put",
 			"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
 		);
 
-	const { mutate: deleteQuestionMutate, isPending: isDeletingQuestion } =
-		apiHooks.useMutation(
-			"delete",
-			"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
-		);
+	const queryClient = useQueryClient();
 
 	const question = getQuestion(questionId) as TData | undefined;
 
-	const { confirm } = useConfirm();
+	/**
+	 * Determines question is changed by comparing the fetched question data
+	 */
+	const isDirty = useMemo(() => {
+		if (!questionData?.data || !question) {
+			return false;
+		}
 
-	const navigate = useNavigate();
+		return !isEqual(
+			creationQuestionConvertResponseToUpdate(questionData.data),
+			creationQuestionConvertResponseToUpdate(question),
+		);
+	}, [questionData?.data, question]);
 
 	/**
 	 * Setters for question fields in the store
@@ -113,7 +118,7 @@ const useCreationQuestion = <
 	/**
 	 * Change question content in the store
 	 */
-	const changeQuestionContent = (content: string) => {
+	const changeContent = (content: string) => {
 		if (!question) {
 			return;
 		}
@@ -127,7 +132,7 @@ const useCreationQuestion = <
 	/**
 	 * Change question explanation in the store
 	 */
-	const changeQuestionExplanation = (explanation: string) => {
+	const changeExplanation = (explanation: string) => {
 		if (!question) {
 			return;
 		}
@@ -141,7 +146,7 @@ const useCreationQuestion = <
 	/**
 	 * Change question type in the store
 	 */
-	const changeQuestionType = (type: QuestionType) => {
+	const changeType = (type: QuestionType) => {
 		if (!question) {
 			return;
 		}
@@ -155,7 +160,7 @@ const useCreationQuestion = <
 	/**
 	 * Add an image to the question by uploading it to the server and updating the store with the returned image URL and ID
 	 */
-	const addQuestionImage = (file: File | null) => {
+	const addImage = (file: File | null) => {
 		if (!file) {
 			return;
 		}
@@ -196,7 +201,7 @@ const useCreationQuestion = <
 	/**
 	 * Delete the question's image by clearing the image URL and ID from the store
 	 */
-	const deleteQuestionImage = () => {
+	const deleteImage = () => {
 		if (!question) {
 			return;
 		}
@@ -211,12 +216,12 @@ const useCreationQuestion = <
 	/**
 	 * Save the question by sending the updated question data to the server and refetching the questions list on success
 	 */
-	const saveQuestion = () => {
-		if (!question) {
+	const saveQuestion = async () => {
+		if (!question || !isDirty) {
 			return;
 		}
 
-		putQuestionMutate(
+		return putQuestionMutateAsync(
 			{
 				params: {
 					path: {
@@ -228,99 +233,31 @@ const useCreationQuestion = <
 			},
 			{
 				onSuccess: (data) => {
-					notify.success("문제가 저장되었습니다.");
-
 					const updatedQuestion = data.data;
 					const updatedQuestionId = updatedQuestion?.id ?? 0;
 
 					refetchQuestions();
-					setQuestion(updatedQuestion as TData);
-
-					if (updatedQuestionId !== questionId) {
-						navigate(
-							createPath(CREATION_ROUTE_PATH.QUESTION, {
-								questionSetId,
-								questionId: updatedQuestionId,
-							}),
-						);
-					}
-				},
-			},
-		);
-	};
-
-	/**
-	 * Delete the question after user confirmation
-	 */
-	const deleteQuestion = async () => {
-		if (questions && questions.length <= 1) {
-			notify.warn("문제는 최소 1개 이상이어야 합니다.");
-
-			return;
-		}
-
-		const targetQuestionNumber = creationQuestionFindNumber(
-			questions || [],
-			questionId,
-		);
-
-		const confirmed = await confirm({
-			title: `${targetQuestionNumber}번 문제 삭제`,
-			description: "삭제된 문제는 복구할 수 없습니다.",
-			confirmText: "삭제",
-			cancelText: "취소",
-		});
-
-		if (!confirmed) {
-			return;
-		}
-
-		deleteQuestionMutate(
-			{
-				params: {
-					path: {
-						questionSetId,
-						questionId,
-					},
-				},
-			},
-			{
-				onSuccess: () => {
-					notify.success(`${targetQuestionNumber}번 문제가 삭제되었습니다.`);
-
-					let navigateToQuestionId: number | undefined;
-
-					// Determine which question to navigate to after deletion
-					// If the first question is deleted, navigate to the next question
-					// If the last question is deleted, navigate to the previous question
-					// Otherwise, navigate to the next question (which will shift up to the deleted question's position)
-					if (targetQuestionNumber === 1) {
-						navigateToQuestionId = questions?.[1]?.id;
-					} else if (targetQuestionNumber === questions?.length) {
-						navigateToQuestionId = questions?.[targetQuestionNumber - 2]?.id;
-					} else {
-						navigateToQuestionId = questions?.[targetQuestionNumber]?.id;
-					}
-
-					if (navigateToQuestionId) {
-						navigate(
-							createPath(CREATION_ROUTE_PATH.QUESTION, {
-								questionSetId,
-								questionId: navigateToQuestionId,
-							}),
-						);
-					} else {
-						throw new Error(
-							"Could not determine question to navigate to after deletion",
-						);
-					}
-
-					refetchQuestions();
+					storeSetQuestion(updatedQuestionId, updatedQuestion as TData);
+					queryClient.refetchQueries({
+						queryKey: apiHooks.queryOptions(
+							"get",
+							"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
+							{
+								params: {
+									path: {
+										questionSetId,
+										questionId: updatedQuestionId,
+									},
+									query: {
+										mode: "MAKING",
+									},
+								},
+							},
+						).queryKey,
+					});
 				},
 				onError: () => {
-					notify.error(
-						`${targetQuestionNumber}번 문제 삭제에 실패했습니다. 다시 시도해주세요.`,
-					);
+					notify.error("문제 저장에 실패했습니다. 다시 시도해주세요.");
 				},
 			},
 		);
@@ -345,17 +282,16 @@ const useCreationQuestion = <
 	return {
 		question,
 		setQuestion,
-		changeQuestionContent,
-		changeQuestionExplanation,
-		changeQuestionType,
-		addQuestionImage,
-		deleteQuestionImage,
+		changeContent,
+		changeExplanation,
+		changeType,
+		addImage,
+		deleteImage,
 		saveQuestion,
-		deleteQuestion,
+		isDirty,
 		isQuestionLoading,
 		isImageUploading: isPostingQuestionImage,
 		isSavingQuestion: isPuttingQuestion,
-		isDeletingQuestion,
 	};
 };
 

@@ -1,104 +1,85 @@
 import { Check, LogIn, Save } from "lucide-react";
-import { useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
 import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
-import {
-	useCreationQuestion,
-	useCreationQuestions,
-} from "@/domains/creation/hooks/question";
+import useCreationQuestion from "@/domains/creation/hooks/question/_useCreationQuestion";
+import useCreationQuestionSet from "@/domains/creation/hooks/question/_useCreationQuestionSet";
 import { createPath } from "@/utils/create-path";
 
 //
 //
 //
 
-const CreationQuestionAdditionalButtons = () => {
-	const timerRef = useRef<NodeJS.Timeout | null>(null);
+interface CreationQuestionAdditionalButtonsProps {
+	questionSetId: number;
+	questionId: number;
+}
 
-	const questionSetId = Number(useParams().questionSetId);
-	const questionId = Number(useParams().questionId);
+//
+//
+//
 
+const CreationQuestionAdditionalButtons = ({
+	questionSetId,
+	questionId,
+}: CreationQuestionAdditionalButtonsProps) => {
 	const navigate = useNavigate();
 
-	const { isEditing, handleUpdateQuestion } = useCreationQuestion({
+	const { validateQuestions } = useCreationQuestionSet({
 		questionSetId,
-		questionId,
 	});
 
-	const { questions, handleValidateQuestions } = useCreationQuestions({
+	const { saveQuestion, isDirty } = useCreationQuestion({
 		questionSetId,
+		questionId,
 	});
 
 	/**
 	 *
 	 */
 	const handleUpdateButtonClick = async () => {
-		const res = await handleUpdateQuestion();
-		const newQuestionId = res?.data?.id;
+		const updatResult = await saveQuestion();
 
-		notify.success("문제가 저장되었습니다.");
-
-		navigate(
-			createPath(CREATION_ROUTE_PATH.QUESTION, {
-				questionSetId,
-				questionId: newQuestionId ?? 0,
-			}),
-		);
+		if (updatResult?.isSuccess) {
+			notify.success("문제가 저장되었습니다.");
+		}
 	};
 
 	/**
 	 *
 	 */
 	const handleCreateButtonClick = async () => {
-		const isExistEditingQuestion = questions.some(
-			(question) => question.isEditing,
-		);
+		if (isDirty) {
+			const updateResult = await saveQuestion();
 
-		if (isExistEditingQuestion) {
-			await handleUpdateQuestion();
+			const newQuestionId = updateResult?.data?.id;
+
+			if (newQuestionId && newQuestionId !== questionId) {
+				navigate(
+					createPath(CREATION_ROUTE_PATH.QUESTION, {
+						questionSetId,
+						questionId: newQuestionId,
+					}),
+				);
+			}
 		}
 
-		const isValid = await handleValidateQuestions();
+		const isValid = await validateQuestions();
 
-		if (!isValid) {
-			notify.error("유효하지 않은 문제가 있습니다. 확인해주세요.");
-			return;
+		if (isValid) {
+			navigate(
+				createPath(CREATION_ROUTE_PATH.PUBLISH, {
+					questionSetId: questionSetId,
+				}),
+			);
 		}
-
-		navigate(
-			createPath(CREATION_ROUTE_PATH.PUBLISH, {
-				questionSetId: questionSetId,
-			}),
-		);
 	};
-
-	//
-	//
-	// biome-ignore lint/correctness/useExhaustiveDependencies: timer only depends on isEditing state
-	useEffect(() => {
-		if (isEditing) {
-			if (timerRef.current) {
-				clearTimeout(timerRef.current);
-			}
-
-			timerRef.current = setTimeout(() => {
-				handleUpdateButtonClick();
-			}, 60 * 1000);
-		}
-
-		return () => {
-			if (timerRef.current) {
-				clearTimeout(timerRef.current);
-			}
-		};
-	}, [isEditing]);
 
 	return (
 		<div className="flex justify-between">
 			<Button
-				disabled={!isEditing}
+				disabled={!isDirty}
 				icon={<Save />}
 				onClick={handleUpdateButtonClick}
 				className="bg-color-gray-5 border-none disabled:text-color-gray-20"

@@ -30,7 +30,7 @@ type CreationQuestionStoreQuestionType =
 	};
 
 interface CreationQuestionStoreState {
-	questionRecords: Record<number, CreationQuestionStoreQuestionType>;
+	questionsRecord: Record<number, CreationQuestionStoreQuestionType>;
 }
 
 interface CreationQuestionStoreActions {
@@ -60,7 +60,7 @@ interface CreationQuestionStoreActions {
 /**
  * A store for managing question data during creation/editing.
  *
- * This store uses a Record-based structure (questionRecords) to manage multiple questions
+ * This store uses a Record-based structure (questionsRecord) to manage multiple questions
  * simultaneously by their IDs, enabling efficient access to any question's data.
  *
  * It stores answer data for all question types (MULTIPLE, SHORT, ORDERING, FILL_BLANK)
@@ -73,10 +73,10 @@ interface CreationQuestionStoreActions {
 const useCreationQuestionStore = create<
 	CreationQuestionStoreState & CreationQuestionStoreActions
 >((set, get) => ({
-	questionRecords: {},
+	questionsRecord: {},
 
 	getQuestion: (questionId: number) => {
-		const question = get().questionRecords[questionId];
+		const question = get().questionsRecord[questionId];
 
 		if (!question) {
 			return undefined;
@@ -88,6 +88,7 @@ const useCreationQuestionStore = create<
 			explanation: question.explanation,
 			imageId: question.imageId,
 			imageUrl: question.imageUrl,
+			type: question.type,
 		} as QuestionResponseType;
 
 		switch (question.type as QuestionType) {
@@ -117,7 +118,7 @@ const useCreationQuestionStore = create<
 	},
 
 	setQuestion: (questionId: number, question: QuestionResponseType) => {
-		const storedQuestion = get().questionRecords[questionId];
+		const storedQuestion = get().questionsRecord[questionId];
 		const newQuestion: CreationQuestionStoreQuestionType = {
 			id: question.id,
 			content: question.content,
@@ -156,14 +157,14 @@ const useCreationQuestionStore = create<
 		}
 
 		set((state) => ({
-			questionRecords: {
-				...state.questionRecords,
+			questionsRecord: {
+				...state.questionsRecord,
 				[questionId]: newQuestion,
 			},
 		}));
 	},
 
-	resetStore: () => set(() => ({ questionRecords: {} })),
+	resetStore: () => set(() => ({ questionsRecord: {} })),
 }));
 
 export default useCreationQuestionStore;

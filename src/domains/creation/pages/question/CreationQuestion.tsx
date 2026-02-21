@@ -1,200 +1,53 @@
-import clsx from "clsx";
-import { ChevronsDown, ChevronsUp, SquareMinus } from "lucide-react";
-import { useEffect, useRef } from "react";
-import {
-	useBeforeUnload,
-	useBlocker,
-	useNavigate,
-	useParams,
-} from "react-router-dom";
-import type { QuestionResponseType } from "@/app.constants";
+import { useEffect } from "react";
+import { useBeforeUnload, useBlocker, useParams } from "react-router-dom";
 import { useConfirm } from "@/components/confirm";
 import EmptyQuestion from "@/components/EmptyQuestion";
-import QuestionNavigation, {
-	QuestionNavigationButton,
-	type QuestionNavigationRef,
-} from "@/components/question-navigation";
-import QuestionNavigationDirectionButton from "@/components/question-navigation/QuestionNavigationDirectionButton";
-import {
-	useCreationQuestion,
-	useCreationQuestions,
-} from "@/domains/creation/hooks/question";
+import useCreationQuestion from "@/domains/creation/hooks/question/_useCreationQuestion";
 import CreationQuestionLayout from "@/domains/creation/layouts/question/CreationQuestionLayout";
 import CreationQuestionAdditional from "@/domains/creation/pages/question/additional/CreationQuestionAdditional";
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
-import { createPath } from "@/utils/create-path";
-import type { QuestionNavigationButtonRenderProps } from "../../../../components/question-navigation/QuestionNavigationList";
-import { CREATION_ROUTE_PATH } from "../../creation.routes";
+import CreationQuestionNavigation from "../../components/question/CreationQuestionNavigation";
+import useCreationQuestionAutoSave from "../../hooks/question/useCreationQuestionAutoSave";
 
 //
 //
 //
 
 const CreationQuestion = () => {
-	const navigate = useNavigate();
-	const questionNavigationRef = useRef<QuestionNavigationRef>(null);
-
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { questions, invalidQuestions, handleAddQuestion } =
-		useCreationQuestions({
-			questionSetId,
-		});
-
-	const { handleUpdateQuestion, handleDeleteQuestion } = useCreationQuestion({
+	const { isDirty } = useCreationQuestion({
 		questionSetId,
 		questionId,
 	});
 
-	const isExistEditingQuestion = questions.some(
-		(question) => question.isEditing,
-	);
-
 	const blocker = useBlocker(({ nextLocation }) => {
-		return (
-			isExistEditingQuestion &&
-			!nextLocation.pathname.startsWith("/creation/question")
-		);
+		return isDirty && !nextLocation.pathname.startsWith("/creation/question");
 	});
 
+	const { confirm } = useConfirm();
+
+	//
+	//
+	//
 	useBeforeUnload((e) => {
-		if (isExistEditingQuestion) {
+		if (isDirty) {
 			e.preventDefault();
 			e.returnValue = "";
 		}
 	});
 
-	const { confirm } = useConfirm();
-
-	/**
-	 *
-	 */
-	const handleQuestionNavigationClick = (newQuestionId: number) => {
-		handleUpdateQuestion();
-
-		navigate(
-			createPath(CREATION_ROUTE_PATH.QUESTION, {
-				questionSetId,
-				questionId: newQuestionId,
-			}),
-			{
-				replace: true,
-			},
-		);
-	};
-
-	/**
-	 *
-	 */
-	const renderQuestoinNaivigationUpButton = () => {
-		const visibleRange = questionNavigationRef.current?.getVisibleRange();
-
-		if (!visibleRange) {
-			return (
-				<QuestionNavigationDirectionButton
-					onClick={() => questionNavigationRef.current?.scrollUp()}
-				>
-					<ChevronsUp />
-				</QuestionNavigationDirectionButton>
-			);
-		}
-
-		const hasInvalidAbove = invalidQuestions.some((invalidId) => {
-			const index = questions.findIndex((q) => q.id === invalidId);
-			return index !== -1 && index < visibleRange.startIndex;
-		});
-
-		return (
-			<QuestionNavigationDirectionButton
-				onClick={() => questionNavigationRef.current?.scrollUp()}
-				className={clsx({
-					"border !border-color-point-50": hasInvalidAbove,
-				})}
-			>
-				<ChevronsUp />
-			</QuestionNavigationDirectionButton>
-		);
-	};
-
-	/**
-	 *
-	 */
-	const renderQuestoinNavigationDownButton = () => {
-		const visibleRange = questionNavigationRef.current?.getVisibleRange();
-
-		if (!visibleRange) {
-			return (
-				<QuestionNavigationDirectionButton
-					onClick={() => questionNavigationRef.current?.scrollDown()}
-				>
-					<ChevronsDown />
-				</QuestionNavigationDirectionButton>
-			);
-		}
-
-		const hasInvalidBelow = invalidQuestions.some((invalidId) => {
-			const index = questions.findIndex((q) => q.id === invalidId);
-			return index !== -1 && index > visibleRange.endIndex;
-		});
-
-		return (
-			<QuestionNavigationDirectionButton
-				onClick={() => questionNavigationRef.current?.scrollDown()}
-				className={clsx({
-					"border !border-color-point-50": hasInvalidBelow,
-				})}
-			>
-				<ChevronsDown />
-			</QuestionNavigationDirectionButton>
-		);
-	};
-
-	/**
-	 *
-	 */
-	const renderQuestionNavigationButton = ({
-		question,
-		index,
-		isActive,
-		isMouseOver,
-		onMouseEnter,
-		onMouseLeave,
-	}: QuestionNavigationButtonRenderProps<QuestionResponseType>) => {
-		const isInvalid = invalidQuestions.includes(question.id);
-
-		return (
-			// biome-ignore lint/a11y/noStaticElementInteractions: div used for hover state
-			<div
-				className="relative"
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-			>
-				<QuestionNavigationButton
-					isActive={isActive}
-					isMouseOver={isMouseOver}
-					number={index + 1}
-					onClick={() => handleQuestionNavigationClick(question.id)}
-					className={clsx({
-						"border !border-color-point-50": isInvalid,
-					})}
-				/>
-
-				{isMouseOver && (
-					<button
-						type="button"
-						onClick={() => handleDeleteQuestion(question.id)}
-						className="absolute top-[5px] right-[5px]"
-					>
-						<SquareMinus size={20} className="text-color-point-50" />
-					</button>
-				)}
-			</div>
-		);
-	};
-
 	//
 	//
+	//
+	useCreationQuestionAutoSave({
+		questionSetId,
+		questionId,
+	});
+
+	//
+	// Block navigation when there are unsaved changes
 	//
 	useEffect(() => {
 		if (blocker.state === "blocked") {
@@ -214,20 +67,20 @@ const CreationQuestion = () => {
 
 	return (
 		<CreationQuestionLayout>
-			<QuestionNavigation
-				ref={questionNavigationRef}
-				hasAddButton
-				questions={questions}
-				activeQuestionId={questionId}
-				onQuestionAdd={handleAddQuestion}
-				renderUpButton={renderQuestoinNaivigationUpButton}
-				renderDownButton={renderQuestoinNavigationDownButton}
-				renderQuestionNavigationButton={renderQuestionNavigationButton}
+			<CreationQuestionNavigation
+				questionSetId={questionSetId}
+				questionId={questionId}
 			/>
 			{questionId !== 0 ? (
 				<>
-					<CreationQuestionMain />
-					<CreationQuestionAdditional />
+					<CreationQuestionMain
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+					<CreationQuestionAdditional
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
 				</>
 			) : (
 				<EmptyQuestion />
