@@ -1,16 +1,13 @@
 import { ChevronRight, Puzzle } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import Badge from "@/components/Badge";
 import Button from "@/components/Button";
-import FileInput from "@/components/FileInput";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
-import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
-import { apiHooks } from "@/libs/api";
 import type { QuestionType } from "@/libs/types";
 import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
 import CreationQuestionImage from "../../components/question/CreationQuestionImage";
-import { useCreationQuestions } from "../../hooks/question";
+import useCreationQuestion from "../../hooks/question/useCreationQuestion";
+import useCreationQuestionSet from "../../hooks/question/useCreationQuestionSet";
 import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
 import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFillBlank";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
@@ -22,62 +19,30 @@ import CreationQuestionPreviewModal from "./preview/CreationQuestionPreviewModal
 //
 //
 
-const CreationQuestionMain = () => {
+interface CreationQuestionMainProps {
+	questionSetId: number;
+	questionId: number;
+}
+
+//
+//
+//
+
+const CreationQuestionMain = ({
+	questionSetId,
+	questionId,
+}: CreationQuestionMainProps) => {
 	const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
-	const questionSetId = Number(useParams().questionSetId);
-	const questionId = Number(useParams().questionId);
-
-	const { data } = apiHooks.useQuery(
-		"get",
-		"/api/v1/question-sets/{questionSetId}",
-		{
-			params: {
-				path: {
-					questionSetId,
-				},
-			},
-		},
-	);
-
-	const questionSet = data?.data;
-
-	const { questions } = useCreationQuestions({ questionSetId });
-
-	const {
-		question,
-		handleContentChange,
-		handleImageChange,
-		handleImageAdd,
-		isUploadingImage,
-	} = useCreationQuestion({
+	const { questionSet, questions } = useCreationQuestionSet({
 		questionSetId,
-		questionId,
 	});
 
-	/**
-	 *
-	 */
-	const renderQuestionImage = () => {
-		if (question?.imageUrl) {
-			return (
-				<CreationQuestionImage
-					imageUrl={question.imageUrl}
-					onDelete={() => handleImageChange(undefined, undefined)}
-				/>
-			);
-		}
-
-		return (
-			<FileInput
-				text="이미지 추가"
-				accept=".jpg,.jpeg,.png,.svg"
-				file={null}
-				onChange={handleImageAdd}
-				isLoading={isUploadingImage}
-			/>
-		);
-	};
+	const { question, changeContent, addImage, deleteImage, isImageUploading } =
+		useCreationQuestion({
+			questionSetId,
+			questionId,
+		});
 
 	/**
 	 *
@@ -85,13 +50,33 @@ const CreationQuestionMain = () => {
 	const renderQuestionAnswer = () => {
 		switch (question?.type as QuestionType) {
 			case "MULTIPLE":
-				return <CreationQuestionAnswerMultiple />;
+				return (
+					<CreationQuestionAnswerMultiple
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "SHORT":
-				return <CreationQuestionAnswerShort />;
+				return (
+					<CreationQuestionAnswerShort
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "ORDERING":
-				return <CreationQuestionAnswerOrdering />;
+				return (
+					<CreationQuestionAnswerOrdering
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "FILL_BLANK":
-				return <CreationQuestionAnswerFillBlank />;
+				return (
+					<CreationQuestionAnswerFillBlank
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			default:
 				return null;
 		}
@@ -118,23 +103,31 @@ const CreationQuestionMain = () => {
 
 				<div className="flex w-full">
 					{(question?.type as QuestionType) === "FILL_BLANK" ? (
-						<CreationQuestionContentFillBlank />
+						<CreationQuestionContentFillBlank
+							questionSetId={questionSetId}
+							questionId={questionId}
+						/>
 					) : (
 						<CreationQuestionContent
 							value={question?.content || ""}
-							onChange={handleContentChange}
+							onChange={changeContent}
 						/>
 					)}
 				</div>
 
-				{renderQuestionImage()}
+				<CreationQuestionImage
+					imageUrl={question?.imageUrl || ""}
+					onChange={addImage}
+					onDelete={deleteImage}
+					isLoading={isImageUploading}
+				/>
 
 				{renderQuestionAnswer()}
 			</div>
 
 			<CreationQuestionPreviewModal
 				open={isPreviewModalOpen}
-				questionCount={questions.length}
+				questionCount={questions?.length ?? 0}
 				questionSetTitle={questionSet?.title || ""}
 				question={
 					question && {

@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { PencilLine } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import { notify } from "@/components/Toast";
@@ -8,7 +8,6 @@ import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import useTeams from "@/hooks/useTeams";
 import { apiHooks } from "@/libs/api";
 import type {
-	ApiResponseQuestionSetApiResponse,
 	ApiResponseQuestionSetsApiResponse,
 	DeliveryMode,
 	QuestionSetDto,
@@ -124,6 +123,19 @@ const ManagementMakingCard = ({
 
 			onSettled: () => {
 				invalidateQuestionSetsQuery();
+				queryClient.invalidateQueries({
+					queryKey: apiHooks.queryOptions(
+						"get",
+						"/api/v1/question-sets/{questionSetId}",
+						{
+							params: {
+								path: {
+									questionSetId: questionSet.id ?? 0,
+								},
+							},
+						},
+					).queryKey,
+				});
 			},
 		},
 	);

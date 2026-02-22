@@ -1,30 +1,30 @@
-import type { QuestionResponseType } from "@/app.constants";
+import { useMemo } from "react";
 import { notify } from "@/components/Toast";
-import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import type {
 	OrderingOptionApiResponse,
 	OrderingQuestionApiResponse,
 } from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
+import type {
+	UseCreationQuestionProps,
+	UseCreationQuestionReturn,
+} from "./useCreationQuestion";
+import useCreationQuestion from "./useCreationQuestion";
 
 //
 //
 //
 
-interface UseCreationQuestionOrderingProps {
-	questionId: number;
-}
+interface UseCreationQuestionOrderingProps extends UseCreationQuestionProps {}
 
-interface UseCreationQuestionOrderingReturn {
-	question?: OrderingQuestionApiResponse;
-	originOrderOptions: OrderingOptionApiResponse[];
-	answerOrderOptions: OrderingOptionApiResponse[];
-	handleOptionContentChange: (optionId: number, content: string) => void;
-	handleAnswerOrderChange: (
-		reorderedOptions: OrderingOptionApiResponse[],
-	) => void;
-	handleOptionAdd: () => void;
-	handleOptionDelete: (optionId: number) => void;
+interface UseCreationQuestionOrderingReturn
+	extends UseCreationQuestionReturn<OrderingQuestionApiResponse> {
+	originOrderOptions?: OrderingOptionApiResponse[];
+	answerOrderOptions?: OrderingOptionApiResponse[];
+	changeOptionContent: (optionId: number, content: string) => void;
+	changeAnswerOrder: (reorderedOptions: OrderingOptionApiResponse[]) => void;
+	addOption: () => void;
+	deleteOption: (optionId: number) => void;
 }
 
 //
@@ -32,111 +32,143 @@ interface UseCreationQuestionOrderingReturn {
 //
 
 const useCreationQuestionOrdering = ({
+	questionSetId,
 	questionId,
 }: UseCreationQuestionOrderingProps): UseCreationQuestionOrderingReturn => {
-	const { questions, editQuestion } = useCreationQuestionsStore();
+	const baseCreationQuestionResult =
+		useCreationQuestion<OrderingQuestionApiResponse>({
+			questionSetId,
+			questionId,
+		});
 
-	const question = questions.find((q) => q.id === questionId) as
-		| OrderingQuestionApiResponse
-		| undefined;
-
-	const options = question?.options || [];
-
-	const originOrderOptions = [...options].sort(
-		(a, b) => a.originOrder - b.originOrder,
+	const { question, setQuestion } = baseCreationQuestionResult;
+	const options = question?.options;
+	const originOrderOptions = useMemo(
+		() =>
+			options
+				? [...options].sort((a, b) => a.originOrder - b.originOrder)
+				: undefined,
+		[options],
 	);
-	const answerOrderOptions = [...options].sort(
-		(a, b) => (a.answerOrder || 0) - (b.answerOrder || 0),
+	const answerOrderOptions = useMemo(
+		() =>
+			options
+				? [...options].sort(
+						(a, b) => (a.answerOrder ?? 0) - (b.answerOrder ?? 0),
+					)
+				: undefined,
+		[options],
 	);
 
 	/**
 	 *
 	 */
-	const handleOptionContentChange = (optionId: number, content: string) => {
-		const updatedOptions = question?.options.map((option) =>
+	const changeOptionContent = (optionId: number, content: string) => {
+		if (!options) {
+			return;
+		}
+
+		const updatedOptions = options.map((option) =>
 			option.id === optionId ? { ...option, content } : option,
 		);
 
-		editQuestion({
+		setQuestion({
 			...question,
 			options: updatedOptions,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleAnswerOrderChange = (
-		reorderedOptions: OrderingOptionApiResponse[],
-	) => {
+	const changeAnswerOrder = (reorderedOptions: OrderingOptionApiResponse[]) => {
+		if (!options) {
+			return;
+		}
+
 		const updatedOptions = reorderedOptions.map((option, index) => ({
 			...option,
 			answerOrder: index + 1,
 		}));
 
-		editQuestion({
+		setQuestion({
 			...question,
 			options: updatedOptions,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleOptionAdd = () => {
-		if (options.length === 6) {
-			notify.error("순서 정답은 최대 6개까지 추가할 수 있습니다.");
+	const addOption = () => {
+		if (!options) {
+			return;
+		}
+
+		if (options.length >= 6) {
+			notify.warn("순서 정답은 최대 6개까지 추가할 수 있습니다.");
 
 			return;
 		}
 
 		const newOption: OrderingOptionApiResponse = {
 			id: generateTemporaryId(),
-			content: "",
 			originOrder: options.length + 1,
 			answerOrder: options.length + 1,
+			content: "",
 		};
+		const updatedOptions = [...options, newOption];
 
-		const updatedOptions = question?.options.concat(newOption);
-
-		editQuestion({
+		setQuestion({
 			...question,
 			options: updatedOptions,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleOptionDelete = (optionId: number) => {
-		if (options.length === 2) {
-			notify.error("순서 정답은 두개 이상 있어야 합니다.");
+	const deleteOption = (optionId: number) => {
+		const deletedOption = options?.find((option) => option.id === optionId);
+
+		if (!options || !deletedOption) {
+			return;
+		}
+
+		if (options.length <= 2) {
+			notify.warn("순서 정답은 최소 2개 이상 있어야 합니다.");
 
 			return;
 		}
 
-		const updatedOptions = question?.options
+		const updatedOptions = options
 			.filter((option) => option.id !== optionId)
-			.map((option, index) => ({
+			.map((option) => ({
 				...option,
-				originOrder: index + 1,
-				answerOrder: index + 1,
+				originOrder:
+					option.originOrder > deletedOption.originOrder
+						? option.originOrder - 1
+						: option.originOrder,
+				answerOrder:
+					(option?.answerOrder ?? 0) > (deletedOption?.answerOrder ?? 0)
+						? (option?.answerOrder ?? 1) - 1
+						: option.answerOrder,
 			}));
 
-		editQuestion({
+		setQuestion({
 			...question,
 			options: updatedOptions,
-		} as QuestionResponseType);
+		});
 	};
 
 	return {
-		question,
+		...baseCreationQuestionResult,
 		originOrderOptions,
 		answerOrderOptions,
-		handleOptionContentChange,
-		handleAnswerOrderChange,
-		handleOptionAdd,
-		handleOptionDelete,
+		changeOptionContent,
+		changeAnswerOrder,
+		addOption,
+		deleteOption,
 	};
 };
 

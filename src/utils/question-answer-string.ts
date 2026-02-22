@@ -32,7 +32,7 @@ const QuestionAnswerString = (question: QuestionResponseType) => {
 
 			return (
 				answers
-					?.filter((answer) => answer.isMain)
+					?.filter((answer) => answer.main)
 					.map((answer) => answer.answer)
 					.join(", ") || ""
 			);
@@ -54,7 +54,7 @@ const QuestionAnswerString = (question: QuestionResponseType) => {
 
 			return (
 				answers
-					?.filter((answer) => answer.isMain)
+					?.filter((answer) => answer.main)
 					.map((answer) => answer.answer)
 					.join(", ") || ""
 			);
