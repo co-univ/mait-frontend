@@ -114,7 +114,7 @@ const CreationPublish = () => {
 			invalidateMakingQuery();
 			invalidateLiveTimeQuery();
 
-			navigate(MANAGEMENT_ROUTE_PATH.ROOT);
+			navigate(`${MANAGEMENT_ROUTE_PATH.ROOT}?mode=live-time`);
 		} catch {
 			notify.error("문제 셋 생성에 실패했습니다.");
 		}
