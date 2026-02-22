@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import Button from "@/components/Button";
 import CreationQuestionAnswerShortBox from "@/domains/creation/components/question/answer/CreationQuestionAnswerShortBox";
-import useCreationQuestionShort from "@/domains/creation/hooks/question/_useCreationQuestionShort";
+import useCreationQuestionShort from "@/domains/creation/hooks/question/useCreationQuestionShort";
 
 //
 //

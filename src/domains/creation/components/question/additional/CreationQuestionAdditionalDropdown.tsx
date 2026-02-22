@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { Dropdown } from "@/components/dropdown";
-import useCreateQuestion from "@/domains/creation/hooks/question/_useCreationQuestion";
+import useCreateQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
 import type { QuestionType } from "@/libs/types";
 
 //

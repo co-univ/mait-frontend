@@ -1,5 +1,5 @@
 import CreationQuestionAnswerFillBlankBox from "@/domains/creation/components/question/answer/CreationQuestionAnswerFillBlankBox";
-import useCreationQuestionFillBlank from "@/domains/creation/hooks/question/_useCreationQuestionFillBlank";
+import useCreationQuestionFillBlank from "@/domains/creation/hooks/question/useCreationQuestionFillBlank";
 
 //
 //

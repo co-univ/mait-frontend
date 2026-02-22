@@ -7,7 +7,7 @@ import { clsx } from "clsx";
 import { Plus } from "lucide-react";
 import Button from "@/components/Button";
 import CreationQuestionBlankExtension from "@/domains/creation/editors/question/creation-question-blank-extention";
-import useCreationQuestionFillBlank from "../../hooks/question/_useCreationQuestionFillBlank";
+import useCreationQuestionFillBlank from "../../hooks/question/useCreationQuestionFillBlank";
 import "./editor.css";
 
 //

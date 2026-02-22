@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useCreationQuestions from "@/domains/creation/hooks/question/useCreationQuestions";
+import useCreationQuestionSet from "@/domains/creation/hooks/question/useCreationQuestionSet";
 import { createPath } from "@/utils/create-path";
 import { CREATION_ROUTE_PATH } from "../../creation.routes";
 
@@ -13,7 +13,9 @@ const CreationRedirect = () => {
 
 	const questionSetId = Number(useParams().questionSetId);
 
-	const { questions, isLoading } = useCreationQuestions({ questionSetId });
+	const { questions, isQuestionsLoading: isLoading } = useCreationQuestionSet({
+		questionSetId,
+	});
 
 	//
 	//

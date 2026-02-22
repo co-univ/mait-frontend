@@ -1,26 +1,24 @@
-import type { QuestionResponseType } from "@/app.constants";
 import { notify } from "@/components/Toast";
-import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
-import type {
-	MultipleChoiceDto,
-	MultipleQuestionApiResponse,
-} from "@/libs/types";
+import type { MultipleQuestionApiResponse } from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
+import type {
+	UseCreationQuestionProps,
+	UseCreationQuestionReturn,
+} from "./useCreationQuestion";
+import useCreationQuestion from "./useCreationQuestion";
 
 //
 //
 //
 
-interface UseQuestionMultipleProps {
-	questionId: number;
-}
+interface UseCreationQuestionMultipleProps extends UseCreationQuestionProps {}
 
-interface UseQuestionMultipleReturn {
-	question?: MultipleQuestionApiResponse;
-	handleChoiceCorrect: (choiceId: number, isCorrect: boolean) => void;
-	handleChoiceContentChange: (choiceId: number, content: string) => void;
-	handleChoiceAdd: () => void;
-	handleChoiceDelete: (choiceId: number) => void;
+interface UseCreationQuestionMultipleReturn
+	extends UseCreationQuestionReturn<MultipleQuestionApiResponse> {
+	changeChoiceCorrect: (choiceId: number, isCorrect: boolean) => void;
+	changeChoiceContent: (choiceId: number, content: string) => void;
+	addChoice: () => void;
+	deleteChoice: (choiceId: number) => void;
 }
 
 //
@@ -28,98 +26,115 @@ interface UseQuestionMultipleReturn {
 //
 
 const useCreationQuestionMultiple = ({
+	questionSetId,
 	questionId,
-}: UseQuestionMultipleProps): UseQuestionMultipleReturn => {
-	const { questions, editQuestion } = useCreationQuestionsStore();
+}: UseCreationQuestionMultipleProps): UseCreationQuestionMultipleReturn => {
+	const baseCreationQuestionResult =
+		useCreationQuestion<MultipleQuestionApiResponse>({
+			questionSetId,
+			questionId,
+		});
 
-	const question = questions.find((q) => q.id === questionId) as
-		| MultipleQuestionApiResponse
-		| undefined;
+	const { question, setQuestion } = baseCreationQuestionResult;
+	const choices = question?.choices;
 
 	/**
 	 *
 	 */
-	const handleChoiceCorrect = (choiceId: number, isCorrect: boolean) => {
-		const updatedChoices = question?.choices.map((choice) =>
+	const changeChoiceCorrect = (choiceId: number, isCorrect: boolean) => {
+		if (!choices) {
+			return;
+		}
+
+		const updatedChoices = choices.map((choice) =>
 			choice.id === choiceId ? { ...choice, isCorrect } : choice,
 		);
 
-		editQuestion({
+		setQuestion({
 			...question,
 			choices: updatedChoices,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleChoiceContentChange = (choiceId: number, content: string) => {
-		const updatedChoices = question?.choices.map((choice) =>
+	const changeChoiceContent = (choiceId: number, content: string) => {
+		if (!choices) {
+			return;
+		}
+
+		const updatedChoices = choices.map((choice) =>
 			choice.id === choiceId ? { ...choice, content } : choice,
 		);
 
-		editQuestion({
+		setQuestion({
 			...question,
 			choices: updatedChoices,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleChoiceAdd = () => {
-		if (question?.choices.length === 8) {
-			notify.error("객관식 선지는 최대 8개까지 추가할 수 있습니다.");
+	const addChoice = () => {
+		if (!choices) {
+			return;
+		}
+
+		if (choices.length >= 8) {
+			notify.warn("객관식 선지는 최대 8개까지 추가할 수 있습니다.");
 
 			return;
 		}
 
-		const newChoice: MultipleChoiceDto = {
+		const newChoice = {
 			id: generateTemporaryId(),
-			number: question ? question.choices.length + 1 : 1,
+			number: choices.length + 1,
 			content: "",
 			isCorrect: false,
 		};
+		const updatedChoices = [...choices, newChoice];
 
-		const updatedChoices = question
-			? [...question.choices, newChoice]
-			: [newChoice];
-
-		editQuestion({
+		setQuestion({
 			...question,
 			choices: updatedChoices,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleChoiceDelete = (choiceId: number) => {
-		if (question?.choices.length === 2) {
-			notify.error("객관식 선지는 두개 이상 있어야 합니다.");
+	const deleteChoice = (choiceId: number) => {
+		if (!choices) {
+			return;
+		}
+
+		if (choices.length <= 2) {
+			notify.warn("객관식 선지는 최소 2개 이상이어야 합니다.");
 
 			return;
 		}
 
-		const updatedChoices = question?.choices
+		const updatedChoices = choices
 			.filter((choice) => choice.id !== choiceId)
 			.map((choice, index) => ({
 				...choice,
 				number: index + 1,
 			}));
 
-		editQuestion({
+		setQuestion({
 			...question,
 			choices: updatedChoices,
-		} as QuestionResponseType);
+		});
 	};
 
 	return {
-		question,
-		handleChoiceCorrect,
-		handleChoiceContentChange,
-		handleChoiceAdd,
-		handleChoiceDelete,
+		...baseCreationQuestionResult,
+		changeChoiceCorrect,
+		changeChoiceContent,
+		addChoice,
+		deleteChoice,
 	};
 };
 

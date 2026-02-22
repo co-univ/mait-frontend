@@ -12,9 +12,11 @@ import useCreationQuestionFillBlank from "../../hooks/question/useCreationQuesti
 const CreationQuestionBlankNode = (props: ReactNodeViewProps) => {
 	const { number, answer } = props.node.attrs;
 
+	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { handleMainAnswerDelete } = useCreationQuestionFillBlank({
+	const { deleteMainAnswer } = useCreationQuestionFillBlank({
+		questionSetId,
 		questionId,
 	});
 
@@ -29,7 +31,7 @@ const CreationQuestionBlankNode = (props: ReactNodeViewProps) => {
 
 				<span className="flex flex-1 typo-body-small">{answer}</span>
 
-				<DeleteCheckBox onClick={() => handleMainAnswerDelete(number)} />
+				<DeleteCheckBox onClick={() => deleteMainAnswer(number)} />
 			</span>
 		</NodeViewWrapper>
 	);

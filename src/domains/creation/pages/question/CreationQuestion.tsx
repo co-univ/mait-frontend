@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { useBeforeUnload, useBlocker, useParams } from "react-router-dom";
 import { useConfirm } from "@/components/confirm";
 import EmptyQuestion from "@/components/EmptyQuestion";
-import useCreationQuestion from "@/domains/creation/hooks/question/_useCreationQuestion";
+import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
 import CreationQuestionLayout from "@/domains/creation/layouts/question/CreationQuestionLayout";
 import CreationQuestionAdditional from "@/domains/creation/pages/question/additional/CreationQuestionAdditional";
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
 import CreationQuestionNavigation from "../../components/question/CreationQuestionNavigation";
 import useCreationQuestionAutoSave from "../../hooks/question/useCreationQuestionAutoSave";
-import useCreationQuestionStore from "../../stores/question/_useCreationQuestionStore";
+import useCreationQuestionStore from "../../stores/question/useCreationQuestionStore";
 
 //
 //

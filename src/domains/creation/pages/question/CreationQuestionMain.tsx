@@ -6,8 +6,8 @@ import CreationQuestionContent from "@/domains/creation/components/question/Crea
 import type { QuestionType } from "@/libs/types";
 import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
 import CreationQuestionImage from "../../components/question/CreationQuestionImage";
-import useCreationQuestion from "../../hooks/question/_useCreationQuestion";
-import useCreationQuestionSet from "../../hooks/question/_useCreationQuestionSet";
+import useCreationQuestion from "../../hooks/question/useCreationQuestion";
+import useCreationQuestionSet from "../../hooks/question/useCreationQuestionSet";
 import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
 import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFillBlank";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";

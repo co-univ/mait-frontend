@@ -1,28 +1,30 @@
-import type { QuestionResponseType } from "@/app.constants";
+import { useMemo } from "react";
 import { notify } from "@/components/Toast";
-import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import type {
 	ShortAnswerApiResponse,
 	ShortQuestionApiResponse,
 } from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
+import type {
+	UseCreationQuestionProps,
+	UseCreationQuestionReturn,
+} from "./useCreationQuestion";
+import useCreationQuestion from "./useCreationQuestion";
 
 //
 //
 //
 
-interface UseQuestionShortProps {
-	questionId: number;
-}
+interface UseCreationQuestionShortProps extends UseCreationQuestionProps {}
 
-interface UseQuestionShortReturn {
-	question?: ShortQuestionApiResponse;
+interface UseCreationQuestionShortReturn
+	extends UseCreationQuestionReturn<ShortQuestionApiResponse> {
 	groupedAnswers: ShortAnswerApiResponse[][];
-	handleAnswerChange: (answerId: number, newAnswer: string) => void;
-	handleMainAnswerAdd: () => void;
-	handleSubAnswerAdd: (number: number) => void;
-	handleMainAnswerDelete: (number: number) => void;
-	handleSubAnswerDelete: (answerId: number) => void;
+	changeAnswer: (answerId: number, newAnswer: string) => void;
+	addMainAnswer: () => void;
+	addSubAnswer: (number: number) => void;
+	deleteMainAnswer: (number: number) => void;
+	deleteSubAnswer: (answerId: number) => void;
 }
 
 //
@@ -30,151 +32,159 @@ interface UseQuestionShortReturn {
 //
 
 const useCreationQuestionShort = ({
+	questionSetId,
 	questionId,
-}: UseQuestionShortProps): UseQuestionShortReturn => {
-	const { questions, editQuestion } = useCreationQuestionsStore();
+}: UseCreationQuestionShortProps): UseCreationQuestionShortReturn => {
+	const baseCreationQuestionResult =
+		useCreationQuestion<ShortQuestionApiResponse>({
+			questionSetId,
+			questionId,
+		});
 
-	const question = questions.find((q) => q.id === questionId) as
-		| ShortQuestionApiResponse
-		| undefined;
+	const { question, setQuestion } = baseCreationQuestionResult;
+	const answers = question?.answers;
 
-	const groupedAnswers: ShortAnswerApiResponse[][] = [];
+	/**
+	 * Groups short answer responses by their number into a 2D array.
+	 */
+	const groupedAnswers = useMemo(() => {
+		const grouped: ShortAnswerApiResponse[][] = Array.from(
+			{
+				length: Math.max(...(answers?.map((ans) => ans.number) || [0])),
+			},
+			() => [],
+		);
 
-	question?.answers?.forEach((answer) => {
-		const index = answer.number - 1;
+		answers?.forEach((answer) => {
+			const index = answer.number - 1;
 
-		if (!groupedAnswers[index]) {
-			groupedAnswers[index] = [];
-		}
+			grouped[index].push(answer);
+		});
 
-		groupedAnswers[index].push(answer);
-	});
+		return grouped;
+	}, [answers]);
 
 	/**
 	 *
 	 */
-	const handleAnswerChange = (answerId: number, newAnswer: string) => {
-		const updatedAnswers = question?.answers?.map((answer) =>
+	const changeAnswer = (answerId: number, newAnswer: string) => {
+		if (!answers) {
+			return;
+		}
+
+		const updatedAnswers = answers.map((answer) =>
 			answer.id === answerId ? { ...answer, answer: newAnswer } : answer,
 		);
 
-		editQuestion({
+		setQuestion({
 			...question,
 			answers: updatedAnswers,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleMainAnswerAdd = () => {
-		if (groupedAnswers.length === 5) {
-			notify.error("주관식 답안은 최대 5개까지 추가할 수 있습니다.");
+	const addMainAnswer = () => {
+		if (!answers) {
+			return;
+		}
+
+		if (groupedAnswers.length >= 5) {
+			notify.warn("주관식 답안은 최대 5개까지 추가할 수 있습니다.");
 
 			return;
 		}
 
-		if (question) {
-			const newAnswer: ShortAnswerApiResponse = {
-				id: generateTemporaryId(),
-				answer: "",
-				main: true,
-				number: groupedAnswers.length + 1,
-			};
+		const newAnswer = {
+			id: generateTemporaryId(),
+			main: true,
+			number: answers.length + 1,
+			answer: "",
+		};
+		const updatedAnswers = [...answers, newAnswer];
 
-			const updatedAnswers = question.answers
-				? [...question.answers, newAnswer]
-				: [newAnswer];
-
-			editQuestion({
-				...question,
-				answers: updatedAnswers,
-			} as QuestionResponseType);
-		}
+		setQuestion({
+			...question,
+			answers: updatedAnswers,
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleSubAnswerAdd = (number: number) => {
-		const groupedAnswer = groupedAnswers[number - 1];
+	const addSubAnswer = (number: number) => {
+		if (!answers) {
+			return;
+		}
 
-		if (groupedAnswer && groupedAnswer.length === 6) {
-			notify.error("인정 답안은 최대 5개까지 추가할 수 있습니다.");
+		// Answer count limit is 5 + 1 (main answer is included in groupedAnswers[number - 1].length)
+		if (groupedAnswers[number - 1]?.length >= 5 + 1) {
+			notify.warn("인정 답안은 최대 5개까지 추가할 수 있습니다.");
 
 			return;
 		}
 
-		if (question) {
-			const newAnswer: ShortAnswerApiResponse = {
-				id: generateTemporaryId(),
-				answer: "",
-				main: false,
-				number,
-			};
+		const newAnswer = {
+			id: generateTemporaryId(),
+			main: false,
+			number,
+			answer: "",
+		};
+		const updatedAnswers = [...answers, newAnswer];
 
-			const updatedAnswers = question.answers
-				? [...question.answers, newAnswer]
-				: [newAnswer];
-
-			editQuestion({
-				...question,
-				answers: updatedAnswers,
-			} as QuestionResponseType);
-		}
+		setQuestion({
+			...question,
+			answers: updatedAnswers,
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleMainAnswerDelete = (number: number) => {
-		if (groupedAnswers.length === 1) {
-			notify.error("주관식 답안은 한개 이상 있어야 합니다.");
+	const deleteMainAnswer = (number: number) => {
+		if (!answers) {
+			return;
+		}
+
+		if (groupedAnswers.length <= 1) {
+			notify.warn("주관식 답안은 최소 1개 이상 존재해야 합니다.");
 
 			return;
 		}
 
-		if (question) {
-			const updatedAnswers = (question.answers || [])
-				.filter((answer) => answer.number !== number)
-				.map((answer) => {
-					if (answer.number > number) {
-						return { ...answer, number: answer.number - 1 };
-					}
-					return answer;
-				});
+		const updatedAnswers = answers.filter((answer) => answer.number !== number);
 
-			editQuestion({
-				...question,
-				answers: updatedAnswers,
-			} as QuestionResponseType);
-		}
+		setQuestion({
+			...question,
+			answers: updatedAnswers,
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleSubAnswerDelete = (answerId: number) => {
-		if (question) {
-			const updatedAnswers = (question.answers || []).filter(
-				(answer) => answer.id !== answerId,
-			);
-
-			editQuestion({
-				...question,
-				answers: updatedAnswers,
-			} as QuestionResponseType);
+	const deleteSubAnswer = (answerId: number) => {
+		if (!answers) {
+			return;
 		}
+
+		const updatedAnswers = answers.filter((answer) => answer.id !== answerId);
+
+		setQuestion({
+			...question,
+			answers: updatedAnswers,
+		});
 	};
 
 	return {
-		question,
+		...baseCreationQuestionResult,
 		groupedAnswers,
-		handleAnswerChange,
-		handleMainAnswerAdd,
-		handleSubAnswerAdd,
-		handleMainAnswerDelete,
-		handleSubAnswerDelete,
+		changeAnswer,
+		addMainAnswer,
+		addSubAnswer,
+		deleteMainAnswer,
+		deleteSubAnswer,
 	};
 };
 

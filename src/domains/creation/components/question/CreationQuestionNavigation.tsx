@@ -11,8 +11,8 @@ import QuestionNavigationDirectionButton from "@/components/question-navigation/
 import type { QuestionNavigationButtonRenderProps } from "@/components/question-navigation/QuestionNavigationList";
 import { createPath } from "@/utils/create-path";
 import { CREATION_ROUTE_PATH } from "../../creation.routes";
-import useCreationQuestion from "../../hooks/question/_useCreationQuestion";
-import useCreationQuestionSet from "../../hooks/question/_useCreationQuestionSet";
+import useCreationQuestion from "../../hooks/question/useCreationQuestion";
+import useCreationQuestionSet from "../../hooks/question/useCreationQuestionSet";
 
 //
 //
