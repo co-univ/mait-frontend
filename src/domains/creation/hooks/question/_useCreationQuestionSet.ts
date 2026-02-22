@@ -119,6 +119,12 @@ const useCreationQuestionSet = ({
 	 *
 	 */
 	const addQuestion = () => {
+		if (questions && questions.length >= 20) {
+			notify.warn("문제는 최대 20개까지 추가할 수 있습니다.");
+
+			return;
+		}
+
 		postQuestionMutate(
 			{
 				params: {
@@ -140,6 +146,9 @@ const useCreationQuestionSet = ({
 							questionSetId,
 							questionId: addedQuestionId,
 						}),
+						{
+							replace: true,
+						},
 					);
 				},
 				onError: () => {
@@ -213,6 +222,9 @@ const useCreationQuestionSet = ({
 									questionSetId,
 									questionId: navigateToQuestionId,
 								}),
+								{
+									replace: true,
+								},
 							);
 						} else {
 							throw new Error(

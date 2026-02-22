@@ -50,13 +50,33 @@ const CreationQuestionMain = ({
 	const renderQuestionAnswer = () => {
 		switch (question?.type as QuestionType) {
 			case "MULTIPLE":
-				return <CreationQuestionAnswerMultiple />;
+				return (
+					<CreationQuestionAnswerMultiple
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "SHORT":
-				return <CreationQuestionAnswerShort />;
+				return (
+					<CreationQuestionAnswerShort
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "ORDERING":
-				return <CreationQuestionAnswerOrdering />;
+				return (
+					<CreationQuestionAnswerOrdering
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			case "FILL_BLANK":
-				return <CreationQuestionAnswerFillBlank />;
+				return (
+					<CreationQuestionAnswerFillBlank
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				);
 			default:
 				return null;
 		}
@@ -83,7 +103,10 @@ const CreationQuestionMain = ({
 
 				<div className="flex w-full">
 					{(question?.type as QuestionType) === "FILL_BLANK" ? (
-						<CreationQuestionContentFillBlank />
+						<CreationQuestionContentFillBlank
+							questionSetId={questionSetId}
+							questionId={questionId}
+						/>
 					) : (
 						<CreationQuestionContent
 							value={question?.content || ""}

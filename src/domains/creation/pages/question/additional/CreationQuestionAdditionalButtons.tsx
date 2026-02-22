@@ -43,6 +43,20 @@ const CreationQuestionAdditionalButtons = ({
 
 		if (updatResult?.isSuccess) {
 			notify.success("문제가 저장되었습니다.");
+
+			const updatedQuestionId = updatResult?.data?.id;
+
+			if (updatedQuestionId && updatedQuestionId !== questionId) {
+				navigate(
+					createPath(CREATION_ROUTE_PATH.QUESTION, {
+						questionSetId,
+						questionId: updatedQuestionId,
+					}),
+					{
+						replace: true,
+					},
+				);
+			}
 		}
 	};
 
@@ -61,6 +75,9 @@ const CreationQuestionAdditionalButtons = ({
 						questionSetId,
 						questionId: newQuestionId,
 					}),
+					{
+						replace: true,
+					},
 				);
 			}
 		}

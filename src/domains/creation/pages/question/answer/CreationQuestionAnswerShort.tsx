@@ -1,54 +1,57 @@
 import { Plus } from "lucide-react";
-import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import CreationQuestionAnswerShortBox from "@/domains/creation/components/question/answer/CreationQuestionAnswerShortBox";
-import useCreationQuestionShort from "@/domains/creation/hooks/question/useCreationQuestionShort";
+import useCreationQuestionShort from "@/domains/creation/hooks/question/_useCreationQuestionShort";
 
 //
 //
 //
 
-const CreationQuestionShort = () => {
-	const questionId = Number(useParams().questionId);
+interface CreationQuestionAnswerShortProps {
+	questionSetId: number;
+	questionId: number;
+}
 
+//
+//
+//
+
+const CreationQuestionShort = ({
+	questionSetId,
+	questionId,
+}: CreationQuestionAnswerShortProps) => {
 	const {
 		groupedAnswers,
-		handleAnswerChange,
-		handleMainAnswerAdd,
-		handleSubAnswerAdd,
-		handleMainAnswerDelete,
-		handleSubAnswerDelete,
+		changeAnswer,
+		addMainAnswer,
+		addSubAnswer,
+		deleteMainAnswer,
+		deleteSubAnswer,
 	} = useCreationQuestionShort({
+		questionSetId,
 		questionId,
 	});
 
-	/**
-	 *
-	 */
-	const renderAnswers = () => {
-		return groupedAnswers.map((answers) => {
-			return (
-				<CreationQuestionAnswerShortBox
-					key={answers[0].id}
-					answers={answers}
-					onAnswerChange={handleAnswerChange}
-					onSubAnswerAdd={handleSubAnswerAdd}
-					onMainAnswerDelete={handleMainAnswerDelete}
-					onSubAnswerDelete={handleSubAnswerDelete}
-				/>
-			);
-		});
-	};
-
 	return (
 		<div className="flex flex-col gap-gap-11">
-			<div className="flex flex-col gap-gap-11">{renderAnswers()}</div>
+			<div className="flex flex-col gap-gap-11">
+				{groupedAnswers.map((answers) => (
+					<CreationQuestionAnswerShortBox
+						key={answers[0].id}
+						answers={answers}
+						onAnswerChange={changeAnswer}
+						onSubAnswerAdd={addSubAnswer}
+						onMainAnswerDelete={deleteMainAnswer}
+						onSubAnswerDelete={deleteSubAnswer}
+					/>
+				))}
+			</div>
 
 			<div className="self-center">
 				<Button
 					icon={<Plus />}
 					item={<span className="typo-body-medium">답안추가</span>}
-					onClick={handleMainAnswerAdd}
+					onClick={addMainAnswer}
 					className="bg-color-gray-5 border-none"
 				/>
 			</div>

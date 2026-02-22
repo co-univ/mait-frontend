@@ -5,19 +5,28 @@ import Text from "@tiptap/extension-text";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { clsx } from "clsx";
 import { Plus } from "lucide-react";
-import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import CreationQuestionBlankExtension from "@/domains/creation/editors/question/creation-question-blank-extention";
-import useCreationQuestionFillBlank from "../../hooks/question/useCreationQuestionFillBlank";
+import useCreationQuestionFillBlank from "../../hooks/question/_useCreationQuestionFillBlank";
 import "./editor.css";
 
 //
 //
 //
 
-const CreationQuestionContentFillBlank = () => {
-	const questionId = Number(useParams().questionId);
+interface CreationQuestionContentFillBlankProps {
+	questionSetId: number;
+	questionId: number;
+}
 
+//
+//
+//
+
+const CreationQuestionContentFillBlank = ({
+	questionSetId,
+	questionId,
+}: CreationQuestionContentFillBlankProps) => {
 	const editor = useEditor({
 		extensions: [
 			Document,
@@ -36,7 +45,8 @@ const CreationQuestionContentFillBlank = () => {
 		},
 	});
 
-	const { handleMainAnswerAdd } = useCreationQuestionFillBlank({
+	const { addMainAnswer } = useCreationQuestionFillBlank({
+		questionSetId,
 		questionId,
 		editor,
 	});
@@ -56,7 +66,7 @@ const CreationQuestionContentFillBlank = () => {
 					icon={<Plus />}
 					item="빈칸 추가"
 					className="bg-color-gray-5 border-none"
-					onClick={handleMainAnswerAdd}
+					onClick={addMainAnswer}
 				/>
 			</div>
 		</div>

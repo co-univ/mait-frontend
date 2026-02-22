@@ -50,30 +50,33 @@ const useCreationQuestion = <
 }: UseCreationQuestionProps): UseCreationQuestionReturn<TData> => {
 	const {
 		getQuestion,
+		getUpdatedAt,
 		setQuestion: storeSetQuestion,
-		resetStore,
 	} = useCreationQuestionsStore();
 
 	const { refetchQuestions } = useCreationQuestionSet({
 		questionSetId,
 	});
 
-	const { data: questionData, isPending: isQuestionLoading } =
-		apiHooks.useQuery(
-			"get",
-			"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
-			{
-				params: {
-					path: {
-						questionSetId,
-						questionId,
-					},
-					query: {
-						mode: "MAKING",
-					},
+	const {
+		data: questionData,
+		isPending: isQuestionLoading,
+		dataUpdatedAt: questionDataUpdatedAt,
+	} = apiHooks.useQuery(
+		"get",
+		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
+		{
+			params: {
+				path: {
+					questionSetId,
+					questionId,
+				},
+				query: {
+					mode: "MAKING",
 				},
 			},
-		);
+		},
+	);
 
 	const { mutate: postQuestionImageMutate, isPending: isPostingQuestionImage } =
 		apiHooks.useMutation(
@@ -110,9 +113,9 @@ const useCreationQuestion = <
 	 */
 	const setQuestion = useCallback(
 		(question: TData) => {
-			storeSetQuestion(questionId, question);
+			storeSetQuestion(questionId, question, questionDataUpdatedAt);
 		},
-		[questionId, storeSetQuestion],
+		[questionId, storeSetQuestion, questionDataUpdatedAt],
 	);
 
 	/**
@@ -237,7 +240,11 @@ const useCreationQuestion = <
 					const updatedQuestionId = updatedQuestion?.id ?? 0;
 
 					refetchQuestions();
-					storeSetQuestion(updatedQuestionId, updatedQuestion as TData);
+					storeSetQuestion(
+						updatedQuestionId,
+						updatedQuestion as TData,
+						questionDataUpdatedAt,
+					);
 					queryClient.refetchQueries({
 						queryKey: apiHooks.queryOptions(
 							"get",
@@ -267,17 +274,25 @@ const useCreationQuestion = <
 	// Sync fetched question data into the store
 	//
 	useEffect(() => {
-		if (questionData?.data) {
-			setQuestion(questionData.data as TData);
-		}
-	}, [questionData?.data, setQuestion]);
+		const storedQuestionUpdatedAt = getUpdatedAt(questionId);
 
-	//
-	// Reset the store when the component unmounts to clear question data in the store
-	//
-	useEffect(() => {
-		return () => resetStore();
-	}, [resetStore]);
+		if (
+			questionData?.data &&
+			questionDataUpdatedAt !== storedQuestionUpdatedAt
+		) {
+			storeSetQuestion(
+				questionId,
+				questionData.data as TData,
+				questionDataUpdatedAt,
+			);
+		}
+	}, [
+		questionId,
+		questionData,
+		questionDataUpdatedAt,
+		getUpdatedAt,
+		storeSetQuestion,
+	]);
 
 	return {
 		question,

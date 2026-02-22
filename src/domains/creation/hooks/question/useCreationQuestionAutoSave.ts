@@ -1,4 +1,7 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { createPath } from "@/utils/create-path";
+import { CREATION_ROUTE_PATH } from "../../creation.routes";
 import useCreationQuestion from "./_useCreationQuestion";
 
 //
@@ -27,6 +30,8 @@ const useCreationQuestionAutoSave = ({
 
 	const saveQuestionRef = useRef(saveQuestion);
 
+	const navigate = useNavigate();
+
 	//
 	//
 	//
@@ -42,14 +47,26 @@ const useCreationQuestionAutoSave = ({
 			return;
 		}
 
-		const autoSaveTimer = setTimeout(() => {
-			saveQuestionRef.current();
+		const autoSaveTimer = setTimeout(async () => {
+			const saveResult = await saveQuestionRef.current();
+
+			if (saveResult?.data?.id) {
+				navigate(
+					createPath(CREATION_ROUTE_PATH.QUESTION, {
+						questionSetId,
+						questionId: saveResult.data.id,
+					}),
+					{
+						replace: true,
+					},
+				);
+			}
 		}, AUTO_UPDATE_INTERVAL);
 
 		return () => {
 			clearTimeout(autoSaveTimer);
 		};
-	}, [isDirty]);
+	}, [isDirty, navigate, questionSetId]);
 };
 
 export default useCreationQuestionAutoSave;

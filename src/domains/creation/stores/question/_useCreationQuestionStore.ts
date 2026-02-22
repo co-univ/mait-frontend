@@ -11,6 +11,7 @@ import type {
 	ShortAnswerApiResponse,
 	ShortQuestionApiResponse,
 } from "@/libs/types";
+import generateTemporaryId from "@/utils/generate-temporary-id";
 
 //
 //
@@ -19,14 +20,16 @@ import type {
 type CreatoinQuestionStoreBaseQuestionType = Omit<
 	QuestionResponseType,
 	"choices" | "answers" | "options"
->;
+> & {
+	updatedAt: number;
+};
 
 type CreationQuestionStoreQuestionType =
 	CreatoinQuestionStoreBaseQuestionType & {
-		multipleAnswers: MultipleChoiceApiResponse[];
-		shortAnswers: ShortAnswerApiResponse[];
-		orderingAnswers: OrderingOptionApiResponse[];
-		fillBlankAnswers: FillBlankAnswerApiResponse[];
+		multipleAnswers?: MultipleChoiceApiResponse[];
+		shortAnswers?: ShortAnswerApiResponse[];
+		orderingAnswers?: OrderingOptionApiResponse[];
+		fillBlankAnswers?: FillBlankAnswerApiResponse[];
 	};
 
 interface CreationQuestionStoreState {
@@ -41,12 +44,23 @@ interface CreationQuestionStoreActions {
 	 */
 	getQuestion: (questionId: number) => QuestionResponseType | undefined;
 	/**
+	 * Retrieves the updatedAt timestamp for a specific question.
+	 * @param questionId - The ID of the question to retrieve the updatedAt timestamp for
+	 * @returns The updatedAt timestamp, or undefined if not found
+	 */
+	getUpdatedAt: (questionId: number) => number | undefined;
+	/**
 	 * Stores or updates question data from QuestionResponseType.
 	 * Preserves answer data from other question types when updating.
 	 * @param questionId - The ID of the question to store/update
 	 * @param question - The question data in QuestionResponseType format
+	 * @param updatedAt - The timestamp of when the question data was last updated
 	 */
-	setQuestion: (questionId: number, question: QuestionResponseType) => void;
+	setQuestion: (
+		questionId: number,
+		question: QuestionResponseType,
+		updatedAt: number,
+	) => void;
 	/**
 	 * Resets the entire question store, clearing all stored question data.
 	 */
@@ -95,29 +109,39 @@ const useCreationQuestionStore = create<
 			case "MULTIPLE":
 				return {
 					...baseQuestion,
-					choices: question.multipleAnswers,
+					choices: question.multipleAnswers ?? [],
 				};
 			case "SHORT":
 				return {
 					...baseQuestion,
-					answers: question.shortAnswers,
+					answers: question.shortAnswers ?? [],
 				};
 			case "ORDERING":
 				return {
 					...baseQuestion,
-					options: question.orderingAnswers,
+					options: question.orderingAnswers ?? [],
 				};
 			case "FILL_BLANK":
 				return {
 					...baseQuestion,
-					answers: question.fillBlankAnswers,
+					answers: question.fillBlankAnswers ?? [],
 				};
 			default:
 				return undefined;
 		}
 	},
 
-	setQuestion: (questionId: number, question: QuestionResponseType) => {
+	getUpdatedAt: (questionId: number) => {
+		const question = get().questionsRecord[questionId];
+
+		return question?.updatedAt;
+	},
+
+	setQuestion: (
+		questionId: number,
+		question: QuestionResponseType,
+		updatedAt: number,
+	) => {
 		const storedQuestion = get().questionsRecord[questionId];
 		const newQuestion: CreationQuestionStoreQuestionType = {
 			id: question.id,
@@ -126,32 +150,70 @@ const useCreationQuestionStore = create<
 			imageId: question.imageId,
 			imageUrl: question.imageUrl,
 			type: question.type,
+			updatedAt,
 
-			multipleAnswers: storedQuestion?.multipleAnswers || [],
-			shortAnswers: storedQuestion?.shortAnswers || [],
-			orderingAnswers: storedQuestion?.orderingAnswers || [],
+			multipleAnswers:
+				storedQuestion?.multipleAnswers ||
+				Array.from({ length: 4 }, (_, index) => ({
+					id: generateTemporaryId(),
+					number: index + 1,
+					content: "",
+					isCorrect: false,
+				})),
+			shortAnswers:
+				storedQuestion?.shortAnswers ||
+				Array.from({ length: 1 }, (_, index) => ({
+					id: generateTemporaryId(),
+					main: true,
+					number: index + 1,
+					answer: "",
+				})),
+			orderingAnswers:
+				storedQuestion?.orderingAnswers ||
+				Array.from({ length: 3 }, (_, index) => ({
+					id: generateTemporaryId(),
+					originOrder: index + 1,
+					answerOrder: index + 1,
+					content: "",
+				})),
 			fillBlankAnswers: storedQuestion?.fillBlankAnswers || [],
 		};
 
 		switch (question.type as QuestionType) {
 			case "MULTIPLE": {
-				newQuestion.multipleAnswers =
-					(question as MultipleQuestionApiResponse).choices || [];
+				const choices = (question as MultipleQuestionApiResponse).choices;
+
+				if (choices !== undefined) {
+					newQuestion.multipleAnswers = choices;
+				}
+
 				break;
 			}
 			case "SHORT": {
-				newQuestion.shortAnswers =
-					(question as ShortQuestionApiResponse).answers || [];
+				const answers = (question as ShortQuestionApiResponse).answers;
+
+				if (answers !== undefined) {
+					newQuestion.shortAnswers = answers;
+				}
+
 				break;
 			}
 			case "ORDERING": {
-				newQuestion.orderingAnswers =
-					(question as OrderingQuestionApiResponse).options || [];
+				const options = (question as OrderingQuestionApiResponse).options;
+
+				if (options !== undefined) {
+					newQuestion.orderingAnswers = options;
+				}
+
 				break;
 			}
 			case "FILL_BLANK": {
-				newQuestion.fillBlankAnswers =
-					(question as FillBlankQuestionApiResponse).answers || [];
+				const answers = (question as FillBlankQuestionApiResponse).answers;
+
+				if (answers !== undefined) {
+					newQuestion.fillBlankAnswers = answers;
+				}
+
 				break;
 			}
 		}

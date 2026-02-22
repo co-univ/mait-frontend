@@ -8,6 +8,7 @@ import CreationQuestionAdditional from "@/domains/creation/pages/question/additi
 import CreationQuestionMain from "@/domains/creation/pages/question/CreationQuestionMain";
 import CreationQuestionNavigation from "../../components/question/CreationQuestionNavigation";
 import useCreationQuestionAutoSave from "../../hooks/question/useCreationQuestionAutoSave";
+import useCreationQuestionStore from "../../stores/question/_useCreationQuestionStore";
 
 //
 //
@@ -16,6 +17,8 @@ import useCreationQuestionAutoSave from "../../hooks/question/useCreationQuestio
 const CreationQuestion = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
+
+	const { resetStore } = useCreationQuestionStore();
 
 	const { isDirty } = useCreationQuestion({
 		questionSetId,
@@ -64,6 +67,13 @@ const CreationQuestion = () => {
 			});
 		}
 	}, [blocker, confirm]);
+
+	//
+	//
+	//
+	useEffect(() => {
+		return () => resetStore();
+	}, [resetStore]);
 
 	return (
 		<CreationQuestionLayout>

@@ -180,6 +180,9 @@ const CreationNew = () => {
 
 		navigate(
 			createPath(CREATION_ROUTE_PATH.ROOT, { questionSetId: questionSetId }),
+			{
+				replace: true,
+			},
 		);
 	};
 
