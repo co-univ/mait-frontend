@@ -8,7 +8,6 @@ import CreationQuestionImage from "../../components/question/CreationQuestionIma
 import CreationQuestionTitleInput from "../../components/question/CreationQuestionTitleInput";
 import useCreationQuestion from "../../hooks/question/useCreationQuestion";
 import useCreationQuestionSet from "../../hooks/question/useCreationQuestionSet";
-import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
 import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFillBlank";
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
 import CreationQuestionAnswerOrdering from "./answer/CreationQuestionAnswerOrdering";
@@ -34,10 +33,9 @@ const CreationQuestionMain = ({
 }: CreationQuestionMainProps) => {
 	const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
-	const { questionSet, questions, changeQuestionSetTitle } =
-		useCreationQuestionSet({
-			questionSetId,
-		});
+	const { questionSet, changeQuestionSetTitle } = useCreationQuestionSet({
+		questionSetId,
+	});
 
 	const { question, changeContent, addImage, deleteImage, isImageUploading } =
 		useCreationQuestion({
@@ -125,14 +123,8 @@ const CreationQuestionMain = ({
 
 			<CreationQuestionPreviewModal
 				open={isPreviewModalOpen}
-				questionCount={questions?.length ?? 0}
-				questionSetTitle={questionSet?.title || ""}
-				question={
-					question && {
-						...question,
-						number: creationQuestionFindNumber(questions, questionId),
-					}
-				}
+				questionSetId={questionSetId}
+				questionId={questionId}
 				onClose={() => setIsPreviewModalOpen(false)}
 			/>
 		</>

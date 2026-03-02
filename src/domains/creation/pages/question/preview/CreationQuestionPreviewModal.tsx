@@ -1,10 +1,18 @@
+import { useState } from "react";
 import { LARGE_PAGE_MARGIN, type QuestionResponseType } from "@/app.constants";
 import Modal from "@/components/modal/Modal";
 import QuestionContent from "@/components/QuestionContent";
+import QuestionNavigation, {
+	QuestionNavigationButton,
+} from "@/components/question-navigation";
+import type { QuestionNavigationButtonRenderProps } from "@/components/question-navigation/QuestionNavigationList";
 import CreationQuestionPreviewModalCloseButton from "@/domains/creation/components/question/preview/CreationQuestionPreviewModalCloseButton";
 import CreationQuestionPreviewModalHeader from "@/domains/creation/components/question/preview/CreationQuestionPreviewModalHeader";
+import {
+	useCreationQuestion,
+	useCreationQuestionSet,
+} from "@/domains/creation/hooks/question";
 import SolvingQuizImage from "@/domains/solving/components/common/SolvingQuizImage";
-import SolvingTopBar from "@/domains/solving/components/common/topbar";
 import SolvingLayout from "@/domains/solving/layouts/common/SolvingLayout";
 import type {
 	FillBlankQuestionApiResponse,
@@ -24,9 +32,8 @@ import CreationQuestoinPreviewModalShortAnswers from "./CreationQuestoinPreviewM
 
 interface CreationQuestionPreviewModalProps {
 	open: boolean;
-	questionCount: number;
-	questionSetTitle: string;
-	question?: QuestionResponseType;
+	questionSetId: number;
+	questionId: number;
 	onClose: () => void;
 }
 
@@ -36,11 +43,39 @@ interface CreationQuestionPreviewModalProps {
 
 const CreationQuestionPreviewModal = ({
 	open,
-	questionCount,
-	questionSetTitle,
-	question,
+	questionSetId,
+	questionId,
 	onClose,
 }: CreationQuestionPreviewModalProps) => {
+	const [activeQuestionId, setActiveQuestionId] = useState(questionId);
+
+	const { questions } = useCreationQuestionSet({
+		questionSetId,
+	});
+	const { question } = useCreationQuestion({
+		questionSetId,
+		questionId: activeQuestionId,
+	});
+
+	/**
+	 *
+	 */
+	const renderQuestionNavigationButton = ({
+		question,
+		index,
+		isActive,
+		isMouseOver,
+	}: QuestionNavigationButtonRenderProps<QuestionResponseType>) => {
+		return (
+			<QuestionNavigationButton
+				isActive={isActive}
+				isMouseOver={isMouseOver}
+				number={index + 1}
+				onClick={() => setActiveQuestionId(question.id)}
+			/>
+		);
+	};
+
 	/**
 	 *
 	 */
@@ -92,13 +127,13 @@ const CreationQuestionPreviewModal = ({
 					}}
 				>
 					<SolvingLayout>
-						<SolvingTopBar
-							disabled={false}
-							questionNum={question.number ?? 0}
-							questionCount={questionCount}
-							quizTitle={questionSetTitle}
-							onSubmit={() => {}}
+						<QuestionNavigation
+							orientation="horizontal"
+							activeQuestionId={activeQuestionId}
+							questions={questions || []}
+							renderQuestionNavigationButton={renderQuestionNavigationButton}
 						/>
+
 						<QuestionContent content={question.content || ""} />
 
 						<SolvingQuizImage src={question.imageUrl} />
