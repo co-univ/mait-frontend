@@ -19,7 +19,7 @@ const Badge = ({ className, icon, item }: BadgeProps) => {
 	return (
 		<div
 			className={clsx(
-				"p-padding-6 flex gap-gap-5 rounded-medium1 bg-color-gray-5",
+				"p-padding-6 flex gap-gap-5 items-center rounded-medium1 bg-color-gray-5",
 				className,
 			)}
 		>

@@ -1,7 +1,10 @@
+import { useEffect, useMemo } from "react";
+import isEqual from "react-fast-compare";
 import { useNavigate } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
+import useQuestionSets from "@/hooks/useQuestionSets";
 import { apiHooks } from "@/libs/api";
 import type {
 	QuestionSetApiResponse,
@@ -9,6 +12,7 @@ import type {
 } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import { CREATION_ROUTE_PATH } from "../../creation.routes";
+import useCreationQuestionSetStore from "../../stores/question/useCreationQuestionSetStore";
 import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
 
 //
@@ -23,19 +27,23 @@ interface UseCreationQuestionSetReturn {
 	questionSet?: QuestionSetApiResponse;
 	questions?: QuestionResponseType[];
 	invalidQuestions?: QuestionValidationApiResponse[];
+	changeQuestionSetTitle: (title: string) => void;
 	addQuestion: () => void;
 	deleteQuestion: (params: {
 		currentQuestionId: number;
 		targetQuestionId: number;
 	}) => void;
+	updateQuestionSetTitle: () => void;
 	validateQuestions: () => Promise<boolean>;
 	refetchQuestionSet: () => void;
 	refetchQuestions: () => void;
+	isDirty: boolean;
 	isQuestionSetLoading: boolean;
 	isQuestionsLoading: boolean;
 	isAddingQuestion: boolean;
 	isDeletingQuestion: boolean;
 	isValidatingQuestions: boolean;
+	isUpdatingQuestionSet: boolean;
 }
 
 //
@@ -45,6 +53,8 @@ interface UseCreationQuestionSetReturn {
 const useCreationQuestionSet = ({
 	questionSetId,
 }: UseCreationQuestionSetProps): UseCreationQuestionSetReturn => {
+	const { questionSet, setQuestionSet } = useCreationQuestionSetStore();
+
 	const {
 		data: questionSetData,
 		isPending: isQuestionSetLoading,
@@ -107,13 +117,42 @@ const useCreationQuestionSet = ({
 			"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
 		);
 
+	const { mutate: patchQuestionSetMutate, isPending: isPatchingQuestionSet } =
+		apiHooks.useMutation("patch", "/api/v1/question-sets/{questionSetId}");
+
+	const { invalidateQuestionSetsQuery } = useQuestionSets({
+		teamId: questionSetData?.data?.teamId ?? 0,
+		mode: "MAKING",
+	});
+
 	const navigate = useNavigate();
 
 	const { confirm } = useConfirm();
 
-	const questionSet = questionSetData?.data;
 	const questions = questionsData?.data;
 	const invalidQuestions = invalidQuestionsData?.data;
+
+	const isDirty = useMemo(() => {
+		if (!questionSetData || !questionSet) {
+			return false;
+		}
+
+		return questionSetData?.data?.title !== questionSet.title;
+	}, [questionSetData, questionSet]);
+
+	/**
+	 *
+	 */
+	const changeQuestionSetTitle = (title: string) => {
+		if (!questionSet) {
+			return;
+		}
+
+		setQuestionSet({
+			...questionSet,
+			title,
+		});
+	};
 
 	/**
 	 *
@@ -263,20 +302,61 @@ const useCreationQuestionSet = ({
 		return true;
 	};
 
+	/**
+	 *
+	 */
+	const updateQuestionSetTitle = () => {
+		if (!questionSet?.title) {
+			return;
+		}
+
+		patchQuestionSetMutate(
+			{
+				params: {
+					path: {
+						questionSetId,
+					},
+				},
+				body: {
+					title: questionSet.title,
+				},
+			},
+			{
+				onSuccess: () => {
+					refetchQuestionSet();
+					invalidateQuestionSetsQuery();
+				},
+			},
+		);
+	};
+
+	//
+	//
+	// biome-ignore lint/correctness/useExhaustiveDependencies: questionSetStore is initialized only questionSetData is changed
+	useEffect(() => {
+		if (questionSetData && !isEqual(questionSet, questionSetData?.data)) {
+			setQuestionSet(questionSetData.data);
+		}
+	}, [questionSetData, setQuestionSet]);
+
 	return {
 		questionSet,
 		questions,
 		invalidQuestions,
+		changeQuestionSetTitle,
 		addQuestion,
 		deleteQuestion,
 		validateQuestions,
+		updateQuestionSetTitle,
 		refetchQuestionSet,
 		refetchQuestions,
+		isDirty,
 		isQuestionSetLoading,
 		isQuestionsLoading,
 		isAddingQuestion: isPostingQuestion,
 		isDeletingQuestion,
 		isValidatingQuestions,
+		isUpdatingQuestionSet: isPatchingQuestionSet,
 	};
 };
 

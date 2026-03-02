@@ -1,11 +1,11 @@
-import { ChevronRight, Puzzle } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
-import Badge from "@/components/Badge";
 import Button from "@/components/Button";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
 import type { QuestionType } from "@/libs/types";
 import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
 import CreationQuestionImage from "../../components/question/CreationQuestionImage";
+import CreationQuestionTitleInput from "../../components/question/CreationQuestionTitleInput";
 import useCreationQuestion from "../../hooks/question/useCreationQuestion";
 import useCreationQuestionSet from "../../hooks/question/useCreationQuestionSet";
 import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
@@ -34,9 +34,10 @@ const CreationQuestionMain = ({
 }: CreationQuestionMainProps) => {
 	const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
-	const { questionSet, questions } = useCreationQuestionSet({
-		questionSetId,
-	});
+	const { questionSet, questions, changeQuestionSetTitle } =
+		useCreationQuestionSet({
+			questionSetId,
+		});
 
 	const { question, changeContent, addImage, deleteImage, isImageUploading } =
 		useCreationQuestion({
@@ -85,13 +86,10 @@ const CreationQuestionMain = ({
 	return (
 		<>
 			<div className="flex flex-1 flex-col gap-gap-11">
-				<div className="flex items-center justify-between">
-					<Badge
-						icon={<Puzzle />}
-						item={
-							<span className="typo-heading-xsmall">{`Q${creationQuestionFindNumber(questions, questionId)}`}</span>
-						}
-						className="text-color-primary-50 !bg-color-primary-5 self-start"
+				<div className="flex items-center justify-between gap-gap-5">
+					<CreationQuestionTitleInput
+						title={questionSet?.title || ""}
+						onChange={changeQuestionSetTitle}
 					/>
 					<Button
 						icon={<ChevronRight />}
