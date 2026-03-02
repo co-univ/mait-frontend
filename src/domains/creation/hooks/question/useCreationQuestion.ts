@@ -54,7 +54,11 @@ const useCreationQuestion = <
 		setQuestion: storeSetQuestion,
 	} = useCreationQuestionStore();
 
-	const { refetchQuestions } = useCreationQuestionSet({
+	const {
+		refetchQuestions,
+		updateQuestionSetTitle,
+		isDirty: isQuestionSetDirty,
+	} = useCreationQuestionSet({
 		questionSetId,
 	});
 
@@ -102,11 +106,14 @@ const useCreationQuestion = <
 			return false;
 		}
 
-		return !isEqual(
-			creationQuestionConvertResponseToUpdate(questionData.data),
-			creationQuestionConvertResponseToUpdate(question),
+		return (
+			isQuestionSetDirty ||
+			!isEqual(
+				creationQuestionConvertResponseToUpdate(questionData.data),
+				creationQuestionConvertResponseToUpdate(question),
+			)
 		);
-	}, [questionData?.data, question]);
+	}, [isQuestionSetDirty, questionData?.data, question]);
 
 	/**
 	 * Setters for question fields in the store
@@ -223,6 +230,8 @@ const useCreationQuestion = <
 		if (!question || !isDirty) {
 			return;
 		}
+
+		updateQuestionSetTitle();
 
 		return putQuestionMutateAsync(
 			{
