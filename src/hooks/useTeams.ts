@@ -1,6 +1,8 @@
+import type { QueryObserverResult } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { apiHooks } from "@/libs/api";
 import type { TeamApiResponse } from "@/libs/types";
+import type { components } from "@/libs/types/api";
 import useActiveTeamIdStore from "@/stores/useActiveTeamIdStore";
 import useUser from "./useUser";
 
@@ -12,7 +14,15 @@ interface UseTeamsReturn {
 	teams?: TeamApiResponse[];
 	activeTeam?: TeamApiResponse;
 	handleActiveTeamChange: (teamId: number) => void;
-	refetch: () => void;
+	refetch: () => Promise<
+		QueryObserverResult<
+			{
+				isSuccess?: boolean;
+				data?: components["schemas"]["TeamApiResponse"][];
+			},
+			never
+		>
+	>;
 	isLoading: boolean;
 }
 
