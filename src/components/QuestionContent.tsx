@@ -30,9 +30,22 @@ const QuestionContent = ({ content, className }: QuestionContentProps) => {
 
 		const matches = Array.from(content.matchAll(FILL_BLANK_PATTERN));
 
+		let brCount = 0;
+		const pushText = (text: string) => {
+			const lines = text.split("\n");
+			lines.forEach((line, i) => {
+				if (i > 0) {
+					parts.push(<br key={`br-${brCount++}`} />);
+				}
+				if (line) {
+					parts.push(line);
+				}
+			});
+		};
+
 		for (const match of matches) {
 			if (match.index !== undefined && match.index > lastIndex) {
-				parts.push(content.slice(lastIndex, match.index));
+				pushText(content.slice(lastIndex, match.index));
 			}
 
 			const number = Number.parseInt(match[1], 10);
@@ -42,7 +55,7 @@ const QuestionContent = ({ content, className }: QuestionContentProps) => {
 		}
 
 		if (lastIndex < content.length) {
-			parts.push(content.slice(lastIndex));
+			pushText(content.slice(lastIndex));
 		}
 
 		return parts;
