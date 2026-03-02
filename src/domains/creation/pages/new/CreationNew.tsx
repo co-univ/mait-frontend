@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Badge from "@/components/Badge";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
+import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
@@ -33,6 +34,11 @@ const CreationNew = () => {
 		creationNewQuestionSetReducer,
 		creationNewQuestionSetInitialState(activeTeam?.teamId ?? 0),
 	);
+
+	const { invalidateQuestionSetsQuery } = useQuestionSets({
+		teamId: activeTeam?.teamId ?? 0,
+		mode: "MAKING",
+	});
 
 	const disabledCreateQuestionSet = [
 		!questionSet.teamId,
@@ -165,6 +171,8 @@ const CreationNew = () => {
 			notify.error("문제 생성에 실패했습니다.");
 			return;
 		}
+
+		invalidateQuestionSetsQuery();
 
 		const questionSetId = res.data?.data?.questionSetId ?? 0;
 
