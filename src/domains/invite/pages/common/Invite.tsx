@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { notify } from "@/components/Toast";
 import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
+import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
 import { apiClient, apiHooks } from "@/libs/api";
 import Loading from "@/pages/Loading";
@@ -24,6 +25,7 @@ const Invite = () => {
 	const code = searchParams.get("code");
 
 	const { user, isLoading: isUserLoading } = useUser();
+	const { handleActiveTeamChange, refetch: refetchTeams } = useTeams();
 
 	const {
 		data,
@@ -67,6 +69,8 @@ const Invite = () => {
 			}
 
 			if (res.data.data?.joinedImmediate) {
+				await refetchTeams();
+				handleActiveTeamChange(inviteInfo?.teamId ?? 0);
 				navigate(HOME_ROUTE_PATH.ROOT);
 			} else {
 				refetch();
