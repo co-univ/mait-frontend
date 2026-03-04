@@ -1,5 +1,5 @@
 import MaitLogo from "@/assets/images/mait-logo.svg";
-import HeaderBrandSectionUserMenu from "./HeaderBrandSectionUserMenu";
+import HeaderUserMenu from "./HeaderUserMenu";
 
 //
 //
@@ -20,7 +20,7 @@ const HeaderBrandSection = () => {
 					MAIT
 				</span>
 			</button>
-			<HeaderBrandSectionUserMenu />
+			<HeaderUserMenu />
 		</div>
 	);
 };

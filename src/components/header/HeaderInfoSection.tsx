@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AUTH_ROUTE_PATH } from "@/domains/auth/auth.routes";
 import { MYPAGE_ROUTE_PATH } from "@/domains/my-page/mypage.routes";
 import useUser from "@/hooks/useUser";
-import HeaderInfoSectionSearchInput from "./HeaderInfoSectionSearchInput";
+import HeaderSearch from "./HeaderSearch";
 
 //
 //
@@ -46,7 +46,7 @@ const HeaderInfoSection = ({ isHide }: HeaderInfoSectionProps) => {
 
 	return (
 		<div className="flex items-center">
-			<HeaderInfoSectionSearchInput />
+			<HeaderSearch />
 			<div className="w-20" />
 			<button type="button" onClick={handleNotificationClick}>
 				<Bell />

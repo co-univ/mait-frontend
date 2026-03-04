@@ -9,7 +9,7 @@ import { hasValidPath } from "@/utils/path";
 //
 //
 
-const HeaderBrandSectionUserMenu = () => {
+const HeaderMenu = () => {
 	const { toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
 
@@ -46,4 +46,4 @@ const HeaderBrandSectionUserMenu = () => {
 	);
 };
 
-export default HeaderBrandSectionUserMenu;
+export default HeaderMenu;
