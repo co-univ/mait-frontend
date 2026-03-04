@@ -10,7 +10,7 @@ interface CreationQuestionLayoutProps {
 
 const CreationQuestionLayout = ({ children }: CreationQuestionLayoutProps) => {
 	return (
-		<div className="py-padding-12 flex h-full w-full justify-center gap-[106px] md:gap-[60px]">
+		<div className="py-padding-12 flex h-full w-full justify-center gap-[60px] lg:gap-[106px]">
 			{children}
 		</div>
 	);
