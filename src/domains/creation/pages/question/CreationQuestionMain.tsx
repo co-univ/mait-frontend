@@ -1,6 +1,4 @@
-import { ChevronRight } from "lucide-react";
 import { useState } from "react";
-import Button from "@/components/Button";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
 import type { QuestionType } from "@/libs/types";
 import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
@@ -19,6 +17,7 @@ import CreationQuestionPreviewModal from "./preview/CreationQuestionPreviewModal
 //
 
 interface CreationQuestionMainProps {
+	titleInputContainerRef: React.RefObject<HTMLDivElement | null>;
 	questionSetId: number;
 	questionId: number;
 }
@@ -28,6 +27,7 @@ interface CreationQuestionMainProps {
 //
 
 const CreationQuestionMain = ({
+	titleInputContainerRef,
 	questionSetId,
 	questionId,
 }: CreationQuestionMainProps) => {
@@ -84,17 +84,20 @@ const CreationQuestionMain = ({
 	return (
 		<>
 			<div className="flex flex-1 flex-col gap-gap-11">
-				<div className="flex items-center justify-between gap-gap-5">
+				<div
+					ref={titleInputContainerRef}
+					className="flex items-center justify-between gap-gap-5"
+				>
 					<CreationQuestionTitleInput
 						title={questionSet?.title || ""}
 						onChange={changeQuestionSetTitle}
 					/>
-					<Button
+					{/* <Button
 						icon={<ChevronRight />}
 						item="미리보기"
 						className="flex-row-reverse"
 						onClick={() => setIsPreviewModalOpen(true)}
-					/>
+					/> */}
 				</div>
 
 				<div className="flex w-full">
