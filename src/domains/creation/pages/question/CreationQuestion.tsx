@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useBeforeUnload, useBlocker, useParams } from "react-router-dom";
 import { useConfirm } from "@/components/confirm";
 import EmptyQuestion from "@/components/EmptyQuestion";
@@ -17,6 +17,8 @@ import useCreationQuestionStore from "../../stores/question/useCreationQuestionS
 const CreationQuestion = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
+
+	const titleInputContainerRef = useRef<HTMLDivElement>(null);
 
 	const { resetStore } = useCreationQuestionStore();
 
@@ -84,10 +86,12 @@ const CreationQuestion = () => {
 			{questionId !== 0 ? (
 				<>
 					<CreationQuestionMain
+						titleInputContainerRef={titleInputContainerRef}
 						questionSetId={questionSetId}
 						questionId={questionId}
 					/>
 					<CreationQuestionAdditional
+						titleInputContainerRef={titleInputContainerRef}
 						questionSetId={questionSetId}
 						questionId={questionId}
 					/>

@@ -108,12 +108,6 @@ const CreationQuestionPreviewModal = ({
 		}
 	};
 
-	if (!question) {
-		onClose();
-
-		return null;
-	}
-
 	return (
 		<Modal open={open} showCloseButton={false} onClose={onClose}>
 			<div className="relative h-screen w-screen flex flex-col bg-color-alpha-white100 overflow-scroll">
@@ -134,9 +128,9 @@ const CreationQuestionPreviewModal = ({
 							renderQuestionNavigationButton={renderQuestionNavigationButton}
 						/>
 
-						<QuestionContent content={question.content || ""} />
+						<QuestionContent content={question?.content || ""} />
 
-						<SolvingQuizImage src={question.imageUrl} />
+						<SolvingQuizImage src={question?.imageUrl} />
 
 						<div className="h-full flex items-end">
 							{renderQuestionAnswers()}

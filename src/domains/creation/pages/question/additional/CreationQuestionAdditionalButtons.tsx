@@ -1,4 +1,5 @@
-import { Check, LogIn, Save } from "lucide-react";
+import { Check, Eye, Save } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
@@ -6,6 +7,7 @@ import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import useCreationQuestion from "@/domains/creation/hooks/question/useCreationQuestion";
 import useCreationQuestionSet from "@/domains/creation/hooks/question/useCreationQuestionSet";
 import { createPath } from "@/utils/create-path";
+import CreationQuestionPreviewModal from "../preview/CreationQuestionPreviewModal";
 
 //
 //
@@ -24,6 +26,8 @@ const CreationQuestionAdditionalButtons = ({
 	questionSetId,
 	questionId,
 }: CreationQuestionAdditionalButtonsProps) => {
+	const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+
 	const navigate = useNavigate();
 
 	const { validateQuestions } = useCreationQuestionSet({
@@ -94,25 +98,34 @@ const CreationQuestionAdditionalButtons = ({
 	};
 
 	return (
-		<div className="flex justify-between">
-			<Button
-				disabled={!isDirty}
-				icon={<Save />}
-				onClick={handleUpdateButtonClick}
-				className="bg-color-gray-5 border-none disabled:text-color-gray-20"
+		<>
+			<div className="flex justify-between">
+				<Button
+					disabled={!isDirty}
+					icon={<Save />}
+					onClick={handleUpdateButtonClick}
+					className="bg-color-gray-5 border-none disabled:text-color-gray-20"
+				/>
+				<Button
+					icon={<Eye />}
+					onClick={() => setIsPreviewModalOpen(true)}
+					className="bg-color-primary-5 border-none"
+				/>
+				<Button
+					icon={<Check />}
+					item="생성하기"
+					onClick={handleCreateButtonClick}
+					className="bg-color-primary-5 border-none text-color-primary-50"
+				/>
+			</div>
+
+			<CreationQuestionPreviewModal
+				open={isPreviewModalOpen}
+				questionSetId={questionSetId}
+				questionId={questionId}
+				onClose={() => setIsPreviewModalOpen(false)}
 			/>
-			<Button
-				disabled
-				icon={<LogIn className="rotate-90" />}
-				className="bg-color-primary-5 border-none text-color-primary-50 disabled:text-color-primary-20"
-			/>
-			<Button
-				icon={<Check />}
-				item="생성하기"
-				onClick={handleCreateButtonClick}
-				className="bg-color-primary-5 border-none text-color-primary-50"
-			/>
-		</div>
+		</>
 	);
 };
 

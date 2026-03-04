@@ -7,6 +7,7 @@ import CreationQuestionAdditionalFields from "@/domains/creation/pages/question/
 //
 
 interface CreationQuestionAdditionalProps {
+	titleInputContainerRef: React.RefObject<HTMLDivElement | null>;
 	questionSetId: number;
 	questionId: number;
 }
@@ -16,11 +17,17 @@ interface CreationQuestionAdditionalProps {
 //
 
 const CreationQuestionAdditional = ({
+	titleInputContainerRef,
 	questionSetId,
 	questionId,
 }: CreationQuestionAdditionalProps) => {
 	return (
 		<div className="h-full w-[268px] flex flex-col gap-gap-11">
+			<div
+				style={{
+					height: titleInputContainerRef.current?.clientHeight,
+				}}
+			/>
 			<CreationQuestionAdditionalButtons
 				questionSetId={questionSetId}
 				questionId={questionId}
