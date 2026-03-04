@@ -1,4 +1,3 @@
-import { useState } from "react";
 import CreationQuestionContent from "@/domains/creation/components/question/CreationQuestionContent";
 import type { QuestionType } from "@/libs/types";
 import CreationQuestionContentFillBlank from "../../components/question/CreationQuestionContentFillBlank";
@@ -10,7 +9,6 @@ import CreationQuestionAnswerFillBlank from "./answer/CreationQuestionAnswerFill
 import CreationQuestionAnswerMultiple from "./answer/CreationQuestionAnswerMultiple";
 import CreationQuestionAnswerOrdering from "./answer/CreationQuestionAnswerOrdering";
 import CreationQuestionAnswerShort from "./answer/CreationQuestionAnswerShort";
-import CreationQuestionPreviewModal from "./preview/CreationQuestionPreviewModal";
 
 //
 //
@@ -31,8 +29,6 @@ const CreationQuestionMain = ({
 	questionSetId,
 	questionId,
 }: CreationQuestionMainProps) => {
-	const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
-
 	const { questionSet, changeQuestionSetTitle } = useCreationQuestionSet({
 		questionSetId,
 	});
@@ -82,55 +78,40 @@ const CreationQuestionMain = ({
 	};
 
 	return (
-		<>
-			<div className="flex flex-1 flex-col gap-gap-11">
-				<div
-					ref={titleInputContainerRef}
-					className="flex items-center justify-between gap-gap-5"
-				>
-					<CreationQuestionTitleInput
-						title={questionSet?.title || ""}
-						onChange={changeQuestionSetTitle}
-					/>
-					{/* <Button
-						icon={<ChevronRight />}
-						item="미리보기"
-						className="flex-row-reverse"
-						onClick={() => setIsPreviewModalOpen(true)}
-					/> */}
-				</div>
-
-				<div className="flex w-full">
-					{(question?.type as QuestionType) === "FILL_BLANK" ? (
-						<CreationQuestionContentFillBlank
-							questionSetId={questionSetId}
-							questionId={questionId}
-						/>
-					) : (
-						<CreationQuestionContent
-							value={question?.content || ""}
-							onChange={changeContent}
-						/>
-					)}
-				</div>
-
-				<CreationQuestionImage
-					imageUrl={question?.imageUrl || ""}
-					onChange={addImage}
-					onDelete={deleteImage}
-					isLoading={isImageUploading}
+		<div className="flex flex-1 flex-col gap-gap-11">
+			<div
+				ref={titleInputContainerRef}
+				className="flex items-center justify-between gap-gap-5"
+			>
+				<CreationQuestionTitleInput
+					title={questionSet?.title || ""}
+					onChange={changeQuestionSetTitle}
 				/>
-
-				{renderQuestionAnswer()}
 			</div>
 
-			<CreationQuestionPreviewModal
-				open={isPreviewModalOpen}
-				questionSetId={questionSetId}
-				questionId={questionId}
-				onClose={() => setIsPreviewModalOpen(false)}
+			<div className="flex w-full">
+				{(question?.type as QuestionType) === "FILL_BLANK" ? (
+					<CreationQuestionContentFillBlank
+						questionSetId={questionSetId}
+						questionId={questionId}
+					/>
+				) : (
+					<CreationQuestionContent
+						value={question?.content || ""}
+						onChange={changeContent}
+					/>
+				)}
+			</div>
+
+			<CreationQuestionImage
+				imageUrl={question?.imageUrl || ""}
+				onChange={addImage}
+				onDelete={deleteImage}
+				isLoading={isImageUploading}
 			/>
-		</>
+
+			{renderQuestionAnswer()}
+		</div>
 	);
 };
 
