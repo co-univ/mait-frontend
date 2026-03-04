@@ -1,5 +1,6 @@
 import { Menu } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import useBreakpoint from "@/hooks/useBreakpoint";
 import useUser from "@/hooks/useUser";
 import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
@@ -15,10 +16,16 @@ const HeaderMenu = () => {
 
 	const location = useLocation();
 
+	const { isSm } = useBreakpoint();
+
 	/**
 	 *
 	 */
 	const handleMenuClick = () => {
+		if (!isSm) {
+			return;
+		}
+
 		if (
 			hasValidPath(
 				GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS,
@@ -37,11 +44,9 @@ const HeaderMenu = () => {
 
 	return (
 		<div className="flex items-center">
-			<div className="w-20" />
 			<button type="button" onClick={handleMenuClick}>
 				<Menu />
 			</button>
-			<div className="w-32" />
 		</div>
 	);
 };
