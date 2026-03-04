@@ -14,7 +14,7 @@ interface SolvingQuizContentBlankAnswerProps {
 interface Answer {
 	id: number;
 	answer: string;
-	isMain: boolean;
+	main: boolean;
 	number: number;
 }
 

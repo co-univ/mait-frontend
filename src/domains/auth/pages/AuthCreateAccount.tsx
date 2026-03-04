@@ -100,8 +100,8 @@ const AuthCreateAccount = () => {
 					policyChecks: termChecks,
 				},
 			});
-
-			const accessToken = response.response.headers.get("Authorization");
+			
+			const accessToken = response.response.headers.get("access_token");
 			if (accessToken) {
 				localStorage.setItem("token", accessToken);
 			}

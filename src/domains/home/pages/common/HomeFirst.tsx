@@ -71,10 +71,10 @@ const HomeFirst = () => {
 				<div className="relative mb-[10vh] z-10 h-full flex flex-col gap-gap-11 items-center justify-center">
 					<div className="flex-1" />
 					<div className="flex flex-col gap-gap-5 items-center">
-						<h1 className="2xl:typo-display-large xl:typo-heading-xlarge typo-heading-large ">
+						<h1 className="2xl:typo-display-large xl:typo-heading-xlarge lg:typo-heading-large typo-heading-medium ">
 							문제 제작은 자동으로, 학습은 함께
 						</h1>
-						<h4 className="2xl:typo-heading-large xl:typo-heading-medium !font-medium text-[#4D4D4D] typo-heading-small">
+						<h4 className="2xl:typo-heading-large xl:typo-heading-medium lg:typo-heading-small typo-body-medium !font-medium text-[#4D4D4D] ">
 							메잇으로 더 똑똑하게 학습하세요!
 						</h4>
 					</div>
@@ -90,7 +90,7 @@ const HomeFirst = () => {
 					ref={lottieRef}
 					className="w-full h-[40vh] px-[10vw] overflow-visible pointer-events-none"
 				>
-					<Lottie options={LOTTIE_OPTIONS} width="100%" />
+					<Lottie options={LOTTIE_OPTIONS} width="100%" height="100%" />
 					{/* <img src={yeah} alt="yeah" className="w-full h-auto" /> */}
 				</div>
 				{/* <div className="absolute inset-0 pointer-events-none">

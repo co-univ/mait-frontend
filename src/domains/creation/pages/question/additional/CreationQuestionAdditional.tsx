@@ -6,12 +6,40 @@ import CreationQuestionAdditionalFields from "@/domains/creation/pages/question/
 //
 //
 
-const CreationQuestionAdditional = () => {
+interface CreationQuestionAdditionalProps {
+	titleInputContainerRef: React.RefObject<HTMLDivElement | null>;
+	questionSetId: number;
+	questionId: number;
+}
+
+//
+//
+//
+
+const CreationQuestionAdditional = ({
+	titleInputContainerRef,
+	questionSetId,
+	questionId,
+}: CreationQuestionAdditionalProps) => {
 	return (
 		<div className="h-full w-[268px] flex flex-col gap-gap-11">
-			<CreationQuestionAdditionalButtons />
-			<CreationQuestionAdditionalDropdown />
-			<CreationQuestionAdditionalFields />
+			<div
+				style={{
+					height: titleInputContainerRef.current?.clientHeight,
+				}}
+			/>
+			<CreationQuestionAdditionalButtons
+				questionSetId={questionSetId}
+				questionId={questionId}
+			/>
+			<CreationQuestionAdditionalDropdown
+				questionSetId={questionSetId}
+				questionId={questionId}
+			/>
+			<CreationQuestionAdditionalFields
+				questionSetId={questionSetId}
+				questionId={questionId}
+			/>
 		</div>
 	);
 };

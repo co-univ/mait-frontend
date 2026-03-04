@@ -744,6 +744,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/teams/{teamId}/question-ranks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 팀 정답 퀴즈 랭킹 조회
+         * @description 완료된 퀴즈에서 정답자 랭킹 반환
+         */
+        get: operations["getTeamQuestionScorerRank"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teams/{teamId}/invitations": {
         parameters: {
             query?: never;
@@ -1169,17 +1189,17 @@ export interface components {
         };
         UpdateFillBlankQuestionApiRequest: {
             type: "UpdateFillBlankQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number">, "type"> & {
-            fillBlankAnswers: components["schemas"]["FillBlankAnswerDto"][];
+        } & (Omit<components["schemas"]["UpdateQuestionApiRequest"], "type"> & {
+            answers: components["schemas"]["FillBlankAnswerDto"][];
         });
         UpdateMultipleQuestionApiRequest: {
             type: "UpdateMultipleQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number">, "type"> & {
+        } & (Omit<components["schemas"]["UpdateQuestionApiRequest"], "type"> & {
             choices: components["schemas"]["MultipleChoiceDto"][];
         });
         UpdateOrderingQuestionApiRequest: {
             type: "UpdateOrderingQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number">, "type"> & {
+        } & (Omit<components["schemas"]["UpdateQuestionApiRequest"], "type"> & {
             options: components["schemas"]["OrderingQuestionOptionDto"][];
         });
         UpdateQuestionApiRequest: {
@@ -1194,17 +1214,12 @@ export interface components {
              * @description 업로드하려는 이미지의 PK
              */
             imageId?: number;
-            /**
-             * Format: int64
-             * @description 문제 번호, 단 문제 번호는 변경되지 않음
-             */
-            number: number;
             type: string;
         };
         UpdateShortQuestionApiRequest: {
             type: "UpdateShortQuestionApiRequest";
-        } & (Omit<WithRequired<components["schemas"]["UpdateQuestionApiRequest"], "number">, "type"> & {
-            shortAnswers: components["schemas"]["ShortAnswerDto"][];
+        } & (Omit<components["schemas"]["UpdateQuestionApiRequest"], "type"> & {
+            answers: components["schemas"]["ShortAnswerDto"][];
         });
         ApiResponseQuestionApiResponse: {
             isSuccess?: boolean;
@@ -1219,7 +1234,7 @@ export interface components {
             id: number;
             answer?: string;
             /** @description 빈칸 문제 답안이 주관식인지 객관식인지 여부 */
-            isMain: boolean;
+            main: boolean;
             /**
              * Format: int64
              * @description 빈칸 문제 답안의 순서
@@ -1297,7 +1312,7 @@ export interface components {
             /** Format: int64 */
             id: number;
             answer?: string;
-            isMain: boolean;
+            main: boolean;
             /** Format: int64 */
             number: number;
         };
@@ -1843,6 +1858,49 @@ export interface components {
              * @enum {string}
              */
             role: "MAKER" | "OWNER" | "PLAYER";
+        };
+        ApiResponseTeamRankApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["TeamRankApiResponse"];
+        };
+        /** @description 내 랭킹 */
+        RankDto: {
+            user?: components["schemas"]["UserDto"];
+            /**
+             * Format: int32
+             * @description 등수
+             */
+            rank: number;
+            /**
+             * Format: int64
+             * @description 맞춘 문제의 개수
+             */
+            count: number;
+        };
+        /**
+         * @description 조회한 랭킹 타입
+         * @enum {string}
+         */
+        RankType: "SCORER" | "CORRECT";
+        TeamRankApiResponse: {
+            type: components["schemas"]["RankType"];
+            /**
+             * Format: int64
+             * @description 조회하는 팀 PK
+             */
+            teamId: number;
+            /** @description 전체 랭킹 */
+            teamRankings: components["schemas"]["RankDto"][];
+            userRank?: components["schemas"]["RankDto"];
+        };
+        UserDto: {
+            /** Format: int64 */
+            id?: number;
+            email?: string;
+            name?: string;
+            nickname?: string;
+            nicknameCode?: string;
+            fullNickname?: string;
         };
         ApiResponseListTeamInvitationLinksApiResponse: {
             isSuccess?: boolean;
@@ -3070,9 +3128,7 @@ export interface operations {
             query?: never;
             header?: never;
             path?: never;
-            cookie: {
-                REFRESH_TOKEN: string;
-            };
+            cookie?: never;
         };
         requestBody?: never;
         responses: {
@@ -3090,13 +3146,9 @@ export interface operations {
     logout: {
         parameters: {
             query?: never;
-            header: {
-                Authorization: string;
-            };
+            header?: never;
             path?: never;
-            cookie: {
-                REFRESH_TOKEN: string;
-            };
+            cookie?: never;
         };
         requestBody?: never;
         responses: {
@@ -3411,6 +3463,36 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseListJoinedTeamUserApiResponse"];
+                };
+            };
+        };
+    };
+    getTeamQuestionScorerRank: {
+        parameters: {
+            query: {
+                /** @description 노출할 랭크 개수 */
+                rankCount?: number;
+                /**
+                 * @description 랭킹 타입
+                 * @example CORRECT
+                 */
+                type: string;
+            };
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseTeamRankApiResponse"];
                 };
             };
         };

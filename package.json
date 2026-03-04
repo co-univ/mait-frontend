@@ -1,6 +1,6 @@
 {
 	"name": "mait-frontend",
-	"version": "1.0.0",
+	"version": "260304.1",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -43,6 +43,7 @@
 		"openapi-react-query": "^0.5.0",
 		"react": "^19.1.2",
 		"react-dom": "^19.1.2",
+		"react-fast-compare": "^3.2.2",
 		"react-lottie": "^1.2.10",
 		"react-router-dom": "^7.7.0",
 		"react-toastify": "^11.0.5",

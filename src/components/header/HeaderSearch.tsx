@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 //
 //
 
-const HeaderInfoSectionSearchInput = () => {
+const HeaderSearch = () => {
 	/**
 	 * Error Monitoring Test
 	 */
@@ -34,4 +34,4 @@ const HeaderInfoSectionSearchInput = () => {
 	);
 };
 
-export default HeaderInfoSectionSearchInput;
+export default HeaderSearch;

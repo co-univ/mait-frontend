@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Badge from "@/components/Badge";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
+import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
@@ -33,6 +34,11 @@ const CreationNew = () => {
 		creationNewQuestionSetReducer,
 		creationNewQuestionSetInitialState(activeTeam?.teamId ?? 0),
 	);
+
+	const { invalidateQuestionSetsQuery } = useQuestionSets({
+		teamId: activeTeam?.teamId ?? 0,
+		mode: "MAKING",
+	});
 
 	const disabledCreateQuestionSet = [
 		!questionSet.teamId,
@@ -166,6 +172,8 @@ const CreationNew = () => {
 			return;
 		}
 
+		invalidateQuestionSetsQuery();
+
 		const questionSetId = res.data?.data?.questionSetId ?? 0;
 
 		if (questionSet.creationType === "AI_GENERATED") {
@@ -180,6 +188,9 @@ const CreationNew = () => {
 
 		navigate(
 			createPath(CREATION_ROUTE_PATH.ROOT, { questionSetId: questionSetId }),
+			{
+				replace: true,
+			},
 		);
 	};
 

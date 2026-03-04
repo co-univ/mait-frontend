@@ -28,9 +28,9 @@ const CreationQuestionAnswerShortBox = ({
 	onMainAnswerDelete,
 	onSubAnswerDelete,
 }: CreationQuestionAnswerShortBoxProps) => {
-	const mainAnswer = answers.find((answer) => answer.isMain);
+	const mainAnswer = answers.find((answer) => answer.main);
 
-	const subAnswers = answers.filter((answer) => !answer.isMain);
+	const subAnswers = answers.filter((answer) => !answer.main);
 
 	/**
 	 *

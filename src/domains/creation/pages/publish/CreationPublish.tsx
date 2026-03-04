@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, PencilLine } from "lucide-react";
 import { useEffect, useReducer } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,6 +25,8 @@ const CreationPublish = () => {
 	const questionSetId = Number(useParams().questionSetId);
 
 	const navigate = useNavigate();
+
+	const queryClient = useQueryClient();
 
 	const { activeTeam } = useTeams();
 
@@ -113,8 +116,21 @@ const CreationPublish = () => {
 
 			invalidateMakingQuery();
 			invalidateLiveTimeQuery();
+			queryClient.invalidateQueries({
+				queryKey: apiHooks.queryOptions(
+					"get",
+					"/api/v1/question-sets/{questionSetId}",
+					{
+						params: {
+							path: {
+								questionSetId,
+							},
+						},
+					},
+				).queryKey,
+			});
 
-			navigate(MANAGEMENT_ROUTE_PATH.ROOT);
+			navigate(`${MANAGEMENT_ROUTE_PATH.ROOT}?mode=live-time`);
 		} catch {
 			notify.error("문제 셋 생성에 실패했습니다.");
 		}

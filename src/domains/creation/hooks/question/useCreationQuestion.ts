@@ -1,194 +1,176 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo } from "react";
+import isEqual from "react-fast-compare";
 import type { QuestionResponseType } from "@/app.constants";
-import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
-import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
-import CreationQuestionConvertQuestionType from "@/domains/creation/utils/question/creation-question-convert-question-type";
-import creationQuestionResponseToUpdate from "@/domains/creation/utils/question/creation-question-response-to-update";
-import { apiClient, apiHooks } from "@/libs/api";
+import { apiHooks } from "@/libs/api";
 import type {
 	ApiResponseQuestionApiResponse,
 	QuestionType,
 } from "@/libs/types";
-import { createPath } from "@/utils/create-path";
-import { CREATION_ROUTE_PATH } from "../../creation.routes";
-import { creationQuestionFindNumber } from "../../utils/question/creation-question-find-number";
+import useCreationQuestionStore from "../../stores/question/useCreationQuestionStore";
+import creationQuestionConvertResponseToUpdate from "../../utils/question/creation-question-convert-response-to-update";
+import useCreationQuestionSet from "./useCreationQuestionSet";
 
 //
 //
 //
 
-interface UseQuestionProps {
+export interface UseCreationQuestionProps {
 	questionSetId: number;
 	questionId: number;
 }
 
-interface UseQuestionReturn {
-	question?: QuestionResponseType;
-	handleContentChange: (content: string) => void;
-	handleExplanationChange: (explanation: string) => void;
-	handleTypeChange: (type: QuestionType) => void;
-	handleImageChange: (imageId?: number, imageUrl?: string) => void;
-	handleImageAdd: (file: File | null) => Promise<void>;
-	handleUpdateQuestion: () => Promise<
-		ApiResponseQuestionApiResponse | undefined
-	>;
-	handleDeleteQuestion: (deleteQuestionId: number) => void;
-	isEditing?: boolean;
-	isUpdating: boolean;
-	isDeleting: boolean;
-	isUploadingImage: boolean;
-}
+export type UseCreationQuestionReturn<
+	TData extends QuestionResponseType = QuestionResponseType,
+> = {
+	question?: TData;
+	setQuestion: (question: TData) => void;
+	changeContent: (content: string) => void;
+	changeExplanation: (explanation: string) => void;
+	changeType: (type: QuestionType) => void;
+	addImage: (file: File | null) => void;
+	deleteImage: () => void;
+	saveQuestion: () => Promise<ApiResponseQuestionApiResponse | undefined>;
+	isDirty: boolean;
+	isQuestionLoading: boolean;
+	isImageUploading: boolean;
+	isSavingQuestion: boolean;
+};
 
 //
 //
 //
 
-const useCreationQuestion = ({
+const useCreationQuestion = <
+	TData extends QuestionResponseType = QuestionResponseType,
+>({
 	questionSetId,
 	questionId,
-}: UseQuestionProps): UseQuestionReturn => {
-	const { questions, editQuestion } = useCreationQuestionsStore();
+}: UseCreationQuestionProps): UseCreationQuestionReturn<TData> => {
+	const {
+		getQuestion,
+		getUpdatedAt,
+		setQuestion: storeSetQuestion,
+	} = useCreationQuestionStore();
 
-	const queryClient = useQueryClient();
+	const {
+		refetchQuestions,
+		updateQuestionSetTitle,
+		isDirty: isQuestionSetDirty,
+	} = useCreationQuestionSet({
+		questionSetId,
+	});
 
-	const navigate = useNavigate();
-
-	const { confirm } = useConfirm();
-
-	const [isUploadingImage, setIsUploadingImage] = useState(false);
-
-	const { mutateAsync: mutatePut, isPending: isUpdating } =
-		apiHooks.useMutation(
-			"put",
-			"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
-			{
-				onSuccess: () => {
-					queryClient.invalidateQueries({
-						queryKey: apiHooks.queryOptions(
-							"get",
-							"/api/v1/question-sets/{questionSetId}/questions",
-							{
-								params: { path: { questionSetId } },
-							},
-						).queryKey,
-					});
-				},
-
-				onError: (_, context) => {
-					const questionId = context?.params.path.questionId;
-					const questionNumber = creationQuestionFindNumber(
-						questions,
-						questionId,
-					);
-
-					notify.error(
-						`${questionNumber}번 문제 저장에 실패했습니다. 다시 시도해주세요.`,
-					);
-				},
-			},
-		);
-
-	const { mutate: mutateDelete, isPending: isDeleting } = apiHooks.useMutation(
-		"delete",
+	const {
+		data: questionData,
+		isPending: isQuestionLoading,
+		dataUpdatedAt: questionDataUpdatedAt,
+	} = apiHooks.useQuery(
+		"get",
 		"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
 		{
-			onSuccess: (_, request) => {
-				const deleteQuestionId = request.params.path.questionId;
-
-				notify.success("문제가 삭제되었습니다.");
-
-				queryClient.invalidateQueries({
-					queryKey: apiHooks.queryOptions(
-						"get",
-						"/api/v1/question-sets/{questionSetId}/questions",
-						{
-							params: { path: { questionSetId } },
-						},
-					).queryKey,
-				});
-
-				if (deleteQuestionId !== questionId) {
-					return;
-				}
-
-				const currentIndex = questions.findIndex(
-					(q) => q.id === deleteQuestionId,
-				);
-				let targetQuestionId: number | null = null;
-
-				if (currentIndex > 0) {
-					targetQuestionId = questions[currentIndex - 1].id;
-				} else if (currentIndex === 0 && questions.length > 1) {
-					targetQuestionId = questions[1].id;
-				}
-
-				if (targetQuestionId) {
-					navigate(
-						createPath(CREATION_ROUTE_PATH.QUESTION, {
-							questionSetId,
-							questionId: targetQuestionId,
-						}),
-						{ replace: true },
-					);
-				}
-			},
-
-			onError: () => {
-				notify.error("문제 삭제에 실패했습니다. 다시 시도해주세요.");
+			params: {
+				path: {
+					questionSetId,
+					questionId,
+				},
+				query: {
+					mode: "MAKING",
+				},
 			},
 		},
 	);
 
-	const question = questions.find((q) => q.id === questionId);
+	const { mutate: postQuestionImageMutate, isPending: isPostingQuestionImage } =
+		apiHooks.useMutation(
+			"post",
+			"/api/v1/question-sets/{questionSetId}/questions/images",
+		);
+
+	const { mutateAsync: putQuestionMutateAsync, isPending: isPuttingQuestion } =
+		apiHooks.useMutation(
+			"put",
+			"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
+		);
+
+	const queryClient = useQueryClient();
+
+	const question = getQuestion(questionId) as TData | undefined;
 
 	/**
-	 *
+	 * Determines question is changed by comparing the fetched question data
 	 */
-	const handleContentChange = (content: string) => {
-		if (question) {
-			editQuestion({ ...question, content });
+	const isDirty = useMemo(() => {
+		if (!questionData?.data || !question) {
+			return false;
 		}
+
+		return (
+			isQuestionSetDirty ||
+			!isEqual(
+				creationQuestionConvertResponseToUpdate(questionData.data),
+				creationQuestionConvertResponseToUpdate(question),
+			)
+		);
+	}, [isQuestionSetDirty, questionData?.data, question]);
+
+	/**
+	 * Setters for question fields in the store
+	 */
+	const setQuestion = useCallback(
+		(question: TData) => {
+			storeSetQuestion(questionId, question, questionDataUpdatedAt);
+		},
+		[questionId, storeSetQuestion, questionDataUpdatedAt],
+	);
+
+	/**
+	 * Change question content in the store
+	 */
+	const changeContent = (content: string) => {
+		if (!question) {
+			return;
+		}
+
+		setQuestion({
+			...question,
+			content,
+		});
 	};
 
 	/**
-	 *
+	 * Change question explanation in the store
 	 */
-	const handleExplanationChange = (explanation: string) => {
-		if (question) {
-			editQuestion({ ...question, explanation });
+	const changeExplanation = (explanation: string) => {
+		if (!question) {
+			return;
 		}
+
+		setQuestion({
+			...question,
+			explanation,
+		});
 	};
 
 	/**
-	 *
+	 * Change question type in the store
 	 */
-	const handleImageChange = (imageId?: number, imageUrl?: string) => {
-		if (question) {
-			editQuestion({ ...question, imageId, imageUrl });
+	const changeType = (type: QuestionType) => {
+		if (!question) {
+			return;
 		}
+
+		setQuestion({
+			...question,
+			type,
+		});
 	};
 
 	/**
-	 *
+	 * Add an image to the question by uploading it to the server and updating the store with the returned image URL and ID
 	 */
-	const handleTypeChange = (type: QuestionType) => {
-		if (question) {
-			const convertedQuestion = CreationQuestionConvertQuestionType(
-				question,
-				type,
-			);
-
-			editQuestion(convertedQuestion);
-		}
-	};
-
-	/**
-	 *
-	 */
-	const handleImageAdd = async (file: File | null) => {
+	const addImage = (file: File | null) => {
 		if (!file) {
 			return;
 		}
@@ -196,109 +178,144 @@ const useCreationQuestion = ({
 		const formData = new FormData();
 		formData.append("image", file);
 
-		setIsUploadingImage(true);
-
-		try {
-			const res = await apiClient.POST(
-				"/api/v1/question-sets/{questionSetId}/questions/images",
-				{
-					params: {
-						path: {
-							questionSetId,
-						},
-					},
-					body: formData as unknown as { image: string },
-					bodySerializer: (body) => body as unknown as FormData,
-				},
-			);
-
-			const imageUrl = res.data?.data?.imageUrl;
-			const imageId = res.data?.data?.id;
-
-			if (imageId && imageUrl) {
-				handleImageChange(imageId, imageUrl);
-			}
-		} catch {
-			notify.error("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
-		} finally {
-			setIsUploadingImage(false);
-		}
-	};
-
-	/**
-	 *
-	 */
-	const handleUpdateQuestion = async () => {
-		const currentQuestions = useCreationQuestionsStore.getState().questions;
-		const targetQuestion = currentQuestions.find((q) => q.id === questionId);
-
-		if (!targetQuestion) {
-			return;
-		}
-
-		if (targetQuestion.isEditing === false) {
-			return;
-		}
-
-		const res = await mutatePut({
-			params: {
-				path: {
-					questionSetId,
-					questionId: targetQuestion.id,
-				},
-			},
-			body: creationQuestionResponseToUpdate(targetQuestion),
-		});
-
-		return res;
-	};
-
-	/**
-	 *
-	 */
-	const handleDeleteQuestion = async (deleteQuestionId: number) => {
-		if (questions.length === 1) {
-			notify.error("문제는 최소 1개 이상 존재해야 합니다.");
-			return;
-		}
-
-		const targetQuestionNumber = creationQuestionFindNumber(
-			questions,
-			deleteQuestionId,
-		);
-
-		const result = await confirm({
-			title: "정말 삭제하시겠습니까?",
-			description: `${targetQuestionNumber}번 문제를 삭제하실 경우, 원하시는 상태로 복구가 어렵습니다.`,
-			cancelText: "취소",
-			confirmText: "확인",
-		});
-
-		if (result) {
-			mutateDelete({
+		postQuestionImageMutate(
+			{
 				params: {
 					path: {
 						questionSetId,
-						questionId: deleteQuestionId,
 					},
 				},
-			});
-		}
+				body: formData as unknown as { image: string },
+				bodySerializer: (body) => body as unknown as FormData,
+			},
+			{
+				onSuccess: (data) => {
+					const imageUrl = data.data?.imageUrl;
+					const imageId = data.data?.id;
+
+					if (imageUrl && imageId && question) {
+						setQuestion({
+							...question,
+							imageId,
+							imageUrl,
+						});
+					}
+				},
+				onError: () => {
+					notify.error("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+				},
+			},
+		);
 	};
+
+	/**
+	 * Delete the question's image by clearing the image URL and ID from the store
+	 */
+	const deleteImage = () => {
+		if (!question) {
+			return;
+		}
+
+		setQuestion({
+			...question,
+			imageId: undefined,
+			imageUrl: undefined,
+		});
+	};
+
+	/**
+	 * Save the question by sending the updated question data to the server and refetching the questions list on success
+	 */
+	const saveQuestion = async () => {
+		if (!question || !isDirty) {
+			return;
+		}
+
+		updateQuestionSetTitle();
+
+		return putQuestionMutateAsync(
+			{
+				params: {
+					path: {
+						questionSetId,
+						questionId,
+					},
+				},
+				body: creationQuestionConvertResponseToUpdate(question),
+			},
+			{
+				onSuccess: (data) => {
+					const updatedQuestion = data.data;
+					const updatedQuestionId = updatedQuestion?.id ?? 0;
+
+					refetchQuestions();
+					storeSetQuestion(
+						updatedQuestionId,
+						updatedQuestion as TData,
+						questionDataUpdatedAt,
+					);
+					queryClient.refetchQueries({
+						queryKey: apiHooks.queryOptions(
+							"get",
+							"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
+							{
+								params: {
+									path: {
+										questionSetId,
+										questionId: updatedQuestionId,
+									},
+									query: {
+										mode: "MAKING",
+									},
+								},
+							},
+						).queryKey,
+					});
+				},
+				onError: () => {
+					notify.error("문제 저장에 실패했습니다. 다시 시도해주세요.");
+				},
+			},
+		);
+	};
+
+	//
+	// Sync fetched question data into the store
+	//
+	useEffect(() => {
+		const storedQuestionUpdatedAt = getUpdatedAt(questionId);
+
+		if (
+			questionData?.data &&
+			questionDataUpdatedAt !== storedQuestionUpdatedAt
+		) {
+			storeSetQuestion(
+				questionId,
+				questionData.data as TData,
+				questionDataUpdatedAt,
+			);
+		}
+	}, [
+		questionId,
+		questionData,
+		questionDataUpdatedAt,
+		getUpdatedAt,
+		storeSetQuestion,
+	]);
 
 	return {
 		question,
-		handleContentChange,
-		handleExplanationChange,
-		handleImageChange,
-		handleImageAdd,
-		handleTypeChange,
-		handleUpdateQuestion,
-		handleDeleteQuestion,
-		isEditing: question?.isEditing,
-		isUpdating,
-		isDeleting,
-		isUploadingImage,
+		setQuestion,
+		changeContent,
+		changeExplanation,
+		changeType,
+		addImage,
+		deleteImage,
+		saveQuestion,
+		isDirty,
+		isQuestionLoading,
+		isImageUploading: isPostingQuestionImage,
+		isSavingQuestion: isPuttingQuestion,
 	};
 };
 

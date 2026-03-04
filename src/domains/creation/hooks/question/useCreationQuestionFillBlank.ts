@@ -1,33 +1,35 @@
 import type { Editor } from "@tiptap/core";
 import { useCallback, useEffect, useMemo } from "react";
-import { FILL_BLANK_PATTERN, type QuestionResponseType } from "@/app.constants";
+import { FILL_BLANK_PATTERN } from "@/app.constants";
 import { notify } from "@/components/Toast";
-import useCreationQuestionsStore from "@/domains/creation/stores/question/useCreationQuestionsStore";
 import type {
 	FillBlankAnswerApiResponse,
 	FillBlankQuestionApiResponse,
 } from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
+import type {
+	UseCreationQuestionProps,
+	UseCreationQuestionReturn,
+} from "./useCreationQuestion";
+import useCreationQuestion from "./useCreationQuestion";
 
 //
 //
 //
 
-interface UseQuestionFillBlankProps {
-	questionId: number;
+interface UseCreationQuestionFillBlankProps extends UseCreationQuestionProps {
 	editor?: Editor;
 }
 
-interface UseQuestionFillBlankReturn {
-	question?: FillBlankQuestionApiResponse;
+interface UseCreationQuestionFillBlankReturn
+	extends UseCreationQuestionReturn<FillBlankQuestionApiResponse> {
 	fillBlankContent: string;
 	groupedAnswers: FillBlankAnswerApiResponse[][];
-	handleAnswerChange: (answerId: number, newAnswer: string) => void;
-	handleContentChange: (editorHtml: string) => void;
-	handleMainAnswerAdd: () => void;
-	handleSubAnswerAdd: (number: number) => void;
-	handleMainAnswerDelete: (number: number) => void;
-	handleSubAnswerDelete: (answerId: number) => void;
+	changeAnswer: (answerId: number, newAnswer: string) => void;
+	addMainAnswer: () => void;
+	addSubAnswer: (number: number) => void;
+	deleteMainAnswer: (number: number) => void;
+	deleteSubAnswer: (answerId: number) => void;
 }
 
 //
@@ -35,26 +37,38 @@ interface UseQuestionFillBlankReturn {
 //
 
 const useCreationQuestionFillBlank = ({
+	questionSetId,
 	questionId,
 	editor,
-}: UseQuestionFillBlankProps): UseQuestionFillBlankReturn => {
-	const { questions, editQuestion } = useCreationQuestionsStore();
+}: UseCreationQuestionFillBlankProps): UseCreationQuestionFillBlankReturn => {
+	const baseCreationQuestionResult =
+		useCreationQuestion<FillBlankQuestionApiResponse>({
+			questionSetId,
+			questionId,
+		});
 
-	const question = questions.find((q) => q.id === questionId) as
-		| FillBlankQuestionApiResponse
-		| undefined;
+	const { question, setQuestion } = baseCreationQuestionResult;
+	const answers = question?.answers;
 
-	const groupedAnswers: FillBlankAnswerApiResponse[][] = [];
+	/**
+	 * Groups fill blank answer responses by their number into a 2D array.
+	 */
+	const groupedAnswers = useMemo(() => {
+		const grouped: FillBlankAnswerApiResponse[][] = Array.from(
+			{
+				length: Math.max(...(answers?.map((ans) => ans.number) || [0])),
+			},
+			() => [],
+		);
 
-	question?.answers?.forEach((answer) => {
-		const index = answer.number - 1;
+		answers?.forEach((answer) => {
+			const index = answer.number - 1;
 
-		if (!groupedAnswers[index]) {
-			groupedAnswers[index] = [];
-		}
+			grouped[index].push(answer);
+		});
 
-		groupedAnswers[index].push(answer);
-	});
+		return grouped;
+	}, [answers]);
 
 	/**
 	 * Convert {{number}} format to <question-blank> format for editor
@@ -89,7 +103,7 @@ const useCreationQuestionFillBlank = ({
 	}, [question?.content]);
 
 	/**
-	 * Handle editor content changes and synchronize blank numbers with answers.
+	 * Change editor content and synchronize blank numbers with answers.
 	 *
 	 * When blanks ({{n}}) are deleted from the editor, this function:
 	 * 1. Detects deleted blank numbers by comparing current content with existing answers
@@ -98,7 +112,7 @@ const useCreationQuestionFillBlank = ({
 	 *
 	 * @param content {string} - editor content in text format (ex: "Blank 1 is {{1}} and Blank 2 is {{2}}")
 	 */
-	const handleContentChange = useCallback(
+	const changeContent = useCallback(
 		(content: string) => {
 			if (!question) {
 				return;
@@ -162,36 +176,44 @@ const useCreationQuestionFillBlank = ({
 				});
 			}
 
-			editQuestion({
+			setQuestion({
 				...question,
 				content: updatedContent,
 				answers: updatedAnswers,
-			} as QuestionResponseType);
+			});
 		},
-		[question, editQuestion],
+		[question, setQuestion, groupedAnswers.length],
 	);
 
 	/**
 	 *
 	 */
-	const handleAnswerChange = (answerId: number, newAnswer: string) => {
-		const updatedAnswers = question?.answers?.map((answer) =>
+	const changeAnswer = (answerId: number, newAnswer: string) => {
+		if (!answers) {
+			return;
+		}
+
+		const updatedAnswers = answers.map((answer) =>
 			answer.id === answerId ? { ...answer, answer: newAnswer } : answer,
 		);
 
-		editQuestion({
+		setQuestion({
 			...question,
 			answers: updatedAnswers,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 * Add a new blank at the current cursor position.
 	 * Renumbers existing blanks and their associated answers accordingly.
 	 */
-	const handleMainAnswerAdd = () => {
-		if (groupedAnswers.length === 5) {
-			notify.error("빈칸은 최대 5개까지 추가할 수 있습니다.");
+	const addMainAnswer = () => {
+		if (!answers) {
+			return;
+		}
+
+		if (groupedAnswers.length >= 5) {
+			notify.warn("빈칸은 최대 5개까지 추가할 수 있습니다.");
 
 			return;
 		}
@@ -276,49 +298,47 @@ const useCreationQuestionFillBlank = ({
 		const newMainAnswer: FillBlankAnswerApiResponse = {
 			id: generateTemporaryId(),
 			answer: "",
-			isMain: true,
+			main: true,
 			number: newBlankNumber,
 		};
 
 		updatedAnswers.push(newMainAnswer);
 
 		// 7. Update question (this will trigger editor sync)
-		editQuestion({
+		setQuestion({
 			...question,
 			content: updatedContent,
 			answers: updatedAnswers,
-		} as QuestionResponseType);
+		});
 	};
 
 	/**
 	 *
 	 */
-	const handleSubAnswerAdd = (number: number) => {
-		const groupedAnswer = groupedAnswers[number - 1];
+	const addSubAnswer = (number: number) => {
+		if (!answers) {
+			return;
+		}
 
-		if (groupedAnswer && groupedAnswer.length === 6) {
-			notify.error("인정 답안은 최대 5개까지 추가할 수 있습니다.");
+		// Answer count limit is 5 + 1 (main answer is included in groupedAnswers[number - 1].length)
+		if (groupedAnswers[number - 1]?.length >= 5 + 1) {
+			notify.warn("인정 답안은 최대 5개까지 추가할 수 있습니다.");
 
 			return;
 		}
 
-		if (question) {
-			const newAnswer: FillBlankAnswerApiResponse = {
-				id: generateTemporaryId(),
-				answer: "",
-				isMain: false,
-				number,
-			};
+		const newAnswer = {
+			id: generateTemporaryId(),
+			main: false,
+			number,
+			answer: "",
+		};
+		const updatedAnswers = [...answers, newAnswer];
 
-			const updatedAnswers = question.answers
-				? [...question.answers, newAnswer]
-				: [newAnswer];
-
-			editQuestion({
-				...question,
-				answers: updatedAnswers,
-			} as QuestionResponseType);
-		}
+		setQuestion({
+			...question,
+			answers: updatedAnswers,
+		});
 	};
 
 	/**
@@ -327,35 +347,37 @@ const useCreationQuestionFillBlank = ({
 	 *
 	 * @param number - The blank number to delete
 	 */
-	const handleMainAnswerDelete = (number: number) => {
-		if (!question?.content) {
+	const deleteMainAnswer = (number: number) => {
+		if (!answers) {
 			return;
 		}
 
-		const updatedContent = question.content.replace(
+		const updatedContent = question?.content?.replace(
 			FILL_BLANK_PATTERN,
 			(match, capturedNumber) => {
 				return Number(capturedNumber) === number ? "" : match;
 			},
 		);
 
-		handleContentChange(updatedContent);
+		console.log("Updated content after main answer deletion:", updatedContent);
+
+		changeContent(updatedContent ?? "");
 	};
 
 	/**
 	 *
 	 */
-	const handleSubAnswerDelete = (answerId: number) => {
-		if (question) {
-			const updatedAnswers = (question.answers || []).filter(
-				(answer) => answer.id !== answerId,
-			);
-
-			editQuestion({
-				...question,
-				answers: updatedAnswers,
-			} as QuestionResponseType);
+	const deleteSubAnswer = (answerId: number) => {
+		if (!answers) {
+			return;
 		}
+
+		const updatedAnswers = answers.filter((answer) => answer.id !== answerId);
+
+		setQuestion({
+			...question,
+			answers: updatedAnswers,
+		});
 	};
 
 	//
@@ -364,10 +386,10 @@ const useCreationQuestionFillBlank = ({
 	useEffect(() => {
 		if (editor) {
 			editor.on("update", () => {
-				handleContentChange(editor.getText());
+				changeContent(editor.getText());
 			});
 		}
-	}, [editor, handleContentChange]);
+	}, [editor, changeContent]);
 
 	//
 	//
@@ -381,15 +403,14 @@ const useCreationQuestionFillBlank = ({
 	}, [editor, question?.content, fillBlankContent]);
 
 	return {
-		question,
+		...baseCreationQuestionResult,
 		fillBlankContent,
 		groupedAnswers,
-		handleAnswerChange,
-		handleContentChange,
-		handleMainAnswerAdd,
-		handleSubAnswerAdd,
-		handleMainAnswerDelete,
-		handleSubAnswerDelete,
+		changeAnswer,
+		addMainAnswer,
+		addSubAnswer,
+		deleteMainAnswer,
+		deleteSubAnswer,
 	};
 };
 
