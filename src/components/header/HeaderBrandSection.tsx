@@ -1,11 +1,14 @@
 import MaitLogo from "@/assets/images/mait-logo.svg";
-import HeaderBrandSectionUserMenu from "./HeaderBrandSectionUserMenu";
+import useBreakpoint from "@/hooks/useBreakpoint";
+import HeaderMenu from "./HeaderMenu";
 
 //
 //
 //
 
 const HeaderBrandSection = () => {
+	const { isSm } = useBreakpoint();
+
 	return (
 		<div className="flex items-center">
 			<button
@@ -20,7 +23,8 @@ const HeaderBrandSection = () => {
 					MAIT
 				</span>
 			</button>
-			<HeaderBrandSectionUserMenu />
+			<div className="w-20" />
+			{isSm && <HeaderMenu />}
 		</div>
 	);
 };
