@@ -58,6 +58,7 @@ const CreationNewLoading = () => {
 				title: "페이지를 벗어나시겠습니까?",
 				description:
 					"AI 문제 생성이 진행 중입니다. 페이지를 벗어나면 생성이 취소됩니다.",
+				disableHistoryTrap: true,
 			}).then((result) => {
 				if (result) {
 					blocker.proceed();

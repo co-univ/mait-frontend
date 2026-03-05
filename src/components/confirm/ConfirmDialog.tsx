@@ -11,6 +11,7 @@ interface ConfirmDialogProps {
 	confirmText?: string;
 	onCancel: () => void;
 	onConfirm: () => void;
+	disableHistoryTrap?: boolean;
 }
 
 //
@@ -27,6 +28,7 @@ const ConfirmDialog = ({
 	confirmText = "확인",
 	onCancel,
 	onConfirm,
+	disableHistoryTrap = false,
 }: ConfirmDialogProps) => {
 	const titleId = useId();
 	const descriptionId = useId();
@@ -89,20 +91,22 @@ const ConfirmDialog = ({
 			}
 		};
 
+		document.addEventListener("keydown", handleKeyDown, true);
+		document.addEventListener("mousedown", preventInteraction, true);
+		document.addEventListener("touchstart", preventInteraction, true);
+		document.addEventListener("click", preventInteraction, true);
+
 		// Prevent browser navigation
 		const preventNavigation = (e: PopStateEvent) => {
 			e.preventDefault();
 			window.history.pushState(null, "", window.location.href);
 		};
 
-		// Push a dummy state to prevent navigation
-		window.history.pushState(null, "", window.location.href);
-
-		document.addEventListener("keydown", handleKeyDown, true);
-		document.addEventListener("mousedown", preventInteraction, true);
-		document.addEventListener("touchstart", preventInteraction, true);
-		document.addEventListener("click", preventInteraction, true);
-		window.addEventListener("popstate", preventNavigation);
+		if (!disableHistoryTrap) {
+			// Push a dummy state to prevent navigation
+			window.history.pushState(null, "", window.location.href);
+			window.addEventListener("popstate", preventNavigation);
+		}
 
 		// Prevent scrolling on body
 		const originalOverflow = document.body.style.overflow;
@@ -113,13 +117,15 @@ const ConfirmDialog = ({
 			document.removeEventListener("mousedown", preventInteraction, true);
 			document.removeEventListener("touchstart", preventInteraction, true);
 			document.removeEventListener("click", preventInteraction, true);
-			window.removeEventListener("popstate", preventNavigation);
 			document.body.style.overflow = originalOverflow;
 
-			// Go back to remove the dummy state
-			window.history.back();
+			if (!disableHistoryTrap) {
+				window.removeEventListener("popstate", preventNavigation);
+				// Go back to remove the dummy state
+				window.history.back();
+			}
 		};
-	}, [onCancel]);
+	}, [onCancel, disableHistoryTrap]);
 
 	return (
 		<div className="fixed inset-0 z-50 bg-color-alpha-black25">

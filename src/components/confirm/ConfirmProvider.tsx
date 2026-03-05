@@ -65,6 +65,7 @@ const ConfirmProvider = ({ children }: { children: ReactNode }) => {
 					description={confirmState.options.description}
 					cancelText={confirmState.options.cancelText}
 					confirmText={confirmState.options.confirmText}
+					disableHistoryTrap={confirmState.options.disableHistoryTrap}
 					onCancel={handleCancel}
 					onConfirm={handleConfirm}
 				/>
