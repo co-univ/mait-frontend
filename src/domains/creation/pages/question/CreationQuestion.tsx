@@ -55,19 +55,24 @@ const CreationQuestion = () => {
 	// Block navigation when there are unsaved changes
 	//
 	useEffect(() => {
-		if (blocker.state === "blocked") {
-			confirm({
-				title: "편집 중인 문제가 있습니다.",
-				description:
-					"페이지를 떠나시겠습니까? (편집 내용은 저장되지 않습니다.)",
-			}).then((result) => {
+		const handleBlocker = async () => {
+			if (blocker.state === "blocked") {
+				const result = await confirm({
+					title: "편집 중인 문제가 있습니다.",
+					description:
+						"페이지를 떠나시겠습니까? (편집 내용은 저장되지 않습니다.)",
+					disableHistoryTrap: true,
+				});
+
 				if (result) {
 					blocker.proceed();
 				} else {
 					blocker.reset();
 				}
-			});
-		}
+			}
+		};
+
+		handleBlocker();
 	}, [blocker, confirm]);
 
 	//
