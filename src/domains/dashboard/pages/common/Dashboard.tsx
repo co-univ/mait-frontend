@@ -1,3 +1,4 @@
+import DashboardTeamRanking from "../../components/team-ranking/DashboardTeamRanking";
 import DashboardLayout from "../../layouts/common/DashboardLayout";
 
 //
@@ -5,7 +6,11 @@ import DashboardLayout from "../../layouts/common/DashboardLayout";
 //
 
 const Dashboard = () => {
-	return <DashboardLayout>gdgd</DashboardLayout>;
+	return (
+		<DashboardLayout>
+			<DashboardTeamRanking />
+		</DashboardLayout>
+	);
 };
 
 export default Dashboard;
