@@ -28,7 +28,6 @@ const DashboardTeamRankingTable = ({
 	teamRankings,
 	userRank,
 }: DashboardTeamRankingTableProps) => {
-	console.log("teamRankings in table", teamRankings);
 	return (
 		<Table.Root className="bg-color-alpha-white100">
 			<Table.Header>
