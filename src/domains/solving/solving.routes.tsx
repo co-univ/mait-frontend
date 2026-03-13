@@ -4,9 +4,7 @@ import AuthGuard from "@/guards/AuthGuard";
 import SolvingReview from "./pages/review/SolvingReview";
 
 const SolvingRedirect = lazy(() => import("./pages/common/SolvingRedirect"));
-const SolvingLiveSolving = lazy(
-	() => import("./pages/live/SolvingLiveSolving"),
-);
+const SolvingLive = lazy(() => import("./pages/live/SolvingLive"));
 const SolvingQuestionSets = lazy(
 	() => import("./pages/question-sets/SolvingQuestionSets"),
 );
@@ -44,7 +42,7 @@ export const solvingRouter: RouteObject[] = [
 	},
 	{
 		path: SOLVING_ROUTE_PATH.LIVE,
-		element: <SolvingLiveSolving />,
+		element: <SolvingLive />,
 	},
 	{
 		path: SOLVING_ROUTE_PATH.ROOT,
