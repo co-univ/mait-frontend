@@ -2,11 +2,10 @@ import { useState } from "react";
 import { notify } from "@/components/Toast";
 import useUser from "@/hooks/useUser";
 import { apiClient } from "@/libs/api";
-import type { FillBlankSubmitAnswer, QuestionType } from "@/libs/types";
-import useSolvingReviewAnswerResultStore, {
-	type AnswersType,
-} from "../../stores/review/useSolvingReviewAnswerResultStore";
+import type { QuestionType } from "@/libs/types";
+import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
 import { solvingAnswersValidation } from "../../utils/solvingAnswersValidation";
+import { solvingBuildSubmitData } from "../../utils/solvingBuildSubmitData";
 
 //
 //
@@ -37,50 +36,6 @@ const useSolvingReviewAnswerSubmit = (): UseSolvingReviewAnswerSubmitReturn => {
 	/**
 	 *
 	 */
-	const buildSubmitData = (
-		userAnswers: AnswersType,
-		questionType: QuestionType,
-		userId: number,
-	) => {
-		switch (questionType) {
-			case "SHORT":
-				return {
-					userId,
-					type: "SHORT" as const,
-					submitAnswers: (userAnswers as string[]).filter(
-						(answer) => answer.trim() !== "",
-					),
-				};
-
-			case "MULTIPLE":
-				return {
-					userId,
-					type: "MULTIPLE" as const,
-					submitAnswers: userAnswers as number[],
-				};
-
-			case "FILL_BLANK":
-				return {
-					userId,
-					type: "FILL_BLANK" as const,
-					submitAnswers: userAnswers as FillBlankSubmitAnswer[],
-				};
-
-			case "ORDERING":
-				return {
-					userId,
-					type: "ORDERING" as const,
-					submitAnswers: userAnswers as number[],
-				};
-
-			default:
-				throw new Error("지원하지 않는 문제 타입입니다.");
-		}
-	};
-
-	/**
-	 *
-	 */
 	const submitAnswer = async ({
 		questionSetId,
 		questionId,
@@ -93,10 +48,7 @@ const useSolvingReviewAnswerSubmit = (): UseSolvingReviewAnswerSubmitReturn => {
 			return false;
 		}
 
-		const validation = solvingAnswersValidation(
-			userAnswers,
-			questionType,
-		);
+		const validation = solvingAnswersValidation(userAnswers, questionType);
 		if (!validation.isValid) {
 			notify.warn(validation.errorMessage || "답안을 입력해주세요.");
 			return false;
@@ -105,7 +57,11 @@ const useSolvingReviewAnswerSubmit = (): UseSolvingReviewAnswerSubmitReturn => {
 		try {
 			setIsSubmitting(true);
 
-			const submitData = buildSubmitData(userAnswers, questionType, user.id);
+			const submitData = solvingBuildSubmitData(
+				userAnswers,
+				questionType,
+				user.id,
+			);
 
 			const { data, error } = await apiClient.POST(
 				"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit/review",

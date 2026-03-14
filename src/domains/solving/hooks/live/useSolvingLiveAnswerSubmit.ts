@@ -1,12 +1,10 @@
 import { useState } from "react";
-import useUser from "@/hooks/useUser";
 import { notify } from "@/components/Toast";
+import useUser from "@/hooks/useUser";
 import { apiClient } from "@/libs/api";
-import type { FillBlankSubmitAnswer, QuestionType } from "@/libs/types";
-import useSolvingLiveAnswerStore, {
-	type AnswersType,
-} from "../../stores/live/useSolvingLiveAnswerStore";
+import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
 import { solvingAnswersValidation } from "../../utils/solvingAnswersValidation";
+import { solvingBuildSubmitData } from "../../utils/solvingBuildSubmitData";
 
 //
 //
@@ -34,51 +32,7 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 		useSolvingLiveAnswerStore();
 
 	/**
-	 * 
-	 */
-	const buildSubmitData = (
-		userAnswers: AnswersType,
-		questionType: QuestionType,
-		userId: number,
-	) => {
-		switch (questionType) {
-			case "SHORT":
-				return {
-					userId,
-					type: "SHORT" as const,
-					submitAnswers: (userAnswers as string[]).filter(
-						(answer) => answer.trim() !== "",
-					),
-				};
-
-			case "MULTIPLE":
-				return {
-					userId,
-					type: "MULTIPLE" as const,
-					submitAnswers: userAnswers as number[],
-				};
-
-			case "FILL_BLANK":
-				return {
-					userId,
-					type: "FILL_BLANK" as const,
-					submitAnswers: userAnswers as FillBlankSubmitAnswer[],
-				};
-
-			case "ORDERING":
-				return {
-					userId,
-					type: "ORDERING" as const,
-					submitAnswers: userAnswers as number[],
-				};
-
-			default:
-				throw new Error("지원하지 않는 문제 타입입니다.");
-		}
-	};
-
-	/**
-	 * 
+	 *
 	 */
 	const submitAnswer = async ({
 		questionSetId,
@@ -106,7 +60,11 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 		try {
 			setIsSubmitting(true);
 
-			const submitData = buildSubmitData(userAnswers, questionType, user.id);
+			const submitData = solvingBuildSubmitData(
+				userAnswers,
+				questionType,
+				user.id,
+			);
 
 			const { data, error } = await apiClient.POST(
 				"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit",
