@@ -110,7 +110,8 @@ const SolvingLiveQuestion = ({
 	};
 
 	//
-	useEffect(() => {
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Reset data when the problem changes
+		useEffect(() => {
 		reset();
 
 		if (type) {
