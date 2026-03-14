@@ -182,7 +182,7 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 			setSubmitResult(isCorrect);
 
 			return true;
-		} catch (error) {
+		} catch {
 			notify.error("답안 제출에 실패하였습니다.");
 			return false;
 		} finally {
