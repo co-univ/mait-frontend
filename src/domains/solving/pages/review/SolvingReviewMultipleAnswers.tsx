@@ -1,5 +1,10 @@
+import type {
+	GradedAnswerMultipleResult,
+	MultipleQuestionApiResponse,
+} from "@/libs/types";
 import SolvingAnswerMultiple from "../../components/common/answer/SolvingAnswerMultiple";
-import useSolvingReviewMultipleQuestion from "../../hooks/review/useSolvingReviewMultipleQuestion";
+import useQuestion from "../../hooks/common/useQuestion";
+import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
 //
@@ -18,16 +23,27 @@ const SolvingReviewMultipleAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewMultipleAnswersProps) => {
-	const {
-		isSubmitted,
-		choices,
-		userAnswers,
-		gradedResults,
-		handleChoiceChange,
-	} = useSolvingReviewMultipleQuestion({
+	const { question } = useQuestion({
 		questionSetId,
 		questionId,
+		mode: "REVIEW",
 	});
+
+	const multipleQuestion = question as MultipleQuestionApiResponse | undefined;
+	const choices = multipleQuestion?.choices ?? [];
+
+	const {
+		getUserAnswers,
+		setUserAnswers,
+		getIsSubmitted,
+		getIsGradedResults,
+	} = useSolvingReviewAnswerResultStore();
+
+	const userAnswers = getUserAnswers(questionId) as number[];
+	const isSubmitted = getIsSubmitted(questionId);
+	const gradedResults = getIsGradedResults(questionId) as
+		| GradedAnswerMultipleResult[]
+		| null;
 
 	/**
 	 *
@@ -37,7 +53,11 @@ const SolvingReviewMultipleAnswers = ({
 			return;
 		}
 
-		handleChoiceChange(choiceNumber);
+		const newAnswers = userAnswers.includes(choiceNumber)
+			? userAnswers.filter((num) => num !== choiceNumber)
+			: [...userAnswers, choiceNumber];
+
+		setUserAnswers(questionId, newAnswers);
 	};
 
 	/**

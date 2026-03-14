@@ -1,5 +1,11 @@
+import { useEffect } from "react";
+import type {
+	GradedAnswerShortResult,
+	ShortQuestionApiResponse,
+} from "@/libs/types";
 import SolvingAnswerShort from "../../components/common/answer/SolvingAnswerShort";
-import useSolvingReviewShortQuestion from "../../hooks/review/useSolvingReviewShortQuestion";
+import useQuestion from "../../hooks/common/useQuestion";
+import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
 //
@@ -18,24 +24,63 @@ const SolvingReviewShortAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewShortAnswersProps) => {
-	const { isSubmitted, userAnswers, gradedResult, handleAnswerChange } =
-		useSolvingReviewShortQuestion({
-			questionSetId,
-			questionId,
-		});
+	const { question } = useQuestion({
+		questionSetId,
+		questionId,
+		mode: "REVIEW",
+	});
+
+	const shortQuestion = question as ShortQuestionApiResponse | undefined;
+	const answerCount = shortQuestion?.answerCount ?? 0;
+
+	const {
+		getUserAnswers,
+		setUserAnswers,
+		getIsSubmitted,
+		getIsGradedResults,
+	} = useSolvingReviewAnswerResultStore();
+
+	const userAnswers = getUserAnswers(questionId) as string[];
+	const isSubmitted = getIsSubmitted(questionId);
+	const gradedResults = getIsGradedResults(questionId) as
+		| GradedAnswerShortResult[]
+		| null;
+
+	/**
+	 *
+	 */
+	const handleAnswerChange = (index: number, value: string) => {
+		if (isSubmitted) {
+			return;
+		}
+
+		const newAnswers = [...userAnswers];
+		newAnswers[index] = value;
+		setUserAnswers(questionId, newAnswers);
+	};
 
 	/**
 	 *
 	 */
 	const getVariation = (index: number) => {
-		if (isSubmitted && gradedResult) {
-			const result = gradedResult[index];
-
+		if (isSubmitted && gradedResults) {
+			const result = gradedResults[index];
 			return result?.isCorrect ? "correct" : "incorrect";
 		}
 
 		return userAnswers[index] === "" ? "default" : "focused";
 	};
+
+	// 초기 답안 배열 설정
+	useEffect(() => {
+		if (answerCount > 0 && userAnswers.length !== answerCount) {
+			const initialAnswers: string[] = Array.from(
+				{ length: answerCount },
+				() => "",
+			);
+			setUserAnswers(questionId, initialAnswers);
+		}
+	}, [answerCount, userAnswers.length, questionId, setUserAnswers]);
 
 	return (
 		<div className="flex flex-col w-full gap-gap-11">

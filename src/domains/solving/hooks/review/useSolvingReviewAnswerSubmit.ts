@@ -1,11 +1,12 @@
 import { useState } from "react";
-import useUser from "@/hooks/useUser";
 import { notify } from "@/components/Toast";
+import useUser from "@/hooks/useUser";
 import { apiClient } from "@/libs/api";
 import type { FillBlankSubmitAnswer, QuestionType } from "@/libs/types";
-import useSolvingLiveAnswerStore, {
+import useSolvingReviewAnswerResultStore, {
 	type AnswersType,
-} from "../../stores/live/useSolvingLiveAnswerStore";
+} from "../../stores/review/useSolvingReviewAnswerResultStore";
+import { solvingReviewAnswersValidation } from "../../utils/solving-review-answers-validation";
 
 //
 //
@@ -14,9 +15,10 @@ import useSolvingLiveAnswerStore, {
 interface SubmitAnswerParams {
 	questionSetId: number;
 	questionId: number;
+	questionType: QuestionType;
 }
 
-interface UseSolvingLiveAnswerSubmitReturn {
+interface UseSolvingReviewAnswerSubmitReturn {
 	submitAnswer: (params: SubmitAnswerParams) => Promise<boolean>;
 	isSubmitting: boolean;
 }
@@ -25,52 +27,15 @@ interface UseSolvingLiveAnswerSubmitReturn {
 //
 //
 
-const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
+const useSolvingReviewAnswerSubmit = (): UseSolvingReviewAnswerSubmitReturn => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const { user } = useUser();
 
-	const { getUserAnswers, getQuestionType, setSubmitResult } =
-		useSolvingLiveAnswerStore();
+	const { getUserAnswers, setAnswerSubmitted } =
+		useSolvingReviewAnswerResultStore();
 
 	/**
 	 *
-	 */
-	const validateAnswers = (
-		userAnswers: AnswersType,
-		questionType: QuestionType,
-	): { isValid: boolean; errorMessage?: string } => {
-		switch (questionType) {
-			case "MULTIPLE": {
-				const answers = userAnswers as number[];
-				if (answers.length === 0) {
-					return { isValid: false, errorMessage: "답안을 선택해주세요." };
-				}
-				return { isValid: true };
-			}
-			case "SHORT": {
-				const answers = userAnswers as string[];
-				if (answers.length === 0 || answers.every((a) => a.trim() === "")) {
-					return { isValid: false, errorMessage: "답안을 입력해주세요." };
-				}
-				return { isValid: true };
-			}
-			case "FILL_BLANK": {
-				const answers = userAnswers as FillBlankSubmitAnswer[];
-				if (answers.some((answer) => answer.answer.trim() === "")) {
-					return { isValid: false, errorMessage: "답안을 입력해주세요." };
-				}
-				return { isValid: true };
-			}
-			case "ORDERING": {
-				return { isValid: true };
-			}
-			default:
-				return { isValid: false, errorMessage: "지원하지 않는 문제 타입입니다." };
-		}
-	};
-
-	/**
-	 * 
 	 */
 	const buildSubmitData = (
 		userAnswers: AnswersType,
@@ -114,27 +79,21 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 	};
 
 	/**
-	 * 
+	 *
 	 */
 	const submitAnswer = async ({
 		questionSetId,
 		questionId,
+		questionType,
 	}: SubmitAnswerParams): Promise<boolean> => {
-		const userAnswers = getUserAnswers();
-		const questionType = getQuestionType();
-
-		if (!questionType) {
-			console.error("문제 타입 정보가 없습니다.");
-			return false;
-		}
+		const userAnswers = getUserAnswers(questionId);
 
 		if (!user?.id) {
 			notify.error("로그인이 필요합니다.");
 			return false;
 		}
 
-		//
-		const validation = validateAnswers(userAnswers, questionType);
+		const validation = solvingReviewAnswersValidation(userAnswers, questionType);
 		if (!validation.isValid) {
 			notify.warn(validation.errorMessage || "답안을 입력해주세요.");
 			return false;
@@ -146,7 +105,7 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 			const submitData = buildSubmitData(userAnswers, questionType, user.id);
 
 			const { data, error } = await apiClient.POST(
-				"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit",
+				"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit/review",
 				{
 					params: {
 						path: {
@@ -160,26 +119,14 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 			);
 
 			if (error) {
-				const errCode = (error as { code?: string }).code;
-				switch (errCode) {
-					case "QS-001":
-						notify.error("풀이 불가한 문제입니다.");
-						break;
-					case "QS-002":
-						notify.error("참여자만 답안을 제출할 수 있습니다.");
-						break;
-					case "QS-003":
-						notify.error("이미 정답 처리된 문제입니다.");
-						break;
-					default:
-						notify.error("답안 제출에 실패하였습니다.");
-						break;
-				}
+				notify.error("답안 제출에 실패하였습니다.");
 				return false;
 			}
 
 			const isCorrect = data?.data?.isCorrect ?? false;
-			setSubmitResult(isCorrect);
+			const gradedResults = data?.data?.gradedResults ?? [];
+
+			setAnswerSubmitted(questionId, isCorrect, gradedResults);
 
 			return true;
 		} catch (error) {
@@ -196,4 +143,4 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 	};
 };
 
-export default useSolvingLiveAnswerSubmit;
+export default useSolvingReviewAnswerSubmit;

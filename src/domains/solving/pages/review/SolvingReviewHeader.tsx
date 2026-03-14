@@ -14,7 +14,7 @@ import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 //
 //
 
-interface SolvingReviewControlProps {
+interface SolvingReviewHeaderProps {
 	isSubmitted: boolean;
 	isCorrect: boolean | null;
 	isExplanationShown: boolean;
@@ -31,7 +31,7 @@ interface SolvingReviewControlProps {
 //
 //
 
-const SolvingReviewControl = ({
+const SolvingReviewHeader = ({
 	isSubmitted,
 	isCorrect,
 	isExplanationShown,
@@ -42,7 +42,7 @@ const SolvingReviewControl = ({
 	handleAnswersSubmit,
 	showExplanation,
 	hideExplanation,
-}: SolvingReviewControlProps) => {
+}: SolvingReviewHeaderProps) => {
 	const navigate = useNavigate();
 
 	/**
@@ -144,4 +144,4 @@ const SolvingReviewControl = ({
 	);
 };
 
-export default SolvingReviewControl;
+export default SolvingReviewHeader;
