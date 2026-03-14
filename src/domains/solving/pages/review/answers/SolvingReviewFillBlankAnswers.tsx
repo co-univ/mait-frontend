@@ -4,9 +4,9 @@ import type {
 	FillBlankSubmitAnswer,
 	GradedAnswerFillBlankResult,
 } from "@/libs/types";
-import SolvingAnswerFillBlank from "../../components/common/answer/SolvingAnswerFillBlank";
-import useQuestion from "../../hooks/common/useQuestion";
-import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
+import SolvingAnswerFillBlank from "../../../components/common/answer/SolvingAnswerFillBlank";
+import useQuestion from "../../../hooks/common/useQuestion";
+import useSolvingReviewAnswerResultStore from "../../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
 //
@@ -36,12 +36,8 @@ const SolvingReviewFillBlankAnswers = ({
 		| undefined;
 	const blankCount = fillBlankQuestion?.blankCount ?? 0;
 
-	const {
-		getUserAnswers,
-		setUserAnswers,
-		getIsSubmitted,
-		getIsGradedResults,
-	} = useSolvingReviewAnswerResultStore();
+	const { getUserAnswers, setUserAnswers, getIsSubmitted, getIsGradedResults } =
+		useSolvingReviewAnswerResultStore();
 
 	const userAnswers = getUserAnswers(questionId) as FillBlankSubmitAnswer[];
 	const isSubmitted = getIsSubmitted(questionId);

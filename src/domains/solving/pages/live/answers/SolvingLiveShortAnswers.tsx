@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import type { ShortQuestionApiResponse } from "@/libs/types";
-import SolvingAnswerShort from "../../components/common/answer/SolvingAnswerShort";
-import useQuestion from "../../hooks/common/useQuestion";
-import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
+import SolvingAnswerShort from "../../../components/common/answer/SolvingAnswerShort";
+import useQuestion from "../../../hooks/common/useQuestion";
+import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 
 //
 //
@@ -56,7 +56,7 @@ const SolvingLiveShortAnswers = ({
 		return userAnswers[index] === "" ? "default" : "focused";
 	};
 
-	//	
+	//
 	useEffect(() => {
 		if (answerCount > 0 && userAnswers.length !== answerCount) {
 			const initialAnswers: string[] = Array.from(

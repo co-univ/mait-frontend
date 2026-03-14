@@ -6,11 +6,11 @@ import useQuestion from "../../hooks/common/useQuestion";
 import useSolvingLiveAnswerSubmit from "../../hooks/live/useSolvingLiveAnswerSubmit";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
-import SolvingLiveFillBlankAnswers from "./SolvingLiveFillBlankAnswers";
+import SolvingLiveFillBlankAnswers from "./answers/SolvingLiveFillBlankAnswers";
+import SolvingLiveMultipleAnswers from "./answers/SolvingLiveMultipleAnswers";
+import SolvingLiveOrderingAnswers from "./answers/SolvingLiveOrderingAnswers";
+import SolvingLiveShortAnswers from "./answers/SolvingLiveShortAnswers";
 import SolvingLiveHeader from "./SolvingLiveHeader";
-import SolvingLiveMultipleAnswers from "./SolvingLiveMultipleAnswers";
-import SolvingLiveOrderingAnswers from "./SolvingLiveOrderingAnswers";
-import SolvingLiveShortAnswers from "./SolvingLiveShortAnswers";
 
 //
 //

@@ -2,9 +2,9 @@ import type {
 	GradedAnswerMultipleResult,
 	MultipleQuestionApiResponse,
 } from "@/libs/types";
-import SolvingAnswerMultiple from "../../components/common/answer/SolvingAnswerMultiple";
-import useQuestion from "../../hooks/common/useQuestion";
-import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
+import SolvingAnswerMultiple from "../../../components/common/answer/SolvingAnswerMultiple";
+import useQuestion from "../../../hooks/common/useQuestion";
+import useSolvingReviewAnswerResultStore from "../../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
 //
@@ -32,12 +32,8 @@ const SolvingReviewMultipleAnswers = ({
 	const multipleQuestion = question as MultipleQuestionApiResponse | undefined;
 	const choices = multipleQuestion?.choices ?? [];
 
-	const {
-		getUserAnswers,
-		setUserAnswers,
-		getIsSubmitted,
-		getIsGradedResults,
-	} = useSolvingReviewAnswerResultStore();
+	const { getUserAnswers, setUserAnswers, getIsSubmitted, getIsGradedResults } =
+		useSolvingReviewAnswerResultStore();
 
 	const userAnswers = getUserAnswers(questionId) as number[];
 	const isSubmitted = getIsSubmitted(questionId);

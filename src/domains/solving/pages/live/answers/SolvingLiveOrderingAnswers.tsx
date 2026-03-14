@@ -9,9 +9,9 @@ import type {
 	OrderingOptionApiResponse,
 	OrderingQuestionApiResponse,
 } from "@/libs/types";
-import SolvingAnswerOrdering from "../../components/common/answer/SolvingAnswerOrdering";
-import useQuestion from "../../hooks/common/useQuestion";
-import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
+import SolvingAnswerOrdering from "../../../components/common/answer/SolvingAnswerOrdering";
+import useQuestion from "../../../hooks/common/useQuestion";
+import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 
 //
 //

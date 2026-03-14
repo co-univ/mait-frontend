@@ -1,6 +1,6 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import QuestionContent from "@/components/QuestionContent";
 import { apiHooks } from "@/libs/api";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
@@ -11,10 +11,10 @@ import useSolvingReviewExplanation from "../../hooks/review/useSolvingReviewExpl
 import useSolvingReviewQuestions from "../../hooks/review/useSolvingReviewQuestions";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
+import SolvingReviewFillBlankAnswers from "./answers/SolvingReviewFillBlankAnswers";
+import SolvingReviewMultipleAnswers from "./answers/SolvingReviewMultipleAnswers";
 import SolvingReviewExplanation from "./SolvingReviewExplanation";
-import SolvingReviewFillBlankAnswers from "./SolvingReviewFillBlankAnswers";
 import SolvingReviewHeader from "./SolvingReviewHeader";
-import SolvingReviewMultipleAnswers from "./SolvingReviewMultipleAnswers";
 import SolvingReviewOrderingAnswers from "./SolvingReviewOrderingAnswers";
 import SolvingReviewShortAnswers from "./SolvingReviewShortAnswers";
 
@@ -176,7 +176,14 @@ const SolvingReview = () => {
 				questionId,
 			},
 		});
-	}, [questionSetId, questionId, question, type, setAnswerInitInfo, updateLastViewedQuestion]);
+	}, [
+		questionSetId,
+		questionId,
+		question,
+		type,
+		setAnswerInitInfo,
+		updateLastViewedQuestion,
+	]);
 
 	// 컴포넌트 언마운트 시 Store 리셋
 	useEffect(() => {

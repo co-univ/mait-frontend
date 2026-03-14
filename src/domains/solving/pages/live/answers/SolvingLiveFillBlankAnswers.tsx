@@ -3,9 +3,9 @@ import type {
 	FillBlankQuestionApiResponse,
 	FillBlankSubmitAnswer,
 } from "@/libs/types";
-import SolvingAnswerFillBlank from "../../components/common/answer/SolvingAnswerFillBlank";
-import useQuestion from "../../hooks/common/useQuestion";
-import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
+import SolvingAnswerFillBlank from "../../../components/common/answer/SolvingAnswerFillBlank";
+import useQuestion from "../../../hooks/common/useQuestion";
+import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 
 //
 //
