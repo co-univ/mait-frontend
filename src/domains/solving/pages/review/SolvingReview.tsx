@@ -5,7 +5,6 @@ import QuestionContent from "@/components/QuestionContent";
 import { apiHooks } from "@/libs/api";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import SolvingSubmitResult from "../../components/common/SolvingSubmitResult";
-import useQuestion from "../../hooks/common/useQuestion";
 import useSolvingReviewAnswerSubmit from "../../hooks/review/useSolvingReviewAnswerSubmit";
 import useSolvingReviewExplanation from "../../hooks/review/useSolvingReviewExplanation";
 import useSolvingReviewQuestions from "../../hooks/review/useSolvingReviewQuestions";
@@ -17,6 +16,7 @@ import SolvingReviewExplanation from "./SolvingReviewExplanation";
 import SolvingReviewHeader from "./SolvingReviewHeader";
 import SolvingReviewOrderingAnswers from "./SolvingReviewOrderingAnswers";
 import SolvingReviewShortAnswers from "./SolvingReviewShortAnswers";
+import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 
 //
 //
@@ -36,7 +36,7 @@ const SolvingReview = () => {
 	const { questions } = useSolvingReviewQuestions({ questionSetId });
 
 	// 문제 데이터
-	const { question, content, number, imageUrl, type, isLoading } = useQuestion({
+	const { question, content, number, imageUrl, type, isLoading } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "REVIEW",

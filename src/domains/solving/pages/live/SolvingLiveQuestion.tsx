@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import QuestionContent from "@/components/QuestionContent";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import SolvingSubmitResult from "../../components/common/SolvingSubmitResult";
-import useQuestion from "../../hooks/common/useQuestion";
 import useSolvingLiveAnswerSubmit from "../../hooks/live/useSolvingLiveAnswerSubmit";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
@@ -11,6 +10,7 @@ import SolvingLiveMultipleAnswers from "./answers/SolvingLiveMultipleAnswers";
 import SolvingLiveOrderingAnswers from "./answers/SolvingLiveOrderingAnswers";
 import SolvingLiveShortAnswers from "./answers/SolvingLiveShortAnswers";
 import SolvingLiveHeader from "./SolvingLiveHeader";
+import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 
 //
 //
@@ -35,7 +35,7 @@ const SolvingLiveQuestion = ({
 }: SolvingLiveQuestionProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 
-	const { content, number, imageUrl, type, isLoading } = useQuestion({
+	const { content, number, imageUrl, type, isLoading } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "LIVE_TIME",

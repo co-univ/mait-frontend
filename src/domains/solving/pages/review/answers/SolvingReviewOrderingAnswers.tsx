@@ -5,12 +5,12 @@ import {
 	type DropResult,
 } from "@hello-pangea/dnd";
 import { useEffect } from "react";
+import useSolvingQuestion from "@/domains/solving/hooks/common/useSolvingQuestion";
 import type {
 	OrderingOptionApiResponse,
 	OrderingQuestionApiResponse,
 } from "@/libs/types";
 import SolvingAnswerOrdering from "../../components/common/answer/SolvingAnswerOrdering";
-import useQuestion from "../../hooks/common/useQuestion";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
@@ -30,7 +30,7 @@ const SolvingReviewOrderingAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewOrderingAnswersProps) => {
-	const { question } = useQuestion({
+	const { question } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "REVIEW",
@@ -39,12 +39,8 @@ const SolvingReviewOrderingAnswers = ({
 	const orderingQuestion = question as OrderingQuestionApiResponse | undefined;
 	const questionOptions = orderingQuestion?.options ?? [];
 
-	const {
-		getUserAnswers,
-		setUserAnswers,
-		getIsSubmitted,
-		getIsCorrect,
-	} = useSolvingReviewAnswerResultStore();
+	const { getUserAnswers, setUserAnswers, getIsSubmitted, getIsCorrect } =
+		useSolvingReviewAnswerResultStore();
 
 	const userAnswers = getUserAnswers(questionId) as number[];
 	const isSubmitted = getIsSubmitted(questionId);

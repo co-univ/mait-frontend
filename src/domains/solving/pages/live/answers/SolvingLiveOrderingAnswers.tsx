@@ -10,7 +10,7 @@ import type {
 	OrderingQuestionApiResponse,
 } from "@/libs/types";
 import SolvingAnswerOrdering from "../../../components/common/answer/SolvingAnswerOrdering";
-import useQuestion from "../../../hooks/common/useQuestion";
+import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
 import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 
 //
@@ -32,7 +32,7 @@ const SolvingLiveOrderingAnswers = ({
 	questionId,
 	isDisabled,
 }: SolvingLiveOrderingAnswersProps) => {
-	const { question } = useQuestion({
+	const { question } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "LIVE_TIME",

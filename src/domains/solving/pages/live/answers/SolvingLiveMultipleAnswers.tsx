@@ -1,7 +1,7 @@
 import type { MultipleQuestionApiResponse } from "@/libs/types";
 import SolvingAnswerMultiple from "../../../components/common/answer/SolvingAnswerMultiple";
-import useQuestion from "../../../hooks/common/useQuestion";
 import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
+import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
 
 //
 //
@@ -22,7 +22,7 @@ const SolvingLiveMultipleAnswers = ({
 	questionId,
 	isDisabled,
 }: SolvingLiveMultipleAnswersProps) => {
-	const { question } = useQuestion({
+	const { question } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "LIVE_TIME",

@@ -1,10 +1,10 @@
 import { useEffect } from "react";
+import useSolvingQuestion from "@/domains/solving/hooks/common/useSolvingQuestion";
 import type {
 	GradedAnswerShortResult,
 	ShortQuestionApiResponse,
 } from "@/libs/types";
 import SolvingAnswerShort from "../../components/common/answer/SolvingAnswerShort";
-import useQuestion from "../../hooks/common/useQuestion";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
@@ -24,7 +24,7 @@ const SolvingReviewShortAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewShortAnswersProps) => {
-	const { question } = useQuestion({
+	const { question } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "REVIEW",
@@ -33,12 +33,8 @@ const SolvingReviewShortAnswers = ({
 	const shortQuestion = question as ShortQuestionApiResponse | undefined;
 	const answerCount = shortQuestion?.answerCount ?? 0;
 
-	const {
-		getUserAnswers,
-		setUserAnswers,
-		getIsSubmitted,
-		getIsGradedResults,
-	} = useSolvingReviewAnswerResultStore();
+	const { getUserAnswers, setUserAnswers, getIsSubmitted, getIsGradedResults } =
+		useSolvingReviewAnswerResultStore();
 
 	const userAnswers = getUserAnswers(questionId) as string[];
 	const isSubmitted = getIsSubmitted(questionId);

@@ -3,7 +3,7 @@ import type {
 	MultipleQuestionApiResponse,
 } from "@/libs/types";
 import SolvingAnswerMultiple from "../../../components/common/answer/SolvingAnswerMultiple";
-import useQuestion from "../../../hooks/common/useQuestion";
+import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
 import useSolvingReviewAnswerResultStore from "../../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
@@ -23,7 +23,7 @@ const SolvingReviewMultipleAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewMultipleAnswersProps) => {
-	const { question } = useQuestion({
+	const { question } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "REVIEW",

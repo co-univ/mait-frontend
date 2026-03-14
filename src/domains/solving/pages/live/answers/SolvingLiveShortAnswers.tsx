@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import type { ShortQuestionApiResponse } from "@/libs/types";
 import SolvingAnswerShort from "../../../components/common/answer/SolvingAnswerShort";
-import useQuestion from "../../../hooks/common/useQuestion";
 import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
+import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
 
 //
 //
@@ -23,7 +23,7 @@ const SolvingLiveShortAnswers = ({
 	questionId,
 	isDisabled,
 }: SolvingLiveShortAnswersProps) => {
-	const { question } = useQuestion({
+	const { question } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "LIVE_TIME",

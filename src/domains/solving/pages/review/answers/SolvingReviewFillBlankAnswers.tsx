@@ -5,8 +5,8 @@ import type {
 	GradedAnswerFillBlankResult,
 } from "@/libs/types";
 import SolvingAnswerFillBlank from "../../../components/common/answer/SolvingAnswerFillBlank";
-import useQuestion from "../../../hooks/common/useQuestion";
 import useSolvingReviewAnswerResultStore from "../../../stores/review/useSolvingReviewAnswerResultStore";
+import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
 
 //
 //
@@ -25,7 +25,7 @@ const SolvingReviewFillBlankAnswers = ({
 	questionSetId,
 	questionId,
 }: SolvingReviewFillBlankAnswersProps) => {
-	const { question } = useQuestion({
+	const { question } = useSolvingQuestion({
 		questionSetId,
 		questionId,
 		mode: "REVIEW",
