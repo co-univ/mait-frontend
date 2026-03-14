@@ -7,7 +7,7 @@ import type { AnswersType } from "../stores/review/useSolvingReviewAnswerResultS
  * @param type - Type of question (MULTIPLE, SHORT, ORDERING, FILL_BLANK)
  * @returns Validation result with error message if invalid
  */
-export const solvingReviewAnswersValidation = (
+export const solvingAnswersValidation = (
 	userAnswers: AnswersType,
 	type: QuestionType,
 ): {

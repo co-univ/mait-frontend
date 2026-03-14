@@ -6,6 +6,7 @@ import type { FillBlankSubmitAnswer, QuestionType } from "@/libs/types";
 import useSolvingLiveAnswerStore, {
 	type AnswersType,
 } from "../../stores/live/useSolvingLiveAnswerStore";
+import { solvingAnswersValidation } from "../../utils/solvingAnswersValidation";
 
 //
 //
@@ -31,43 +32,6 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 
 	const { getUserAnswers, getQuestionType, setSubmitResult } =
 		useSolvingLiveAnswerStore();
-
-	/**
-	 *
-	 */
-	const validateAnswers = (
-		userAnswers: AnswersType,
-		questionType: QuestionType,
-	): { isValid: boolean; errorMessage?: string } => {
-		switch (questionType) {
-			case "MULTIPLE": {
-				const answers = userAnswers as number[];
-				if (answers.length === 0) {
-					return { isValid: false, errorMessage: "답안을 선택해주세요." };
-				}
-				return { isValid: true };
-			}
-			case "SHORT": {
-				const answers = userAnswers as string[];
-				if (answers.length === 0 || answers.every((a) => a.trim() === "")) {
-					return { isValid: false, errorMessage: "답안을 입력해주세요." };
-				}
-				return { isValid: true };
-			}
-			case "FILL_BLANK": {
-				const answers = userAnswers as FillBlankSubmitAnswer[];
-				if (answers.some((answer) => answer.answer.trim() === "")) {
-					return { isValid: false, errorMessage: "답안을 입력해주세요." };
-				}
-				return { isValid: true };
-			}
-			case "ORDERING": {
-				return { isValid: true };
-			}
-			default:
-				return { isValid: false, errorMessage: "지원하지 않는 문제 타입입니다." };
-		}
-	};
 
 	/**
 	 * 
@@ -133,8 +97,7 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 			return false;
 		}
 
-		//
-		const validation = validateAnswers(userAnswers, questionType);
+		const validation = solvingAnswersValidation(userAnswers, questionType);
 		if (!validation.isValid) {
 			notify.warn(validation.errorMessage || "답안을 입력해주세요.");
 			return false;

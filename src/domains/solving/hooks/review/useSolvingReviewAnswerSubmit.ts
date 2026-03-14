@@ -6,7 +6,7 @@ import type { FillBlankSubmitAnswer, QuestionType } from "@/libs/types";
 import useSolvingReviewAnswerResultStore, {
 	type AnswersType,
 } from "../../stores/review/useSolvingReviewAnswerResultStore";
-import { solvingReviewAnswersValidation } from "../../utils/solving-review-answers-validation";
+import { solvingAnswersValidation } from "../../utils/solvingAnswersValidation";
 
 //
 //
@@ -93,7 +93,10 @@ const useSolvingReviewAnswerSubmit = (): UseSolvingReviewAnswerSubmitReturn => {
 			return false;
 		}
 
-		const validation = solvingReviewAnswersValidation(userAnswers, questionType);
+		const validation = solvingAnswersValidation(
+			userAnswers,
+			questionType,
+		);
 		if (!validation.isValid) {
 			notify.warn(validation.errorMessage || "답안을 입력해주세요.");
 			return false;
