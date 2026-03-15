@@ -12,14 +12,18 @@ import DashboardTeamRankingTabsTrigger from "./DashboardTeamRankingTabsTrigger";
 //
 //
 
-type RANKING_TYPES = "scorer" | "correct";
-
 const RANKING_TYPE_VALUES: Record<RANKING_TYPES, string> = {
 	scorer: "SCORER",
 	correct: "CORRECT",
 };
 
 const RANK_COUNT = 3;
+
+//
+//
+//
+
+type RANKING_TYPES = "scorer" | "correct";
 
 //
 //
