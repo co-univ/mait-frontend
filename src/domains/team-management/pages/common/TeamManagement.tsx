@@ -39,6 +39,10 @@ const TeamManagement = () => {
 	 *
 	 */
 	const renderInviteButtons = () => {
+		if (activeTeam?.role === "PLAYER") {
+			return null;
+		}
+
 		return (
 			<div ref={refs.setReference} className="flex gap-gap-5">
 				<Button
