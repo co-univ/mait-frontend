@@ -1,8 +1,9 @@
+import { useMemo } from "react";
 import ranking1 from "@/assets/images/ranking-1.png";
 import ranking2 from "@/assets/images/ranking-2.png";
 import ranking3 from "@/assets/images/ranking-3.png";
 import { Table } from "@/components/table";
-import type { RankDto } from "@/libs/types";
+import type { RankDto, UserDto } from "@/libs/types";
 import DashboardTeamRankingTableRowCell from "./DashboardTeamRankingTableRowCell";
 
 //
@@ -28,6 +29,37 @@ const DashboardTeamRankingTable = ({
 	teamRankings,
 	userRank,
 }: DashboardTeamRankingTableProps) => {
+	//
+	const rankings: Array<
+		Omit<RankDto, "user"> & {
+			users: UserDto[];
+		}
+	> = useMemo(() => {
+		const ret: Array<
+			Omit<RankDto, "user"> & {
+				users: UserDto[];
+			}
+		> = [];
+
+		teamRankings?.forEach((ranking) => {
+			if (ranking.user === undefined) {
+				return;
+			}
+
+			if (ret[ranking.rank - 1] === undefined) {
+				ret[ranking.rank - 1] = {
+					rank: ranking.rank,
+					count: ranking.count,
+					users: [ranking.user],
+				};
+			} else {
+				ret[ranking.rank - 1].users.push(ranking.user);
+			}
+		});
+
+		return ret;
+	}, [teamRankings]);
+
 	return (
 		<Table.Root className="bg-color-alpha-white100">
 			<Table.Header>
@@ -41,14 +73,16 @@ const DashboardTeamRankingTable = ({
 			<Table.Divider />
 
 			<Table.Body>
-				{teamRankings?.map((rank) => (
+				{rankings.map((ranking) => (
 					<>
 						<DashboardTeamRankingTableRowCell
-							key={rank.user?.id}
-							rank={rank}
+							key={ranking.rank}
+							rank={ranking.rank}
+							count={ranking.count}
+							users={ranking?.users ?? []}
 							rankIcon={
 								<img
-									src={RANKING_ICON[rank.rank]}
+									src={RANKING_ICON[ranking.rank]}
 									alt="ranking"
 									className="w-full h-full"
 								/>
@@ -61,11 +95,12 @@ const DashboardTeamRankingTable = ({
 
 				{userRank && (
 					<DashboardTeamRankingTableRowCell
-						rank={userRank}
+						users={userRank.user ? [userRank.user] : []}
+						rank={`${userRank.rank}등 [내 등수]`}
+						count={userRank.count}
 						rankIcon={
 							<div className="size-[12px] bg-color-point-50 rounded-radius-max" />
 						}
-						rankLabel="내 등수"
 					/>
 				)}
 			</Table.Body>

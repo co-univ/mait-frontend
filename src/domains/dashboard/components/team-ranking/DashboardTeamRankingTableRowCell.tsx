@@ -1,14 +1,15 @@
 import { Table } from "@/components/table";
-import type { RankDto } from "@/libs/types";
+import type { UserDto } from "@/libs/types";
 
 //
 //
 //
 
 interface DashboardTeamRankingTableRowCellProps {
-	rank: RankDto;
+	rank: number | string;
+	count: number;
+	users: UserDto[];
 	rankIcon: React.ReactNode;
-	rankLabel?: string;
 }
 
 //
@@ -17,8 +18,9 @@ interface DashboardTeamRankingTableRowCellProps {
 
 const DashboardTeamRankingTableRowCell = ({
 	rank,
+	count,
+	users,
 	rankIcon,
-	rankLabel,
 }: DashboardTeamRankingTableRowCellProps) => (
 	<Table.Row>
 		<Table.Cell width="12px" />
@@ -26,12 +28,16 @@ const DashboardTeamRankingTableRowCell = ({
 			{rankIcon}
 		</Table.Cell>
 		<Table.Cell width="112px">
-			{rank.rank}등{rankLabel ? ` [${rankLabel}]` : ""}
+			{typeof rank === "number" ? `${rank}등` : rank}
 		</Table.Cell>
 		<Table.Cell grow>
-			{rank.user?.name}({rank.user?.nickname})
+			{users.map((user, index) => (
+				<span key={user.id}>
+					{user.name}({user.nickname}){index < users.length - 1 ? ", " : ""}
+				</span>
+			))}
 		</Table.Cell>
-		<Table.Cell width="144px">{rank.count}문제</Table.Cell>
+		<Table.Cell width="144px">{count}문제</Table.Cell>
 	</Table.Row>
 );
 
