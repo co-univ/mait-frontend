@@ -67,9 +67,7 @@ const DashboardTeamRanking = () => {
 		setSearchParams({ ranking: value });
 	};
 
-	//
 	// Prefetch ranking data when activeTeam changes to ensure the displayed rankings are up-to-date
-	//
 	useEffect(() => {
 		if (!activeTeam) {
 			return;
