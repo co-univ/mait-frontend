@@ -14,14 +14,15 @@ const ControlSolving = lazy(() => import("./pages/solving/ControlSolving"));
 
 /**
  * @property {string} ROOT `/control/question-set/:questionSetId`
- * @property {string} SOLVING `/control/solving/question-set/:questionSetId/question/:questionId`
- * @property {string} PARTICIPANT `/control/participant/question-set/:questionSetId/question/:questionId`
+ * @property {string} LIVE_SOLVING `/control/live/solving/question-set/:questionSetId/question/:questionId`
+ * @property {string} LIVE_PARTICIPANT `/control/live/participant/question-set/:questionSetId/question/:questionId`
  */
 export const CONTROL_ROUTE_PATH = {
 	ROOT: "/control/question-set/:questionSetId",
-	SOLVING: "/control/solving/question-set/:questionSetId/question/:questionId",
-	PARTICIPANT:
-		"/control/participant/question-set/:questionSetId/question/:questionId",
+	LIVE_SOLVING:
+		"/control/live/solving/question-set/:questionSetId/question/:questionId",
+	LIVE_PARTICIPANT:
+		"/control/live/participant/question-set/:questionSetId/question/:questionId",
 };
 
 //
@@ -30,11 +31,11 @@ export const CONTROL_ROUTE_PATH = {
 
 export const controlRouter: RouteObject[] = [
 	{
-		path: CONTROL_ROUTE_PATH.SOLVING,
+		path: CONTROL_ROUTE_PATH.LIVE_SOLVING,
 		element: <ControlSolving />,
 	},
 	{
-		path: CONTROL_ROUTE_PATH.PARTICIPANT,
+		path: CONTROL_ROUTE_PATH.LIVE_PARTICIPANT,
 		element: <ControlParticipant />,
 	},
 	{

@@ -48,7 +48,7 @@ const ControlSolving = () => {
 	 */
 	const handleQuestionNavigationClick = (questionId: number) => {
 		navigate(
-			createPath(CONTROL_ROUTE_PATH.SOLVING, {
+			createPath(CONTROL_ROUTE_PATH.LIVE_SOLVING, {
 				questionSetId,
 				questionId,
 			}),

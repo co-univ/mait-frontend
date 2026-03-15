@@ -103,7 +103,7 @@ const ControlSolvingSubmission = ({
 	 */
 	const handlePariticipantButtonClick = () => {
 		navigate(
-			createPath(CONTROL_ROUTE_PATH.PARTICIPANT, {
+			createPath(CONTROL_ROUTE_PATH.LIVE_PARTICIPANT, {
 				questionSetId,
 				questionId,
 			}),
