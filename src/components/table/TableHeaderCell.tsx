@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 //
 
 interface TableHeaderCellProps {
-	children: ReactNode;
+	children?: ReactNode;
 	className?: string;
 	/** Width of the cell (e.g., "100px", "auto", "1fr") */
 	width?: string;
