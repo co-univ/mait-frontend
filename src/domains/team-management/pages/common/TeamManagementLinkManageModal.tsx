@@ -43,6 +43,9 @@ const TeamManagementLinkManageModal = ({
 				path: { teamId: activeTeam?.teamId ?? 0 },
 			},
 		},
+		{
+			enabled: ["OWNER", "MAKER"].includes(activeTeam?.role ?? ""),
+		},
 	);
 
 	const invitationLinks = data?.data;
