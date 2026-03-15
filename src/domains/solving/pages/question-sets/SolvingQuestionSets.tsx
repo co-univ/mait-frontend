@@ -17,6 +17,7 @@ import SolvingQuestionSetsReview from "./SolvingQuestionSetsReview";
 
 const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
 	"live-time": "LIVE_TIME",
+	"study": "STUDY",
 	review: "REVIEW",
 };
 
@@ -67,6 +68,13 @@ const SolvingQuestionSets = () => {
 				<QuestionSetsTabs modes={["live-time", "study", "review"]} />
 
 				<Tabs.Content value="live-time">
+					<SolvingQuestionSetsLiveTime
+						questionSetGroup={questionSetGroup}
+						isLoading={isLoading}
+					/>
+				</Tabs.Content>
+
+				<Tabs.Content value="study">
 					<SolvingQuestionSetsLiveTime
 						questionSetGroup={questionSetGroup}
 						isLoading={isLoading}
