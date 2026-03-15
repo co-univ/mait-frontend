@@ -91,7 +91,7 @@ const DashboardTeamRanking = () => {
 	}, [activeTeam, queryClient]);
 
 	return (
-		<div className="flex w-full flex-col gap-gap-9 rounded-radius-large2 border border-color-gray-10 bg-color-gray-5 p-padding-11 shadow-base">
+		<div className="flex w-full h-full flex-col gap-gap-9 rounded-radius-large2 border border-color-gray-10 bg-color-gray-5 p-padding-11 shadow-base">
 			<DashboardTeamRankingHeader />
 			<Tabs.Root
 				defaultValue="scorer"
