@@ -4,8 +4,8 @@ import type {
 	GradedAnswerShortResult,
 	ShortQuestionApiResponse,
 } from "@/libs/types";
-import SolvingAnswerShort from "../../components/common/answer/SolvingAnswerShort";
-import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
+import SolvingAnswerShort from "@/domains/solving/components/common/answer/SolvingAnswerShort";
+import useSolvingReviewAnswerResultStore from "@/domains/solving/stores/review/useSolvingReviewAnswerResultStore";
 
 //
 //

@@ -14,9 +14,9 @@ import SolvingReviewFillBlankAnswers from "./answers/SolvingReviewFillBlankAnswe
 import SolvingReviewMultipleAnswers from "./answers/SolvingReviewMultipleAnswers";
 import SolvingReviewExplanation from "./SolvingReviewExplanation";
 import SolvingReviewHeader from "./SolvingReviewHeader";
-import SolvingReviewOrderingAnswers from "./SolvingReviewOrderingAnswers";
-import SolvingReviewShortAnswers from "./SolvingReviewShortAnswers";
 import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
+import SolvingReviewShortAnswers from "./answers/SolvingReviewShortAnswers";
+import SolvingReviewOrderingAnswers from "./answers/SolvingReviewOrderingAnswers";
 
 //
 //

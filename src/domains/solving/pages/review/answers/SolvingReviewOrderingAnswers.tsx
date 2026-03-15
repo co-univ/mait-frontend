@@ -10,8 +10,8 @@ import type {
 	OrderingOptionApiResponse,
 	OrderingQuestionApiResponse,
 } from "@/libs/types";
-import SolvingAnswerOrdering from "../../components/common/answer/SolvingAnswerOrdering";
-import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
+import useSolvingReviewAnswerResultStore from "@/domains/solving/stores/review/useSolvingReviewAnswerResultStore";
+import SolvingAnswerOrdering from "@/domains/solving/components/common/answer/SolvingAnswerOrdering";
 
 //
 //
