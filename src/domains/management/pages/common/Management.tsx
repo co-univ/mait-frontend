@@ -10,6 +10,7 @@ import ManagementCreateQuestionButton from "../../components/common/ManagementCr
 import ManagementLiveTime from "./ManagementLiveTime";
 import ManagementMaking from "./ManagementMaking";
 import ManagementReview from "./ManagementReview";
+import ManagementStudy from "./ManagementStudy";
 
 //
 //
@@ -18,6 +19,7 @@ import ManagementReview from "./ManagementReview";
 const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
 	making: "MAKING",
 	"live-time": "LIVE_TIME",
+	"study": "STUDY",
 	review: "REVIEW",
 };
 
@@ -59,7 +61,9 @@ const Management = () => {
 				className="flex flex-col gap-gap-11"
 			>
 				<div className="flex justify-between items-end">
-					<QuestionSetsTabs modes={["making", "live-time", "review"]} />
+					<QuestionSetsTabs
+						modes={["making", "live-time", "study", "review"]}
+					/>
 					<ManagementCreateQuestionButton />
 				</div>
 
@@ -73,6 +77,14 @@ const Management = () => {
 
 				<Tabs.Content value="live-time">
 					<ManagementLiveTime
+						questionSetGroup={questionSetGroup}
+						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+						isLoading={isLoading}
+					/>
+				</Tabs.Content>
+
+				<Tabs.Content value="study">
+					<ManagementStudy
 						questionSetGroup={questionSetGroup}
 						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 						isLoading={isLoading}

@@ -64,7 +64,7 @@ const SolvingQuestionSets = () => {
 				onValueChange={handleModeChange}
 				className="flex flex-col gap-gap-11"
 			>
-				<QuestionSetsTabs modes={["live-time", "review"]} />
+				<QuestionSetsTabs modes={["live-time", "study", "review"]} />
 
 				<Tabs.Content value="live-time">
 					<SolvingQuestionSetsLiveTime
