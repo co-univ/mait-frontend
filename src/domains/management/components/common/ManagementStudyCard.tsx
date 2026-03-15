@@ -48,13 +48,13 @@ const ManagementStudyCard = ({
 	 *
 	 */
 	const handleStartButtonClick = () => {
-		startLiveTime({
-			params: {
-				path: {
-					questionSetId: questionSet.id ?? 0,
-				},
-			},
-		});
+		// startLiveTime({
+		// 	params: {
+		// 		path: {
+		// 			questionSetId: questionSet.id ?? 0,
+		// 		},
+		// 	},
+		// });
 	};
 
 	/**
