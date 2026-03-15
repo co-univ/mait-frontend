@@ -20,7 +20,7 @@ const TeamManagement = () => {
 
 	const accountAddButtonRef = useRef<HTMLButtonElement>(null);
 
-	const { activeTeam } = useTeams();
+	const { activeTeam, isMakerOrAbove } = useTeams();
 
 	const { refs, floatingStyles } = useFloating({
 		placement: "bottom-end",
@@ -39,6 +39,10 @@ const TeamManagement = () => {
 	 *
 	 */
 	const renderInviteButtons = () => {
+		if (!isMakerOrAbove) {
+			return null;
+		}
+
 		return (
 			<div ref={refs.setReference} className="flex gap-gap-5">
 				<Button
