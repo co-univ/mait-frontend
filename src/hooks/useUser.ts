@@ -11,6 +11,7 @@ import { apiHooks } from "@/libs/api";
 const useUser = () => {
 	const {
 		data: userData,
+		isLoading,
 		isPending,
 		isError,
 	} = apiHooks.useQuery(
@@ -25,8 +26,9 @@ const useUser = () => {
 
 	return {
 		user: userData?.data,
-		isLoading: isPending,
-		isError: isError,
+		isLoading,
+		isPending,
+		isError,
 	};
 };
 
