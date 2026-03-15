@@ -51,7 +51,7 @@ const useTeamManagementUsers = ({
 }: UseTeamManagementUsersProps): UseTeamManagementUsersReturn => {
 	const queryClient = useQueryClient();
 
-	const { activeTeam } = useTeams();
+	const { isMakerOrAbove } = useTeams();
 
 	const teamUserDataQueryKey = apiHooks.queryOptions(
 		"get",
@@ -87,7 +87,7 @@ const useTeamManagementUsers = ({
 				},
 			},
 			{
-				enabled: ["OWNER", "MAKER"].includes(activeTeam?.role ?? ""),
+				enabled: isMakerOrAbove,
 			},
 		);
 

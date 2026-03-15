@@ -20,7 +20,7 @@ const TeamManagement = () => {
 
 	const accountAddButtonRef = useRef<HTMLButtonElement>(null);
 
-	const { activeTeam } = useTeams();
+	const { activeTeam, isMakerOrAbove } = useTeams();
 
 	const { refs, floatingStyles } = useFloating({
 		placement: "bottom-end",
@@ -39,7 +39,7 @@ const TeamManagement = () => {
 	 *
 	 */
 	const renderInviteButtons = () => {
-		if (activeTeam?.role === "PLAYER") {
+		if (!isMakerOrAbove) {
 			return null;
 		}
 

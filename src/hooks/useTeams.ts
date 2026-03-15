@@ -10,6 +10,16 @@ import useUser from "./useUser";
 //
 //
 
+const ROLE_LEVEL: Record<TeamApiResponse["role"], number> = {
+	OWNER: 3,
+	MAKER: 2,
+	PLAYER: 1,
+};
+
+//
+//
+//
+
 interface UseTeamsReturn {
 	teams?: TeamApiResponse[];
 	activeTeam?: TeamApiResponse;
@@ -24,6 +34,7 @@ interface UseTeamsReturn {
 		>
 	>;
 	isLoading: boolean;
+	isMakerOrAbove: boolean;
 }
 
 //
@@ -46,6 +57,9 @@ const useTeams = (): UseTeamsReturn => {
 
 	const teams = data?.data;
 	const activeTeam = teams?.find((team) => team.teamId === activeTeamId);
+	const isMakerOrAbove = activeTeam
+		? ROLE_LEVEL[activeTeam.role] >= ROLE_LEVEL.MAKER
+		: false;
 
 	/**
 	 *
@@ -69,6 +83,7 @@ const useTeams = (): UseTeamsReturn => {
 		handleActiveTeamChange,
 		refetch,
 		isLoading: isPending,
+		isMakerOrAbove,
 	};
 };
 

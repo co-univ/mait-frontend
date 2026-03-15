@@ -33,7 +33,7 @@ const TeamManagementLinkManageModal = ({
 	open,
 	onClose,
 }: TeamManagementLinkManageModalProps) => {
-	const { activeTeam } = useTeams();
+	const { activeTeam, isMakerOrAbove } = useTeams();
 
 	const { data, refetch } = apiHooks.useQuery(
 		"get",
@@ -44,7 +44,7 @@ const TeamManagementLinkManageModal = ({
 			},
 		},
 		{
-			enabled: ["OWNER", "MAKER"].includes(activeTeam?.role ?? ""),
+			enabled: isMakerOrAbove,
 		},
 	);
 
