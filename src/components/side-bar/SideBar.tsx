@@ -50,7 +50,7 @@ const NAVIGATION_ITEMS = [
 		label: "팀 관리",
 		path: TEAM_MANAGEMENT_ROUTE_PATH.ROOT,
 		activePaths: ["/team-management"],
-		isMakerOnly: true,
+		isMakerOnly: false,
 	},
 ];
 
