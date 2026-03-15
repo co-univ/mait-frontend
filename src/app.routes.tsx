@@ -3,6 +3,7 @@ import App from "@/App";
 import { authRouter } from "@/domains/auth";
 import { controlRouter } from "@/domains/control/control.routes";
 import { creationRouter } from "@/domains/creation/creation.routes";
+import { dashboardRouter } from "@/domains/dashboard/dashboard.routes";
 import { homeRouter } from "@/domains/home";
 import { inviteRouter } from "@/domains/invite/invite.routes";
 import { managementRouter } from "@/domains/management/management.routes";
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
 			...myPageRouter,
 			...teamManagementRouter,
 			...inviteRouter,
+			...dashboardRouter,
 
 			{
 				path: "*",
