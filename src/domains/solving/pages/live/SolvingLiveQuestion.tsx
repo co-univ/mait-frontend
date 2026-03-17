@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import QuestionContent from "@/components/QuestionContent";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import SolvingSubmitResult from "../../components/common/SolvingSubmitResult";
-import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 import useSolvingLiveAnswerSubmit from "../../hooks/live/useSolvingLiveAnswerSubmit";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
@@ -11,6 +10,7 @@ import SolvingLiveMultipleAnswers from "./answers/SolvingLiveMultipleAnswers";
 import SolvingLiveOrderingAnswers from "./answers/SolvingLiveOrderingAnswers";
 import SolvingLiveShortAnswers from "./answers/SolvingLiveShortAnswers";
 import SolvingLiveHeader from "./SolvingLiveHeader";
+import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 
 //
 //
@@ -41,7 +41,7 @@ const SolvingLiveQuestion = ({
 		mode: "LIVE_TIME",
 	});
 
-	const { getIsSubmitted, getIsCorrect, getType, setQuestionType, reset } =
+	const { getIsSubmitted, getIsCorrect, setQuestionType, reset } =
 		useSolvingLiveAnswerStore();
 
 	const isSubmitted = getIsSubmitted();
@@ -111,13 +111,13 @@ const SolvingLiveQuestion = ({
 
 	//
 	// biome-ignore lint/correctness/useExhaustiveDependencies: Reset data when the problem changes
-	useEffect(() => {
+		useEffect(() => {
 		reset();
 
-		if (type && type !== getType()) {
+		if (type) {
 			setQuestionType(type);
 		}
-	}, [questionId, type, reset, setQuestionType, getType]);
+	}, [questionId, type, reset, setQuestionType]);
 
 	if (isLoading) {
 		return null;
