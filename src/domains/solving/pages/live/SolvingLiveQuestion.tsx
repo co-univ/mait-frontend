@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import QuestionContent from "@/components/QuestionContent";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import SolvingSubmitResult from "../../components/common/SolvingSubmitResult";
+import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 import useSolvingLiveAnswerSubmit from "../../hooks/live/useSolvingLiveAnswerSubmit";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
@@ -10,7 +11,6 @@ import SolvingLiveMultipleAnswers from "./answers/SolvingLiveMultipleAnswers";
 import SolvingLiveOrderingAnswers from "./answers/SolvingLiveOrderingAnswers";
 import SolvingLiveShortAnswers from "./answers/SolvingLiveShortAnswers";
 import SolvingLiveHeader from "./SolvingLiveHeader";
-import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 
 //
 //
@@ -41,7 +41,7 @@ const SolvingLiveQuestion = ({
 		mode: "LIVE_TIME",
 	});
 
-	const { getIsSubmitted, getIsCorrect, setQuestionType, reset } =
+	const { getType, getIsSubmitted, getIsCorrect, setQuestionType, reset } =
 		useSolvingLiveAnswerStore();
 
 	const isSubmitted = getIsSubmitted();
@@ -54,6 +54,8 @@ const SolvingLiveQuestion = ({
 
 	// 답안 입력 비활성화 조건: 탈락한 경우만
 	const isAnswerDisabled = isFailed;
+
+	const currentQuestionType = getType();
 
 	/**
 	 *
@@ -111,13 +113,16 @@ const SolvingLiveQuestion = ({
 
 	//
 	// biome-ignore lint/correctness/useExhaustiveDependencies: Reset data when the problem changes
-		useEffect(() => {
+	useEffect(() => {
 		reset();
+	}, [questionId]);
 
-		if (type) {
+	// Set question type for answer component rendering
+	useEffect(() => {
+		if (type && type !== currentQuestionType) {
 			setQuestionType(type);
 		}
-	}, [questionId, type, reset, setQuestionType]);
+	}, [type, currentQuestionType, setQuestionType]);
 
 	if (isLoading) {
 		return null;
