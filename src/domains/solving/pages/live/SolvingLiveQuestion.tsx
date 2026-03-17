@@ -41,7 +41,7 @@ const SolvingLiveQuestion = ({
 		mode: "LIVE_TIME",
 	});
 
-	const { getIsSubmitted, getIsCorrect, getType, setQuestionType, reset } =
+	const { getType, getIsSubmitted, getIsCorrect, setQuestionType, reset } =
 		useSolvingLiveAnswerStore();
 
 	const isSubmitted = getIsSubmitted();
@@ -54,6 +54,8 @@ const SolvingLiveQuestion = ({
 
 	// 답안 입력 비활성화 조건: 탈락한 경우만
 	const isAnswerDisabled = isFailed;
+
+	const currentQuestionType = getType();
 
 	/**
 	 *
@@ -113,11 +115,14 @@ const SolvingLiveQuestion = ({
 	// biome-ignore lint/correctness/useExhaustiveDependencies: Reset data when the problem changes
 	useEffect(() => {
 		reset();
+	}, [questionId]);
 
-		if (type && type !== getType()) {
+	// Set question type for answer component rendering
+	useEffect(() => {
+		if (type && type !== currentQuestionType) {
 			setQuestionType(type);
 		}
-	}, [questionId, type, reset, setQuestionType, getType]);
+	}, [type, currentQuestionType, setQuestionType]);
 
 	if (isLoading) {
 		return null;

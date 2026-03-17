@@ -15,11 +15,11 @@ interface SolvingLiveAnswerState {
 }
 
 interface SolvingLiveAnswerActions {
+	getType: () => QuestionType | null;
 	getUserAnswers: () => AnswersType;
 	getQuestionType: () => QuestionType | null;
 	getIsSubmitted: () => boolean;
 	getIsCorrect: () => boolean | null;
-	getType: () => QuestionType | null;
 
 	setUserAnswers: (answers: AnswersType) => void;
 	setQuestionType: (type: QuestionType) => void;
@@ -43,6 +43,8 @@ const useSolvingLiveAnswerStore = create<
 >((set, get) => ({
 	...initialState,
 
+	getType: () => get().questionType,
+
 	getUserAnswers: () => get().userAnswers,
 
 	getQuestionType: () => get().questionType,
@@ -50,8 +52,6 @@ const useSolvingLiveAnswerStore = create<
 	getIsSubmitted: () => get().isSubmitted,
 
 	getIsCorrect: () => get().isCorrect,
-
-	getType: () => get().questionType,
 
 	setUserAnswers: (answers: AnswersType) => {
 		set({ userAnswers: answers });
