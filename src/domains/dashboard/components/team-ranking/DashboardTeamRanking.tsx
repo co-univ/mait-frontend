@@ -58,7 +58,7 @@ const DashboardTeamRanking = () => {
 
 	const queryClient = useQueryClient();
 
-	const { teamRankings, userRank } = data?.data ?? {};
+	const { containsUserRank, teamRankings, userRank } = data?.data ?? {};
 
 	/**
 	 *
@@ -102,7 +102,7 @@ const DashboardTeamRanking = () => {
 				<DashboardTeamRankingTabsTrigger />
 				<DashboardTeamRankingTable
 					teamRankings={teamRankings}
-					userRank={userRank}
+					userRank={containsUserRank ? undefined : userRank}
 				/>
 			</Tabs.Root>
 		</div>
