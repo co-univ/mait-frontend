@@ -4,6 +4,7 @@ import { notify } from "@/components/Toast";
 import { apiHooks } from "@/libs/api";
 import type { ParticipantInfoApiResponse } from "@/libs/types";
 import useControlParticipantStore from "../../stores/participant/useControlParticipantStore";
+import useControlSolvingQuestionSet from "../solving/useControlSolvingQuestionSet";
 
 //
 //
@@ -68,8 +69,6 @@ const useControlParticipants = ({
 		},
 	);
 
-	const { confirm } = useConfirm();
-
 	const {
 		mutateAsync: submitParticipants,
 		isPending: isParticipantSubmitPending,
@@ -84,7 +83,7 @@ const useControlParticipants = ({
 			"/api/v1/question-sets/{questionSetId}/live-status/participants/winners",
 		);
 
-	const { mutate: sendParticipants } = apiHooks.useMutation(
+	const { mutateAsync: sendParticipants } = apiHooks.useMutation(
 		"post",
 		"/api/v1/question-sets/{questionSetId}/live-status/participants/send",
 		{
@@ -100,6 +99,12 @@ const useControlParticipants = ({
 			},
 		},
 	);
+
+	const { handleQuestionSetEnd } = useControlSolvingQuestionSet({
+		questionSetId,
+	});
+
+	const { confirm } = useConfirm();
 
 	/**
 	 *
@@ -236,7 +241,7 @@ const useControlParticipants = ({
 
 		const confirmPromise = confirm({
 			title: "우승자 확정",
-			description: `${activeParticipants?.length}명의 우승자를 player에게 전송하시겠습니까?`,
+			description: `우승자 확정 시 실시간 풀이가 종료됩니다.\n${activeParticipants?.length}명의 우승자를 player에게 전송하시겠습니까?`,
 		});
 
 		const [submitResponse, isConfirmed] = await Promise.all([
@@ -254,7 +259,7 @@ const useControlParticipants = ({
 			return;
 		}
 
-		sendParticipants({
+		await sendParticipants({
 			params: {
 				path: {
 					questionSetId,
@@ -264,6 +269,8 @@ const useControlParticipants = ({
 				},
 			},
 		});
+
+		handleQuestionSetEnd();
 	};
 
 	//
