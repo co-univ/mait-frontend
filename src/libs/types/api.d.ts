@@ -2091,6 +2091,8 @@ export interface components {
             /** @description 전체 랭킹 */
             teamRankings: components["schemas"]["RankDto"][];
             userRank?: components["schemas"]["RankDto"];
+            /** @description 요청한 rankCount 범위 내에 내 랭킹(userRank)이 포함되는지 여부 */
+            containsUserRank: boolean;
         };
         UserDto: {
             /** Format: int64 */
