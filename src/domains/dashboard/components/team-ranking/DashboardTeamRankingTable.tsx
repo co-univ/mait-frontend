@@ -61,7 +61,7 @@ const DashboardTeamRankingTable = ({
 	}, [teamRankings]);
 
 	return (
-		<Table.Root className="bg-color-alpha-white100">
+		<Table.Root className="h-full bg-color-alpha-white100">
 			<Table.Header>
 				<Table.HeaderCell width="12px" />
 				<Table.HeaderCell width="24px" />
@@ -72,7 +72,7 @@ const DashboardTeamRankingTable = ({
 
 			<Table.Divider />
 
-			<Table.Body>
+			<Table.Body className="h-full">
 				{rankings.map((ranking) => (
 					<>
 						<DashboardTeamRankingTableRowCell
