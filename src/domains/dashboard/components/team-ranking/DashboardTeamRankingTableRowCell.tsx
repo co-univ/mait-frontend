@@ -27,7 +27,7 @@ const DashboardTeamRankingTableRowCell = ({
 	const { user } = useUser();
 
 	return (
-		<Table.Row>
+		<Table.Row className="h-full ">
 			<Table.Cell width="12px" />
 			<Table.Cell
 				width="24px"
