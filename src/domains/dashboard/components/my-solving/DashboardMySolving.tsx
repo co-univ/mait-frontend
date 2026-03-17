@@ -45,7 +45,7 @@ const DashboardMySolving = () => {
 			</DashboardMySolvingRow>
 
 			<DashboardMySolvingDivider />
-			<DashboardMySolvingRow label="정답률 평균">
+			<DashboardMySolvingRow label="평균 정답률">
 				<DashboardMySolvingCircleStatus
 					percentage={solvingData?.accuracyRate ?? 0}
 				/>
