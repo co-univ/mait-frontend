@@ -1,8 +1,5 @@
 import { create } from "zustand";
-import type {
-	FillBlankSubmitAnswer,
-	QuestionType,
-} from "@/libs/types";
+import type { FillBlankSubmitAnswer, QuestionType } from "@/libs/types";
 
 //
 //
@@ -18,6 +15,7 @@ interface SolvingLiveAnswerState {
 }
 
 interface SolvingLiveAnswerActions {
+	getType: () => QuestionType | null;
 	getUserAnswers: () => AnswersType;
 	getQuestionType: () => QuestionType | null;
 	getIsSubmitted: () => boolean;
@@ -44,6 +42,8 @@ const useSolvingLiveAnswerStore = create<
 	SolvingLiveAnswerState & SolvingLiveAnswerActions
 >((set, get) => ({
 	...initialState,
+
+	getType: () => get().questionType,
 
 	getUserAnswers: () => get().userAnswers,
 

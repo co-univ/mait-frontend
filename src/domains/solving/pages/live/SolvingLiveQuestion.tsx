@@ -41,7 +41,7 @@ const SolvingLiveQuestion = ({
 		mode: "LIVE_TIME",
 	});
 
-	const { getIsSubmitted, getIsCorrect, setQuestionType, reset } =
+	const { getType, getIsSubmitted, getIsCorrect, setQuestionType, reset } =
 		useSolvingLiveAnswerStore();
 
 	const isSubmitted = getIsSubmitted();
@@ -54,6 +54,8 @@ const SolvingLiveQuestion = ({
 
 	// 답안 입력 비활성화 조건: 탈락한 경우만
 	const isAnswerDisabled = isFailed;
+
+	const currentQuestionType = getType();
 
 	/**
 	 *
@@ -117,10 +119,10 @@ const SolvingLiveQuestion = ({
 
 	// Set question type for answer component rendering
 	useEffect(() => {
-		if (type) {
+		if (type && type !== currentQuestionType) {
 			setQuestionType(type);
 		}
-	}, [type, setQuestionType]);
+	}, [type, currentQuestionType, setQuestionType]);
 
 	if (isLoading) {
 		return null;
