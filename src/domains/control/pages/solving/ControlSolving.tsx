@@ -51,7 +51,7 @@ const ControlSolving = () => {
 	/**
 	 *
 	 */
-	const renderQuestionContrlButton = () => {
+	const renderQuestionControlButton = () => {
 		if (!questionSet) {
 			return null;
 		}
@@ -115,7 +115,7 @@ const ControlSolving = () => {
 		<LabeledPageLayout
 			icon={<PencilLine />}
 			label="문제 풀이 관리"
-			rightContent={renderQuestionContrlButton()}
+			rightContent={renderQuestionControlButton()}
 		>
 			<div className="flex flex-col gap-gap-11">
 				<QuestionNavigation
