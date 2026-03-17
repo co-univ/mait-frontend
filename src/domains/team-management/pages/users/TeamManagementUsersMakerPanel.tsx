@@ -1,5 +1,6 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { UserRound } from "lucide-react";
+import useTeams from "@/hooks/useTeams";
 import type {
 	ApplyTeamUserApiResponse,
 	JoinedTeamUserApiResponse,
@@ -45,6 +46,8 @@ const TeamManagementUsersMakerPanel = ({
 	onApproveUser,
 	onRejectUser,
 }: TeamManagementUsersMakerPanelProps) => {
+	const { isMakerOrAbove } = useTeams();
+
 	return (
 		<TeamManagementUsersPanel icon={<UserRound />} title="메이커">
 			<div className="flex flex-col gap-gap-5">
@@ -74,7 +77,7 @@ const TeamManagementUsersMakerPanel = ({
 					>
 						{makers?.map((user, index) => (
 							<Draggable
-								isDragDisabled={isLoading}
+								isDragDisabled={isLoading || !isMakerOrAbove}
 								key={user.teamUserId}
 								draggableId={user.teamUserId.toString()}
 								index={index}
@@ -86,7 +89,7 @@ const TeamManagementUsersMakerPanel = ({
 										{...provided.dragHandleProps}
 									>
 										<TeamManagementUsersBox
-											draggable={!isLoading}
+											editable={!isLoading && isMakerOrAbove}
 											isDragging={snapshot.isDragging}
 											user={user}
 											onUserDelete={onUserDelete}

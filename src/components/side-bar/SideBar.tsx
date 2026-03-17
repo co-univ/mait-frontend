@@ -38,19 +38,19 @@ const NAVIGATION_ITEMS = [
 		activePaths: ["/solving"],
 		isMakerOnly: false,
 	},
-	// {
-	// 	icon: <LayoutDashboard />,
-	// 	label: "풀이 결과 대시보드",
-	// 	path: "/dashboard",
-	// 	activePaths: ["/dashboard"],
-	// 	isMakerOnly: false,
-	// },
+	{
+		icon: <LayoutDashboard />,
+		label: "풀이 결과 대시보드",
+		path: "/dashboard",
+		activePaths: ["/dashboard"],
+		isMakerOnly: false,
+	},
 	{
 		icon: <Users />,
 		label: "팀 관리",
 		path: TEAM_MANAGEMENT_ROUTE_PATH.ROOT,
 		activePaths: ["/team-management"],
-		isMakerOnly: true,
+		isMakerOnly: false,
 	},
 ];
 

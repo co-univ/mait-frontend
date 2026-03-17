@@ -1,5 +1,6 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { UsersRound } from "lucide-react";
+import useTeams from "@/hooks/useTeams";
 import type { JoinedTeamUserApiResponse } from "@/libs/types";
 import TeamManagementUsersBox from "../../components/users/TeamManagementUsersBox";
 import TeamManagementUsersPanel from "../../components/users/TeamManagementUsersPanel";
@@ -25,6 +26,8 @@ const TeamManagementUsersPlayerPanel = ({
 	players,
 	onUserDelete,
 }: TeamManagementUsersPlayerPanelProps) => {
+	const { isMakerOrAbove } = useTeams();
+
 	return (
 		<TeamManagementUsersPanel icon={<UsersRound />} title="플레이어">
 			<Droppable
@@ -39,7 +42,7 @@ const TeamManagementUsersPlayerPanel = ({
 					>
 						{players?.map((user, index) => (
 							<Draggable
-								isDragDisabled={isLoading}
+								isDragDisabled={isLoading || !isMakerOrAbove}
 								key={user.teamUserId}
 								draggableId={user.teamUserId.toString()}
 								index={index}
@@ -51,7 +54,7 @@ const TeamManagementUsersPlayerPanel = ({
 										{...provided.dragHandleProps}
 									>
 										<TeamManagementUsersBox
-											draggable={!isLoading}
+											editable={!isLoading && isMakerOrAbove}
 											isDragging={snapshot.isDragging}
 											user={user}
 											onUserDelete={onUserDelete}

@@ -11,7 +11,7 @@ interface TableCellProps {
 	/** Width of the cell (e.g., "100px", "auto", "1fr") */
 	width?: string;
 	className?: string;
-	children: ReactNode;
+	children?: ReactNode;
 }
 
 //

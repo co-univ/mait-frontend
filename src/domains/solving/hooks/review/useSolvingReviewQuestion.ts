@@ -6,7 +6,7 @@ import { apiHooks } from "@/libs/api";
 import type { QuestionType } from "@/libs/types";
 import QuestionAnswerString from "@/utils/question-answer-string";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
-import { solvingReviewAnswersValidation } from "../../utils/solving-review-answers-validation";
+import { solvingAnswersValidation } from "../../utils/solvingAnswersValidation";
 
 //
 //
@@ -118,7 +118,7 @@ const useSolvingReviewQuestion = ({
 			return false;
 		}
 
-		const { isValid, errorMessage } = solvingReviewAnswersValidation(
+		const { isValid, errorMessage } = solvingAnswersValidation(
 			getUserAnswers(questionId),
 			question.type as QuestionType,
 		);

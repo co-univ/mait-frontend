@@ -9,8 +9,11 @@ import { apiHooks } from "@/libs/api";
  * @returns user data, loading state, and error state
  */
 const useUser = () => {
+	const token = localStorage.getItem("token");
+
 	const {
 		data: userData,
+		isLoading,
 		isPending,
 		isError,
 	} = apiHooks.useQuery(
@@ -20,13 +23,15 @@ const useUser = () => {
 		{
 			staleTime: 1000 * 60 * 60,
 			retry: 0,
+			enabled: !!token,
 		},
 	);
 
 	return {
 		user: userData?.data,
-		isLoading: isPending,
-		isError: isError,
+		isLoading,
+		isPending,
+		isError,
 	};
 };
 

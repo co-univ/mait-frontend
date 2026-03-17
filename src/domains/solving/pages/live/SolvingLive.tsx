@@ -1,18 +1,15 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
-import * as StompJs from "@stomp/stompjs";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import SockJS from "sockjs-client";
 import SolvingBell from "src/domains/solving/components/common/SolvingBell";
 import SolvingLiveNextStage from "src/domains/solving/pages/live/SolvingLiveNextStage";
 import SolvingLiveWinner from "src/domains/solving/pages/live/SolvingLiveWinner";
 import type { QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
 import { apiClient } from "@/libs/api";
-import type { QuestionSetApiResponse } from "@/libs/types";
-import SolvingQuiz from "../../components/common/SolvingQuiz";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
 import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
+import SolvingLiveQuestion from "./SolvingLiveQuestion";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
 
 //
@@ -29,11 +26,8 @@ interface CurrentQuestionStatus {
 //
 //
 
-const SolvingLiveSolving = () => {
-	const [questionSetInfo, setQuestionSetInfo] =
-		useState<QuestionSetApiResponse | null>(null); // 문제 셋 정보
+const SolvingLive = () => {
 	const [questionId, setQuestionId] = useState<number | null>(null); // 문제 id
-	const [questionInfo, setQuestionInfo] = useState<any>(null); // 문제 정보
 	const [isSubmitAllowed, setIsSubmitAllowed] = useState(false); // 답안 제출 가능 여부
 	const [showQualifierView, setShowQualifierView] = useState(false); // QUALIFIER 페이지 표시 여부
 	const [activeParticipants, setActiveParticipants] = useState<
@@ -57,53 +51,6 @@ const SolvingLiveSolving = () => {
 	const currentUserId = user?.id;
 	const questionSetId = Number(location.pathname.split("/").pop());
 
-	/**
-	 * 문제 셋 정보 가져오기
-	 */
-	const fetchQuestionSetInfo = async () => {
-		try {
-			const res = await apiClient.GET("/api/v1/question-sets/{questionSetId}", {
-				params: {
-					path: {
-						questionSetId,
-					},
-				},
-			});
-			if (res.data?.isSuccess && res.data?.data) {
-				setQuestionSetInfo(res.data.data);
-			}
-		} catch (err) {
-			console.error("Failed to fetch question set info", err);
-		}
-	};
-
-	/**
-	 * 문제 정보 가져오기
-	 */
-	const fetchQuestionInfo = async (questionId: number) => {
-		try {
-			const res = await apiClient.GET(
-				"/api/v1/question-sets/{questionSetId}/questions/{questionId}",
-				{
-					params: {
-						path: {
-							questionSetId,
-							questionId,
-						},
-						query: {
-							mode: "LIVE_TIME",
-						},
-					},
-				},
-			);
-			if (res.data?.data) {
-				setQuestionInfo(res.data.data);
-			}
-		} catch (err) {
-			console.error("Failed to fetch question info", err);
-		}
-	};
-
 	const { quizController } = useSolvingLiveQuizController({
 		setQuestionId,
 		setIsSubmitAllowed,
@@ -112,7 +59,8 @@ const SolvingLiveSolving = () => {
 		isFailed,
 		setIsFailed,
 		setShowWinner,
-		onQuestionInfo: fetchQuestionInfo,
+		// SolvingLiveQuestion이 자체적으로 데이터를 fetch하므로 빈 함수 전달
+		onQuestionInfo: () => {},
 		userIdRef,
 	});
 
@@ -177,7 +125,6 @@ const SolvingLiveSolving = () => {
 
 	//
 	useEffect(() => {
-		fetchQuestionSetInfo();
 		fetchCurrentQuestionStatus();
 	}, [questionSetId]);
 
@@ -207,11 +154,9 @@ const SolvingLiveSolving = () => {
 			{!showQualifierView &&
 				!showWinner &&
 				(questionId !== null ? (
-					<SolvingQuiz
-						questionInfo={questionInfo}
-						quizTitle={questionSetInfo?.title as string}
-						questionCount={questionSetInfo?.questionCount as number}
-						questionSetId={Number(questionSetId)}
+					<SolvingLiveQuestion
+						questionSetId={questionSetId}
+						questionId={questionId}
 						isSubmitAllowed={isSubmitAllowed && !isFailed}
 						isFailed={isFailed}
 					/>
@@ -222,4 +167,4 @@ const SolvingLiveSolving = () => {
 	);
 };
 
-export default SolvingLiveSolving;
+export default SolvingLive;

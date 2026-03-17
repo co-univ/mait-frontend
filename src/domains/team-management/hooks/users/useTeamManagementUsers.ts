@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
+import useTeams from "@/hooks/useTeams";
 import { apiClient, apiHooks } from "@/libs/api";
 import type {
 	ApiResponseListJoinedTeamUserApiResponse,
@@ -50,6 +51,8 @@ const useTeamManagementUsers = ({
 }: UseTeamManagementUsersProps): UseTeamManagementUsersReturn => {
 	const queryClient = useQueryClient();
 
+	const { isMakerOrAbove } = useTeams();
+
 	const teamUserDataQueryKey = apiHooks.queryOptions(
 		"get",
 		"/api/v1/teams/{teamId}/users",
@@ -75,11 +78,18 @@ const useTeamManagementUsers = ({
 	});
 
 	const { data: applicantsData, refetch: refetchApplicants } =
-		apiHooks.useQuery("get", "/api/v1/teams/{teamId}/applicants", {
-			params: {
-				path: { teamId },
+		apiHooks.useQuery(
+			"get",
+			"/api/v1/teams/{teamId}/applicants",
+			{
+				params: {
+					path: { teamId },
+				},
 			},
-		});
+			{
+				enabled: isMakerOrAbove,
+			},
+		);
 
 	const { mutate: patchUserRole } = apiHooks.useMutation(
 		"patch",

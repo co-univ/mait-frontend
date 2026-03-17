@@ -239,6 +239,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/study-mode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 학습모드 풀이 시작 API
+         * @description 학습 모드 - 문제 풀기 버튼 클릭 시 활용하는 API
+         */
+        post: operations["startStudySubmission"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/study-mode/grade": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 학습모드 채점 API
+         * @description 학습 모드 - 전체 답안을 채점합니다. 미제출 문제는 오답 처리됩니다.
+         */
+        post: operations["gradeStudySession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/questions": {
         parameters: {
             query?: never;
@@ -565,6 +605,26 @@ export interface paths {
         patch: operations["updateTeamUserRole"];
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/study-mode/drafts/{questionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 학습모드 답안 업데이트 API
+         * @description 학습 모드 - 특정 문제의 답안 초안을 업데이트합니다.
+         */
+        patch: operations["updateStudyDraft"];
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/review": {
         parameters: {
             query?: never;
@@ -744,6 +804,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/teams/{teamId}/user-solving-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 개인 정답률 조회
+         * @description 완료된 퀴즈에서 로그인한 유저의 개인 정답률 통계 반환
+         */
+        get: operations["getPersonalAccuracy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teams/{teamId}/question-ranks": {
         parameters: {
             query?: never;
@@ -824,6 +904,26 @@ export interface paths {
         };
         /** 초대 링크 팀 정보 반환 API */
         get: operations["getTeamInfo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/study-mode/drafts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 학습모드 문제별 임시 저장 목록 조회 API
+         * @description 학습 모드 - 사용자 세션의 문제별 답안 초안을 조회합니다.
+         */
+        get: operations["getStudyDrafts"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1090,7 +1190,7 @@ export interface components {
          * @description 문제 풀이 방식
          * @enum {string}
          */
-        DeliveryMode: "MANAGING" | "MAKING" | "LIVE_TIME" | "REVIEW";
+        DeliveryMode: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
         /**
          * @description 문제 셋 공개 단위
          * @enum {string}
@@ -1101,7 +1201,7 @@ export interface components {
             title: string;
             /** @description 문제 셋 주제 */
             subject: string;
-            mode?: components["schemas"]["DeliveryMode"];
+            mode: components["schemas"]["DeliveryMode"];
             /** @description 문제 셋 난이도 설명 */
             difficulty?: string;
             visibility?: components["schemas"]["QuestionSetVisibility"];
@@ -1486,6 +1586,83 @@ export interface components {
             /** @description 문제 셋 주제 */
             subject: string;
         };
+        ApiResponseUserStudyModeApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["UserStudyModeApiResponse"];
+        };
+        /**
+         * @description 풀이 상태
+         * @enum {string}
+         */
+        SolvingStatus: "PROGRESSING" | "COMPLETE";
+        UserStudyModeApiResponse: {
+            /**
+             * Format: int64
+             * @description 풀이 세션 ID
+             */
+            solvingSessionId: number;
+            /**
+             * Format: int64
+             * @description 문제셋 ID
+             */
+            questionSetId: number;
+            status: components["schemas"]["SolvingStatus"];
+            /**
+             * Format: date-time
+             * @description 풀이 시작 시간
+             */
+            startedAt: string;
+        };
+        ApiResponseStudyGradeResultApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["StudyGradeResultApiResponse"];
+        };
+        /** @description 문제별 채점 결과 */
+        QuestionAnswerSubmitApiResponse: {
+            /**
+             * Format: int64
+             * @description 제출한 기록 PK
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 제출한 유저 PK
+             */
+            userId: number;
+            /**
+             * Format: int64
+             * @description 제출한 문제 PK
+             */
+            questionId: number;
+            /** @description 정/오답 여부 */
+            isCorrect: boolean;
+            /** @description 제출한 답안 */
+            submittedAnswer?: string;
+        };
+        StudyGradeResultApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            questionSetId: number;
+            /**
+             * Format: int64
+             * @description 풀이 세션 ID
+             */
+            solvingSessionId: number;
+            /**
+             * Format: int32
+             * @description 총 문제 수
+             */
+            totalCount: number;
+            /**
+             * Format: int32
+             * @description 정답 수
+             */
+            correctCount: number;
+            /** @description 문제별 채점 결과 */
+            results: components["schemas"]["QuestionAnswerSubmitApiResponse"][];
+        };
         CreateFillBlankQuestionApiRequest: {
             type: "CreateFillBlankQuestionApiRequest";
         } & (Omit<WithRequired<components["schemas"]["CreateQuestionApiRequest"], "number">, "type"> & {
@@ -1520,7 +1697,7 @@ export interface components {
         } & Omit<components["schemas"]["SubmitAnswerDtoString"], "type"> & Omit<components["schemas"]["SubmitAnswerDtoLong"], "type"> & Omit<components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"], "type">);
         FillBlankQuestionSubmitApiRequest: {
             type: "FillBlankQuestionSubmitApiRequest";
-        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type">;
+        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers">, "type">;
         FillBlankSubmitAnswer: {
             /** Format: int64 */
             number: number;
@@ -1534,7 +1711,7 @@ export interface components {
         } & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoString"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoLong"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"], "submitAnswers">, "type">);
         MultipleQuestionSubmitApiRequest: {
             type: "MultipleQuestionSubmitApiRequest";
-        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type">;
+        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers">, "type">;
         OrderingQuestionSubmitAnswer: {
             type: "OrderingQuestionSubmitAnswer";
         } & (Omit<WithRequired<components["schemas"]["SubmitAnswerDtoObject"], "submitAnswers">, "type"> & {
@@ -1543,13 +1720,13 @@ export interface components {
         } & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoString"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoLong"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"], "submitAnswers">, "type">);
         OrderingQuestionSubmitApiRequest: {
             type: "OrderingQuestionSubmitApiRequest";
-        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type">;
+        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers">, "type">;
         QuestionAnswerSubmitApiRequest: {
             /**
              * Format: int64
-             * @description 문제 PK, 추후에 삭제 예정
+             * @description 문제 PK, 추후에 삭제 예정, 학습모드의 경우 해당 필드를 입력하지 않아도 무관
              */
-            userId: number;
+            userId?: number;
             submitAnswers?: components["schemas"]["FillBlankQuestionSubmitAnswer"] | components["schemas"]["MultipleQuestionSubmitAnswer"] | components["schemas"]["OrderingQuestionSubmitAnswer"] | components["schemas"]["ShortQuestionSubmitAnswer"];
             type: string;
         };
@@ -1563,7 +1740,7 @@ export interface components {
         } & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoString"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoLong"], "submitAnswers">, "type"> & Omit<WithRequired<components["schemas"]["SubmitAnswerDtoFillBlankSubmitAnswer"], "submitAnswers">, "type">);
         ShortQuestionSubmitApiRequest: {
             type: "ShortQuestionSubmitApiRequest";
-        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers" | "userId">, "type">;
+        } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers">, "type">;
         SubmitAnswerDtoFillBlankSubmitAnswer: {
             type?: components["schemas"]["QuestionType"];
             submitAnswers?: components["schemas"]["FillBlankSubmitAnswer"][];
@@ -1583,25 +1760,6 @@ export interface components {
         ApiResponseQuestionAnswerSubmitApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionAnswerSubmitApiResponse"];
-        };
-        QuestionAnswerSubmitApiResponse: {
-            /**
-             * Format: int64
-             * @description 제출한 기록 PK
-             */
-            id: number;
-            /**
-             * Format: int64
-             * @description 제출한 유저 PK
-             */
-            userId: number;
-            /**
-             * Format: int64
-             * @description 제출한 문제 PK
-             */
-            questionId: number;
-            /** @description 정/오답 여부 */
-            isCorrect: boolean;
         };
         ApiResponseQuestionAnswerReviewSubmitApiResponse: {
             isSuccess?: boolean;
@@ -1788,6 +1946,26 @@ export interface components {
         UpdateQuestionSetFieldApiRequest: {
             title: string;
         };
+        ApiResponseStudyAnswerDraftApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["StudyAnswerDraftApiResponse"];
+        };
+        StudyAnswerDraftApiResponse: {
+            /**
+             * Format: int64
+             * @description 풀이 세션 ID
+             */
+            solvingSessionId: number;
+            /**
+             * Format: int64
+             * @description 문제 ID
+             */
+            questionId: number;
+            /** @description 제출한 답안 */
+            submittedAnswer?: string;
+            /** @description 제출 여부 */
+            submitted: boolean;
+        };
         UpdateQuestionSetReviewApiRequest: {
             /** @enum {string} */
             visibility: "PUBLIC" | "GROUP" | "PRIVATE";
@@ -1859,6 +2037,27 @@ export interface components {
              */
             role: "MAKER" | "OWNER" | "PLAYER";
         };
+        ApiResponsePersonalAccuracyApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["PersonalAccuracyApiResponse"];
+        };
+        PersonalAccuracyApiResponse: {
+            /**
+             * Format: int64
+             * @description 총 푼 문제 수
+             */
+            totalSolvedCount: number;
+            /**
+             * Format: int64
+             * @description 맞은 문제 수
+             */
+            correctCount: number;
+            /**
+             * Format: double
+             * @description 정답률 (%)
+             */
+            accuracyRate: number;
+        };
         ApiResponseTeamRankApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["TeamRankApiResponse"];
@@ -1892,6 +2091,8 @@ export interface components {
             /** @description 전체 랭킹 */
             teamRankings: components["schemas"]["RankDto"][];
             userRank?: components["schemas"]["RankDto"];
+            /** @description 요청한 rankCount 범위 내에 내 랭킹(userRank)이 포함되는지 여부 */
+            containsUserRank: boolean;
         };
         UserDto: {
             /** Format: int64 */
@@ -2005,7 +2206,7 @@ export interface components {
             /** @enum {string} */
             visibility?: "PUBLIC" | "GROUP" | "PRIVATE";
             /** @enum {string} */
-            deliveryMode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "REVIEW";
+            deliveryMode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
             /** @enum {string} */
             ongoingStatus?: "BEFORE" | "ONGOING" | "AFTER";
             /** Format: int64 */
@@ -2036,8 +2237,12 @@ export interface components {
              * @example MAKING
              * @enum {string}
              */
-            mode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "REVIEW";
+            mode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
             content?: components["schemas"]["QuestionSetContainer"];
+        };
+        ApiResponseListStudyAnswerDraftApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["StudyAnswerDraftApiResponse"][];
         };
         ApiResponseListQuestionScorerApiResponse: {
             isSuccess?: boolean;
@@ -2398,7 +2603,7 @@ export interface operations {
     getQuestion: {
         parameters: {
             query?: {
-                mode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "REVIEW";
+                mode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
             };
             header?: never;
             path: {
@@ -2748,7 +2953,7 @@ export interface operations {
     getQuestionSets: {
         parameters: {
             query: {
-                mode: "MANAGING" | "MAKING" | "LIVE_TIME" | "REVIEW";
+                mode: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
                 teamId: number;
             };
             header?: never;
@@ -2792,10 +2997,54 @@ export interface operations {
             };
         };
     };
+    startStudySubmission: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserStudyModeApiResponse"];
+                };
+            };
+        };
+    };
+    gradeStudySession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudyGradeResultApiResponse"];
+                };
+            };
+        };
+    };
     getQuestions: {
         parameters: {
             query?: {
-                mode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "REVIEW";
+                mode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
             };
             header?: never;
             path: {
@@ -3237,6 +3486,33 @@ export interface operations {
             };
         };
     };
+    updateStudyDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+                questionId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FillBlankQuestionSubmitApiRequest"] | components["schemas"]["MultipleQuestionSubmitApiRequest"] | components["schemas"]["OrderingQuestionSubmitApiRequest"] | components["schemas"]["ShortQuestionSubmitApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudyAnswerDraftApiResponse"];
+                };
+            };
+        };
+    };
     updateToReviewMode: {
         parameters: {
             query?: never;
@@ -3467,6 +3743,28 @@ export interface operations {
             };
         };
     };
+    getPersonalAccuracy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalAccuracyApiResponse"];
+                };
+            };
+        };
+    };
     getTeamQuestionScorerRank: {
         parameters: {
             query: {
@@ -3579,6 +3877,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseTeamInviteApiResponse"];
+                };
+            };
+        };
+    };
+    getStudyDrafts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListStudyAnswerDraftApiResponse"];
                 };
             };
         };
