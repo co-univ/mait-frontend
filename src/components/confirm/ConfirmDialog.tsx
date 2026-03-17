@@ -145,7 +145,7 @@ const ConfirmDialog = ({
 					</div>
 
 					{description && (
-						<p id={descriptionId} className="typo-body-small">
+						<p id={descriptionId} className="typo-body-small whitespace-pre-wrap">
 							{description}
 						</p>
 					)}
