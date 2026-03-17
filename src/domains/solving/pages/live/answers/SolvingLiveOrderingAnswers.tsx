@@ -85,10 +85,7 @@ const SolvingLiveOrderingAnswers = ({
 
 	//
 	useEffect(() => {
-		if (
-			questionOptions.length > 0 &&
-			userAnswers.length !== questionOptions.length
-		) {
+		if (questionOptions.length > 0 && userAnswers.length === 0) {
 			const initialAnswers: number[] = Array.from(
 				{ length: questionOptions.length },
 				(_, index) => index + 1,

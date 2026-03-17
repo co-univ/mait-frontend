@@ -4,8 +4,8 @@ import type {
 	FillBlankSubmitAnswer,
 } from "@/libs/types";
 import SolvingAnswerFillBlank from "../../../components/common/answer/SolvingAnswerFillBlank";
-import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
+import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 
 //
 //
@@ -68,7 +68,7 @@ const SolvingLiveFillBlankAnswers = ({
 
 	//
 	useEffect(() => {
-		if (blankCount > 0 && userAnswers.length !== blankCount) {
+		if (blankCount > 0 && userAnswers.length === 0) {
 			const initialAnswers: FillBlankSubmitAnswer[] = Array.from(
 				{ length: blankCount },
 				(_, index) => ({
