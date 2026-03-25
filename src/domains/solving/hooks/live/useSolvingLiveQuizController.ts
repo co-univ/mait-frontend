@@ -91,9 +91,11 @@ export const useSolvingLiveQuizController = ({
 					break;
 				}
 				case CommandType.LIVE_END: {
-					navigate(SOLVING_ROUTE_PATH.ROOT);
-					setShowWinner(false);
 					setIsFailed(false);
+					setTimeout(() => {
+						setShowWinner(false);
+						navigate(SOLVING_ROUTE_PATH.ROOT);
+					}, 5000);
 					break;
 				}
 			}

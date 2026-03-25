@@ -137,23 +137,23 @@ const SideBar = () => {
 				<div className="h-size-height-1" />
 
 				<div className="w-full flex flex-col gap-gap-5">
-					{NAVIGATION_ITEMS.filter(
-						(item) =>
-							!item.isMakerOnly || (activeTeam && activeTeam.role !== "PLAYER"),
-					).map((item) => (
-						<SidebarItem
-							key={item.path}
-							className={clsx("text-color-gray-30", {
-								"text-color-primary-50 !typo-heading-xsmall bg-primary-5":
-									hasValidPath(item.activePaths, location.pathname),
-							})}
-						>
-							<Link to={item.path} className="flex items-center gap-gap-5">
-								{item.icon}
-								<span>{item.label}</span>
-							</Link>
-						</SidebarItem>
-					))}
+					{activeTeam &&
+						NAVIGATION_ITEMS.filter(
+							(item) => !item.isMakerOnly || activeTeam.role !== "PLAYER",
+						).map((item) => (
+							<SidebarItem
+								key={item.path}
+								className={clsx("text-color-gray-30", {
+									"text-color-primary-50 !typo-heading-xsmall bg-primary-5":
+										hasValidPath(item.activePaths, location.pathname),
+								})}
+							>
+								<Link to={item.path} className="flex items-center gap-gap-5">
+									{item.icon}
+									<span>{item.label}</span>
+								</Link>
+							</SidebarItem>
+						))}
 				</div>
 			</nav>
 		</aside>

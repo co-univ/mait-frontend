@@ -72,7 +72,11 @@ const useTeams = (): UseTeamsReturn => {
 	//
 	//
 	useEffect(() => {
-		if (teams && !teams.some((team) => team.teamId === activeTeamId)) {
+		if (
+			teams &&
+			teams?.length > 0 &&
+			!teams.some((team) => team.teamId === activeTeamId)
+		) {
 			setActiveTeamId(teams[0].teamId);
 		}
 	}, [teams, activeTeamId, setActiveTeamId]);
