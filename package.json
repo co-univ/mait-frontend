@@ -1,6 +1,6 @@
 {
 	"name": "mait-frontend",
-	"version": "260317.2",
+	"version": "260325.1",
 	"private": true,
 	"type": "module",
 	"scripts": {
