@@ -95,6 +95,8 @@ const SolvingLiveQuestion = ({
 			questionSetId,
 			questionId,
 			isDisabled: isAnswerDisabled,
+			isSubmitted,
+			isCorrect,
 		};
 
 		switch (type) {

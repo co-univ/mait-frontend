@@ -4,8 +4,8 @@ import type {
 	FillBlankSubmitAnswer,
 } from "@/libs/types";
 import SolvingAnswerFillBlank from "../../../components/common/answer/SolvingAnswerFillBlank";
-import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
+import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 
 //
 //
@@ -15,6 +15,8 @@ interface SolvingLiveFillBlankAnswersProps {
 	questionSetId: number;
 	questionId: number;
 	isDisabled: boolean;
+	isSubmitted: boolean;
+	isCorrect: boolean | null;
 }
 
 //
@@ -25,6 +27,8 @@ const SolvingLiveFillBlankAnswers = ({
 	questionSetId,
 	questionId,
 	isDisabled,
+	isSubmitted,
+	isCorrect,
 }: SolvingLiveFillBlankAnswersProps) => {
 	const { question } = useSolvingQuestion({
 		questionSetId,
@@ -59,11 +63,21 @@ const SolvingLiveFillBlankAnswers = ({
 	/**
 	 *
 	 */
-	const getAnswerVariation = (number: number): "default" | "focused" => {
+	const getAnswerVariation = (
+		number: number,
+	): "default" | "focused" | "correct" | "incorrect" => {
 		const answer = userAnswers.find(
 			(userAnswer) => userAnswer.number === number,
 		);
-		return answer?.answer === "" ? "default" : "focused";
+		if (!answer || answer.answer === "") {
+			return "default";
+		}
+
+		if (!isSubmitted) {
+			return "focused";
+		}
+
+		return isCorrect ? "correct" : "incorrect";
 	};
 
 	//

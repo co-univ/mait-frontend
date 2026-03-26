@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import type { ShortQuestionApiResponse } from "@/libs/types";
 import SolvingAnswerShort from "../../../components/common/answer/SolvingAnswerShort";
-import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
+import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 
 //
 //
@@ -12,6 +12,8 @@ interface SolvingLiveShortAnswersProps {
 	questionSetId: number;
 	questionId: number;
 	isDisabled: boolean;
+	isSubmitted: boolean;
+	isCorrect: boolean | null;
 }
 
 //
@@ -22,6 +24,8 @@ const SolvingLiveShortAnswers = ({
 	questionSetId,
 	questionId,
 	isDisabled,
+	isSubmitted,
+	isCorrect,
 }: SolvingLiveShortAnswersProps) => {
 	const { question } = useSolvingQuestion({
 		questionSetId,
@@ -52,8 +56,19 @@ const SolvingLiveShortAnswers = ({
 	/**
 	 *
 	 */
-	const getAnswerVariation = (index: number): "default" | "focused" => {
-		return userAnswers[index] === "" ? "default" : "focused";
+	const getAnswerVariation = (
+		index: number,
+	): "default" | "focused" | "correct" | "incorrect" => {
+		const answer = userAnswers[index] ?? "";
+		if (answer === "") {
+			return "default";
+		}
+
+		if (!isSubmitted) {
+			return "focused";
+		}
+		
+		return isCorrect ? "correct" : "incorrect";
 	};
 
 	//
