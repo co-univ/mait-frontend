@@ -153,7 +153,15 @@ const useCreationQuestionShort = ({
 			return;
 		}
 
-		const updatedAnswers = answers.filter((answer) => answer.number !== number);
+		const updatedAnswers = answers
+			.filter((answer) => answer.number !== number)
+			.map((answer) => {
+				if (answer.number > number) {
+					return { ...answer, number: answer.number - 1 };
+				}
+
+				return answer;
+			});
 
 		setQuestion({
 			...question,
