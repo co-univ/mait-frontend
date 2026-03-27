@@ -108,7 +108,7 @@ const TermAccordionItem = ({
 						{term.title}
 					</>
 				}
-				onCheckChange={() => onCheckChange(checked)}
+				onCheckChange={() => onCheckChange(!checked)}
 			/>
 			<AccordionContent className="bg-color-gray-5 rounded-radius-medium1 p-padding-8">
 				<span className="typo-body-small-bold font-pretendard">
