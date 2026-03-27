@@ -7,6 +7,7 @@ import SolvingLiveWinner from "src/domains/solving/pages/live/SolvingLiveWinner"
 import type { QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
 import { apiClient } from "@/libs/api";
+import useSolvingLiveQuestionSet from "../../hooks/live/useSolvingLiveQuestionSet";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
 import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
 import SolvingLiveQuestion from "./SolvingLiveQuestion";
@@ -50,6 +51,10 @@ const SolvingLive = () => {
 
 	const currentUserId = user?.id;
 	const questionSetId = Number(location.pathname.split("/").pop());
+
+	const { questionSetTitle, totalQuestionNum } = useSolvingLiveQuestionSet({
+		questionSetId,
+	});
 
 	const { quizController } = useSolvingLiveQuizController({
 		setQuestionId,
@@ -155,6 +160,8 @@ const SolvingLive = () => {
 				!showWinner &&
 				(questionId !== null ? (
 					<SolvingLiveQuestion
+						questionSetTitle={questionSetTitle}
+						totalQuestionNum={totalQuestionNum}
 						questionSetId={questionSetId}
 						questionId={questionId}
 						isSubmitAllowed={isSubmitAllowed && !isFailed}
