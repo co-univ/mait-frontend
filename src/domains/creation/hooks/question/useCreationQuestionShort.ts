@@ -99,7 +99,7 @@ const useCreationQuestionShort = ({
 		const newAnswer = {
 			id: generateTemporaryId(),
 			main: true,
-			number: answers.length + 1,
+			number: Math.max(...answers.map((a) => a.number), 0) + 1,
 			answer: "",
 		};
 		const updatedAnswers = [...answers, newAnswer];
