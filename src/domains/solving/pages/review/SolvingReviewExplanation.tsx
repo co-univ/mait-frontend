@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import SqureCheckSuccess from "@/assets/icons/squre-check-success.svg";
 import SquareXPoint from "@/assets/icons/squre-x-point.svg";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
 //
 //
@@ -23,6 +24,8 @@ const SolvingReviewExplanation = ({
 	answer,
 	explanation,
 }: SolvingReviewExplanationProps) => {
+	const { isMobile } = useBreakpoint();
+
 	if (!isExplanationShown) {
 		return null;
 	}
@@ -38,21 +41,25 @@ const SolvingReviewExplanation = ({
 			)}
 		>
 			<div
-				className={clsx("flex gap-gap-6 items-center typo-heading-medium", {
-					"text-color-success-50": isCorrect,
-					"text-color-point-50": isCorrect === false,
-				})}
+				className={clsx(
+					"flex gap-gap-6 items-center",
+					isMobile ? "typo-heading-xsmall" : "typo-heading-medium",
+					{
+						"text-color-success-50": isCorrect,
+						"text-color-point-50": isCorrect === false,
+					},
+				)}
 			>
 				{isCorrect && <SqureCheckSuccess />}
 				{isCorrect && "정답"}
 				{isCorrect === false && <SquareXPoint />}
 				{isCorrect === false && "오답"}
 			</div>
-			<div className="typo-body-large">정답 : {answer}</div>
+			<div className={isMobile ? "typo-body-small" : "typo-body-large"}>정답 : {answer}</div>
 			{explanation && (
 				<div className="flex flex-col gap-gap-5">
-					<div className="typo-body-large-bold text-color-gray-50">해설</div>
-					<div className="typo-body-large text-color-gray-50">
+					<div className={clsx("text-color-gray-50 font-pretendard", isMobile ? "typo-body-small-bold" : "typo-body-large-bold")}>해설</div>
+					<div className={clsx("text-color-gray-50 font-pretendard", isMobile ? "typo-body-small" : "typo-body-large")}>
 						{`: ${explanation}`}
 					</div>
 				</div>
