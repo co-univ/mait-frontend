@@ -21,6 +21,7 @@ interface QuestionNavigationListProps<T> {
 	orientation: "vertical" | "horizontal";
 	questions: T[];
 	listRef: React.RefObject<HTMLDivElement | null>;
+	gap?: number;
 	renderQuestionNavigationButton: (
 		props: QuestionNavigationButtonRenderProps<T>,
 	) => React.ReactNode;
@@ -35,6 +36,7 @@ const QuestionNavigationList = <T extends { id: number }>({
 	activeQuestionId,
 	orientation,
 	listRef,
+	gap = GAP,
 	renderQuestionNavigationButton,
 }: QuestionNavigationListProps<T>) => {
 	const [hoveredQuestionId, setHoveredQuestionId] = useState<number | null>(
@@ -57,7 +59,7 @@ const QuestionNavigationList = <T extends { id: number }>({
 					"flex-row": !isVertical,
 				})}
 				style={{
-					gap: `${GAP}px`,
+					gap: `${gap}px`,
 				}}
 			>
 				{questions.map((question, index) => {

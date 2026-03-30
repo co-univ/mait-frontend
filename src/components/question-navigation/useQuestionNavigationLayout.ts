@@ -10,6 +10,8 @@ interface UseQuestionNavigationLayoutProps<T extends { id: number }> {
 	orientation: "vertical" | "horizontal";
 	activeQuestionId: number;
 	questions: T[];
+	buttonSize?: number;
+	gap?: number;
 }
 
 interface UseQuestionNavigationLayoutReturn {
@@ -32,6 +34,8 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 	orientation,
 	activeQuestionId,
 	questions,
+	buttonSize = BUTTON_SIZE,
+	gap = GAP,
 }: UseQuestionNavigationLayoutProps<T>): UseQuestionNavigationLayoutReturn => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const listRef = useRef<HTMLDivElement>(null);
@@ -85,7 +89,7 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 		}
 
 		const listSize = getClientSize(list);
-		const scrollAmount = listSize + GAP;
+		const scrollAmount = listSize + gap;
 
 		list.scrollBy({
 			top: isVertical ? -scrollAmount : 0,
@@ -105,7 +109,7 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 		}
 
 		const listSize = getClientSize(list);
-		const scrollAmount = listSize + GAP;
+		const scrollAmount = listSize + gap;
 
 		list.scrollBy({
 			top: isVertical ? scrollAmount : 0,
@@ -145,14 +149,14 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 		const scrollPosition = getScrollPosition(list);
 		const listSize = getClientSize(list);
 
-		const startIndex = Math.floor(scrollPosition / (BUTTON_SIZE + GAP));
+		const startIndex = Math.floor(scrollPosition / (buttonSize + gap));
 		const endIndex = Math.min(
-			Math.ceil((scrollPosition + listSize) / (BUTTON_SIZE + GAP)) - 1,
+			Math.ceil((scrollPosition + listSize) / (buttonSize + gap)) - 1,
 			questions.length - 1,
 		);
 
 		return { startIndex, endIndex };
-	}, [getScrollPosition, getClientSize, questions.length]);
+	}, [getScrollPosition, getClientSize, questions.length, buttonSize, gap]);
 
 	//
 	// Scroll to active question if it's out of view
@@ -180,7 +184,7 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 		}
 
 		const itemPosition =
-			activeQuestionIndex * BUTTON_SIZE + activeQuestionIndex * GAP;
+			activeQuestionIndex * buttonSize + activeQuestionIndex * gap;
 
 		// Check if active question is out of view
 		if (
@@ -221,15 +225,15 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 
 			const availableSize =
 				containerSize -
-				controlButtonCount * BUTTON_SIZE -
-				controlButtonCount * GAP;
+				controlButtonCount * buttonSize -
+				controlButtonCount * gap;
 
 			const count = Math.min(
-				Math.floor((availableSize + GAP) / (BUTTON_SIZE + GAP)),
+				Math.floor((availableSize + gap) / (buttonSize + gap)),
 				questions.length,
 			);
 
-			const size = Math.max(count * BUTTON_SIZE + (count - 1) * GAP, 0);
+			const size = Math.max(count * buttonSize + (count - 1) * gap, 0);
 
 			list.style.height = isVertical ? `${size}px` : "auto";
 			list.style.width = !isVertical ? `${size}px` : "auto";
@@ -248,7 +252,7 @@ const useQuestionNavigationLayout = <T extends { id: number }>({
 		return () => {
 			resizeObserver.disconnect();
 		};
-	}, [isVertical, controlButtonCount, questions, getClientSize]);
+	}, [isVertical, controlButtonCount, questions, getClientSize, buttonSize, gap]);
 
 	//
 	// Update scroll position when scrolling
