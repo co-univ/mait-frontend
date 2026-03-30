@@ -5,12 +5,14 @@ import { useLocation } from "react-router-dom";
 import {
 	HEADER_HEIGHT,
 	LARGE_PAGE_MARGIN,
+	MEDIUM_PAGE_MARGIN,
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN,
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
 import Header from "@/components/header/Header";
 import Sidebar from "@/components/side-bar/SideBar";
+import useBreakpoint from "@/hooks/useBreakpoint";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
@@ -58,6 +60,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 	const location = useLocation();
 	const { isSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
+	const { isSm, isMd } = useBreakpoint();
 
 	/**
 	 *
@@ -74,20 +77,23 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			return "0px";
 		}
 
-		const isSmallMarginPage = hasValidPath(
-			SMALL_PAGE_MARGIN_PATHS,
-			location.pathname,
-		);
+		const isSmallMarginPage =
+			hasValidPath(SMALL_PAGE_MARGIN_PATHS, location.pathname) || !isSm;
+
+		const isMediumMarginPage = !isSmallMarginPage && isSm && !isMd;
 
 		const isSidebarOpenWithUser = user && isSidebarOpen;
 
-		if (isSidebarOpenWithUser && !isSmallMarginPage) {
+		if (isSidebarOpenWithUser) {
 			ret.left += SIDEBAR_WIDTH;
 		}
 
-		if (isSidebarOpenWithUser || isSmallMarginPage) {
+		if (isSmallMarginPage) {
 			ret.left += SMALL_PAGE_MARGIN;
 			ret.right += SMALL_PAGE_MARGIN;
+		} else if (isMediumMarginPage) {
+			ret.left += MEDIUM_PAGE_MARGIN;
+			ret.right += MEDIUM_PAGE_MARGIN;
 		} else {
 			ret.left += LARGE_PAGE_MARGIN;
 			ret.right += LARGE_PAGE_MARGIN;
