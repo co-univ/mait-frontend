@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import type React from "react";
 import type { JSX } from "react";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
 //
 //
@@ -29,13 +30,19 @@ const SolvingBadge = ({
 	color = "primary",
 	disabled = false,
 }: SolvingBadgeProps) => {
+	const { isMobile } = useBreakpoint();
+
 	const flexDirection =
 		direction === "row-reverse" ? "flex-row-reverse" : "flex-row";
 
 	return (
 		<Component
 			className={clsx(
-				"flex p-padding-6 gap-gap-5 rounded-radius-medium1 items-center",
+				"flex gap-gap-5 rounded-radius-medium1 items-center",
+				{
+					"p-padding-6": !isMobile,
+					"p-padding-3": isMobile,
+				},
 				flexDirection,
 				{
 					"bg-gray-5 text-alpha-black100 stroke-color-alpha-black100":
@@ -55,8 +62,22 @@ const SolvingBadge = ({
 			)}
 			onClick={disabled ? undefined : onClick}
 		>
-			{icon}
-			<span className="typo-heading-small">{lable}</span>
+			<div
+				className={clsx("*:w-full *:h-full", {
+					"w-4 h-4": !isMobile,
+					"w-3 h-3": isMobile,
+				})}
+			>
+				{icon}
+			</div>
+			<span
+				className={clsx({
+					"typo-heading-small": !isMobile,
+					"typo-heading-xxsmall": isMobile,
+				})}
+			>
+				{lable}
+			</span>
 		</Component>
 	);
 };

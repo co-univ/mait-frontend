@@ -1,11 +1,15 @@
 import clsx from "clsx";
 import AdjustableTextarea from "@/components/AdjustableTextarea";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
 //
 //
 //
 
-const ANSWER_HEIGHT = 94;
+const ANSWER_HEIGHT = {
+	pc: 94,
+	mobile: 60,
+};
 
 export interface SolvingAnswerProps {
 	readOnly?: boolean;
@@ -26,22 +30,33 @@ const SolvingAnswer = ({
 	content,
 	onChange,
 }: SolvingAnswerProps) => {
+	const { isMobile } = useBreakpoint();
+
+	const typoClass = isMobile
+		? variation === "default" ? "typo-body-xsmall" : "typo-body-xsmall-bold"
+		: variation === "default" ? "typo-body-medium" : "typo-heading-xsmall";
+
 	return (
 		<div
 			className={clsx(
-				"w-full px-padding-12 py-padding-6 flex items-center border rounded-radius-medium1",
+				"w-full flex items-center border rounded-radius-medium1",
+				typoClass,
 				{
-					"bg-color-gray-5 border-none typo-body-medium":
+					"px-padding-12 py-padding-6": !isMobile,
+					"px-padding-10 py-padding-5": isMobile,
+				},
+				{
+					"bg-color-gray-5 border-none":
 						variation === "default",
-					"bg-color-primary-5 border-color-primary-50 typo-heading-xsmall text-color-primary-50":
+					"bg-color-primary-5 border-color-primary-50 text-color-primary-50":
 						variation === "focused",
-					"bg-color-success-5 border-color-success-50 typo-heading-xsmall text-color-success-50":
+					"bg-color-success-5 border-color-success-50 text-color-success-50":
 						variation === "correct",
-					"bg-color-point-5 border-color-point-50 typo-heading-xsmall text-color-point-50":
+					"bg-color-point-5 border-color-point-50 text-color-point-50":
 						variation === "incorrect",
 				},
 			)}
-			style={{ minHeight: ANSWER_HEIGHT }}
+			style={{ minHeight: isMobile ? ANSWER_HEIGHT.mobile : ANSWER_HEIGHT.pc }}
 		>
 			{readOnly ? (
 				<p className="w-full text-left">{content}</p>
