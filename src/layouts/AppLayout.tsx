@@ -56,7 +56,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 		useState(false);
 
 	const location = useLocation();
-	const { isSidebarOpen } = useSidebarOpenStore();
+	const { isSidebarOpen, closeSidebar } = useSidebarOpenStore();
 	const { user } = useUser();
 
 	/**
@@ -110,6 +110,13 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 		return {};
 	};
+
+	//
+	useEffect(() => {
+		if (location.pathname.startsWith("/solving")) {
+			closeSidebar();
+		}
+	}, [location.pathname, closeSidebar]);
 
 	//
 	useEffect(() => {
