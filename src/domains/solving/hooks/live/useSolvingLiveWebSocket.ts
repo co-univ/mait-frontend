@@ -55,7 +55,6 @@ export const useSolvingLiveWebSocket = ({
 
 							const msg = JSON.parse(message.body);
 							onMessage(msg);
-							console.log('/participate :', msg);
 						}
 					},
 				);
@@ -66,12 +65,9 @@ export const useSolvingLiveWebSocket = ({
 						if (message.body) {
 							const msg = JSON.parse(message.body);
 							onMessage(msg);
-							console.log('/participation-status :', msg);
 						}
 					},
 				);
-
-				console.log("Connected: " + frame);
 			},
 			onStompError: (error) => {
 				console.error("Broker reported error: ", error);
