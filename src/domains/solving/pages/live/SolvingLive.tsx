@@ -11,6 +11,7 @@ import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQui
 import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
 import SolvingLiveQuestion from "./SolvingLiveQuestion";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
+import { PARTICIPANT_STATUS } from "../../solving.constants";
 
 //
 //
@@ -102,6 +103,12 @@ const SolvingLive = () => {
 		const statusType = msg?.statusType; // 문제 풀이 상태
 		const commandType = msg?.commandType; // 명령 타입
 		const activeParticipants = msg?.activeParticipants; // 활성화된 참가자
+		const participantStatus = msg?.participantStatus; // 참여자 상태
+
+		if (participantStatus === PARTICIPANT_STATUS.ELUMINATED) {
+			setIsFailed(true);
+			return;
+		}
 
 		quizController(questionId, statusType, commandType, activeParticipants);
 	};
