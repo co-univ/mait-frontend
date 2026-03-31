@@ -85,7 +85,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 		const isMediumMarginPage = !isSmallMarginPage && isSm && !isMd;
 
-		const isSidebarOpenWithUser = user && isSidebarOpen;
+		const isSidebarOpenWithUser = user && isSidebarOpen && isMd;
 
 		if (isSidebarOpenWithUser) {
 			ret.left += SIDEBAR_WIDTH;
