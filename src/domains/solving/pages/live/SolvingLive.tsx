@@ -10,7 +10,7 @@ import { apiClient } from "@/libs/api";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
 import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
 import { PARTICIPANT_STATUS } from "../../solving.constants";
-import SolvingLiveParticipantElluminationConfirm from "./SolvingLiveParticipantElluminationConfirm";
+import SolvingLiveParticipantElluminationConfirm from "./SolvingLiveParticipantEliminationConfirm";
 import SolvingLiveQuestion from "./SolvingLiveQuestion";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
 

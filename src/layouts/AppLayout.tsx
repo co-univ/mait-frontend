@@ -37,6 +37,8 @@ const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE = {
 
 const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/invite"];
 
+const SIDEBAR_CLOSE_PATHS = ["/solving/live", "/solving/review", "/solving/study"];
+
 //
 //
 //
@@ -113,7 +115,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 	//
 	useEffect(() => {
-		if (location.pathname.startsWith("/solving")) {
+		if (SIDEBAR_CLOSE_PATHS.some((path) => location.pathname.startsWith(path))) {
 			closeSidebar();
 		}
 	}, [location.pathname, closeSidebar]);
