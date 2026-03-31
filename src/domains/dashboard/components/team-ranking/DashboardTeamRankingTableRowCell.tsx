@@ -46,7 +46,7 @@ const DashboardTeamRankingTableRowCell = ({
 							"font-bold text-primary-50": rankUser.id === user?.id,
 						})}
 					>
-						{rankUser.name}({rankUser.nickname})
+						{rankUser.nickname}
 						{index < users.length - 1 ? ", " : ""}
 					</span>
 				))}
