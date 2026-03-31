@@ -11,6 +11,7 @@ interface SidebarOpenState {
 
 interface SidebarOpenStoreActions {
 	toggleSidebarOpen: () => void;
+	closeSidebar: () => void;
 }
 
 //
@@ -25,6 +26,7 @@ const useSidebarOpenStore = create<
 			isSidebarOpen: true,
 			toggleSidebarOpen: () =>
 				set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+			closeSidebar: () => set({ isSidebarOpen: false }),
 		}),
 		{
 			name: "sidebar-open-storage",

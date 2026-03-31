@@ -39,6 +39,8 @@ const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE = {
 
 const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/invite"];
 
+const SIDEBAR_CLOSE_PATHS = ["/solving/live", "/solving/review", "/solving/study"];
+
 //
 //
 //
@@ -58,7 +60,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 		useState(false);
 
 	const location = useLocation();
-	const { isSidebarOpen } = useSidebarOpenStore();
+	const { isSidebarOpen, closeSidebar } = useSidebarOpenStore();
 	const { user } = useUser();
 	const { isSm, isMd } = useBreakpoint();
 
@@ -116,6 +118,13 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 		return {};
 	};
+
+	//
+	useEffect(() => {
+		if (SIDEBAR_CLOSE_PATHS.some((path) => location.pathname.startsWith(path))) {
+			closeSidebar();
+		}
+	}, [location.pathname, closeSidebar]);
 
 	//
 	useEffect(() => {

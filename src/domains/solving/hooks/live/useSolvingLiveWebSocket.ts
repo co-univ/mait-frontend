@@ -1,7 +1,7 @@
-import { TOKEN } from "@/app.constants";
 import * as StompJs from "@stomp/stompjs";
 import { useRef } from "react";
 import SockJS from "sockjs-client";
+import type { ParticipantStatus } from "../../solving.constants";
 
 //
 //
@@ -13,6 +13,7 @@ interface WebSocketMessage {
 	statusType?: string;
 	commandType?: string;
 	activeParticipants?: any[];
+	participantStatus?: ParticipantStatus;
 }
 
 interface UseSolvingLiveWebSocketProps {
@@ -57,7 +58,16 @@ export const useSolvingLiveWebSocket = ({
 						}
 					},
 				);
-				console.log("Connected: " + frame);
+
+				client.subscribe(
+					`/user/queue/question-sets/${questionSetId}/participation-status`,
+					(message) => {
+						if (message.body) {
+							const msg = JSON.parse(message.body);
+							onMessage(msg);
+						}
+					},
+				);
 			},
 			onStompError: (error) => {
 				console.error("Broker reported error: ", error);
