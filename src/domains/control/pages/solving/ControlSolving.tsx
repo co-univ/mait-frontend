@@ -7,6 +7,7 @@ import QuestionNavigation, {
 	QuestionNavigationButton,
 } from "@/components/question-navigation";
 import type { QuestionNavigationButtonRenderProps } from "@/components/question-navigation/QuestionNavigationList";
+import { sonnerNotify } from "@/components/SonnerToast";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { createPath } from "@/utils/create-path";
 import { CONTROL_ROUTE_PATH } from "../../control.routes";
@@ -36,7 +37,7 @@ const ControlSolving = () => {
 	const { connect, disconnect } = useControlSolvingWebSocket({
 		questionSetId,
 		onMessage: (message) => {
-			console.log("Participation status:", message);
+			sonnerNotify.info(`${message.userNickname}님이 실시간 풀이에 입장하였습니다.`);
 		},
 	});
 
