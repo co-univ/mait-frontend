@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
+import SonnerToast from "./components/SonnerToast";
 import Toast from "./components/Toast";
 import Loading from "./pages/Loading";
 
@@ -13,6 +14,7 @@ const App = () => {
 				</Suspense>
 			</AppLayout>
 			<Toast />
+			<SonnerToast />
 		</>
 	);
 };

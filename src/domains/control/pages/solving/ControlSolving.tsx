@@ -1,4 +1,5 @@
 import { PencilLine } from "lucide-react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
 import Button from "@/components/Button";
@@ -6,12 +7,14 @@ import QuestionNavigation, {
 	QuestionNavigationButton,
 } from "@/components/question-navigation";
 import type { QuestionNavigationButtonRenderProps } from "@/components/question-navigation/QuestionNavigationList";
+import { sonnerNotify } from "@/components/SonnerToast";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { createPath } from "@/utils/create-path";
 import { CONTROL_ROUTE_PATH } from "../../control.routes";
 import useControlSolvingQuestion from "../../hooks/solving/question/useControlSolvingQuestion";
 import useControlSolvingQuestions from "../../hooks/solving/question/useControlSolvingQuestions";
 import useControlSolvingQuestionSet from "../../hooks/solving/useControlSolvingQuestionSet";
+import { useControlSolvingWebSocket } from "../../hooks/solving/useControlSolvingWebSocket";
 import ControlSolvingQuestion from "./question/ControlSolvingQuestion";
 import ControlSolvingSubmission from "./submission/ControlSolvingSubmission";
 
@@ -29,6 +32,13 @@ const ControlSolving = () => {
 	const { question } = useControlSolvingQuestion({
 		questionSetId,
 		questionId,
+	});
+
+	const { connect, disconnect } = useControlSolvingWebSocket({
+		questionSetId,
+		onMessage: (message) => {
+			sonnerNotify.info(`${message.userNickname}님이 실시간 풀이에 입장하였습니다.`);
+		},
 	});
 
 	const navigate = useNavigate();
@@ -110,6 +120,15 @@ const ControlSolving = () => {
 			</div>
 		);
 	};
+
+	// Connect to WebSocket
+	useEffect(() => {
+		connect();
+
+		return () => {
+			disconnect();
+		};
+	}, [connect, disconnect]);
 
 	return (
 		<LabeledPageLayout
