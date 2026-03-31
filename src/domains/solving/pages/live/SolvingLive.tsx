@@ -38,6 +38,7 @@ const SolvingLive = () => {
 			participantId: number;
 			userId: number;
 			participantName: string;
+			userNickname?: string;
 		}>
 	>([]);
 	const [currentQuestionStatus, setCurrentQuestionStatus] =
