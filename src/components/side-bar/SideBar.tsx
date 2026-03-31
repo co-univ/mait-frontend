@@ -23,7 +23,7 @@ import SidebarItem from "./SidebarItem";
 //
 //
 
-const NAVIGATION_ITEMS = [
+export const NAVIGATION_ITEMS = [
 	{
 		icon: <SquarePen />,
 		label: "문제 관리",
@@ -114,7 +114,7 @@ const SideBar = () => {
 	return (
 		<aside
 			className={clsx(
-				"p-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed z-40",
+				"p-padding-12 bg-color-alpha-white100 flex-grow-0 overflow-hidden fixed z-40 hidden md:block",
 				SIDEBAR_TRANSITION,
 				{
 					"flex-grow shadow-xl": sidebarVariant === "default",

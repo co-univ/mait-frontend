@@ -11,6 +11,7 @@ import {
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
 import Header from "@/components/header/Header";
+import MobileSidebar from "@/components/side-bar/MobileSidebar";
 import Sidebar from "@/components/side-bar/SideBar";
 import useBreakpoint from "@/hooks/useBreakpoint";
 import useUser from "@/hooks/useUser";
@@ -146,11 +147,10 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			className="flex flex-col min-w-screen min-h-screen"
 			style={getBackgroundStyle()}
 		>
-			{location.pathname === "/" ? null : (
-				<Header isTransparentBackground={isGradationSecondaryRadialPage} />
-			)}
+			<Header isTransparentBackground={isGradationSecondaryRadialPage} />
 			<div className="relative flex flex-1">
 				<Sidebar />
+				<MobileSidebar />
 				<main
 					className={clsx("flex-1 relative", SIDEBAR_TRANSITION)}
 					style={{
