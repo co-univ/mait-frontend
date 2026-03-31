@@ -1,4 +1,5 @@
 import { PencilLine } from "lucide-react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
 import Button from "@/components/Button";
@@ -12,6 +13,7 @@ import { CONTROL_ROUTE_PATH } from "../../control.routes";
 import useControlSolvingQuestion from "../../hooks/solving/question/useControlSolvingQuestion";
 import useControlSolvingQuestions from "../../hooks/solving/question/useControlSolvingQuestions";
 import useControlSolvingQuestionSet from "../../hooks/solving/useControlSolvingQuestionSet";
+import { useControlSolvingWebSocket } from "../../hooks/solving/useControlSolvingWebSocket";
 import ControlSolvingQuestion from "./question/ControlSolvingQuestion";
 import ControlSolvingSubmission from "./submission/ControlSolvingSubmission";
 
@@ -29,6 +31,13 @@ const ControlSolving = () => {
 	const { question } = useControlSolvingQuestion({
 		questionSetId,
 		questionId,
+	});
+
+	const { connect, disconnect } = useControlSolvingWebSocket({
+		questionSetId,
+		onMessage: (message) => {
+			console.log("Participation status:", message);
+		},
 	});
 
 	const navigate = useNavigate();
@@ -110,6 +119,15 @@ const ControlSolving = () => {
 			</div>
 		);
 	};
+
+	// Connect to WebSocket
+	useEffect(() => {
+		connect();
+
+		return () => {
+			disconnect();
+		};
+	}, [connect, disconnect]);
 
 	return (
 		<LabeledPageLayout
