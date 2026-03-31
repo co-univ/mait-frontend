@@ -21,6 +21,8 @@ interface SolvingLiveOrderingAnswersProps {
 	questionSetId: number;
 	questionId: number;
 	isDisabled: boolean;
+	isSubmitted: boolean;
+	isCorrect: boolean | null;
 }
 
 //
@@ -31,6 +33,8 @@ const SolvingLiveOrderingAnswers = ({
 	questionSetId,
 	questionId,
 	isDisabled,
+	isSubmitted,
+	isCorrect,
 }: SolvingLiveOrderingAnswersProps) => {
 	const { question } = useSolvingQuestion({
 		questionSetId,
@@ -79,7 +83,13 @@ const SolvingLiveOrderingAnswers = ({
 	/**
 	 *
 	 */
-	const getAnswerVariation = (isDragging: boolean): "default" | "focused" => {
+	const getAnswerVariation = (
+		isDragging: boolean,
+	): "default" | "focused" | "correct" | "incorrect" => {
+		if (isSubmitted) {
+			return isCorrect ? "correct" : "incorrect";
+		}
+
 		return isDragging ? "focused" : "default";
 	};
 

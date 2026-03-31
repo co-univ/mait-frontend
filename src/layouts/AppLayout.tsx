@@ -5,12 +5,15 @@ import { useLocation } from "react-router-dom";
 import {
 	HEADER_HEIGHT,
 	LARGE_PAGE_MARGIN,
+	MEDIUM_PAGE_MARGIN,
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN,
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
 import Header from "@/components/header/Header";
+import MobileSidebar from "@/components/side-bar/MobileSidebar";
 import Sidebar from "@/components/side-bar/SideBar";
+import useBreakpoint from "@/hooks/useBreakpoint";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
@@ -37,6 +40,8 @@ const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE = {
 
 const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/invite"];
 
+const SIDEBAR_CLOSE_PATHS = ["/solving/live", "/solving/review", "/solving/study"];
+
 //
 //
 //
@@ -56,8 +61,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 		useState(false);
 
 	const location = useLocation();
-	const { isSidebarOpen } = useSidebarOpenStore();
+	const { isSidebarOpen, closeSidebar } = useSidebarOpenStore();
 	const { user } = useUser();
+	const { isSm, isMd } = useBreakpoint();
 
 	/**
 	 *
@@ -74,20 +80,23 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			return "0px";
 		}
 
-		const isSmallMarginPage = hasValidPath(
-			SMALL_PAGE_MARGIN_PATHS,
-			location.pathname,
-		);
+		const isSmallMarginPage =
+			hasValidPath(SMALL_PAGE_MARGIN_PATHS, location.pathname) || !isSm;
 
-		const isSidebarOpenWithUser = user && isSidebarOpen;
+		const isMediumMarginPage = !isSmallMarginPage && isSm && !isMd;
 
-		if (isSidebarOpenWithUser && !isSmallMarginPage) {
+		const isSidebarOpenWithUser = user && isSidebarOpen && isMd;
+
+		if (isSidebarOpenWithUser) {
 			ret.left += SIDEBAR_WIDTH;
 		}
 
-		if (isSidebarOpenWithUser || isSmallMarginPage) {
+		if (isSmallMarginPage) {
 			ret.left += SMALL_PAGE_MARGIN;
 			ret.right += SMALL_PAGE_MARGIN;
+		} else if (isMediumMarginPage) {
+			ret.left += MEDIUM_PAGE_MARGIN;
+			ret.right += MEDIUM_PAGE_MARGIN;
 		} else {
 			ret.left += LARGE_PAGE_MARGIN;
 			ret.right += LARGE_PAGE_MARGIN;
@@ -113,6 +122,13 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 	//
 	useEffect(() => {
+		if (SIDEBAR_CLOSE_PATHS.some((path) => location.pathname.startsWith(path))) {
+			closeSidebar();
+		}
+	}, [location.pathname, closeSidebar]);
+
+	//
+	useEffect(() => {
 		const isGradationSecondaryRadialPage =
 			GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS.some((path) =>
 				location.pathname.startsWith(path),
@@ -131,11 +147,10 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			className="flex flex-col min-w-screen min-h-screen"
 			style={getBackgroundStyle()}
 		>
-			{location.pathname === "/" ? null : (
-				<Header isTransparentBackground={isGradationSecondaryRadialPage} />
-			)}
+			<Header isTransparentBackground={isGradationSecondaryRadialPage} />
 			<div className="relative flex flex-1">
 				<Sidebar />
+				<MobileSidebar />
 				<main
 					className={clsx("flex-1 relative", SIDEBAR_TRANSITION)}
 					style={{

@@ -139,7 +139,7 @@ const ControlSolvingSubmission = ({
 						onClick={handleScorerDialogOpen}
 					/>
 					<Button
-						item="진출자 선정"
+						item="진출자/우승자 관리"
 						className="bg-color-primary-5 typo-body-small text-color-primary-50 border-none"
 						onClick={handlePariticipantButtonClick}
 					/>

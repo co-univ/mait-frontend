@@ -26,7 +26,7 @@ interface UseQuestionReturn {
 //
 //
 
-const useQuestion = ({
+const useSolvingQuestion = ({
 	questionSetId,
 	questionId,
 	mode,
@@ -59,4 +59,4 @@ const useQuestion = ({
 	};
 };
 
-export default useQuestion;
+export default useSolvingQuestion;

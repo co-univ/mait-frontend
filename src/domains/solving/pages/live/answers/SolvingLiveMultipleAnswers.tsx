@@ -11,6 +11,8 @@ interface SolvingLiveMultipleAnswersProps {
 	questionSetId: number;
 	questionId: number;
 	isDisabled: boolean;
+	isSubmitted: boolean;
+	isCorrect: boolean | null;
 }
 
 //
@@ -21,6 +23,8 @@ const SolvingLiveMultipleAnswers = ({
 	questionSetId,
 	questionId,
 	isDisabled,
+	isSubmitted,
+	isCorrect,
 }: SolvingLiveMultipleAnswersProps) => {
 	const { question } = useSolvingQuestion({
 		questionSetId,
@@ -56,7 +60,16 @@ const SolvingLiveMultipleAnswers = ({
 	const getAnswerVariation = (
 		choiceNumber: number,
 	): "default" | "focused" | "correct" | "incorrect" => {
-		return userAnswers.includes(choiceNumber) ? "focused" : "default";
+		const selected = userAnswers.includes(choiceNumber);
+		if (!selected) {
+			return "default";
+		}
+
+		if (!isSubmitted) {
+			return "focused";
+		}
+
+		return isCorrect ? "correct" : "incorrect";
 	};
 
 	return (

@@ -99,7 +99,7 @@ const useCreationQuestionShort = ({
 		const newAnswer = {
 			id: generateTemporaryId(),
 			main: true,
-			number: answers.length + 1,
+			number: Math.max(...answers.map((a) => a.number), 0) + 1,
 			answer: "",
 		};
 		const updatedAnswers = [...answers, newAnswer];
@@ -153,7 +153,15 @@ const useCreationQuestionShort = ({
 			return;
 		}
 
-		const updatedAnswers = answers.filter((answer) => answer.number !== number);
+		const updatedAnswers = answers
+			.filter((answer) => answer.number !== number)
+			.map((answer) => {
+				if (answer.number > number) {
+					return { ...answer, number: answer.number - 1 };
+				}
+
+				return answer;
+			});
 
 		setQuestion({
 			...question,

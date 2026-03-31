@@ -7,8 +7,11 @@ import SolvingLiveWinner from "src/domains/solving/pages/live/SolvingLiveWinner"
 import type { QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
 import { apiClient } from "@/libs/api";
+import useSolvingLiveQuestionSet from "../../hooks/live/useSolvingLiveQuestionSet";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
 import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
+import { PARTICIPANT_STATUS } from "../../solving.constants";
+import SolvingLiveParticipantElluminationConfirm from "./SolvingLiveParticipantEliminationConfirm";
 import SolvingLiveQuestion from "./SolvingLiveQuestion";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
 
@@ -35,12 +38,15 @@ const SolvingLive = () => {
 			participantId: number;
 			userId: number;
 			participantName: string;
+			userNickname?: string;
 		}>
 	>([]);
 	const [currentQuestionStatus, setCurrentQuestionStatus] =
 		useState<CurrentQuestionStatus | null>(null); // 현재 문제 상태
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
+	const [isElluminationConfirmVisible, setIsElluminationConfirmVisible] =
+		useState(false);
 
 	const userIdRef = useRef<number | null>(null);
 
@@ -50,6 +56,10 @@ const SolvingLive = () => {
 
 	const currentUserId = user?.id;
 	const questionSetId = Number(location.pathname.split("/").pop());
+
+	const { questionSetTitle, totalQuestionNum } = useSolvingLiveQuestionSet({
+		questionSetId,
+	});
 
 	const { quizController } = useSolvingLiveQuizController({
 		setQuestionId,
@@ -102,6 +112,14 @@ const SolvingLive = () => {
 		const statusType = msg?.statusType; // 문제 풀이 상태
 		const commandType = msg?.commandType; // 명령 타입
 		const activeParticipants = msg?.activeParticipants; // 활성화된 참가자
+		const participantStatus = msg?.participantStatus; // 참여자 상태
+
+		if (participantStatus === PARTICIPANT_STATUS.ELIMINATED) {
+			console.log("eliminated!");
+			setIsElluminationConfirmVisible(true);
+			setIsFailed(true);
+			return;
+		}
 
 		quizController(questionId, statusType, commandType, activeParticipants);
 	};
@@ -155,6 +173,8 @@ const SolvingLive = () => {
 				!showWinner &&
 				(questionId !== null ? (
 					<SolvingLiveQuestion
+						questionSetTitle={questionSetTitle}
+						totalQuestionNum={totalQuestionNum}
 						questionSetId={questionSetId}
 						questionId={questionId}
 						isSubmitAllowed={isSubmitAllowed && !isFailed}
@@ -163,6 +183,10 @@ const SolvingLive = () => {
 				) : (
 					<SolvingLiveWaiting />
 				))}
+			<SolvingLiveParticipantElluminationConfirm
+				isOpen={isElluminationConfirmVisible}
+				onClose={() => setIsElluminationConfirmVisible(false)}
+			/>
 		</>
 	);
 };
