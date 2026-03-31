@@ -15,14 +15,16 @@ const ErrorDetect = () => {
 	}, [error]);
 
 	return (
-		<div className="w-full h-full flex flex-col justify-center items-center gap-gap-9">
-			<RedBell />
-			<h1 className="typo-heading-large text-center">
-				예상치 못한 문제가 발생했어요
-			</h1>
-			<span className="typo-body-large">
-				페이지를 새로고침하거나 잠시 후 다시 시도해 주세요.
-			</span>
+		<div className="w-full h-full flex flex-col justify-center items-center gap-gap-11 md:gap-gap-9 px-5 md:px-0">
+			<div className="w-full flex flex-col items-center gap-gap-9">
+				<RedBell />
+				<h1 className="typo-heading-medium md:typo-heading-large text-center">
+					예상치 못한 문제가 발생했어요
+				</h1>
+				<span className="typo-body-small md:typo-body-large">
+					페이지를 새로고침하거나 잠시 후 다시 시도해 주세요.
+				</span>
+			</div>
 			<button
 				type="button"
 				onClick={() => window.location.reload()}

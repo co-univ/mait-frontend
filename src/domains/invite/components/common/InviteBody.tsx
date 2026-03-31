@@ -13,7 +13,7 @@ interface InviteBodyProps {
 //
 
 const InviteBody = ({ children }: InviteBodyProps) => {
-	return <h2 className="text-center typo-body-large">{children}</h2>;
+	return <h2 className="text-center typo-body-small md:typo-body-large">{children}</h2>;
 };
 
 export default InviteBody;
