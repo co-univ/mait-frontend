@@ -18,6 +18,7 @@ interface SolvingLiveWinnerProps {
 		participantId: number;
 		userId: number;
 		participantName: string;
+		userNickname?: string;
 	}>;
 	currentUserId: number;
 	open?: boolean;
@@ -105,7 +106,7 @@ const SolvingLiveWinner = ({
 									className="typo-heading-xlarge text-color-warning-60"
 									key={user.userId}
 								>
-									{user.participantName}
+									{user.userNickname ?? user.participantName}
 								</div>
 							))}
 						</div>

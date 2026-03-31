@@ -23,6 +23,7 @@ interface ActiveParticipant {
 	participantId: number;
 	userId: number;
 	participantName: string;
+	userNickname?: string;
 }
 
 //

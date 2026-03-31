@@ -16,6 +16,7 @@ interface SolvingLiveNextStageProps {
 		participantId: number;
 		userId: number;
 		participantName: string;
+		userNickname?: string;
 	}>;
 	open?: boolean;
 	onClose?: () => void;
@@ -96,7 +97,7 @@ const SolvingLiveNextStage = ({
 									.map((user) => (
 										<div key={user.userId} className="flex items-center gap-2">
 											<Award size={awardSize} />
-											<div>{user.participantName}</div>
+											<div>{user.userNickname ?? user.participantName}</div>
 										</div>
 									))}
 							</div>
