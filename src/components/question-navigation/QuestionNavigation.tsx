@@ -7,7 +7,7 @@ import {
 	Plus,
 } from "lucide-react";
 import { useImperativeHandle } from "react";
-import { BUTTON_SIZE, GAP } from "./constants";
+import { BUTTON_SIZES, GAPS, type QuestionNavigationVariation } from "./constants";
 import QuestionNavigationDirectionButton from "./QuestionNavigationDirectionButton";
 import QuestionNavigationList, {
 	type QuestionNavigationButtonRenderProps,
@@ -30,6 +30,7 @@ interface QuestionNavigationProps<T> {
 	hasAddButton?: boolean;
 	activeQuestionId?: number;
 	orientation?: "vertical" | "horizontal";
+	variation?: QuestionNavigationVariation;
 	questions: T[];
 	onQuestionAdd?: () => void;
 	renderUpButton?: () => React.ReactNode;
@@ -49,11 +50,15 @@ const QuestionNavigation = <T extends { id: number }>({
 	questions,
 	activeQuestionId,
 	orientation = "vertical",
+	variation = "default",
 	onQuestionAdd,
 	renderUpButton,
 	renderDownButton,
 	renderQuestionNavigationButton,
 }: QuestionNavigationProps<T>) => {
+	const buttonSize = BUTTON_SIZES[variation];
+	const gap = GAPS[variation];
+
 	const {
 		canScrollUp,
 		canScrollDown,
@@ -68,6 +73,8 @@ const QuestionNavigation = <T extends { id: number }>({
 		orientation,
 		activeQuestionId: activeQuestionId ?? 0,
 		questions,
+		buttonSize,
+		gap,
 	});
 
 	const isVertical = orientation === "vertical";
@@ -121,8 +128,8 @@ const QuestionNavigation = <T extends { id: number }>({
 					aria-label="Add new question"
 					className="flex items-center justify-center rounded-medium1 hover:bg-color-gray-5"
 					style={{
-						width: BUTTON_SIZE,
-						height: BUTTON_SIZE,
+						width: buttonSize,
+						height: buttonSize,
 					}}
 				>
 					<Plus />
@@ -151,7 +158,7 @@ const QuestionNavigation = <T extends { id: number }>({
 				"flex-row w-full": !isVertical,
 			})}
 			style={{
-				gap: `${GAP}px`,
+				gap: `${gap}px`,
 			}}
 		>
 			{renderDirectionButton("up")}
@@ -161,6 +168,7 @@ const QuestionNavigation = <T extends { id: number }>({
 				orientation={orientation}
 				questions={questions}
 				listRef={listRef}
+				gap={gap}
 				renderQuestionNavigationButton={renderQuestionNavigationButton}
 			/>
 

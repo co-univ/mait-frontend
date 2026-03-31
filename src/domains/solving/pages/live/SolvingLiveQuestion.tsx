@@ -17,6 +17,8 @@ import SolvingLiveHeader from "./SolvingLiveHeader";
 //
 
 interface SolvingLiveQuestionProps {
+	questionSetTitle: string;
+	totalQuestionNum: number;
 	questionSetId: number;
 	questionId: number;
 	isSubmitAllowed: boolean;
@@ -28,6 +30,8 @@ interface SolvingLiveQuestionProps {
 //
 
 const SolvingLiveQuestion = ({
+	questionSetTitle,
+	totalQuestionNum,
 	questionSetId,
 	questionId,
 	isSubmitAllowed,
@@ -139,6 +143,9 @@ const SolvingLiveQuestion = ({
 			/>
 
 			<SolvingLiveHeader
+				quizTitle={questionSetTitle}
+				questionNum={number ?? 0}
+				totalQuestionNum={totalQuestionNum}
 				isSubmitted={isSubmitted}
 				isCorrect={isCorrect}
 				isSubmitDisabled={isSubmitDisabled}

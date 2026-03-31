@@ -5,6 +5,7 @@ import QuestionNavigation, {
 	QuestionNavigationButton,
 } from "@/components/question-navigation";
 import type { QuestionNavigationButtonRenderProps } from "@/components/question-navigation/QuestionNavigationList";
+import useBreakpoint from "@/hooks/useBreakpoint";
 import { createPath } from "@/utils/create-path";
 import SolvingBadge from "../../components/common/SolvingBadge";
 import SolvingButton from "../../components/common/SolvingButton";
@@ -44,6 +45,7 @@ const SolvingReviewHeader = ({
 	hideExplanation,
 }: SolvingReviewHeaderProps) => {
 	const navigate = useNavigate();
+	const { isMobile } = useBreakpoint();
 
 	/**
 	 *
@@ -94,6 +96,7 @@ const SolvingReviewHeader = ({
 					isMouseOver={isMouseOver}
 					number={index + 1}
 					onClick={() => handleQuestionNavigationClick(question.id)}
+					variation={isMobile ? "small" : "default"}
 				/>
 			</div>
 		);
@@ -103,6 +106,7 @@ const SolvingReviewHeader = ({
 		<div className="flex flex-col gap-gap-11">
 			<QuestionNavigation
 				orientation="horizontal"
+				variation={isMobile ? "small" : "default"}
 				activeQuestionId={questionId}
 				questions={questions ?? []}
 				renderQuestionNavigationButton={renderQuestionNavigationButton}

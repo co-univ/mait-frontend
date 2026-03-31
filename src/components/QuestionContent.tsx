@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import type { JSX } from "react";
 import { FILL_BLANK_PATTERN } from "@/app.constants";
+import useBreakpoint from "@/hooks/useBreakpoint";
 import FillBlank from "./FillBlank";
 
 //
@@ -17,6 +18,8 @@ interface QuestionContentProps {
 //
 
 const QuestionContent = ({ content, className }: QuestionContentProps) => {
+	const { isMobile } = useBreakpoint();
+
 	/**
 	 *
 	 */
@@ -62,7 +65,15 @@ const QuestionContent = ({ content, className }: QuestionContentProps) => {
 	};
 
 	return (
-		<div className={clsx("typo-heading-small", className)}>
+		<div
+			className={clsx(
+				{
+					"typo-heading-small": !isMobile,
+					"typo-heading-xxsmall": isMobile,
+				},
+				className,
+			)}
+		>
 			{renderContent()}
 		</div>
 	);

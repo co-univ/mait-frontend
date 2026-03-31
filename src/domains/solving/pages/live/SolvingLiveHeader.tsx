@@ -1,12 +1,16 @@
 import { ChevronRight, Puzzle } from "lucide-react";
 import SolvingBadge from "../../components/common/SolvingBadge";
 import SolvingButton from "../../components/common/SolvingButton";
+import SolvingLiveTopBar from "./SolvingLiveTopBar";
 
 //
 //
 //
 
 interface SolvingLiveHeaderProps {
+	quizTitle: string;
+	questionNum: number;
+	totalQuestionNum: number;
 	isSubmitted: boolean;
 	isCorrect: boolean | null;
 	isSubmitDisabled: boolean;
@@ -19,6 +23,9 @@ interface SolvingLiveHeaderProps {
 //
 
 const SolvingLiveHeader = ({
+	quizTitle,
+	questionNum,
+	totalQuestionNum,
 	isSubmitted,
 	isCorrect,
 	isSubmitDisabled,
@@ -37,8 +44,14 @@ const SolvingLiveHeader = ({
 	};
 
 	return (
-		<div className="flex flex-col gap-gap-11">
-			<div className="flex justify-between items-center">
+		<div
+			className="sticky top-0 bg-alpha-white100 flex flex-col gap-gap-11">
+			<SolvingLiveTopBar
+				title={quizTitle}
+				questionNum={questionNum}
+				totalQuestionNum={totalQuestionNum}
+			/>
+			<div className="flex justify-between items-center  mb-1">
 				<SolvingBadge
 					color={getBadgeColor()}
 					icon={<Puzzle />}

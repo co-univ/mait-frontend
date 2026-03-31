@@ -23,6 +23,10 @@ interface BreakpointState {
 	is2xl: boolean;
 }
 
+interface UseBreakPointReturn extends BreakpointState {
+	isMobile: boolean;
+}
+
 //
 //
 //
@@ -76,7 +80,7 @@ const getState = (width: number): BreakpointState => {
  * const { isLg } = useBreakpoint();
  * return <div className={isLg ? 'text-xl' : 'text-base'}>Hello</div>;
  */
-const useBreakpoint = (): BreakpointState => {
+const useBreakpoint = (): UseBreakPointReturn => {
 	const [state, setState] = useState<BreakpointState>(() =>
 		getState(window.innerWidth),
 	);
@@ -91,7 +95,10 @@ const useBreakpoint = (): BreakpointState => {
 		return () => observer.disconnect();
 	}, []);
 
-	return state;
+	return {
+		...state,
+		isMobile: !state.isSm,
+	};
 };
 
 export default useBreakpoint;

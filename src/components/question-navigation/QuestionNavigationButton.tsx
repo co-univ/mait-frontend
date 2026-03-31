@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { BUTTON_SIZE } from "./constants";
+import { BUTTON_SIZES, type QuestionNavigationVariation } from "./constants";
 
 //
 //
@@ -11,6 +11,7 @@ interface QuestionNavigationButtonProps {
 	number: number;
 	onClick: () => void;
 	className?: string;
+	variation?: QuestionNavigationVariation;
 }
 
 //
@@ -23,12 +24,15 @@ const QuestionNavigationButton = ({
 	number,
 	onClick,
 	className,
+	variation = "default",
 }: QuestionNavigationButtonProps) => {
+	const size = BUTTON_SIZES[variation];
+
 	return (
 		<div
 			style={{
-				width: BUTTON_SIZE,
-				height: BUTTON_SIZE,
+				width: size,
+				height: size,
 			}}
 		>
 			<button

@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import quizCorrect from "src/assets/images/quiz-correct.png";
 import quizIncorrect from "src/assets/images/quiz-incorrect.png";
+import useBreakpoint from "@/hooks/useBreakpoint";
 
 //
 //
@@ -22,6 +23,8 @@ const SolvingSubmitResult = ({
 	show = true,
 	onAnimationComplete,
 }: SolvingSubmitResultProps) => {
+	const { isMobile } = useBreakpoint();
+
 	return (
 		<AnimatePresence mode="wait">
 			{show && (
@@ -42,7 +45,7 @@ const SolvingSubmitResult = ({
 					<motion.img
 						src={correct ? quizCorrect : quizIncorrect}
 						alt={correct ? "Quiz Success" : "Quiz Fail"}
-						className="h-[95px] aspect-square"
+						className={isMobile ? "h-[64px] aspect-square" : "h-[95px] aspect-square"}
 						initial={{ scale: 0, rotate: -180 }}
 						animate={{ scale: 1, rotate: 0 }}
 						transition={{
@@ -53,7 +56,7 @@ const SolvingSubmitResult = ({
 						}}
 					/>
 					<motion.span
-						className={clsx("typo-heading-xlarge", {
+						className={clsx(isMobile ? "typo-heading-medium" : "typo-heading-xlarge", {
 							"text-success-50": correct,
 							"text-point-50": !correct,
 						})}

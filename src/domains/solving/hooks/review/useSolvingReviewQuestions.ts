@@ -9,7 +9,7 @@ interface UseSolvingReviewQuestionsProps {
 	questionSetId: number;
 }
 
-interface UseSolvingReviewQuestionsRetrurn {
+interface UseSolvingReviewQuestionsReturn {
 	questions: QuestionResponseType[];
 	isLoading: boolean;
 }
@@ -20,7 +20,7 @@ interface UseSolvingReviewQuestionsRetrurn {
 
 const useSolvingReviewQuestions = ({
 	questionSetId,
-}: UseSolvingReviewQuestionsProps): UseSolvingReviewQuestionsRetrurn => {
+}: UseSolvingReviewQuestionsProps): UseSolvingReviewQuestionsReturn => {
 	const { data, isPending } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/questions",
