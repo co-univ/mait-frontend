@@ -1,16 +1,20 @@
-/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: live solving manages websocket and tracking effects manually */
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import SolvingBell from "src/domains/solving/components/common/SolvingBell";
 import SolvingLiveNextStage from "src/domains/solving/pages/live/SolvingLiveNextStage";
 import SolvingLiveWinner from "src/domains/solving/pages/live/SolvingLiveWinner";
-import type { QuestionStatusType } from "src/enums/solving.enum";
+import type { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
 import { apiClient } from "@/libs/api";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import useSolvingLiveQuestionSet from "../../hooks/live/useSolvingLiveQuestionSet";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
 import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
-import { PARTICIPANT_STATUS } from "../../solving.constants";
+import {
+	PARTICIPANT_STATUS,
+	type ParticipantStatus,
+} from "../../solving.constants";
 import SolvingLiveParticipantElluminationConfirm from "./SolvingLiveParticipantEliminationConfirm";
 import SolvingLiveQuestion from "./SolvingLiveQuestion";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
@@ -19,10 +23,19 @@ import SolvingLiveWaiting from "./SolvingLiveWaiting";
 //
 //
 
-interface CurrentQuestionStatus {
-	questionSetId: number;
-	questionId: number;
-	questionStatusType: QuestionStatusType;
+interface ActiveParticipant {
+	participantId: number;
+	userId: number;
+	participantName: string;
+	userNickname?: string;
+}
+
+interface SolvingLiveWebSocketMessage {
+	questionId?: number;
+	statusType?: QuestionStatusType;
+	commandType?: CommandType;
+	activeParticipants?: ActiveParticipant[];
+	participantStatus?: ParticipantStatus;
 }
 
 //
@@ -34,20 +47,15 @@ const SolvingLive = () => {
 	const [isSubmitAllowed, setIsSubmitAllowed] = useState(false); // 답안 제출 가능 여부
 	const [showQualifierView, setShowQualifierView] = useState(false); // QUALIFIER 페이지 표시 여부
 	const [activeParticipants, setActiveParticipants] = useState<
-		Array<{
-			participantId: number;
-			userId: number;
-			participantName: string;
-			userNickname?: string;
-		}>
+		ActiveParticipant[]
 	>([]);
-	const [currentQuestionStatus, setCurrentQuestionStatus] =
-		useState<CurrentQuestionStatus | null>(null); // 현재 문제 상태
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
 	const [isElluminationConfirmVisible, setIsElluminationConfirmVisible] =
 		useState(false);
 
+	const hasTrackedEnterRef = useRef(false);
+	const hasTrackedFirstQuestionViewRef = useRef(false);
 	const userIdRef = useRef<number | null>(null);
 
 	const location = useLocation();
@@ -56,6 +64,9 @@ const SolvingLive = () => {
 
 	const currentUserId = user?.id;
 	const questionSetId = Number(location.pathname.split("/").pop());
+	const entrySource =
+		(location.state as { entrySource?: string } | null)?.entrySource ??
+		"direct";
 
 	const { questionSetTitle, totalQuestionNum } = useSolvingLiveQuestionSet({
 		questionSetId,
@@ -90,11 +101,6 @@ const SolvingLive = () => {
 				},
 			);
 			const { questionId, questionStatusType } = res.data?.data ?? {};
-			setCurrentQuestionStatus({
-				questionSetId: res?.data?.data?.questionSetId as number,
-				questionId: questionId as number,
-				questionStatusType: questionStatusType as QuestionStatusType,
-			});
 
 			if (questionId && questionStatusType) {
 				quizController(questionId, questionStatusType as QuestionStatusType);
@@ -107,7 +113,7 @@ const SolvingLive = () => {
 	/**
 	 * 수신된 웹소켓 메시지 핸들러 (quizController 호출부)
 	 */
-	const handleWebSocketMessage = (msg: any) => {
+	const handleWebSocketMessage = (msg: SolvingLiveWebSocketMessage) => {
 		const questionId = msg.questionId; // 문제 id
 		const statusType = msg?.statusType; // 문제 풀이 상태
 		const commandType = msg?.commandType; // 명령 타입
@@ -141,10 +147,37 @@ const SolvingLive = () => {
 		setShowQualifierView(false);
 	}, [questionId]);
 
+	useEffect(() => {
+		if (hasTrackedEnterRef.current) {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveEnter, {
+			question_set_id: questionSetId.toString(),
+			entry_source: entrySource,
+			mode: "live_time",
+		});
+		hasTrackedEnterRef.current = true;
+	}, [entrySource, questionSetId]);
+
 	//
 	useEffect(() => {
 		fetchCurrentQuestionStatus();
 	}, [questionSetId]);
+
+	useEffect(() => {
+		if (questionId === null || hasTrackedFirstQuestionViewRef.current) {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveFirstQuestionView, {
+			question_set_id: questionSetId.toString(),
+			question_id: questionId.toString(),
+			entry_source: entrySource,
+			mode: "live_time",
+		});
+		hasTrackedFirstQuestionViewRef.current = true;
+	}, [entrySource, questionId, questionSetId]);
 
 	//
 	useEffect(() => {
