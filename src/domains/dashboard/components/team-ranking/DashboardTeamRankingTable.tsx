@@ -4,6 +4,7 @@ import ranking2 from "@/assets/images/ranking-2.png";
 import ranking3 from "@/assets/images/ranking-3.png";
 import { Table } from "@/components/table";
 import type { RankDto, UserDto } from "@/libs/types";
+import DashboardTeamRankingEmpty from "./DashboardTeamRankingEmpty";
 import DashboardTeamRankingTableRowCell from "./DashboardTeamRankingTableRowCell";
 
 //
@@ -73,6 +74,10 @@ const DashboardTeamRankingTable = ({
 			<Table.Divider />
 
 			<Table.Body className="h-full">
+				{rankings.length === 0 && userRank == null ? (
+					<DashboardTeamRankingEmpty />
+				) : null}
+
 				{rankings.map((ranking) => (
 					<>
 						<DashboardTeamRankingTableRowCell
