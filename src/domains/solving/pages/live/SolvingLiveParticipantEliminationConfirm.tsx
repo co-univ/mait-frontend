@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { useEffect } from "react";
 import Button from "@/components/Button";
+import useUser from "@/hooks/useUser";
 
 //
 //
@@ -15,6 +16,8 @@ const SolvingLiveParticipantEliminationConfirm = ({
 	isOpen,
 	onClose,
 }: SolvingLiveParticipantEliminationConfirmProps) => {
+	const { user } = useUser();
+
 	//
 	useEffect(() => {
 		if (!isOpen) return;
@@ -45,7 +48,7 @@ const SolvingLiveParticipantEliminationConfirm = ({
 					진출자 선정이 완료되었습니다!
 				</h3>
 				<p className="text-alpha-black100 typo-body-medium">
-					문제 풀이는 다음 기회에 진행해주세요.
+					{user?.nickname}님은 현재 문제를 풀 수 없습니다.
 				</p>
 			</div>
 
