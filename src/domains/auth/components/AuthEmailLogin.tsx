@@ -12,7 +12,11 @@ import { useLogin } from "@/hooks/useAuth";
 //
 //
 
-const isProduction = import.meta.env.MODE === "production";
+const isProduction = import.meta.env.PUBLIC_MODE === "production";
+
+//
+//
+//
 
 const AuthEmailLogin = () => {
 	const [email, setEmail] = useState("");
