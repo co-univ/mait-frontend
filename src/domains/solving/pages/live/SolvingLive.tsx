@@ -115,7 +115,6 @@ const SolvingLive = () => {
 		const participantStatus = msg?.participantStatus; // 참여자 상태
 
 		if (participantStatus === PARTICIPANT_STATUS.ELIMINATED) {
-			console.log("eliminated!");
 			setIsElluminationConfirmVisible(true);
 			setIsFailed(true);
 			return;
