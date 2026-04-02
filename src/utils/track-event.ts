@@ -3,6 +3,9 @@ export const GTM_EVENT_NAMES = {
 	solvingLiveCtaClick: "solving_live_cta_click",
 	solvingLiveEnter: "solving_live_enter",
 	solvingLiveFirstQuestionView: "solving_live_first_question_view",
+	solvingLiveStageView: "solving_live_stage_view",
+	solvingLiveExit: "solving_live_exit",
+	solvingLiveAnswerSubmit: "solving_live_answer_submit",
 } as const;
 
 type TrackEventParams = Record<

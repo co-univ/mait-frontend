@@ -38,6 +38,8 @@ interface SolvingLiveWebSocketMessage {
 	participantStatus?: ParticipantStatus;
 }
 
+type LiveStage = "waiting" | "question" | "qualifier" | "winner";
+
 //
 //
 //
@@ -56,6 +58,11 @@ const SolvingLive = () => {
 
 	const hasTrackedEnterRef = useRef(false);
 	const hasTrackedFirstQuestionViewRef = useRef(false);
+	const hasTrackedExitRef = useRef(false);
+	const stageViewKeyRef = useRef<string | null>(null);
+	const currentStageRef = useRef<LiveStage>("waiting");
+	const currentQuestionIdRef = useRef<number | null>(null);
+	const isFlowCompletedRef = useRef(false);
 	const userIdRef = useRef<number | null>(null);
 
 	const location = useLocation();
@@ -135,6 +142,40 @@ const SolvingLive = () => {
 		onMessage: handleWebSocketMessage,
 	});
 
+	const currentStage: LiveStage = (() => {
+		if (showWinner) {
+			return "winner";
+		}
+
+		if (showQualifierView) {
+			return "qualifier";
+		}
+
+		if (questionId !== null) {
+			return "question";
+		}
+
+		return "waiting";
+	})();
+
+	const trackLiveExit = (exitType: "route_change" | "reload_or_close") => {
+		if (hasTrackedExitRef.current || isFlowCompletedRef.current) {
+			return;
+		}
+
+		if (currentStageRef.current === "winner") {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveExit, {
+			question_set_id: questionSetId.toString(),
+			question_id: currentQuestionIdRef.current?.toString(),
+			live_stage: currentStageRef.current,
+			exit_type: exitType,
+		});
+		hasTrackedExitRef.current = true;
+	};
+
 	//
 	useEffect(() => {
 		if (user?.id) {
@@ -146,6 +187,24 @@ const SolvingLive = () => {
 	useEffect(() => {
 		setShowQualifierView(false);
 	}, [questionId]);
+
+	useEffect(() => {
+		currentStageRef.current = currentStage;
+		currentQuestionIdRef.current = questionId;
+
+		const stageViewKey = `${currentStage}:${questionId ?? "none"}`;
+
+		if (stageViewKeyRef.current === stageViewKey) {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveStageView, {
+			question_set_id: questionSetId.toString(),
+			question_id: questionId?.toString(),
+			live_stage: currentStage,
+		});
+		stageViewKeyRef.current = stageViewKey;
+	}, [currentStage, questionId, questionSetId]);
 
 	useEffect(() => {
 		if (hasTrackedEnterRef.current) {
@@ -183,10 +242,24 @@ const SolvingLive = () => {
 	useEffect(() => {
 		connect(); // WebSocket 연결
 
+		const handlePageHide = () => {
+			trackLiveExit("reload_or_close");
+		};
+
+		window.addEventListener("pagehide", handlePageHide);
+
 		return () => {
+			window.removeEventListener("pagehide", handlePageHide);
+			trackLiveExit("route_change");
 			disconnect();
 		};
 	}, [questionSetId]);
+
+	useEffect(() => {
+		if (showWinner) {
+			isFlowCompletedRef.current = true;
+		}
+	}, [showWinner]);
 
 	return (
 		<>
@@ -210,6 +283,7 @@ const SolvingLive = () => {
 						totalQuestionNum={totalQuestionNum}
 						questionSetId={questionSetId}
 						questionId={questionId}
+						liveStage={currentStage}
 						isSubmitAllowed={isSubmitAllowed && !isFailed}
 						isFailed={isFailed}
 					/>
