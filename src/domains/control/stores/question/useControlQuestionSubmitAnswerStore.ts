@@ -12,62 +12,47 @@ type UpdateAnswerPayloadType =
 	| ShortUpdateAnswerPayload
 	| FillBlankUpdateAnswerPayload;
 
-interface ControlQuestionSubmitAnswerStoreState<TData> {
+interface ControlQuestionSubmitAnswerStoreState {
 	hasSubmitAnswerPayload: boolean;
-	submitAnswerPayload?: TData;
+	submitAnswerPayload?: UpdateAnswerPayloadType;
 }
 
-interface ControlQuestionSubmitAnswerStoreActions<TData> {
-	setSubmitAnswerPayload: (payload: TData) => void;
+interface ControlQuestionSubmitAnswerStoreActions {
+	setSubmitAnswerPayload: (payload: UpdateAnswerPayloadType) => void;
 }
 
 //
 //
 //
 
-const createControlQuestionSubmitAnswerStore = <
-	TData extends UpdateAnswerPayloadType = UpdateAnswerPayloadType,
->() => {
-	return create<
-		ControlQuestionSubmitAnswerStoreState<TData> &
-			ControlQuestionSubmitAnswerStoreActions<TData>
-	>()((set) => ({
-		hasSubmitAnswerPayload: false,
+const useControlQuestionSubmitAnswerStore = create<
+	ControlQuestionSubmitAnswerStoreState &
+		ControlQuestionSubmitAnswerStoreActions
+>()((set) => ({
+	hasSubmitAnswerPayload: false,
 
-		setSubmitAnswerPayload: (payload) => {
-			const shortAnswers =
-				(payload as ShortUpdateAnswerPayload).shortAnswers ?? [];
+	setSubmitAnswerPayload: (payload) => {
+		const shortAnswers =
+			(payload as ShortUpdateAnswerPayload).shortAnswers ?? [];
 
-			const fillBlankAnswers =
-				(payload as FillBlankUpdateAnswerPayload).answers ?? [];
+		const fillBlankAnswers =
+			(payload as FillBlankUpdateAnswerPayload).answers ?? [];
 
-			const isShortAnswersArrayValid =
-				shortAnswers.length > 0 &&
-				shortAnswers.every((answer) => answer?.answer?.trim() !== "");
+		const isShortAnswersArrayValid =
+			shortAnswers.length > 0 &&
+			shortAnswers.every((answer) => answer?.answer?.trim() !== "");
 
-			const isFillBlankAnswersArrayValid =
-				fillBlankAnswers.length > 0 &&
-				fillBlankAnswers.every((answer) => answer?.answer?.trim() !== "");
+		const isFillBlankAnswersArrayValid =
+			fillBlankAnswers.length > 0 &&
+			fillBlankAnswers.every((answer) => answer?.answer?.trim() !== "");
 
-			set({
-				submitAnswerPayload: payload,
-				hasSubmitAnswerPayload: Boolean(
-					isShortAnswersArrayValid || isFillBlankAnswersArrayValid,
-				),
-			});
-		},
-	}));
-};
-
-const useControlQuestionSubmitAnswerStore =
-	createControlQuestionSubmitAnswerStore();
-const useControlQuestionSubmitShortAnswerStore =
-	createControlQuestionSubmitAnswerStore<ShortUpdateAnswerPayload>();
-const useControlQuestionSubmitFillBlankAnswerStore =
-	createControlQuestionSubmitAnswerStore<FillBlankUpdateAnswerPayload>();
+		set({
+			submitAnswerPayload: payload,
+			hasSubmitAnswerPayload: Boolean(
+				isShortAnswersArrayValid || isFillBlankAnswersArrayValid,
+			),
+		});
+	},
+}));
 
 export default useControlQuestionSubmitAnswerStore;
-export {
-	useControlQuestionSubmitShortAnswerStore,
-	useControlQuestionSubmitFillBlankAnswerStore,
-};
