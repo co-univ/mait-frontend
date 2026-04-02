@@ -43,7 +43,7 @@ export const useSolvingLiveWebSocket = ({
 			heartbeatIncoming: 4000,
 			heartbeatOutgoing: 4000,
 			connectHeaders: {
-				Authorization: `${localStorage.getItem('token')}`,
+				Authorization: `${localStorage.getItem("token")}`,
 			},
 			onConnect: (frame) => {
 				// 구독 설정
@@ -68,6 +68,10 @@ export const useSolvingLiveWebSocket = ({
 						}
 					},
 				);
+
+				client.publish({
+					destination: `/app/question-sets/${questionSetId}/participation-status`,
+				});
 			},
 			onStompError: (error) => {
 				console.error("Broker reported error: ", error);
