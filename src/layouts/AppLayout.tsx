@@ -67,7 +67,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 	const location = useLocation();
 	const { isSidebarOpen, closeSidebar } = useSidebarOpenStore();
 	const { user } = useUser();
-	const { isSm, isLg } = useBreakpoint();
+	const { isSm, isMd, isLg } = useBreakpoint();
 
 	/**
 	 *
@@ -91,7 +91,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 		const isSidebarOpenWithUser = user && isSidebarOpen;
 
-		if (isSidebarOpenWithUser && !isSmallMarginPage && isLg) {
+		if (isSidebarOpenWithUser && !isSmallMarginPage && isMd) {
 			ret.left += SIDEBAR_WIDTH;
 		}
 
