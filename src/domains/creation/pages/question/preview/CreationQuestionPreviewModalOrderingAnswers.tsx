@@ -26,9 +26,9 @@ interface CreationQuestionPreviewModalOrderingAnswersProps {
 const CreationQuestionPreviewModalOrderingAnswers = ({
 	question,
 }: CreationQuestionPreviewModalOrderingAnswersProps) => {
-	const [options, setOptions] = useState<OrderingOptionApiResponse[]>(
-		question.options,
-	);
+	const [options, setOptions] = useState<OrderingOptionApiResponse[]>([
+		...question.options.sort((a, b) => a.originOrder - b.originOrder),
+	]);
 
 	/**
 	 *
