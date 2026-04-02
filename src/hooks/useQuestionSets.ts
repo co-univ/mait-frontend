@@ -45,6 +45,10 @@ const useQuestionSets = ({
 				},
 			},
 		},
+		{
+			staleTime: 0,
+			refetchOnMount: true,
+		},
 	);
 
 	const queryClient = useQueryClient();
