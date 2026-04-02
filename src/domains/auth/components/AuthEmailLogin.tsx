@@ -5,12 +5,14 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CheckBox from "@/components/CheckBox";
-import { useLogin } from "@/hooks/useAuth";
 import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
+import { useLogin } from "@/hooks/useAuth";
 
 //
 //
 //
+
+const isProduction = import.meta.env.MODE === "production";
 
 const AuthEmailLogin = () => {
 	const [email, setEmail] = useState("");
@@ -52,7 +54,11 @@ const AuthEmailLogin = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center font-paperlogy">
+		<div
+			className={clsx("flex items-center justify-center font-paperlogy", {
+				"opacity-40 pointer-events-none": isProduction,
+			})}
+		>
 			<div className="w-full">
 				{/* Form */}
 				<form onSubmit={handleSubmit} className="space-y-4">
@@ -66,7 +72,7 @@ const AuthEmailLogin = () => {
 								onChange={(e) => setEmail(e.target.value)}
 								placeholder="이메일"
 								className="w-full rounded-radius-medium1 border border-gray-20 px-gap-8 py-gap-6 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-								disabled={loginMutation.isPending}
+								disabled={loginMutation.isPending || isProduction}
 							/>
 							<div className="relative">
 								<input
@@ -76,7 +82,7 @@ const AuthEmailLogin = () => {
 									onChange={(e) => setPassword(e.target.value)}
 									placeholder="비밀번호"
 									className="w-full rounded-radius-medium1 border border-gray-20 px-gap-8 py-gap-6 focus:border-primary-50 focus:outline-none focus:ring-1 focus:ring-primary-50"
-									disabled={loginMutation.isPending}
+									disabled={loginMutation.isPending || isProduction}
 								/>
 								<button
 									type="button"
@@ -115,7 +121,10 @@ const AuthEmailLogin = () => {
 					<button
 						type="submit"
 						disabled={
-							loginMutation.isPending || !email.trim() || !password.trim()
+							loginMutation.isPending ||
+							!email.trim() ||
+							!password.trim() ||
+							isProduction
 						}
 						className="w-full rounded-md bg-primary-50 px-4 py-2 text-[17px] font-medium text-white focus:outline-none cursor-pointer select-none"
 					>
