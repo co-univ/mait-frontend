@@ -65,6 +65,7 @@ const Toast = () => {
 			transition={Bounce}
 			closeButton={false} // We render it manually inside the body
 			theme="light"
+			className="!w-[calc(100vw-32px)] !max-w-[calc(100vw-32px)] !left-4 !right-4 sm:!w-auto sm:!max-w-none sm:!left-auto"
 		/>
 	);
 };
@@ -122,7 +123,7 @@ const toastWithMessage = (type: ToastType, message: string) => {
 		progressClassName: colorClasses.bg,
 		closeButton: false,
 		className:
-			"min-w-[450px] relative flex w-full items-center justify-between pt-padding-6 pb-padding-4 px-padding-8",
+			"relative flex w-full items-center justify-between pt-padding-6 pb-padding-4 px-padding-8 sm:min-w-[450px]",
 	};
 
 	toast(<ToastBody />, options);

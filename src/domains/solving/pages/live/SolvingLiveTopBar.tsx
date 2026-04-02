@@ -41,7 +41,12 @@ const SolvingLiveTopBar = ({
 					{title}
 				</span>
 			</div>
-			<div className="w-full h-[10px] rounded-radius-max bg-gray-5 relative">
+			<div
+				className={clsx("w-full rounded-radius-max bg-gray-5 relative", {
+					"h-[10px]": !isMobile,
+					"h-[5px]": isMobile,
+				})}
+			>
 				<div
 					className={clsx("absolute inset-0 bg-primary-50 rounded-max", {
 						"h-[10px]": !isMobile,
