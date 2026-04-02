@@ -103,7 +103,10 @@ const SolvingLiveWinner = ({
 							<Award size={40} className="stroke-color-warning-60" />
 							{activeParticipants.map((user) => (
 								<div
-									className="typo-heading-xlarge text-color-warning-60"
+									className={clsx(
+										"text-color-warning-60",
+										isMobile ? "typo-heading-medium" : "typo-heading-xlarge",
+									)}
 									key={user.userId}
 								>
 									{user.userNickname ?? user.participantName}
