@@ -40,7 +40,11 @@ const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE = {
 
 const GRADATION_PRIMARY_LINEAR_BACKGROUND_STYLE_PATHS = ["/invite"];
 
-const SIDEBAR_CLOSE_PATHS = ["/solving/live", "/solving/review", "/solving/study"];
+const SIDEBAR_CLOSE_PATHS = [
+	"/solving/live",
+	"/solving/review",
+	"/solving/study",
+];
 
 //
 //
@@ -63,7 +67,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 	const location = useLocation();
 	const { isSidebarOpen, closeSidebar } = useSidebarOpenStore();
 	const { user } = useUser();
-	const { isSm, isMd } = useBreakpoint();
+	const { isSm, isLg } = useBreakpoint();
 
 	/**
 	 *
@@ -80,21 +84,21 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 			return "0px";
 		}
 
-		const isSmallMarginPage =
-			hasValidPath(SMALL_PAGE_MARGIN_PATHS, location.pathname) || !isSm;
+		const isSmallMarginPage = hasValidPath(
+			SMALL_PAGE_MARGIN_PATHS,
+			location.pathname,
+		);
 
-		const isMediumMarginPage = !isSmallMarginPage && isSm && !isMd;
+		const isSidebarOpenWithUser = user && isSidebarOpen;
 
-		const isSidebarOpenWithUser = user && isSidebarOpen && isMd;
-
-		if (isSidebarOpenWithUser) {
+		if (isSidebarOpenWithUser && !isSmallMarginPage && isLg) {
 			ret.left += SIDEBAR_WIDTH;
 		}
 
-		if (isSmallMarginPage) {
+		if ([!isSm, isSmallMarginPage, isSidebarOpenWithUser].some(Boolean)) {
 			ret.left += SMALL_PAGE_MARGIN;
 			ret.right += SMALL_PAGE_MARGIN;
-		} else if (isMediumMarginPage) {
+		} else if (!isLg) {
 			ret.left += MEDIUM_PAGE_MARGIN;
 			ret.right += MEDIUM_PAGE_MARGIN;
 		} else {
@@ -122,7 +126,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
 	//
 	useEffect(() => {
-		if (SIDEBAR_CLOSE_PATHS.some((path) => location.pathname.startsWith(path))) {
+		if (
+			SIDEBAR_CLOSE_PATHS.some((path) => location.pathname.startsWith(path))
+		) {
 			closeSidebar();
 		}
 	}, [location.pathname, closeSidebar]);
