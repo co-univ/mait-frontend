@@ -7,13 +7,14 @@ import type { ParticipantStatus } from "../../solving.constants";
 //
 //
 
-interface WebSocketMessage {
+export interface WebSocketMessage {
 	questionSetId?: number;
 	questionId: number;
 	statusType?: string;
 	commandType?: string;
 	activeParticipants?: any[];
 	participantStatus?: ParticipantStatus;
+	isInitialStatus?: boolean;
 }
 
 interface UseSolvingLiveWebSocketProps {
@@ -30,6 +31,7 @@ export const useSolvingLiveWebSocket = ({
 	onMessage,
 }: UseSolvingLiveWebSocketProps) => {
 	const clientRef = useRef<StompJs.Client | null>(null);
+	const isInitialStatusRef = useRef(true);
 
 	/**
 	 *
@@ -45,14 +47,12 @@ export const useSolvingLiveWebSocket = ({
 			connectHeaders: {
 				Authorization: `${localStorage.getItem("token")}`,
 			},
-			onConnect: (frame) => {
+			onConnect: () => {
 				// 구독 설정
 				client.subscribe(
 					`/topic/question-sets/${questionSetId}/participate`,
 					(message) => {
 						if (message.body) {
-							console.log("Received message:", message.body);
-
 							const msg = JSON.parse(message.body);
 							onMessage(msg);
 						}
@@ -64,7 +64,12 @@ export const useSolvingLiveWebSocket = ({
 					(message) => {
 						if (message.body) {
 							const msg = JSON.parse(message.body);
-							onMessage(msg);
+
+							onMessage({
+								...msg,
+								isInitialStatus: isInitialStatusRef.current,
+							});
+							isInitialStatusRef.current = false;
 						}
 					},
 				);
@@ -72,9 +77,6 @@ export const useSolvingLiveWebSocket = ({
 				client.publish({
 					destination: `/app/question-sets/${questionSetId}/participation-status`,
 				});
-			},
-			onStompError: (error) => {
-				console.error("Broker reported error: ", error);
 			},
 		});
 

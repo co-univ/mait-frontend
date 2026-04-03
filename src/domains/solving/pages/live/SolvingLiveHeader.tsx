@@ -34,7 +34,6 @@ const SolvingLiveHeader = ({
 	number,
 	handleAnswersSubmit,
 }: SolvingLiveHeaderProps) => {
-	console.log(isFailed);
 	/**
 	 *
 	 */
