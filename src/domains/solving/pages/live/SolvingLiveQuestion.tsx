@@ -148,6 +148,7 @@ const SolvingLiveQuestion = ({
 				totalQuestionNum={totalQuestionNum}
 				isSubmitted={isSubmitted}
 				isCorrect={isCorrect}
+				isFailed={isFailed}
 				isSubmitDisabled={isSubmitDisabled}
 				number={number}
 				handleAnswersSubmit={handleAnswersSubmit}

@@ -10,7 +10,7 @@ import useBreakpoint from "@/hooks/useBreakpoint";
 export interface SolvingBadgeProps {
 	lable: string;
 	direction?: "row" | "row-reverse";
-	icon: React.ReactNode;
+	icon?: React.ReactNode;
 	as?: keyof JSX.IntrinsicElements;
 	onClick?: () => void;
 	color?: "gray" | "primary" | "success" | "point";
@@ -25,11 +25,13 @@ const SolvingBadge = ({
 	lable,
 	direction = "row",
 	icon,
-	as: Component = "div",
+	as,
 	onClick,
 	color = "primary",
 	disabled = false,
 }: SolvingBadgeProps) => {
+	const Component = as ?? "div";
+
 	const { isMobile } = useBreakpoint();
 
 	const flexDirection =
@@ -55,21 +57,23 @@ const SolvingBadge = ({
 						color === "point" && !disabled,
 				},
 				{
-					"cursor-not-allowed": disabled,
-					"cursor-pointer": !disabled,
+					"cursor-not-allowed": disabled && as === "button",
+					"cursor-pointer": !disabled && as === "button",
 					"bg-gray-5 text-gray-20 stroke-color-gray-20": disabled,
 				},
 			)}
 			onClick={disabled ? undefined : onClick}
 		>
-			<div
-				className={clsx("*:w-full *:h-full", {
-					"w-4 h-4": !isMobile,
-					"w-3 h-3": isMobile,
-				})}
-			>
-				{icon}
-			</div>
+			{icon && (
+				<div
+					className={clsx("*:w-full *:h-full", {
+						"w-4 h-4": !isMobile,
+						"w-3 h-3": isMobile,
+					})}
+				>
+					{icon}
+				</div>
+			)}
 			<span
 				className={clsx({
 					"typo-heading-small": !isMobile,
