@@ -40,12 +40,14 @@ const SolvingSubmitResult = ({
 						duration: 0.8,
 					}}
 					onAnimationComplete={onAnimationComplete}
-					className="absolute top-20 left-1/2 transform -translate-x-1/2 flex flex-col items-center justify-center z-50 pointer-events-none"
+					className="fixed top-20 left-1/2 transform !-translate-x-1/2 flex flex-col items-center justify-center z-50 pointer-events-none"
 				>
 					<motion.img
 						src={correct ? quizCorrect : quizIncorrect}
 						alt={correct ? "Quiz Success" : "Quiz Fail"}
-						className={isMobile ? "h-[64px] aspect-square" : "h-[95px] aspect-square"}
+						className={
+							isMobile ? "h-[64px] aspect-square" : "h-[95px] aspect-square"
+						}
 						initial={{ scale: 0, rotate: -180 }}
 						animate={{ scale: 1, rotate: 0 }}
 						transition={{
@@ -56,10 +58,13 @@ const SolvingSubmitResult = ({
 						}}
 					/>
 					<motion.span
-						className={clsx(isMobile ? "typo-heading-medium" : "typo-heading-xlarge", {
-							"text-success-50": correct,
-							"text-point-50": !correct,
-						})}
+						className={clsx(
+							isMobile ? "typo-heading-medium" : "typo-heading-xlarge",
+							{
+								"text-success-50": correct,
+								"text-point-50": !correct,
+							},
+						)}
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{

@@ -13,6 +13,7 @@ interface SolvingLiveHeaderProps {
 	totalQuestionNum: number;
 	isSubmitted: boolean;
 	isCorrect: boolean | null;
+	isFailed: boolean;
 	isSubmitDisabled: boolean;
 	number?: number;
 	handleAnswersSubmit: () => void;
@@ -28,6 +29,7 @@ const SolvingLiveHeader = ({
 	totalQuestionNum,
 	isSubmitted,
 	isCorrect,
+	isFailed,
 	isSubmitDisabled,
 	number,
 	handleAnswersSubmit,
@@ -44,8 +46,7 @@ const SolvingLiveHeader = ({
 	};
 
 	return (
-		<div
-			className="sticky top-0 bg-alpha-white100 flex flex-col gap-gap-11">
+		<div className="sticky top-0 bg-alpha-white100 flex flex-col gap-gap-11">
 			<SolvingLiveTopBar
 				title={quizTitle}
 				questionNum={questionNum}
@@ -58,13 +59,17 @@ const SolvingLiveHeader = ({
 					lable={`Q${number ?? ""}`}
 				/>
 				<div className="flex gap-gap-5">
-					<SolvingButton
-						color={getBadgeColor()}
-						icon={<ChevronRight />}
-						lable="제출하기"
-						onClick={handleAnswersSubmit}
-						disabled={isSubmitDisabled}
-					/>
+					{!isFailed ? (
+						<SolvingButton
+							color={getBadgeColor()}
+							icon={<ChevronRight />}
+							lable="제출하기"
+							onClick={handleAnswersSubmit}
+							disabled={isSubmitDisabled}
+						/>
+					) : (
+						<SolvingBadge color="point" lable="풀이 불가" />
+					)}
 				</div>
 			</div>
 		</div>

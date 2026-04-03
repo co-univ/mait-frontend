@@ -10,7 +10,10 @@ import { apiClient } from "@/libs/api";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import useSolvingLiveQuestionSet from "../../hooks/live/useSolvingLiveQuestionSet";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
-import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
+import {
+	useSolvingLiveWebSocket,
+	type WebSocketMessage,
+} from "../../hooks/live/useSolvingLiveWebSocket";
 import {
 	PARTICIPANT_STATUS,
 	type ParticipantStatus,
@@ -123,7 +126,7 @@ const SolvingLive = () => {
 	/**
 	 * 수신된 웹소켓 메시지 핸들러 (quizController 호출부)
 	 */
-	const handleWebSocketMessage = (msg: SolvingLiveWebSocketMessage) => {
+	const handleWebSocketMessage = (msg: WebSocketMessage) => {
 		const questionId = msg.questionId; // 문제 id
 		const statusType = msg?.statusType; // 문제 풀이 상태
 		const commandType = msg?.commandType; // 명령 타입
@@ -131,13 +134,23 @@ const SolvingLive = () => {
 		const participantStatus = msg?.participantStatus; // 참여자 상태
 
 		if (participantStatus === PARTICIPANT_STATUS.ELIMINATED) {
-			console.log("eliminated!");
-			setIsElluminationConfirmVisible(true);
 			setIsFailed(true);
+			if (msg.isInitialStatus) {
+				setIsElluminationConfirmVisible(true);
+			}
 			return;
 		}
 
-		quizController(questionId, statusType, commandType, activeParticipants);
+		if (participantStatus === PARTICIPANT_STATUS.ACTIVE) {
+			setIsFailed(false);
+		}
+
+		quizController(
+			questionId,
+			statusType as QuestionStatusType,
+			commandType as CommandType,
+			activeParticipants,
+		);
 	};
 
 	const { connect, disconnect } = useSolvingLiveWebSocket({
