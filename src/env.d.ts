@@ -1,5 +1,9 @@
 /// <reference types="@rsbuild/core/types" />
 
+interface Window {
+	dataLayer: Array<Record<string, unknown>>;
+}
+
 declare module "*.svg" {
 	import type * as React from "react";
 	const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>;

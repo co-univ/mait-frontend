@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { Tabs } from "@/components/tabs";
 import useTeams from "@/hooks/useTeams";
 import { apiHooks } from "@/libs/api";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import DashboardTeamRankingHeader from "./DashboardTeamRankingHeader";
 import DashboardTeamRankingTable from "./DashboardTeamRankingTable";
 import DashboardTeamRankingTabsTrigger from "./DashboardTeamRankingTabsTrigger";
@@ -64,6 +65,14 @@ const DashboardTeamRanking = () => {
 	 *
 	 */
 	const handleRankingTypeChange = (value: string) => {
+		if (value === rankingType) {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.dashboardRankingTabClick, {
+			ranking_type: value,
+		});
+
 		setSearchParams({ ranking: value });
 	};
 

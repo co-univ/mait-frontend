@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import QuestionContent from "@/components/QuestionContent";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import SolvingSubmitResult from "../../components/common/SolvingSubmitResult";
 import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
@@ -16,11 +17,18 @@ import SolvingLiveHeader from "./SolvingLiveHeader";
 //
 //
 
+type LiveStage = "waiting" | "question" | "qualifier" | "winner";
+
+//
+//
+//
+
 interface SolvingLiveQuestionProps {
 	questionSetTitle: string;
 	totalQuestionNum: number;
 	questionSetId: number;
 	questionId: number;
+	liveStage: LiveStage;
 	isSubmitAllowed: boolean;
 	isFailed: boolean;
 }
@@ -34,6 +42,7 @@ const SolvingLiveQuestion = ({
 	totalQuestionNum,
 	questionSetId,
 	questionId,
+	liveStage,
 	isSubmitAllowed,
 	isFailed,
 }: SolvingLiveQuestionProps) => {
@@ -72,6 +81,11 @@ const SolvingLiveQuestion = ({
 		const success = await submitAnswer({ questionSetId, questionId });
 
 		if (success) {
+			trackEvent(GTM_EVENT_NAMES.solvingLiveAnswerSubmit, {
+				question_set_id: questionSetId.toString(),
+				question_id: questionId.toString(),
+				live_stage: liveStage,
+			});
 			setShowCorrect(true);
 		}
 	};

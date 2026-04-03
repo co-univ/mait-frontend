@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { apiHooks } from "@/libs/api";
 import ErrorDetect from "@/pages/ErrorDetect";
 import Loading from "@/pages/Loading";
@@ -12,6 +12,7 @@ import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
 const SolvingReviewRedirect = () => {
 	const questionSetId = Number(useParams().questionSetId);
+	const location = useLocation();
 
 	const { data, isPending, isError } = apiHooks.useQuery(
 		"get",
@@ -42,9 +43,12 @@ const SolvingReviewRedirect = () => {
 				questionSetId,
 				questionId: lastViewedQuestionId,
 			}),
-			{ replace: true },
+			{
+				replace: true,
+				state: location.state,
+			},
 		);
-	}, [lastViewedQuestionId, questionSetId, navigate]);
+	}, [lastViewedQuestionId, questionSetId, navigate, location.state]);
 
 	if (isPending) {
 		return <Loading />;
