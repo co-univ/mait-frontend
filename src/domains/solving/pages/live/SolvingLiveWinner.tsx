@@ -58,7 +58,11 @@ const SolvingLiveWinner = ({
 	 */
 	const handleResultClick = () => {
 		trackEvent(GTM_EVENT_NAMES.solvingLiveResultCtaClick);
-		navigate("/dashboard");
+		navigate("/dashboard", {
+			state: {
+				entrySource: "winner_cta",
+			},
+		});
 	};
 
 	return (

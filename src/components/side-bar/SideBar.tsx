@@ -16,6 +16,7 @@ import useUser from "@/hooks/useUser";
 import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SideBarDropdown from "./SideBarDropdown";
 import SidebarItem from "./SidebarItem";
 
@@ -111,6 +112,19 @@ const SideBar = () => {
 		}
 	}, [isGradationSecondaryRadialPage, isSidebarOpen, toggleSidebarOpen]);
 
+	/**
+	 *
+	 */
+	const handleNavigationItemClick = (path: string) => {
+		if (path !== "/dashboard") {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.dashboardNavClick, {
+			entry_source: "sidebar",
+		});
+	};
+
 	return (
 		<aside
 			className={clsx(
@@ -148,7 +162,16 @@ const SideBar = () => {
 										hasValidPath(item.activePaths, location.pathname),
 								})}
 							>
-								<Link to={item.path} className="flex items-center gap-gap-5">
+								<Link
+									to={item.path}
+									state={
+										item.path === "/dashboard"
+											? { entrySource: "sidebar" }
+											: undefined
+									}
+									className="flex items-center gap-gap-5"
+									onClick={() => handleNavigationItemClick(item.path)}
+								>
 									{item.icon}
 									<span>{item.label}</span>
 								</Link>

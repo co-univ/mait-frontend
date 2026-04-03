@@ -13,6 +13,9 @@ export const GTM_EVENT_NAMES = {
 	solvingReviewQuestionView: "solving_review_question_view",
 	solvingReviewExplanationView: "solving_review_explanation_view",
 	solvingReviewExit: "solving_review_exit",
+	dashboardNavClick: "dashboard_nav_click",
+	dashboardEnter: "dashboard_enter",
+	dashboardRankingTabClick: "dashboard_ranking_tab_click",
 } as const;
 
 type TrackEventParams = Record<
