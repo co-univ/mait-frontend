@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import type { QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
 //
@@ -28,7 +29,17 @@ const SolvingQuestionSetsLiveTimeCard = ({
 	 *
 	 */
 	const handleSolveButtonClick = () => {
-		navigate(createPath(SOLVING_ROUTE_PATH.LIVE, { id: questionSet.id ?? 0 }));
+		trackEvent(GTM_EVENT_NAMES.solvingLiveCtaClick, {
+			question_set_id: questionSet.id?.toString(),
+			entry_source: "solving_question_sets",
+			mode: "live_time",
+		});
+
+		navigate(createPath(SOLVING_ROUTE_PATH.LIVE, { id: questionSet.id ?? 0 }), {
+			state: {
+				entrySource: "solving_question_sets",
+			},
+		});
 	};
 
 	return (

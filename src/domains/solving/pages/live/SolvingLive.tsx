@@ -1,16 +1,23 @@
-/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: live solving manages websocket and tracking effects manually */
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import SolvingBell from "src/domains/solving/components/common/SolvingBell";
 import SolvingLiveNextStage from "src/domains/solving/pages/live/SolvingLiveNextStage";
 import SolvingLiveWinner from "src/domains/solving/pages/live/SolvingLiveWinner";
-import type { QuestionStatusType } from "src/enums/solving.enum";
+import type { CommandType, QuestionStatusType } from "src/enums/solving.enum";
 import useUser from "src/hooks/useUser";
 import { apiClient } from "@/libs/api";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import useSolvingLiveQuestionSet from "../../hooks/live/useSolvingLiveQuestionSet";
 import { useSolvingLiveQuizController } from "../../hooks/live/useSolvingLiveQuizController";
-import { useSolvingLiveWebSocket } from "../../hooks/live/useSolvingLiveWebSocket";
-import { PARTICIPANT_STATUS } from "../../solving.constants";
+import {
+	useSolvingLiveWebSocket,
+	type WebSocketMessage,
+} from "../../hooks/live/useSolvingLiveWebSocket";
+import {
+	PARTICIPANT_STATUS,
+	type ParticipantStatus,
+} from "../../solving.constants";
 import SolvingLiveParticipantElluminationConfirm from "./SolvingLiveParticipantEliminationConfirm";
 import SolvingLiveQuestion from "./SolvingLiveQuestion";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
@@ -19,10 +26,25 @@ import SolvingLiveWaiting from "./SolvingLiveWaiting";
 //
 //
 
-interface CurrentQuestionStatus {
-	questionSetId: number;
-	questionId: number;
-	questionStatusType: QuestionStatusType;
+type LiveStage = "waiting" | "question" | "qualifier" | "winner";
+
+//
+//
+//
+
+interface ActiveParticipant {
+	participantId: number;
+	userId: number;
+	participantName: string;
+	userNickname?: string;
+}
+
+interface SolvingLiveWebSocketMessage {
+	questionId?: number;
+	statusType?: QuestionStatusType;
+	commandType?: CommandType;
+	activeParticipants?: ActiveParticipant[];
+	participantStatus?: ParticipantStatus;
 }
 
 //
@@ -34,28 +56,30 @@ const SolvingLive = () => {
 	const [isSubmitAllowed, setIsSubmitAllowed] = useState(false); // 답안 제출 가능 여부
 	const [showQualifierView, setShowQualifierView] = useState(false); // QUALIFIER 페이지 표시 여부
 	const [activeParticipants, setActiveParticipants] = useState<
-		Array<{
-			participantId: number;
-			userId: number;
-			participantName: string;
-			userNickname?: string;
-		}>
+		ActiveParticipant[]
 	>([]);
-	const [currentQuestionStatus, setCurrentQuestionStatus] =
-		useState<CurrentQuestionStatus | null>(null); // 현재 문제 상태
 	const [isFailed, setIsFailed] = useState(false); // 탈락 여부 (다음 문제부터 풀이 불가)
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
 	const [isElluminationConfirmVisible, setIsElluminationConfirmVisible] =
 		useState(false);
 
+	const hasTrackedEnterRef = useRef(false);
+	const hasTrackedFirstQuestionViewRef = useRef(false);
+	const hasTrackedExitRef = useRef(false);
+	const stageViewKeyRef = useRef<string | null>(null);
+	const currentStageRef = useRef<LiveStage>("waiting");
+	const currentQuestionIdRef = useRef<number | null>(null);
+	const isFlowCompletedRef = useRef(false);
 	const userIdRef = useRef<number | null>(null);
 
 	const location = useLocation();
 
 	const { user } = useUser();
 
-	const currentUserId = user?.id;
 	const questionSetId = Number(location.pathname.split("/").pop());
+	const entrySource =
+		(location.state as { entrySource?: string } | null)?.entrySource ??
+		"direct";
 
 	const { questionSetTitle, totalQuestionNum } = useSolvingLiveQuestionSet({
 		questionSetId,
@@ -90,11 +114,6 @@ const SolvingLive = () => {
 				},
 			);
 			const { questionId, questionStatusType } = res.data?.data ?? {};
-			setCurrentQuestionStatus({
-				questionSetId: res?.data?.data?.questionSetId as number,
-				questionId: questionId as number,
-				questionStatusType: questionStatusType as QuestionStatusType,
-			});
 
 			if (questionId && questionStatusType) {
 				quizController(questionId, questionStatusType as QuestionStatusType);
@@ -107,7 +126,7 @@ const SolvingLive = () => {
 	/**
 	 * 수신된 웹소켓 메시지 핸들러 (quizController 호출부)
 	 */
-	const handleWebSocketMessage = (msg: any) => {
+	const handleWebSocketMessage = (msg: WebSocketMessage) => {
 		const questionId = msg.questionId; // 문제 id
 		const statusType = msg?.statusType; // 문제 풀이 상태
 		const commandType = msg?.commandType; // 명령 타입
@@ -115,19 +134,63 @@ const SolvingLive = () => {
 		const participantStatus = msg?.participantStatus; // 참여자 상태
 
 		if (participantStatus === PARTICIPANT_STATUS.ELIMINATED) {
-			console.log("eliminated!");
-			setIsElluminationConfirmVisible(true);
 			setIsFailed(true);
+			if (msg.isInitialStatus) {
+				setIsElluminationConfirmVisible(true);
+			}
 			return;
 		}
 
-		quizController(questionId, statusType, commandType, activeParticipants);
+		if (participantStatus === PARTICIPANT_STATUS.ACTIVE) {
+			setIsFailed(false);
+		}
+
+		quizController(
+			questionId,
+			statusType as QuestionStatusType,
+			commandType as CommandType,
+			activeParticipants,
+		);
 	};
 
 	const { connect, disconnect } = useSolvingLiveWebSocket({
 		questionSetId,
 		onMessage: handleWebSocketMessage,
 	});
+
+	const currentStage: LiveStage = (() => {
+		if (showWinner) {
+			return "winner";
+		}
+
+		if (showQualifierView) {
+			return "qualifier";
+		}
+
+		if (questionId !== null) {
+			return "question";
+		}
+
+		return "waiting";
+	})();
+
+	const trackLiveExit = (exitType: "route_change" | "reload_or_close") => {
+		if (hasTrackedExitRef.current || isFlowCompletedRef.current) {
+			return;
+		}
+
+		if (currentStageRef.current === "winner") {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveExit, {
+			question_set_id: questionSetId.toString(),
+			question_id: currentQuestionIdRef.current?.toString(),
+			live_stage: currentStageRef.current,
+			exit_type: exitType,
+		});
+		hasTrackedExitRef.current = true;
+	};
 
 	//
 	useEffect(() => {
@@ -143,17 +206,79 @@ const SolvingLive = () => {
 
 	//
 	useEffect(() => {
+		currentStageRef.current = currentStage;
+		currentQuestionIdRef.current = questionId;
+
+		const stageViewKey = `${currentStage}:${questionId ?? "none"}`;
+
+		if (stageViewKeyRef.current === stageViewKey) {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveStageView, {
+			question_set_id: questionSetId.toString(),
+			question_id: questionId?.toString(),
+			live_stage: currentStage,
+		});
+		stageViewKeyRef.current = stageViewKey;
+	}, [currentStage, questionId, questionSetId]);
+
+	//
+	useEffect(() => {
+		if (hasTrackedEnterRef.current) {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveEnter, {
+			question_set_id: questionSetId.toString(),
+			entry_source: entrySource,
+			mode: "live_time",
+		});
+		hasTrackedEnterRef.current = true;
+	}, [entrySource, questionSetId]);
+
+	//
+	useEffect(() => {
 		fetchCurrentQuestionStatus();
 	}, [questionSetId]);
 
 	//
 	useEffect(() => {
+		if (questionId === null || hasTrackedFirstQuestionViewRef.current) {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveFirstQuestionView, {
+			question_set_id: questionSetId.toString(),
+			question_id: questionId.toString(),
+			entry_source: entrySource,
+			mode: "live_time",
+		});
+		hasTrackedFirstQuestionViewRef.current = true;
+	}, [entrySource, questionId, questionSetId]);
+
+	//
+	useEffect(() => {
 		connect(); // WebSocket 연결
 
+		const handlePageHide = () => {
+			trackLiveExit("reload_or_close");
+		};
+
+		window.addEventListener("pagehide", handlePageHide);
+
 		return () => {
+			window.removeEventListener("pagehide", handlePageHide);
+			trackLiveExit("route_change");
 			disconnect();
 		};
 	}, [questionSetId]);
+
+	useEffect(() => {
+		if (showWinner) {
+			isFlowCompletedRef.current = true;
+		}
+	}, [showWinner]);
 
 	return (
 		<>
@@ -165,7 +290,6 @@ const SolvingLive = () => {
 			<SolvingLiveWinner
 				open={showWinner}
 				activeParticipants={activeParticipants}
-				currentUserId={currentUserId ?? 0}
 				onClose={() => setShowWinner(false)}
 			/>
 			<SolvingBell open={isSubmitAllowed} />
@@ -177,6 +301,7 @@ const SolvingLive = () => {
 						totalQuestionNum={totalQuestionNum}
 						questionSetId={questionSetId}
 						questionId={questionId}
+						liveStage={currentStage}
 						isSubmitAllowed={isSubmitAllowed && !isFailed}
 						isFailed={isFailed}
 					/>

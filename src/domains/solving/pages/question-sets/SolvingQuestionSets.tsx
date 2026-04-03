@@ -1,4 +1,5 @@
 import { SquarePen } from "lucide-react";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
@@ -6,6 +7,7 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingQuestionSetsLiveTime from "./SolvingQuestionSetsLiveTime";
 import SolvingQuestionSetsReview from "./SolvingQuestionSetsReview";
 
@@ -42,6 +44,18 @@ const SolvingQuestionSets = () => {
 
 		setSearchParams(newParams);
 	};
+
+	//
+	useEffect(() => {
+		if (mode !== "live-time") {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveTabView, {
+			entry_source: "solving_question_sets",
+			mode: "live_time",
+		});
+	}, [mode]);
 
 	return (
 		<LabeledPageLayout icon={<SquarePen />} label="문제 풀기">

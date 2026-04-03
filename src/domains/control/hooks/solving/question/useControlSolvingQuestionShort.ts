@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { notify } from "@/components/Toast";
-import { useControlQuestionSubmitShortAnswerStore } from "@/domains/control/stores/question/useControlQuestionSubmitAnswerStore";
+import useControlQuestionSubmitAnswerStore from "@/domains/control/stores/question/useControlQuestionSubmitAnswerStore";
 import type {
 	ShortAnswerApiResponse,
 	ShortAnswerDto,
 	ShortQuestionApiResponse,
+	ShortUpdateAnswerPayload,
 } from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
 import useControlSolvingQuestion, {
@@ -40,7 +41,7 @@ const useControlSolvingQuestionShort = ({
 	questionId,
 }: UseControlSolvingQuestionShortProps): UseControlSolvingQuestionShortReturn => {
 	const { submitAnswerPayload, setSubmitAnswerPayload } =
-		useControlQuestionSubmitShortAnswerStore();
+		useControlQuestionSubmitAnswerStore();
 
 	const { question, ...rest } =
 		useControlSolvingQuestion<ShortQuestionApiResponse>({
@@ -48,7 +49,9 @@ const useControlSolvingQuestionShort = ({
 			questionId,
 		});
 
-	const addedAnswers = submitAnswerPayload?.shortAnswers ?? [];
+	const addedAnswers =
+		(submitAnswerPayload as ShortUpdateAnswerPayload | undefined)
+			?.shortAnswers ?? [];
 
 	/**
 	 * Groups short answer responses by their number into a 2D array.

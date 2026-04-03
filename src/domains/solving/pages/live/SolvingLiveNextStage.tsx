@@ -101,6 +101,18 @@ const SolvingLiveNextStage = ({
 										</div>
 									))}
 							</div>
+							<div
+								className={clsx("flex flex-col", isMobile ? "gap-2" : "gap-4")}
+							>
+								{activeParticipants
+									.filter((_, idx) => idx % 2 === 1)
+									.map((user) => (
+										<div key={user.userId} className="flex items-center gap-2">
+											<Award size={awardSize} />
+											<div>{user.userNickname ?? user.participantName}</div>
+										</div>
+									))}
+							</div>
 						</div>
 					</div>
 				</div>

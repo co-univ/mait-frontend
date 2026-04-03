@@ -1,12 +1,14 @@
 import clsx from "clsx";
 import { Award, ChevronRight, PartyPopper } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import gold_bell from "src/assets/images/gold-bell.png";
 import winner_print from "src/assets/images/winner-print.png";
 import winner_stamp from "src/assets/images/winner-stamp.png";
 import Button from "@/components/Button";
 import useBreakpoint from "@/hooks/useBreakpoint";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingFullModalLayout from "../../layouts/live/SolvingFullModalLayout";
-import { useNavigate } from "react-router-dom";
 
 //
 //
@@ -20,7 +22,6 @@ interface SolvingLiveWinnerProps {
 		participantName: string;
 		userNickname?: string;
 	}>;
-	currentUserId: number;
 	open?: boolean;
 	onClose?: () => void;
 }
@@ -30,20 +31,40 @@ interface SolvingLiveWinnerProps {
 
 const SolvingLiveWinner = ({
 	activeParticipants,
-	currentUserId,
 	open,
 	onClose,
 }: SolvingLiveWinnerProps) => {
 	const navigate = useNavigate();
+	const hasTrackedViewRef = useRef(false);
 
 	const { isMobile } = useBreakpoint();
 
 	/**
-	 * 
+	 *
 	 */
 	const handleResultClick = () => {
-		navigate("/dashboard");
-	}
+		trackEvent(GTM_EVENT_NAMES.solvingLiveResultCtaClick);
+		navigate("/dashboard", {
+			state: {
+				entrySource: "winner_cta",
+			},
+		});
+	};
+
+	//
+	useEffect(() => {
+		if (!open) {
+			hasTrackedViewRef.current = false;
+			return;
+		}
+
+		if (hasTrackedViewRef.current) {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveResultCtaView);
+		hasTrackedViewRef.current = true;
+	}, [open]);
 
 	return (
 		<SolvingFullModalLayout open={open} onClose={onClose}>
@@ -103,7 +124,10 @@ const SolvingLiveWinner = ({
 							<Award size={40} className="stroke-color-warning-60" />
 							{activeParticipants.map((user) => (
 								<div
-									className="typo-heading-xlarge text-color-warning-60"
+									className={clsx(
+										"text-color-warning-60",
+										isMobile ? "typo-heading-medium" : "typo-heading-xlarge",
+									)}
 									key={user.userId}
 								>
 									{user.userNickname ?? user.participantName}
@@ -118,7 +142,7 @@ const SolvingLiveWinner = ({
 						</div>
 
 						<div className={clsx(isMobile ? "h-4" : "h-[34px]")} />
-						
+
 						<div>
 							<Button
 								className={clsx(

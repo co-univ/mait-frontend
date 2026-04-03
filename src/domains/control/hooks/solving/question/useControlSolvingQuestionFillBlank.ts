@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { notify } from "@/components/Toast";
-import { useControlQuestionSubmitFillBlankAnswerStore } from "@/domains/control/stores/question/useControlQuestionSubmitAnswerStore";
+import useControlQuestionSubmitAnswerStore from "@/domains/control/stores/question/useControlQuestionSubmitAnswerStore";
 import type {
 	FillBlankAnswerApiResponse,
 	FillBlankAnswerDto,
 	FillBlankQuestionApiResponse,
+	FillBlankUpdateAnswerPayload,
 } from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
 import useControlSolvingQuestion, {
@@ -40,7 +41,7 @@ const useControlSolvingQuestionFillBlank = ({
 	questionId,
 }: UseControlSolvingQuestionFillBlankProps): UseControlSolvingQuestionFillBlankReturn => {
 	const { submitAnswerPayload, setSubmitAnswerPayload } =
-		useControlQuestionSubmitFillBlankAnswerStore();
+		useControlQuestionSubmitAnswerStore();
 
 	const { question, ...rest } =
 		useControlSolvingQuestion<FillBlankQuestionApiResponse>({
@@ -48,7 +49,9 @@ const useControlSolvingQuestionFillBlank = ({
 			questionId,
 		});
 
-	const addedAnswers = submitAnswerPayload?.answers ?? [];
+	const addedAnswers =
+		(submitAnswerPayload as FillBlankUpdateAnswerPayload | undefined)?.answers ??
+		[];
 
 	/**
 	 * Groups fill blank answer responses by their number into a 2D array.
