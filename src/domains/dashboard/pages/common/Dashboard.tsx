@@ -16,6 +16,7 @@ const Dashboard = () => {
 		(location.state as { entrySource?: string } | null)?.entrySource ??
 		"direct";
 
+	//
 	useEffect(() => {
 		if (hasTrackedEnterRef.current) {
 			return;

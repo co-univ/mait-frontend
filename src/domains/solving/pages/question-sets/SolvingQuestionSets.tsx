@@ -34,17 +34,6 @@ const SolvingQuestionSets = () => {
 		mode: QUESTION_SET_MODES[mode],
 	});
 
-	useEffect(() => {
-		if (mode !== "live-time") {
-			return;
-		}
-
-		trackEvent(GTM_EVENT_NAMES.solvingLiveTabView, {
-			entry_source: "solving_question_sets",
-			mode: "live_time",
-		});
-	}, [mode]);
-
 	/**
 	 *
 	 */
@@ -55,6 +44,18 @@ const SolvingQuestionSets = () => {
 
 		setSearchParams(newParams);
 	};
+
+	//
+	useEffect(() => {
+		if (mode !== "live-time") {
+			return;
+		}
+
+		trackEvent(GTM_EVENT_NAMES.solvingLiveTabView, {
+			entry_source: "solving_question_sets",
+			mode: "live_time",
+		});
+	}, [mode]);
 
 	return (
 		<LabeledPageLayout icon={<SquarePen />} label="문제 풀기">

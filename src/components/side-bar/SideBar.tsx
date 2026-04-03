@@ -103,15 +103,6 @@ const SideBar = () => {
 		}
 	}, [sidebarVariant]);
 
-	//
-	//
-	//
-	useEffect(() => {
-		if (isGradationSecondaryRadialPage && isSidebarOpen) {
-			toggleSidebarOpen();
-		}
-	}, [isGradationSecondaryRadialPage, isSidebarOpen, toggleSidebarOpen]);
-
 	/**
 	 *
 	 */
@@ -124,6 +115,13 @@ const SideBar = () => {
 			entry_source: "sidebar",
 		});
 	};
+
+	//
+	useEffect(() => {
+		if (isGradationSecondaryRadialPage && isSidebarOpen) {
+			toggleSidebarOpen();
+		}
+	}, [isGradationSecondaryRadialPage, isSidebarOpen, toggleSidebarOpen]);
 
 	return (
 		<aside

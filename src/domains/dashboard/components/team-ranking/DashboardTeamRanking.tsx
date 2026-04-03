@@ -72,6 +72,7 @@ const DashboardTeamRanking = () => {
 		trackEvent(GTM_EVENT_NAMES.dashboardRankingTabClick, {
 			ranking_type: value,
 		});
+
 		setSearchParams({ ranking: value });
 	};
 

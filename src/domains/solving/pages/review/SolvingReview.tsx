@@ -199,12 +199,14 @@ const SolvingReview = () => {
 		updateLastViewedQuestion,
 	]);
 
+	//
 	useEffect(() => {
 		currentQuestionSetIdRef.current = questionSetId;
 		currentQuestionIdRef.current = questionId;
 		currentEntrySourceRef.current = entrySource;
 	}, [entrySource, questionId, questionSetId]);
 
+	//
 	useEffect(() => {
 		if (Number.isNaN(questionSetId)) {
 			return;
@@ -217,6 +219,7 @@ const SolvingReview = () => {
 		trackedExplanationViewKeysRef.current.clear();
 	}, [questionSetId]);
 
+	//
 	useEffect(() => {
 		if (isLoading || !question || hasTrackedEnterRef.current) {
 			return;
@@ -231,6 +234,7 @@ const SolvingReview = () => {
 		hasTrackedEnterRef.current = true;
 	}, [entrySource, isLoading, question, questionId, questionSetId]);
 
+	//
 	useEffect(() => {
 		if (isLoading || !question) {
 			return;
@@ -251,6 +255,7 @@ const SolvingReview = () => {
 		trackedQuestionViewKeysRef.current.add(questionViewKey);
 	}, [entrySource, isLoading, question, questionId, questionSetId]);
 
+	//
 	useEffect(() => {
 		if (!isExplanationShown || !question) {
 			return;
@@ -271,6 +276,7 @@ const SolvingReview = () => {
 		trackedExplanationViewKeysRef.current.add(explanationViewKey);
 	}, [entrySource, isExplanationShown, question, questionId, questionSetId]);
 
+	//
 	useEffect(() => {
 		const handlePageHide = () => {
 			if (hasTrackedExitRef.current || sessionStartedAtRef.current === null) {

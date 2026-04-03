@@ -39,6 +39,19 @@ const SolvingLiveWinner = ({
 
 	const { isMobile } = useBreakpoint();
 
+	/**
+	 *
+	 */
+	const handleResultClick = () => {
+		trackEvent(GTM_EVENT_NAMES.solvingLiveResultCtaClick);
+		navigate("/dashboard", {
+			state: {
+				entrySource: "winner_cta",
+			},
+		});
+	};
+
+	//
 	useEffect(() => {
 		if (!open) {
 			hasTrackedViewRef.current = false;
@@ -52,18 +65,6 @@ const SolvingLiveWinner = ({
 		trackEvent(GTM_EVENT_NAMES.solvingLiveResultCtaView);
 		hasTrackedViewRef.current = true;
 	}, [open]);
-
-	/**
-	 *
-	 */
-	const handleResultClick = () => {
-		trackEvent(GTM_EVENT_NAMES.solvingLiveResultCtaClick);
-		navigate("/dashboard", {
-			state: {
-				entrySource: "winner_cta",
-			},
-		});
-	};
 
 	return (
 		<SolvingFullModalLayout open={open} onClose={onClose}>

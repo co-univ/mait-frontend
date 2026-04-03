@@ -23,6 +23,12 @@ import SolvingLiveWaiting from "./SolvingLiveWaiting";
 //
 //
 
+type LiveStage = "waiting" | "question" | "qualifier" | "winner";
+
+//
+//
+//
+
 interface ActiveParticipant {
 	participantId: number;
 	userId: number;
@@ -37,8 +43,6 @@ interface SolvingLiveWebSocketMessage {
 	activeParticipants?: ActiveParticipant[];
 	participantStatus?: ParticipantStatus;
 }
-
-type LiveStage = "waiting" | "question" | "qualifier" | "winner";
 
 //
 //
@@ -187,6 +191,7 @@ const SolvingLive = () => {
 		setShowQualifierView(false);
 	}, [questionId]);
 
+	//
 	useEffect(() => {
 		currentStageRef.current = currentStage;
 		currentQuestionIdRef.current = questionId;
@@ -205,6 +210,7 @@ const SolvingLive = () => {
 		stageViewKeyRef.current = stageViewKey;
 	}, [currentStage, questionId, questionSetId]);
 
+	//
 	useEffect(() => {
 		if (hasTrackedEnterRef.current) {
 			return;
@@ -223,6 +229,7 @@ const SolvingLive = () => {
 		fetchCurrentQuestionStatus();
 	}, [questionSetId]);
 
+	//
 	useEffect(() => {
 		if (questionId === null || hasTrackedFirstQuestionViewRef.current) {
 			return;
