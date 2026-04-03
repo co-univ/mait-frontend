@@ -69,7 +69,6 @@ const SolvingLive = () => {
 
 	const { user } = useUser();
 
-	const currentUserId = user?.id;
 	const questionSetId = Number(location.pathname.split("/").pop());
 	const entrySource =
 		(location.state as { entrySource?: string } | null)?.entrySource ??
@@ -271,7 +270,6 @@ const SolvingLive = () => {
 			<SolvingLiveWinner
 				open={showWinner}
 				activeParticipants={activeParticipants}
-				currentUserId={currentUserId ?? 0}
 				onClose={() => setShowWinner(false)}
 			/>
 			<SolvingBell open={isSubmitAllowed} />

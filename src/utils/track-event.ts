@@ -3,6 +3,8 @@ export const GTM_EVENT_NAMES = {
 	solvingLiveCtaClick: "solving_live_cta_click",
 	solvingLiveEnter: "solving_live_enter",
 	solvingLiveFirstQuestionView: "solving_live_first_question_view",
+	solvingLiveResultCtaView: "solving_live_result_cta_view",
+	solvingLiveResultCtaClick: "solving_live_result_cta_click",
 	solvingLiveStageView: "solving_live_stage_view",
 	solvingLiveExit: "solving_live_exit",
 	solvingLiveAnswerSubmit: "solving_live_answer_submit",
