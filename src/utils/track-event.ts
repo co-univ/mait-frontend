@@ -8,6 +8,11 @@ export const GTM_EVENT_NAMES = {
 	solvingLiveStageView: "solving_live_stage_view",
 	solvingLiveExit: "solving_live_exit",
 	solvingLiveAnswerSubmit: "solving_live_answer_submit",
+	solvingReviewCtaClick: "solving_review_cta_click",
+	solvingReviewEnter: "solving_review_enter",
+	solvingReviewQuestionView: "solving_review_question_view",
+	solvingReviewExplanationView: "solving_review_explanation_view",
+	solvingReviewExit: "solving_review_exit",
 } as const;
 
 type TrackEventParams = Record<

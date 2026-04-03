@@ -6,6 +6,7 @@ import {
 } from "@/components/question-sets/question-sets.constants";
 import type { QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
+import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
 //
@@ -32,10 +33,21 @@ const SolvingQuestionSetsReviewCard = ({
 	 *
 	 */
 	const handleSolveButtonClick = () => {
+		trackEvent(GTM_EVENT_NAMES.solvingReviewCtaClick, {
+			question_set_id: (questionSet.id ?? 0).toString(),
+			entry_source: "solving_question_sets_review",
+			mode: "review",
+		});
+
 		navigate(
 			createPath(SOLVING_ROUTE_PATH.REVIEW_REDIRECT, {
 				questionSetId: questionSet.id ?? 0,
 			}),
+			{
+				state: {
+					entrySource: "solving_question_sets_review",
+				},
+			},
 		);
 	};
 
