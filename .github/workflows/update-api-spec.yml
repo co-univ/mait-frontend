@@ -15,8 +15,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -35,6 +33,10 @@ jobs:
         id: short_sha
         run: |
           FULL_SHA="${{ github.event.client_payload.sha }}"
+          if [ -z "$FULL_SHA" ]; then
+            echo "Error: client_payload.sha is missing"
+            exit 1
+          fi
           SHORT_SHA="${FULL_SHA:0:7}"
           echo "full=$FULL_SHA" >> $GITHUB_OUTPUT
           echo "short=$SHORT_SHA" >> $GITHUB_OUTPUT
@@ -45,6 +47,13 @@ jobs:
         id: time
         run: .github/scripts/generate-timestamp.sh
 
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.PUBLIC_API_DOCS_URL_DEV }}" ]; then
+            echo "Error: PUBLIC_API_DOCS_URL_DEV secret is not set"
+            exit 1
+          fi
+
       - name: Update API spec files
         env:
           PUBLIC_API_DOCS_URL: ${{ secrets.PUBLIC_API_DOCS_URL_DEV }}
@@ -53,12 +62,6 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: .github/scripts/check-changes.sh
-
-      - name: Exit if no changes
-        if: steps.check_changes.outputs.has_changes == 'false'
-        run: |
-          echo "No API spec changes detected. Exiting workflow."
-          exit 0
 
       - name: Check for existing PR
         if: steps.check_changes.outputs.has_changes == 'true'
@@ -79,16 +82,7 @@ jobs:
           COMMIT_MESSAGE: ${{ github.event.client_payload.commit_message }}
           DATE: ${{ steps.time.outputs.date }}
           TIME: ${{ steps.time.outputs.time }}
-        run: |
-          .github/scripts/prepare-pr-body.sh \
-            "$REPOSITORY" \
-            "$PR_EXISTS" \
-            "$EXISTING_BODY" \
-            "$SHORT_SHA" \
-            "$FULL_SHA" \
-            "$COMMIT_MESSAGE" \
-            "$DATE" \
-            "$TIME"
+        run: .github/scripts/prepare-pr-body.sh
 
       - name: Create or Update Pull Request
         if: steps.check_changes.outputs.has_changes == 'true'
@@ -99,7 +93,7 @@ jobs:
           base: develop
           branch: chore/update-api-spec
           delete-branch: true
-          add-paths: src/libs/types/**
+          add-paths: src/libs/types/
           title: '[chore] Update API Spec (${{ steps.time.outputs.date }} ${{ steps.time.outputs.time }})'
           body: ${{ steps.pr_body.outputs.content }}
           labels: api

@@ -1,6 +1,7 @@
 {
 	"name": "mait-frontend",
 	"version": "260403.1",
+	"packageManager": "pnpm@10.17.1",
 	"private": true,
 	"type": "module",
 	"scripts": {

@@ -1,14 +1,17 @@
 #!/bin/bash
+set -e
 
-# Check if there are any changes in the git working directory
-if git diff --quiet && git diff --cached --quiet; then
+TARGET_PATH="src/libs/types/"
+
+# Check if there are any changes in src/libs/types/
+if git diff --quiet -- "$TARGET_PATH" && git diff --cached --quiet -- "$TARGET_PATH"; then
   echo "has_changes=false" >> $GITHUB_OUTPUT
-  echo "No changes detected"
+  echo "No changes detected in $TARGET_PATH"
   exit 0
 else
   echo "has_changes=true" >> $GITHUB_OUTPUT
-  echo "Changes detected:"
-  git diff --stat
-  git diff --cached --stat
+  echo "Changes detected in $TARGET_PATH:"
+  git diff --stat -- "$TARGET_PATH"
+  git diff --cached --stat -- "$TARGET_PATH"
   exit 0
 fi
