@@ -1003,23 +1003,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/question-sets/{questionSetId}/live-status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 실시간 문제셋 상태 조회 */
-        get: operations["getLiveStatus"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/question-sets/{questionSetId}/live-status/rank/correct": {
         parameters: {
             query?: never;
@@ -1190,7 +1173,7 @@ export interface components {
          * @description 문제 풀이 방식
          * @enum {string}
          */
-        DeliveryMode: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
+        QuestionSetSolveMode: "LIVE_TIME" | "STUDY";
         /**
          * @description 문제 셋 공개 단위
          * @enum {string}
@@ -1201,7 +1184,7 @@ export interface components {
             title: string;
             /** @description 문제 셋 주제 */
             subject: string;
-            mode: components["schemas"]["DeliveryMode"];
+            solveMode: components["schemas"]["QuestionSetSolveMode"];
             /** @description 문제 셋 난이도 설명 */
             difficulty?: string;
             visibility?: components["schemas"]["QuestionSetVisibility"];
@@ -1210,6 +1193,11 @@ export interface components {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetApiResponse"];
         };
+        /**
+         * @description 문제 모드
+         * @enum {string}
+         */
+        DeliveryMode: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
         QuestionSetApiResponse: {
             /** Format: int64 */
             id: number;
@@ -1220,9 +1208,10 @@ export interface components {
             creationType: components["schemas"]["QuestionSetCreationType"];
             visibility: components["schemas"]["QuestionSetVisibility"];
             deliveryMode: components["schemas"]["DeliveryMode"];
+            solveMode?: components["schemas"]["QuestionSetSolveMode"];
             /** Format: int64 */
             teamId: number;
-            ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
+            status?: components["schemas"]["QuestionSetStatus"];
             /** Format: int64 */
             questionCount: number;
             difficulty?: string;
@@ -1235,10 +1224,10 @@ export interface components {
          */
         QuestionSetCreationType: "AI_GENERATED" | "MANUAL";
         /**
-         * @description 문제 셋 진행 상태
+         * @description 문제 셋 상태
          * @enum {string}
          */
-        QuestionSetOngoingStatus: "BEFORE" | "ONGOING" | "AFTER";
+        QuestionSetStatus: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
         FillBlankAnswerDto: {
             /** Format: int64 */
             id?: number;
@@ -2195,7 +2184,7 @@ export interface components {
         };
         /** @description 문제 셋 컨테이너 (QuestionSetList 또는 QuestionSetGroup) */
         QuestionSetContainer: components["schemas"]["QuestionSetList"] | components["schemas"]["QuestionSetGroup"];
-        /** @description 진행 상태별로 그룹화된 문제 셋 (BEFORE: 시작 전, ONGOING: 진행 중, AFTER: 종료) */
+        /** @description 상태별로 그룹화된 문제 셋 */
         QuestionSetDto: {
             /** Format: int64 */
             id?: number;
@@ -2206,9 +2195,9 @@ export interface components {
             /** @enum {string} */
             visibility?: "PUBLIC" | "GROUP" | "PRIVATE";
             /** @enum {string} */
-            deliveryMode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
+            solveMode?: "LIVE_TIME" | "STUDY";
             /** @enum {string} */
-            ongoingStatus?: "BEFORE" | "ONGOING" | "AFTER";
+            status?: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
             /** Format: int64 */
             teamId?: number;
             /** Format: int64 */
@@ -2220,7 +2209,7 @@ export interface components {
         };
         /** @description 문제 셋 그룹 (진행 상태별로 그룹화된 Map 구조) */
         QuestionSetGroup: {
-            /** @description 진행 상태별로 그룹화된 문제 셋 (BEFORE: 시작 전, ONGOING: 진행 중, AFTER: 종료) */
+            /** @description 상태별로 그룹화된 문제 셋 */
             questionSets?: {
                 [key: string]: components["schemas"]["QuestionSetDto"][];
             };
@@ -2397,16 +2386,6 @@ export interface components {
         ApiResponseQuestionScorerApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionScorerApiResponse"];
-        };
-        ApiResponseQuestionSetLiveStatusResponse: {
-            isSuccess?: boolean;
-            data?: components["schemas"]["QuestionSetLiveStatusResponse"];
-        };
-        QuestionSetLiveStatusResponse: {
-            /** Format: int64 */
-            questionSetId?: number;
-            /** @enum {string} */
-            liveStatus?: "BEFORE" | "ONGOING" | "AFTER";
         };
         ApiResponseParticipantsCorrectAnswerRankResponse: {
             isSuccess?: boolean;
@@ -3995,28 +3974,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionScorerApiResponse"];
-                };
-            };
-        };
-    };
-    getLiveStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                questionSetId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseQuestionSetLiveStatusResponse"];
                 };
             };
         };
