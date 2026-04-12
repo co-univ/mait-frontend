@@ -1,5 +1,5 @@
 import type {
-	DeliveryMode,
+	QuestionSetSolveMode,
 	QuestionSetVisibility,
 	UpdateQuestionSetApiRequest,
 } from "@/libs/types";
@@ -13,14 +13,14 @@ type CreationPublishQuestionSetState = UpdateQuestionSetApiRequest;
 type CreationPublishQuestionSetAction =
 	| { type: "SET_TITLE"; payload: string }
 	| { type: "SET_SUBJECT"; payload: string }
-	| { type: "SET_MODE"; payload: DeliveryMode }
+	| { type: "SET_MODE"; payload: QuestionSetSolveMode }
 	| { type: "SET_DIFFICULTY"; payload: string }
 	| { type: "SET_VISIBILITY"; payload: QuestionSetVisibility };
 
 export const CREATION_PUBLISH_QUESTION_INITIAL_STATE = {
 	title: "",
 	subject: "",
-	mode: "LIVE_TIME" as DeliveryMode,
+	solveMode: "LIVE_TIME" as QuestionSetSolveMode,
 	difficulty: "",
 	visibility: "PUBLIC" as QuestionSetVisibility,
 };
@@ -39,7 +39,7 @@ export const creationPublishQuestionSetReducer = (
 		case "SET_SUBJECT":
 			return { ...state, subject: action.payload };
 		case "SET_MODE":
-			return { ...state, mode: action.payload };
+			return { ...state, solveMode: action.payload };
 		case "SET_DIFFICULTY":
 			return { ...state, difficulty: action.payload };
 		case "SET_VISIBILITY":

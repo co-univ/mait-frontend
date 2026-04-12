@@ -9,7 +9,7 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient, apiHooks } from "@/libs/api";
-import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
+import type { QuestionSetSolveMode, QuestionSetVisibility } from "@/libs/types";
 import {
 	CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	creationPublishQuestionSetReducer,
@@ -80,8 +80,8 @@ const CreationPublish = () => {
 	/**
 	 *
 	 */
-	const handleModeChange = (mode: DeliveryMode) => {
-		dispatch({ type: "SET_MODE", payload: mode });
+	const handleModeChange = (solveMode: QuestionSetSolveMode) => {
+		dispatch({ type: "SET_MODE", payload: solveMode });
 	};
 
 	/**
@@ -171,10 +171,10 @@ const CreationPublish = () => {
 					<CreationPublishLeftPanel
 						title={questionSet.title}
 						visibility={questionSet.visibility ?? "PUBLIC"}
-						mode={questionSet.mode ?? "LIVE_TIME"}
+						solveMode={questionSet.solveMode ?? "LIVE_TIME"}
 						onChangeTitle={handleTitleChange}
 						onChangeVisibility={handleVisibilityChange}
-						onChangeMode={handleModeChange}
+						onChangeSolveMode={handleModeChange}
 					/>
 					<CreationPublishRightPanel
 						creationType={data?.data?.creationType}

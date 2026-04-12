@@ -45,7 +45,7 @@ const ManagementLiveTimeCard = ({
 
 	const navigate = useNavigate();
 
-	const questionSetStatus = questionSet.ongoingStatus;
+	const questionSetStatus = questionSet.status;
 
 	/**
 	 *

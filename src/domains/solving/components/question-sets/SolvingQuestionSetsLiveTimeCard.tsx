@@ -23,7 +23,7 @@ const SolvingQuestionSetsLiveTimeCard = ({
 }: SolvingQuestionSetsLiveTimeCardProps) => {
 	const navigate = useNavigate();
 
-	const questionSetStatus = questionSet.ongoingStatus;
+	const questionSetStatus = questionSet.status;
 
 	/**
 	 *
@@ -62,7 +62,7 @@ const SolvingQuestionSetsLiveTimeCard = ({
 				/>
 				<div className="flex gap-gap-5">
 					<QuestionSetsCard.Footer.Button
-						disabled={questionSet.ongoingStatus !== "ONGOING"}
+						disabled={questionSet.status !== "ONGOING"}
 						variant="secondary"
 						item="문제 풀기"
 						onClick={handleSolveButtonClick}
