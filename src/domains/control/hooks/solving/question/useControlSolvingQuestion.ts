@@ -71,7 +71,7 @@ const useControlSolvingQuestion = <
 		},
 		{
 			refetchInterval:
-				questionSetData?.data?.ongoingStatus === "ONGOING"
+				questionSetData?.data?.status === "ONGOING"
 					? QUESTION_POLLING_INTERVAL
 					: undefined,
 		},
@@ -165,7 +165,7 @@ const useControlSolvingQuestion = <
 			return;
 		}
 
-		if (questionSet?.ongoingStatus === "BEFORE") {
+		if (questionSet?.status === "BEFORE") {
 			notify.warn("문제 시작 후 문제 공개 및 제출 허용이 가능합니다.");
 
 			return;
