@@ -6,7 +6,7 @@ import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
-import ManagementQuestionSetCardAdditionalButton from "./ManagementQuestionSetCardAdditionalButton";
+import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -30,6 +30,20 @@ const ManagementLiveTimeCard = ({
 	onReviewStatusModalOpen,
 	invalidateQuestionSetsQuery,
 }: ManagementLiveTimeCardProps) => {
+	const { mutate: deleteQuestionSet } = apiHooks.useMutation(
+		"delete",
+		"/api/v1/question-sets/{questionSetId}",
+		{
+			onSuccess: () => {
+				notify.success("문제 셋이 삭제되었습니다.");
+				invalidateQuestionSetsQuery?.();
+			},
+			onError: () => {
+				notify.error("문제 셋 삭제에 실패했습니다.");
+			},
+		},
+	);
+
 	const { mutate: startLiveTime } = apiHooks.useMutation(
 		"patch",
 		"/api/v1/question-sets/{questionSetId}/live-status/start",
@@ -47,6 +61,19 @@ const ManagementLiveTimeCard = ({
 	const navigate = useNavigate();
 
 	const questionSetStatus = questionSet.status;
+
+	/**
+	 *
+	 */
+	const handleDeleteButtonClick = () => {
+		deleteQuestionSet({
+			params: {
+				path: {
+					questionSetId: questionSet.id ?? 0,
+				},
+			},
+		});
+	};
 
 	/**
 	 *
@@ -158,7 +185,18 @@ const ManagementLiveTimeCard = ({
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
-				<ManagementQuestionSetCardAdditionalButton />
+				{questionSetStatus === "BEFORE" && (
+					<ManagementQuestionSetCardAdditionalButton
+						onEdit={handleCreationButtonClick}
+						onDelete={handleDeleteButtonClick}
+					/>
+				)}
+				{questionSetStatus === "AFTER" && (
+					<ManagementQuestionSetCardAdditionalButton
+						onRestart={handleRestartButtonClick}
+						onDelete={handleDeleteButtonClick}
+					/>
+				)}
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>

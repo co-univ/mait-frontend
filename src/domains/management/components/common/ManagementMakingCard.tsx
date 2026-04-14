@@ -14,7 +14,7 @@ import type {
 	QuestionSetList,
 } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
-import ManagementQuestionSetCardAdditionalButton from "./ManagementQuestionSetCardAdditionalButton";
+import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -141,7 +141,34 @@ const ManagementMakingCard = ({
 		},
 	);
 
+	const { mutate: deleteQuestionSet } = apiHooks.useMutation(
+		"delete",
+		"/api/v1/question-sets/{questionSetId}",
+		{
+			onSuccess: () => {
+				notify.success("문제 셋이 삭제되었습니다.");
+				invalidateQuestionSetsQuery();
+			},
+			onError: () => {
+				notify.error("문제 셋 삭제에 실패했습니다.");
+			},
+		},
+	);
+
 	const navigate = useNavigate();
+
+	/**
+	 *
+	 */
+	const handleDeleteButtonClick = () => {
+		deleteQuestionSet({
+			params: {
+				path: {
+					questionSetId: questionSet.id ?? 0,
+				},
+			},
+		});
+	};
 
 	/**
 	 *
@@ -203,7 +230,9 @@ const ManagementMakingCard = ({
 						</button>
 					}
 				/>
-				<ManagementQuestionSetCardAdditionalButton />
+				<ManagementQuestionSetCardAdditionalButton
+					onDelete={handleDeleteButtonClick}
+				/>
 			</>
 		);
 	};

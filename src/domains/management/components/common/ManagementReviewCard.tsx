@@ -2,12 +2,12 @@ import { QuestionSetsCard } from "@/components/question-sets/card";
 import { notify } from "@/components/Toast";
 import ManagementReviewCardVisibilityDropdown from "@/domains/management/components/common/ManagementReviewCardVisibilityDropdown";
 import apiHooks from "@/libs/api/hooks";
-import ManagementQuestionSetCardAdditionalButton from "./ManagementQuestionSetCardAdditionalButton";
 import type {
 	DeliveryMode,
 	QuestionSetDto,
 	QuestionSetVisibility,
 } from "@/libs/types";
+import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -42,6 +42,36 @@ const ManagementReviewCard = ({
 		},
 	);
 
+	const { mutate: deleteQuestionSet } = apiHooks.useMutation(
+		"delete",
+		"/api/v1/question-sets/{questionSetId}",
+		{
+			onSuccess: () => {
+				notify.success("문제 셋이 삭제되었습니다.");
+				invalidateQuestionSetsQuery();
+			},
+			onError: () => {
+				notify.error("문제 셋 삭제에 실패했습니다.");
+			},
+		},
+	);
+
+	/**
+	 *
+	 */
+	const handleDeleteButtonClick = () => {
+		deleteQuestionSet({
+			params: {
+				path: {
+					questionSetId: questionSet.id ?? 0,
+				},
+			},
+		});
+	};
+
+	/**
+	 *
+	 */
 	const handleVisibilityChange = (value: QuestionSetVisibility) => {
 		mutate({
 			params: {
@@ -59,17 +89,17 @@ const ManagementReviewCard = ({
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
-				<div className="flex items-center gap-gap-5 shrink-0">
-					<ManagementReviewCardVisibilityDropdown
-						currentVisibility={currentVisibility}
-						onVisibilityChange={handleVisibilityChange}
-					/>
-					<ManagementQuestionSetCardAdditionalButton />
-				</div>
+				<ManagementQuestionSetCardAdditionalButton
+					onDelete={handleDeleteButtonClick}
+				/>
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>
 				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />
+				<ManagementReviewCardVisibilityDropdown
+					currentVisibility={currentVisibility}
+					onVisibilityChange={handleVisibilityChange}
+				/>
 			</QuestionSetsCard.Footer>
 		</QuestionSetsCard.Root>
 	);
