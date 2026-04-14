@@ -17,9 +17,10 @@ interface DropdownItemProps<T extends string = string> {
 	/** Optional check icon to display when selected */
 	checkIcon?: ReactNode;
 	children: ReactNode;
-	className?: string;
-	labelClassName?: string;
-	buttonClassName?: string;
+	classNames?: {
+		button?: string;
+		label?: string;
+	};
 	onClick?: () => void;
 }
 
@@ -41,9 +42,7 @@ const DropdownItem = <T extends string = string>({
 	icon,
 	checkIcon,
 	isHeader = false,
-	className,
-	labelClassName,
-	buttonClassName,
+	classNames,
 	disabled = false,
 	onClick,
 }: DropdownItemProps<T>) => {
@@ -76,7 +75,7 @@ const DropdownItem = <T extends string = string>({
 						"cursor-pointer hover:bg-color-primary-5": !disabled && !isHeader,
 						"cursor-default": disabled || isHeader,
 					},
-					buttonClassName,
+					classNames?.button,
 				)}
 			>
 				<div
@@ -88,13 +87,13 @@ const DropdownItem = <T extends string = string>({
 				</div>
 
 				<div
-					className={clsx("flex gap-gap-5 items-center grow", className, {
-						"text-color-gray-30": (disabled || !isSelected) && !isHeader && !className,
-						"text-black": !disabled && !className,
+					className={clsx("flex gap-gap-5 items-center grow", {
+						"text-color-gray-30": (disabled || !isSelected) && !isHeader,
+						"text-black": !disabled,
 					})}
 				>
 					{icon && <div className="flex items-center">{icon}</div>}
-					<p className={clsx("typo-body-small text-nowrap whitespace-pre", labelClassName)}>
+					<p className={clsx("typo-body-small text-nowrap whitespace-pre", classNames?.label)}>
 						{children}
 					</p>
 				</div>

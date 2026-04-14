@@ -45,8 +45,10 @@ const ManagementQuestionSetCardAdditionalButton = ({
 				key="edit"
 				value="edit"
 				onClick={onEdit}
-				labelClassName="text-color-alpha-black100 font-pretendard"
-				buttonClassName="hover:!bg-color-alpha-white100"
+				classNames={{
+					label: "font-pretendard",
+					button: "hover:!bg-color-alpha-white100",
+				}}
 			>
 				수정하기
 			</Dropdown.Item>
@@ -56,8 +58,10 @@ const ManagementQuestionSetCardAdditionalButton = ({
 				key="restart"
 				value="restart"
 				onClick={onRestart}
-				labelClassName="text-color-alpha-black100 font-pretendard"
-				buttonClassName="hover:!bg-color-alpha-white100"
+				classNames={{
+					label: "font-pretendard",
+					button: "hover:!bg-color-alpha-white100",
+				}}
 			>
 				재시작하기
 			</Dropdown.Item>
@@ -67,8 +71,10 @@ const ManagementQuestionSetCardAdditionalButton = ({
 				key="delete"
 				value="delete"
 				onClick={handleDeleteClick}
-				labelClassName="text-color-point-50 font-pretendard"
-				buttonClassName="hover:!bg-color-alpha-white100"
+				classNames={{
+					label: "text-color-point-50 font-pretendard",
+					button: "hover:!bg-color-alpha-white100",
+				}}
 			>
 				삭제하기
 			</Dropdown.Item>
