@@ -2,6 +2,7 @@ import { QuestionSetsCard } from "@/components/question-sets/card";
 import { notify } from "@/components/Toast";
 import ManagementReviewCardVisibilityDropdown from "@/domains/management/components/common/ManagementReviewCardVisibilityDropdown";
 import apiHooks from "@/libs/api/hooks";
+import ManagementQuestionSetCardAdditionalButton from "./ManagementQuestionSetCardAdditionalButton";
 import type {
 	DeliveryMode,
 	QuestionSetDto,
@@ -58,10 +59,13 @@ const ManagementReviewCard = ({
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
-				<ManagementReviewCardVisibilityDropdown
-					currentVisibility={currentVisibility}
-					onVisibilityChange={handleVisibilityChange}
-				/>
+				<div className="flex items-center gap-gap-5 shrink-0">
+					<ManagementReviewCardVisibilityDropdown
+						currentVisibility={currentVisibility}
+						onVisibilityChange={handleVisibilityChange}
+					/>
+					<ManagementQuestionSetCardAdditionalButton />
+				</div>
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>

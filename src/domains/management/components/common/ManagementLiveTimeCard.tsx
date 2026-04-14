@@ -6,6 +6,7 @@ import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
+import ManagementQuestionSetCardAdditionalButton from "./ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -119,44 +120,7 @@ const ManagementLiveTimeCard = ({
 	/**
 	 *
 	 */
-	const renderFirstButton = () => {
-		if (questionSetStatus === "BEFORE") {
-			return (
-				<QuestionSetsCard.Footer.Button
-					variant="secondary"
-					item="문제 수정"
-					onClick={handleCreationButtonClick}
-				/>
-			);
-		}
-
-		if (questionSetStatus === "AFTER") {
-			return (
-				<QuestionSetsCard.Footer.Button
-					variant="secondary"
-					item="복습상태"
-					onClick={handleReviewStatusButtonClick}
-				/>
-			);
-		}
-
-		return null;
-	};
-
-	/**
-	 *
-	 */
-	const renderSecondButton = () => {
-		if (questionSetStatus === "ONGOING") {
-			return (
-				<QuestionSetsCard.Footer.Button
-					variant="secondary"
-					item="풀이 관리"
-					onClick={handleControlButtonClick}
-				/>
-			);
-		}
-
+	const renderFooterButton = () => {
 		if (questionSetStatus === "BEFORE") {
 			return (
 				<QuestionSetsCard.Footer.Button
@@ -167,12 +131,22 @@ const ManagementLiveTimeCard = ({
 			);
 		}
 
+		if (questionSetStatus === "ONGOING") {
+			return (
+				<QuestionSetsCard.Footer.Button
+					variant="secondary"
+					item="풀이 관리"
+					onClick={handleControlButtonClick}
+				/>
+			);
+		}
+
 		if (questionSetStatus === "AFTER") {
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
-					item="재시작"
-					onClick={handleRestartButtonClick}
+					item="복습 전환"
+					onClick={handleReviewStatusButtonClick}
 				/>
 			);
 		}
@@ -184,14 +158,12 @@ const ManagementLiveTimeCard = ({
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
+				<ManagementQuestionSetCardAdditionalButton />
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>
 				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />
-				<div className="flex gap-gap-5">
-					{renderFirstButton()}
-					{renderSecondButton()}
-				</div>
+				{renderFooterButton()}
 			</QuestionSetsCard.Footer>
 		</QuestionSetsCard.Root>
 	);

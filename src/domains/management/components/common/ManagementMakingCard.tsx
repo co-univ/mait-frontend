@@ -14,6 +14,7 @@ import type {
 	QuestionSetList,
 } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
+import ManagementQuestionSetCardAdditionalButton from "./ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -193,14 +194,17 @@ const ManagementMakingCard = ({
 	 */
 	const renderDefaultHeader = () => {
 		return (
-			<QuestionSetsCard.Header.Title
-				title={questionSet.title}
-				icon={
-					<button type="button" onClick={handleTitleClick}>
-						<PencilLine />
-					</button>
-				}
-			/>
+			<>
+				<QuestionSetsCard.Header.Title
+					title={questionSet.title}
+					icon={
+						<button type="button" onClick={handleTitleClick}>
+							<PencilLine />
+						</button>
+					}
+				/>
+				<ManagementQuestionSetCardAdditionalButton />
+			</>
 		);
 	};
 
