@@ -19,7 +19,11 @@ export interface paths {
          */
         put: operations["completeQuestionSet"];
         post?: never;
-        delete?: never;
+        /**
+         * 문제 셋 삭제
+         * @description 문제 셋과 관련된 모든 데이터를 삭제합니다.
+         */
+        delete: operations["deleteQuestionSet"];
         options?: never;
         head?: never;
         /**
@@ -2549,6 +2553,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionSetApiResponse"];
+                };
+            };
+        };
+    };
+    deleteQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };
