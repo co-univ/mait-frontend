@@ -14,6 +14,8 @@ import type {
 	QuestionSetList,
 } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
+import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
+import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -40,6 +42,13 @@ const ManagementMakingCard = ({
 	const queryClient = useQueryClient();
 
 	const { activeTeam } = useTeams();
+
+	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
+		questionSetId: questionSet.id ?? 0,
+		invalidateQuestionSetsQuery,
+	});
+
+	const navigate = useNavigate();
 
 	const queryKey = apiHooks.queryOptions("get", "/api/v1/question-sets", {
 		params: {
@@ -140,8 +149,6 @@ const ManagementMakingCard = ({
 		},
 	);
 
-	const navigate = useNavigate();
-
 	/**
 	 *
 	 */
@@ -193,14 +200,19 @@ const ManagementMakingCard = ({
 	 */
 	const renderDefaultHeader = () => {
 		return (
-			<QuestionSetsCard.Header.Title
-				title={questionSet.title}
-				icon={
-					<button type="button" onClick={handleTitleClick}>
-						<PencilLine />
-					</button>
-				}
-			/>
+			<>
+				<QuestionSetsCard.Header.Title
+					title={questionSet.title}
+					icon={
+						<button type="button" onClick={handleTitleClick}>
+							<PencilLine />
+						</button>
+					}
+				/>
+				<ManagementQuestionSetCardAdditionalButton
+					onDelete={handleDeleteButtonClick}
+				/>
+			</>
 		);
 	};
 
