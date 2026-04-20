@@ -1081,6 +1081,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/study/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 학습 모드 풀이 - 유저 풀이 상태별 문제 셋 목록 조회 */
+        get: operations["getStudyProgressQuestionSets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/study/management": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 학습 모드 관리 - 문제 셋 상태별 목록 조회 */
+        get: operations["getStudyManagementQuestionSets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/policies": {
         parameters: {
             query?: never;
@@ -2444,6 +2478,55 @@ export interface components {
              * @description 문제 번호, 존재하지 않을 수 있음
              */
             number?: number;
+        };
+        ApiResponseStudyQuestionSetGroup: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["StudyQuestionSetGroup"];
+        };
+        /** @description 학습 모드 풀이 - 문제 셋 */
+        StudyQuestionSetDto: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            id?: number;
+            /** @description 문제 셋 제목 */
+            title?: string;
+            /** @description 과목 */
+            subject?: string;
+            /**
+             * @description 전역 진행 상태
+             * @enum {string}
+             */
+            status?: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
+            /** @description 난이도 */
+            difficulty?: string;
+            /**
+             * @description 유저 풀이 상태
+             * @enum {string}
+             */
+            userStudyStatus?: "BEFORE" | "ONGOING" | "AFTER";
+            /**
+             * Format: int64
+             * @description 풀이 세션 ID (풀이 전인 경우 null)
+             */
+            solvingSessionId?: number;
+            /**
+             * Format: date-time
+             * @description 최종 수정 일시
+             */
+            updatedAt?: string;
+        };
+        /** @description 문제 셋 그룹 (학습 모드 - 사용자별 풀이 상태로 그룹화된 Map 구조) */
+        StudyQuestionSetGroup: {
+            /** @description 사용자 풀이 상태별로 그룹화된 문제 셋 */
+            questionSets?: {
+                [key: string]: components["schemas"]["StudyQuestionSetDto"][];
+            };
+        };
+        ApiResponseQuestionSetGroup: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionSetGroup"];
         };
         ApiResponseListLatestPoliciesApiResponse: {
             isSuccess?: boolean;
@@ -4088,6 +4171,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseListQuestionValidationApiResponse"];
+                };
+            };
+        };
+    };
+    getStudyProgressQuestionSets: {
+        parameters: {
+            query: {
+                teamId: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudyQuestionSetGroup"];
+                };
+            };
+        };
+    };
+    getStudyManagementQuestionSets: {
+        parameters: {
+            query: {
+                teamId: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetGroup"];
                 };
             };
         };
