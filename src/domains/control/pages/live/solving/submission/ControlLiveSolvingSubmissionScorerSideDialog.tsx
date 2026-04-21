@@ -10,7 +10,7 @@ import { apiHooks } from "@/libs/api";
 //
 //
 
-interface ControlSolvingSubmissionScorerSideDialogProps {
+interface ControlLiveSolvingSubmissionScorerSideDialogProps {
 	open: boolean;
 	onClose: () => void;
 }
@@ -19,10 +19,10 @@ interface ControlSolvingSubmissionScorerSideDialogProps {
 //
 //
 
-const ControlSolvingSubmissionScorerSideDialog = ({
+const ControlLiveSolvingSubmissionScorerSideDialog = ({
 	open,
 	onClose,
-}: ControlSolvingSubmissionScorerSideDialogProps) => {
+}: ControlLiveSolvingSubmissionScorerSideDialogProps) => {
 	const questionSetId = Number(useParams().questionSetId);
 
 	const { data: questionSetData } = apiHooks.useQuery(
@@ -100,4 +100,4 @@ const ControlSolvingSubmissionScorerSideDialog = ({
 	);
 };
 
-export default ControlSolvingSubmissionScorerSideDialog;
+export default ControlLiveSolvingSubmissionScorerSideDialog;
