@@ -46,7 +46,7 @@ const ManagementQuestionSetCardAdditionalButton = ({
 				value="edit"
 				onClick={onEdit}
 				classNames={{
-					label: "font-pretendard",
+					label: "font-pretendard text-color-alpha-black100",
 					button: "hover:!bg-color-alpha-white100",
 				}}
 			>
@@ -59,7 +59,7 @@ const ManagementQuestionSetCardAdditionalButton = ({
 				value="restart"
 				onClick={onRestart}
 				classNames={{
-					label: "font-pretendard",
+					label: "font-pretendard text-color-alpha-black100",
 					button: "hover:!bg-color-alpha-white100",
 				}}
 			>
