@@ -1,6 +1,6 @@
 import { Field } from "@/components/field";
 import { Radio } from "@/components/radio";
-import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
+import type { QuestionSetSolveMode, QuestionSetVisibility } from "@/libs/types";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 
@@ -11,10 +11,10 @@ import CreationPanelTextarea from "../../components/common/CreationPanelTextarea
 type CreationPublishLeftPanelProps = {
 	title: string;
 	visibility: QuestionSetVisibility;
-	mode: DeliveryMode;
+	solveMode: QuestionSetSolveMode;
 	onChangeTitle: (title: string) => void;
 	onChangeVisibility: (visibility: QuestionSetVisibility) => void;
-	onChangeMode: (mode: DeliveryMode) => void;
+	onChangeSolveMode: (solveMode: QuestionSetSolveMode) => void;
 };
 
 //
@@ -24,10 +24,10 @@ type CreationPublishLeftPanelProps = {
 const CreationPublishLeftPanel = ({
 	title,
 	visibility,
-	mode,
+	solveMode,
 	onChangeTitle,
 	onChangeVisibility,
-	onChangeMode,
+	onChangeSolveMode,
 }: CreationPublishLeftPanelProps) => {
 	/**
 	 *
@@ -88,8 +88,8 @@ const CreationPublishLeftPanel = ({
 				<Field.Label className="typo-body-large">문제 풀이 방식</Field.Label>
 				<div className="flex justify-between py-padding-10 px-padding-11 bg-color-gray-5 rounded-radius-medium1">
 					<Radio.Group
-						value={mode}
-						onChange={(value) => onChangeMode(value as DeliveryMode)}
+						value={solveMode}
+						onChange={(value) => onChangeSolveMode(value as QuestionSetSolveMode)}
 						className="flex flex-1 flex-wrap gap-gap-8 justify-between"
 					>
 						<Radio.Item value="LIVE_TIME" className="flex-1 min-w-[100px]">

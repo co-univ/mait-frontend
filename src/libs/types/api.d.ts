@@ -19,7 +19,11 @@ export interface paths {
          */
         put: operations["completeQuestionSet"];
         post?: never;
-        delete?: never;
+        /**
+         * 문제 셋 삭제
+         * @description 문제 셋과 관련된 모든 데이터를 삭제합니다.
+         */
+        delete: operations["deleteQuestionSet"];
         options?: never;
         head?: never;
         /**
@@ -1003,23 +1007,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/question-sets/{questionSetId}/live-status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 실시간 문제셋 상태 조회 */
-        get: operations["getLiveStatus"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/question-sets/{questionSetId}/live-status/rank/correct": {
         parameters: {
             query?: never;
@@ -1094,6 +1081,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/study/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 학습 모드 풀이 - 유저 풀이 상태별 문제 셋 목록 조회 */
+        get: operations["getStudyProgressQuestionSets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/study/management": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 학습 모드 관리 - 문제 셋 상태별 목록 조회 */
+        get: operations["getStudyManagementQuestionSets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/policies": {
         parameters: {
             query?: never;
@@ -1148,6 +1169,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/teams/{teamId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** 팀 삭제 API */
+        delete: operations["deleteTeam"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/{teamId}/users/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** 팀 탈퇴 API */
+        delete: operations["leaveTeam"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teams/team-users/{teamUserId}": {
         parameters: {
             query?: never;
@@ -1190,7 +1245,7 @@ export interface components {
          * @description 문제 풀이 방식
          * @enum {string}
          */
-        DeliveryMode: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
+        QuestionSetSolveMode: "LIVE_TIME" | "STUDY";
         /**
          * @description 문제 셋 공개 단위
          * @enum {string}
@@ -1201,7 +1256,7 @@ export interface components {
             title: string;
             /** @description 문제 셋 주제 */
             subject: string;
-            mode: components["schemas"]["DeliveryMode"];
+            solveMode: components["schemas"]["QuestionSetSolveMode"];
             /** @description 문제 셋 난이도 설명 */
             difficulty?: string;
             visibility?: components["schemas"]["QuestionSetVisibility"];
@@ -1210,6 +1265,11 @@ export interface components {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetApiResponse"];
         };
+        /**
+         * @description 문제 모드
+         * @enum {string}
+         */
+        DeliveryMode: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
         QuestionSetApiResponse: {
             /** Format: int64 */
             id: number;
@@ -1220,9 +1280,10 @@ export interface components {
             creationType: components["schemas"]["QuestionSetCreationType"];
             visibility: components["schemas"]["QuestionSetVisibility"];
             deliveryMode: components["schemas"]["DeliveryMode"];
+            solveMode?: components["schemas"]["QuestionSetSolveMode"];
             /** Format: int64 */
             teamId: number;
-            ongoingStatus?: components["schemas"]["QuestionSetOngoingStatus"];
+            status?: components["schemas"]["QuestionSetStatus"];
             /** Format: int64 */
             questionCount: number;
             difficulty?: string;
@@ -1235,10 +1296,10 @@ export interface components {
          */
         QuestionSetCreationType: "AI_GENERATED" | "MANUAL";
         /**
-         * @description 문제 셋 진행 상태
+         * @description 문제 셋 상태
          * @enum {string}
          */
-        QuestionSetOngoingStatus: "BEFORE" | "ONGOING" | "AFTER";
+        QuestionSetStatus: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
         FillBlankAnswerDto: {
             /** Format: int64 */
             id?: number;
@@ -2195,7 +2256,7 @@ export interface components {
         };
         /** @description 문제 셋 컨테이너 (QuestionSetList 또는 QuestionSetGroup) */
         QuestionSetContainer: components["schemas"]["QuestionSetList"] | components["schemas"]["QuestionSetGroup"];
-        /** @description 진행 상태별로 그룹화된 문제 셋 (BEFORE: 시작 전, ONGOING: 진행 중, AFTER: 종료) */
+        /** @description 상태별로 그룹화된 문제 셋 */
         QuestionSetDto: {
             /** Format: int64 */
             id?: number;
@@ -2206,9 +2267,9 @@ export interface components {
             /** @enum {string} */
             visibility?: "PUBLIC" | "GROUP" | "PRIVATE";
             /** @enum {string} */
-            deliveryMode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
+            solveMode?: "LIVE_TIME" | "STUDY";
             /** @enum {string} */
-            ongoingStatus?: "BEFORE" | "ONGOING" | "AFTER";
+            status?: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
             /** Format: int64 */
             teamId?: number;
             /** Format: int64 */
@@ -2220,7 +2281,7 @@ export interface components {
         };
         /** @description 문제 셋 그룹 (진행 상태별로 그룹화된 Map 구조) */
         QuestionSetGroup: {
-            /** @description 진행 상태별로 그룹화된 문제 셋 (BEFORE: 시작 전, ONGOING: 진행 중, AFTER: 종료) */
+            /** @description 상태별로 그룹화된 문제 셋 */
             questionSets?: {
                 [key: string]: components["schemas"]["QuestionSetDto"][];
             };
@@ -2398,16 +2459,6 @@ export interface components {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionScorerApiResponse"];
         };
-        ApiResponseQuestionSetLiveStatusResponse: {
-            isSuccess?: boolean;
-            data?: components["schemas"]["QuestionSetLiveStatusResponse"];
-        };
-        QuestionSetLiveStatusResponse: {
-            /** Format: int64 */
-            questionSetId?: number;
-            /** @enum {string} */
-            liveStatus?: "BEFORE" | "ONGOING" | "AFTER";
-        };
         ApiResponseParticipantsCorrectAnswerRankResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["ParticipantsCorrectAnswerRankResponse"];
@@ -2461,6 +2512,55 @@ export interface components {
              * @description 문제 번호, 존재하지 않을 수 있음
              */
             number?: number;
+        };
+        ApiResponseStudyQuestionSetGroup: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["StudyQuestionSetGroup"];
+        };
+        /** @description 학습 모드 풀이 - 문제 셋 */
+        StudyQuestionSetDto: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            id?: number;
+            /** @description 문제 셋 제목 */
+            title?: string;
+            /** @description 과목 */
+            subject?: string;
+            /**
+             * @description 전역 진행 상태
+             * @enum {string}
+             */
+            status?: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
+            /** @description 난이도 */
+            difficulty?: string;
+            /**
+             * @description 유저 풀이 상태
+             * @enum {string}
+             */
+            userStudyStatus?: "BEFORE" | "ONGOING" | "AFTER";
+            /**
+             * Format: int64
+             * @description 풀이 세션 ID (풀이 전인 경우 null)
+             */
+            solvingSessionId?: number;
+            /**
+             * Format: date-time
+             * @description 최종 수정 일시
+             */
+            updatedAt?: string;
+        };
+        /** @description 문제 셋 그룹 (학습 모드 - 사용자별 풀이 상태로 그룹화된 Map 구조) */
+        StudyQuestionSetGroup: {
+            /** @description 사용자 풀이 상태별로 그룹화된 문제 셋 */
+            questionSets?: {
+                [key: string]: components["schemas"]["StudyQuestionSetDto"][];
+            };
+        };
+        ApiResponseQuestionSetGroup: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionSetGroup"];
         };
         ApiResponseListLatestPoliciesApiResponse: {
             isSuccess?: boolean;
@@ -2570,6 +2670,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionSetApiResponse"];
+                };
+            };
+        };
+    };
+    deleteQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };
@@ -3999,28 +4121,6 @@ export interface operations {
             };
         };
     };
-    getLiveStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                questionSetId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseQuestionSetLiveStatusResponse"];
-                };
-            };
-        };
-    };
     getCorrectAnswerRank: {
         parameters: {
             query?: never;
@@ -4109,6 +4209,50 @@ export interface operations {
             };
         };
     };
+    getStudyProgressQuestionSets: {
+        parameters: {
+            query: {
+                teamId: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudyQuestionSetGroup"];
+                };
+            };
+        };
+    };
+    getStudyManagementQuestionSets: {
+        parameters: {
+            query: {
+                teamId: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetGroup"];
+                };
+            };
+        };
+    };
     findLatestPolicies: {
         parameters: {
             query: {
@@ -4173,6 +4317,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseString"];
+                };
+            };
+        };
+    };
+    deleteTeam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    leaveTeam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };

@@ -7,6 +7,8 @@ import type {
 	QuestionSetDto,
 	QuestionSetVisibility,
 } from "@/libs/types";
+import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
+import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -41,6 +43,14 @@ const ManagementReviewCard = ({
 		},
 	);
 
+	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
+		questionSetId: questionSet.id ?? 0,
+		invalidateQuestionSetsQuery,
+	});
+
+	/**
+	 *
+	 */
 	const handleVisibilityChange = (value: QuestionSetVisibility) => {
 		mutate({
 			params: {
@@ -58,14 +68,18 @@ const ManagementReviewCard = ({
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
-				<ManagementReviewCardVisibilityDropdown
-					currentVisibility={currentVisibility}
-					onVisibilityChange={handleVisibilityChange}
+				<ManagementQuestionSetCardAdditionalButton
+					status="REVIEW"
+					onDelete={handleDeleteButtonClick}
 				/>
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>
 				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />
+				<ManagementReviewCardVisibilityDropdown
+					currentVisibility={currentVisibility}
+					onVisibilityChange={handleVisibilityChange}
+				/>
 			</QuestionSetsCard.Footer>
 		</QuestionSetsCard.Root>
 	);

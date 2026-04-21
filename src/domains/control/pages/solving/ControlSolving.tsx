@@ -66,7 +66,7 @@ const ControlSolving = () => {
 			return null;
 		}
 
-		const status = questionSet.ongoingStatus;
+		const status = questionSet.status;
 
 		switch (status) {
 			case "BEFORE": {
