@@ -6,7 +6,7 @@ import type React from "react";
 
 interface LabeledPageLayoutProps {
 	icon: React.ReactNode;
-	label: string;
+	label: React.ReactNode;
 	rightContent?: React.ReactNode;
 	children: React.ReactNode;
 }
