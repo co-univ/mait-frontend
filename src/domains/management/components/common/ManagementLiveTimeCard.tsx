@@ -166,12 +166,14 @@ const ManagementLiveTimeCard = ({
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
 				{questionSetStatus === "BEFORE" && (
 					<ManagementQuestionSetCardAdditionalButton
+						status={questionSetStatus}
 						onEdit={handleCreationButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
 				)}
 				{questionSetStatus === "AFTER" && (
 					<ManagementQuestionSetCardAdditionalButton
+						status={questionSetStatus}
 						onRestart={handleRestartButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>

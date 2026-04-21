@@ -210,6 +210,7 @@ const ManagementMakingCard = ({
 					}
 				/>
 				<ManagementQuestionSetCardAdditionalButton
+					status="BEFORE"
 					onDelete={handleDeleteButtonClick}
 				/>
 			</>

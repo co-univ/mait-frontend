@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { Dropdown } from "@/components/dropdown";
+import type { QuestionSetStatus } from "@/libs/types";
 import AdditionalButtonTrigger from "./AdditionalButtonTrigger";
 
 //
@@ -8,6 +9,7 @@ import AdditionalButtonTrigger from "./AdditionalButtonTrigger";
 //
 
 interface ManagementQuestionSetCardAdditionalButtonProps {
+	status: QuestionSetStatus;
 	onEdit?: () => void;
 	onRestart?: () => void;
 	onDelete?: () => void;
@@ -18,6 +20,7 @@ interface ManagementQuestionSetCardAdditionalButtonProps {
 //
 
 const ManagementQuestionSetCardAdditionalButton = ({
+	status,
 	onEdit,
 	onRestart,
 	onDelete,
@@ -29,9 +32,19 @@ const ManagementQuestionSetCardAdditionalButton = ({
 	 *
 	 */
 	const handleDeleteClick = async () => {
+		const confirmDescriptions: Record<QuestionSetStatus, string> = {
+			BEFORE: "생성한 문제셋 전체가 삭제됩니다.",
+			ONGOING:
+				"생성한 문제셋과 해당 셋의 풀이 기록 데이터가 모두 삭제됩니다.\n삭제된 데이터는 복구가 어렵습니다.",
+			AFTER:
+				"생성한 문제셋과 해당 셋의 풀이 기록 데이터가 모두 삭제됩니다.\n삭제된 데이터는 복구가 어렵습니다.",
+			REVIEW:
+				"생성한 문제셋과 해당 셋의 풀이 기록 데이터가 모두 삭제됩니다.\n삭제된 데이터는 복구가 어렵습니다.",
+		};
+
 		const confirmed = await confirm({
-			title: "문제 셋 삭제",
-			description: "문제 셋을 삭제하시겠습니까?",
+			title: "정말 삭제하시겠습니까?",
+			description: confirmDescriptions[status],
 		});
 
 		if (confirmed) {
