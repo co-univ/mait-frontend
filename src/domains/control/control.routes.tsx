@@ -3,26 +3,36 @@ import type { RouteObject } from "react-router-dom";
 import TeamMakerGuard from "@/guards/TeamMakerGuard";
 
 const ControlRedirect = lazy(() => import("./pages/common/ControlRedirect"));
-const ControlParticipant = lazy(
-	() => import("./pages/participant/ControlParticipant"),
+const ControlLiveParticipant = lazy(
+	() => import("./pages/live/participant/ControlLiveParticipant"),
 );
-const ControlSolving = lazy(() => import("./pages/solving/ControlSolving"));
+const ControlLiveSolving = lazy(
+	() => import("./pages/live/solving/ControlLiveSolving"),
+);
+const ControlStudySolving = lazy(
+	() => import("./pages/study/solving/ControlStudySolving"),
+);
 
 //
 //
 //
 
 /**
- * @property {string} ROOT `/control/question-set/:questionSetId`
+ * @property {string} LIVE_ROOT `/control/live/question-set/:questionSetId`
  * @property {string} LIVE_SOLVING `/control/live/solving/question-set/:questionSetId/question/:questionId`
  * @property {string} LIVE_PARTICIPANT `/control/live/participant/question-set/:questionSetId/question/:questionId`
+ * @property {string} STUDY_ROOT `/control/study/question-set/:questionSetId`
+ * @property {string} STUDY_SOLVING `/control/study/solving/question-set/:questionSetId/question/:questionId`
  */
 export const CONTROL_ROUTE_PATH = {
-	ROOT: "/control/question-set/:questionSetId",
+	LIVE_ROOT: "/control/live/question-set/:questionSetId",
 	LIVE_SOLVING:
 		"/control/live/solving/question-set/:questionSetId/question/:questionId",
 	LIVE_PARTICIPANT:
 		"/control/live/participant/question-set/:questionSetId/question/:questionId",
+	STUDY_ROOT: "/control/study/question-set/:questionSetId",
+	STUDY_SOLVING:
+		"/control/study/solving/question-set/:questionSetId/question/:questionId",
 };
 
 //
@@ -32,15 +42,23 @@ export const CONTROL_ROUTE_PATH = {
 export const controlRouter: RouteObject[] = [
 	{
 		path: CONTROL_ROUTE_PATH.LIVE_SOLVING,
-		element: <ControlSolving />,
+		element: <ControlLiveSolving />,
 	},
 	{
 		path: CONTROL_ROUTE_PATH.LIVE_PARTICIPANT,
-		element: <ControlParticipant />,
+		element: <ControlLiveParticipant />,
 	},
 	{
-		path: CONTROL_ROUTE_PATH.ROOT,
-		element: <ControlRedirect />,
+		path: CONTROL_ROUTE_PATH.STUDY_SOLVING,
+		element: <ControlStudySolving />,
+	},
+	{
+		path: CONTROL_ROUTE_PATH.LIVE_ROOT,
+		element: <ControlRedirect routePath={CONTROL_ROUTE_PATH.LIVE_SOLVING} />,
+	},
+	{
+		path: CONTROL_ROUTE_PATH.STUDY_ROOT,
+		element: <ControlRedirect routePath={CONTROL_ROUTE_PATH.STUDY_SOLVING} />,
 	},
 ].map((route) => ({
 	...route,
