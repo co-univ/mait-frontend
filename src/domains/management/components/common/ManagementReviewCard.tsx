@@ -69,6 +69,7 @@ const ManagementReviewCard = ({
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
 				<ManagementQuestionSetCardAdditionalButton
+					status="REVIEW"
 					onDelete={handleDeleteButtonClick}
 				/>
 			</QuestionSetsCard.Header>
