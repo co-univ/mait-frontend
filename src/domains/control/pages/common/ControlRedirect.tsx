@@ -1,14 +1,21 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createPath } from "@/utils/create-path";
-import { CONTROL_ROUTE_PATH } from "../../control.routes";
 import useControlSolvings from "../../hooks/solving/question/useControlSolvingQuestions";
 
 //
 //
 //
 
-const ControlRedirect = () => {
+interface ControlRedirectProps {
+	routePath: string;
+}
+
+//
+//
+//
+
+const ControlRedirect = ({ routePath }: ControlRedirectProps) => {
 	const questionSetId = Number(useParams().questionSetId);
 
 	const { questions, isLoading } = useControlSolvings({ questionSetId });
@@ -24,7 +31,7 @@ const ControlRedirect = () => {
 
 			if (firstQuestionId) {
 				navigate(
-					createPath(CONTROL_ROUTE_PATH.LIVE_SOLVING, {
+					createPath(routePath, {
 						questionSetId,
 						questionId: firstQuestionId,
 					}),
@@ -32,7 +39,7 @@ const ControlRedirect = () => {
 				);
 			}
 		}
-	}, [questions, isLoading, navigate, questionSetId]);
+	}, [questions, isLoading, navigate, questionSetId, routePath]);
 
 	return null;
 };

@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { notify } from "@/components/Toast";
-import ControlParticipantMemberAddButton from "../../components/participant/ControlParticipantMemberAddButton";
-import ControlParticipantMemberBox from "../../components/participant/ControlParticipantMemberBox";
-import ControlParticipantMemberInput from "../../components/participant/ControlParticipantMemberInput";
-import useControlParticipants from "../../hooks/paticipant/useControlParticipants";
-import { findParticipantByNameWithNickname } from "../../utils/find-participant";
+import ControlParticipantMemberAddButton from "../../../components/participant/ControlParticipantMemberAddButton";
+import ControlParticipantMemberBox from "../../../components/participant/ControlParticipantMemberBox";
+import ControlParticipantMemberInput from "../../../components/participant/ControlParticipantMemberInput";
+import useControlParticipants from "../../../hooks/paticipant/useControlParticipants";
+import { findParticipantByNameWithNickname } from "../../../utils/find-participant";
 
 //
 //
 //
 
-const ControlParticipantActiveMembers = () => {
+const ControlLiveParticipantActiveMembers = () => {
 	const [isAddingParticipant, setIsAddingParticipant] = useState(false);
 
 	const questionSetId = Number(useParams().questionSetId);
@@ -89,4 +89,4 @@ const ControlParticipantActiveMembers = () => {
 	);
 };
 
-export default ControlParticipantActiveMembers;
+export default ControlLiveParticipantActiveMembers;
