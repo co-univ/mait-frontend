@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
-import type { QuestionSetDto } from "@/libs/types";
+import type { StudyQuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
@@ -10,7 +10,7 @@ import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 //
 
 interface SolvingQuestionSetsStudyCardProps {
-  questionSet: QuestionSetDto;
+  questionSet: StudyQuestionSetDto;
 }
 
 //
@@ -29,7 +29,11 @@ const SolvingQuestionSetsStudyCard = ({
 	 *
 	 */
 	const handleSolveButtonClick = () => {
-		navigate(createPath(SOLVING_ROUTE_PATH.LIVE, { id: questionSet.id ?? 0 }));
+		navigate(
+			createPath(SOLVING_ROUTE_PATH.STUDY_REDIRECT, {
+				questionSetId: questionSet.id ?? 0,
+			}),
+		);
 	};
 
 	/**
