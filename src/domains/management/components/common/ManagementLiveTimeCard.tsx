@@ -83,7 +83,7 @@ const ManagementLiveTimeCard = ({
 	 */
 	const handleControlButtonClick = () => {
 		navigate(
-			createPath(CONTROL_ROUTE_PATH.ROOT, {
+			createPath(CONTROL_ROUTE_PATH.LIVE_ROOT, {
 				questionSetId: questionSet.id ?? 0,
 			}),
 		);

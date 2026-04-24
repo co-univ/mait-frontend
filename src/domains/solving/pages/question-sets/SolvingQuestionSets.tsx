@@ -10,6 +10,7 @@ import type { DeliveryMode } from "@/libs/types";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingQuestionSetsLiveTime from "./SolvingQuestionSetsLiveTime";
 import SolvingQuestionSetsReview from "./SolvingQuestionSetsReview";
+import SolvingQuestionSetsStudy from "./SolvingQuestionSetsStudy";
 
 //
 //
@@ -75,7 +76,7 @@ const SolvingQuestionSets = () => {
 				</Tabs.Content>
 
 				<Tabs.Content value="study">
-					<SolvingQuestionSetsLiveTime
+					<SolvingQuestionSetsStudy
 						questionSetGroup={questionSetGroup}
 						isLoading={isLoading}
 					/>

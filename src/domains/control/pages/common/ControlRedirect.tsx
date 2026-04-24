@@ -8,7 +8,17 @@ import useControlSolvings from "../../hooks/solving/question/useControlSolvingQu
 //
 //
 
-const ControlRedirect = () => {
+interface ControlRedirectProps {
+	routePath?: string;
+}
+
+//
+//
+//
+
+const ControlRedirect = ({
+	routePath = CONTROL_ROUTE_PATH.LIVE_SOLVING,
+}: ControlRedirectProps) => {
 	const questionSetId = Number(useParams().questionSetId);
 
 	const { questions, isLoading } = useControlSolvings({ questionSetId });
@@ -24,7 +34,7 @@ const ControlRedirect = () => {
 
 			if (firstQuestionId) {
 				navigate(
-					createPath(CONTROL_ROUTE_PATH.SOLVING, {
+					createPath(routePath, {
 						questionSetId,
 						questionId: firstQuestionId,
 					}),
@@ -32,7 +42,7 @@ const ControlRedirect = () => {
 				);
 			}
 		}
-	}, [questions, isLoading, navigate, questionSetId]);
+	}, [questions, isLoading, navigate, questionSetId, routePath]);
 
 	return null;
 };

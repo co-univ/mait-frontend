@@ -1,6 +1,6 @@
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
 import QuestionSetsLable from "@/components/question-sets/QuestionSetsLable";
-import ManagementLiveTimeCard from "../../components/common/ManagementLiveTimeCard";
+import ManagementStudyCard from "../../components/common/ManagementStudyCard";
 import ManagementReviewStatusModal from "../../components/common/ManagementReviewStatusModal";
 import type { DeliveryMode, QuestionSetGroup } from "@/libs/types";
 import { useState } from "react";
@@ -73,14 +73,14 @@ const ManagementStudy = ({
 					<div className="flex flex-col gap-gap-11">
 						<QuestionSetsLable label="풀이 중" variant="secondary" />
 
-						<QuestionSetsCardsLayout isLoading={false}>
-							{ongoingQuestionSets.map((questionSet) => (
-								<ManagementLiveTimeCard
-									key={questionSet.id}
-									questionSet={questionSet}
-								/>
-							))}
-						</QuestionSetsCardsLayout>
+							<QuestionSetsCardsLayout isLoading={false}>
+								{ongoingQuestionSets.map((questionSet) => (
+									<ManagementStudyCard
+										key={questionSet.id}
+										questionSet={questionSet}
+									/>
+								))}
+							</QuestionSetsCardsLayout>
 					</div>
 				)}
 
@@ -88,14 +88,14 @@ const ManagementStudy = ({
 					<div className="flex flex-col gap-gap-11">
 						<QuestionSetsLable label="풀이 전" variant="secondary" />
 
-						<QuestionSetsCardsLayout isLoading={false}>
-							{beforeQuestionSets.map((questionSet) => (
-								<ManagementLiveTimeCard
-									key={questionSet.id}
-									questionSet={questionSet}
-									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-								/>
-							))}
+							<QuestionSetsCardsLayout isLoading={false}>
+								{beforeQuestionSets.map((questionSet) => (
+									<ManagementStudyCard
+										key={questionSet.id}
+										questionSet={questionSet}
+										invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+									/>
+								))}
 						</QuestionSetsCardsLayout>
 					</div>
 				)}
@@ -104,13 +104,13 @@ const ManagementStudy = ({
 					<div className="flex flex-col gap-gap-11">
 						<QuestionSetsLable label="풀이 완료" variant="secondary" />
 
-						<QuestionSetsCardsLayout isLoading={false}>
-							{afterQuestionSets.map((questionSet) => (
-								<ManagementLiveTimeCard
-									key={questionSet.id}
-									questionSet={questionSet}
-									onReviewStatusModalOpen={handleReviewStatusModalOpen}
-									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+							<QuestionSetsCardsLayout isLoading={false}>
+								{afterQuestionSets.map((questionSet) => (
+									<ManagementStudyCard
+										key={questionSet.id}
+										questionSet={questionSet}
+										onReviewStatusModalOpen={handleReviewStatusModalOpen}
+										invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 								/>
 							))}
 						</QuestionSetsCardsLayout>

@@ -6,6 +6,8 @@ import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import { apiClient } from "@/libs/api";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
+import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
+import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -30,8 +32,12 @@ const ManagementStudyCard = ({
 	invalidateQuestionSetsQuery,
 }: ManagementStudyCardProps) => {
   const navigate = useNavigate();
+	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
+		questionSetId: questionSet.id ?? 0,
+		invalidateQuestionSetsQuery,
+	});
 
-  const questionSetStatus = questionSet.ongoingStatus;
+  const questionSetStatus = questionSet.status;
 
 	/**
 	 *
@@ -48,13 +54,7 @@ const ManagementStudyCard = ({
 	 *
 	 */
 	const handleStartButtonClick = () => {
-		// startLiveTime({
-		// 	params: {
-		// 		path: {
-		// 			questionSetId: questionSet.id ?? 0,
-		// 		},
-		// 	},
-		// });
+		notify.info("학습모드 시작 API는 백엔드 확인 후 연결할 예정입니다.");
 	};
 
 	/**
@@ -62,7 +62,7 @@ const ManagementStudyCard = ({
 	 */
 	const handleControlButtonClick = () => {
 		navigate(
-			createPath(CONTROL_ROUTE_PATH.ROOT, {
+			createPath(CONTROL_ROUTE_PATH.STUDY_ROOT, {
 				questionSetId: questionSet.id ?? 0,
 			}),
 		);
@@ -93,11 +93,11 @@ const ManagementStudyCard = ({
 			if (!res.data?.isSuccess) {
 				throw new Error("Failed to restart question set");
 			}
-			invalidateQuestionSetsQuery?.({
-				mode: "LIVE_TIME",
-			});
-			notify.success("문제셋이 재시작되었습니다.");
-		} catch {
+				invalidateQuestionSetsQuery?.({
+					mode: "STUDY",
+				});
+				notify.success("문제셋이 재시작되었습니다.");
+			} catch {
 			notify.error("문제셋 재시작에 실패했습니다.");
 		}
 	};
@@ -106,26 +106,6 @@ const ManagementStudyCard = ({
 	 *
 	 */
 	const renderFirstButton = () => {
-		if (questionSetStatus === "BEFORE") {
-			return (
-				<QuestionSetsCard.Footer.Button
-					variant="secondary"
-					item="문제 수정"
-					onClick={handleCreationButtonClick}
-				/>
-			);
-		}
-
-		if (questionSetStatus === "AFTER") {
-			return (
-				<QuestionSetsCard.Footer.Button
-					variant="secondary"
-					item="복습상태"
-					onClick={handleReviewStatusButtonClick}
-				/>
-			);
-		}
-
 		return null;
 	};
 
@@ -157,8 +137,8 @@ const ManagementStudyCard = ({
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
-					item="재시작"
-					onClick={handleRestartButtonClick}
+					item="복습 전환"
+					onClick={handleReviewStatusButtonClick}
 				/>
 			);
 		}
@@ -166,11 +146,23 @@ const ManagementStudyCard = ({
 		return null;
 	};
 
-	return (
-		<QuestionSetsCard.Root>
-			<QuestionSetsCard.Header>
-				<QuestionSetsCard.Header.Title title={questionSet.title} />
-			</QuestionSetsCard.Header>
+		return (
+			<QuestionSetsCard.Root>
+				<QuestionSetsCard.Header>
+					<QuestionSetsCard.Header.Title title={questionSet.title} />
+					{questionSetStatus === "BEFORE" && (
+						<ManagementQuestionSetCardAdditionalButton
+							onEdit={handleCreationButtonClick}
+							onDelete={handleDeleteButtonClick}
+						/>
+					)}
+					{questionSetStatus === "AFTER" && (
+						<ManagementQuestionSetCardAdditionalButton
+							onRestart={handleRestartButtonClick}
+							onDelete={handleDeleteButtonClick}
+						/>
+					)}
+				</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>
 				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />
