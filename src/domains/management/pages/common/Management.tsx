@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
+import useStudyQuestionSets from "@/hooks/useStudyQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
@@ -40,6 +41,15 @@ const Management = () => {
 	} = useQuestionSets({
 		teamId: activeTeam?.teamId ?? 0,
 		mode: QUESTION_SET_MODES[mode],
+	});
+
+	const {
+		questionSetGroup: studyQuestionSetGroup,
+		invalidateQuestionSetsQuery: studyInvalidateQuestionSetsQuery,
+		isLoading: studyIsLoading,
+	} = useStudyQuestionSets({
+		teamId: activeTeam?.teamId ?? 0,
+		target: "management",
 	});
 
 	/**
@@ -85,9 +95,9 @@ const Management = () => {
 
 				<Tabs.Content value="study">
 					<ManagementStudy
-						questionSetGroup={questionSetGroup}
-						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-						isLoading={isLoading}
+						questionSetGroup={studyQuestionSetGroup}
+						invalidateQuestionSetsQuery={studyInvalidateQuestionSetsQuery}
+						isLoading={studyIsLoading}
 					/>
 				</Tabs.Content>
 

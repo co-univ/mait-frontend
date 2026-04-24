@@ -48,6 +48,7 @@ const useQuestionSets = ({
 		{
 			staleTime: 0,
 			refetchOnMount: true,
+			enabled: teamId > 0 && mode !== "STUDY",
 		},
 	);
 
@@ -87,7 +88,7 @@ const useQuestionSets = ({
 		questionSetGroup,
 		invalidateQuestionSetsQuery,
 		isLoading: isPending,
-		error,
+		error: error,
 	};
 };
 

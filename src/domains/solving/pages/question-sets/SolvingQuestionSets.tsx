@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
+import useStudyQuestionSets from "@/hooks/useStudyQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
@@ -34,6 +35,14 @@ const SolvingQuestionSets = () => {
 	const { questionSetList, questionSetGroup, isLoading } = useQuestionSets({
 		teamId: activeTeam?.teamId ?? 0,
 		mode: QUESTION_SET_MODES[mode],
+	});
+
+	const {
+		questionSetGroup: studyQuestionSetGroup,
+		isLoading: studyIsLoading,
+	} = useStudyQuestionSets({
+		teamId: activeTeam?.teamId ?? 0,
+		target: "progress",
 	});
 
 	/**
@@ -77,8 +86,8 @@ const SolvingQuestionSets = () => {
 
 				<Tabs.Content value="study">
 					<SolvingQuestionSetsStudy
-						questionSetGroup={questionSetGroup}
-						isLoading={isLoading}
+						questionSetGroup={studyQuestionSetGroup}
+						isLoading={studyIsLoading}
 					/>
 				</Tabs.Content>
 
