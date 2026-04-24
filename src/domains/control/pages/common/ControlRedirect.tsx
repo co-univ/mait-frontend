@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createPath } from "@/utils/create-path";
-import { CONTROL_ROUTE_PATH } from "../../control.routes";
 import useControlSolvings from "../../hooks/solving/question/useControlSolvingQuestions";
 
 //
@@ -9,16 +8,14 @@ import useControlSolvings from "../../hooks/solving/question/useControlSolvingQu
 //
 
 interface ControlRedirectProps {
-	routePath?: string;
+	routePath: string;
 }
 
 //
 //
 //
 
-const ControlRedirect = ({
-	routePath = CONTROL_ROUTE_PATH.LIVE_SOLVING,
-}: ControlRedirectProps) => {
+const ControlRedirect = ({ routePath }: ControlRedirectProps) => {
 	const questionSetId = Number(useParams().questionSetId);
 
 	const { questions, isLoading } = useControlSolvings({ questionSetId });

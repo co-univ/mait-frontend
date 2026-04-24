@@ -4,9 +4,11 @@ import TeamMakerGuard from "@/guards/TeamMakerGuard";
 
 const ControlRedirect = lazy(() => import("./pages/common/ControlRedirect"));
 const ControlLiveParticipant = lazy(
-	() => import("./pages/participant/ControlParticipant"),
+	() => import("./pages/live/participant/ControlLiveParticipant"),
 );
-const ControlLiveSolving = lazy(() => import("./pages/solving/ControlSolving"));
+const ControlLiveSolving = lazy(
+	() => import("./pages/live/solving/ControlLiveSolving"),
+);
 const ControlStudySolving = lazy(
 	() => import("./pages/study/solving/ControlStudySolving"),
 );

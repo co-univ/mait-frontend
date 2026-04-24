@@ -1,7 +1,7 @@
 import { PencilLine } from "lucide-react";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { CONTROL_ROUTE_PATH } from "../../../control.routes";
-import ControlSolvingQuestionNavigation from "../common/ControlSolvingQuestionNavigation";
+import ControlSolvingQuestionNavigation from "../../common/solving/ControlSolvingQuestionNavigation";
 import ControlStudySolvingQuestion from "./question/ControlStudySolvingQuestion";
 import ControlStudySolvingSubmission from "./submission/ControlStudySolvingSubmission";
 

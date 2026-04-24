@@ -1,11 +1,11 @@
-import ControlSolvingSubmission from "@/domains/control/pages/solving/submission/ControlSolvingSubmission";
+import ControlSolvingSubmissionPanel from "@/domains/control/pages/common/solving/submission/ControlSolvingSubmissionPanel";
 
 //
 //
 //
 
 const ControlStudySolvingSubmission = () => {
-	return <ControlSolvingSubmission />;
+	return <ControlSolvingSubmissionPanel />;
 };
 
 export default ControlStudySolvingSubmission;

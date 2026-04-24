@@ -2,16 +2,16 @@ import { BellRing, RefreshCw } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import useControlParticipants from "../../hooks/paticipant/useControlParticipants";
-import ControlParticipantActiveMembers from "./ControlParticipantActiveMembers";
-import ControlParticipantCorrectRanking from "./ControlParticipantCorrectRanking";
-import ControlParticipantScorerRanking from "./ControlParticipantScorerRanking";
+import useControlParticipants from "../../../hooks/paticipant/useControlParticipants";
+import ControlLiveParticipantActiveMembers from "./ControlLiveParticipantActiveMembers";
+import ControlLiveParticipantCorrectRanking from "./ControlLiveParticipantCorrectRanking";
+import ControlLiveParticipantScorerRanking from "./ControlLiveParticipantScorerRanking";
 
 //
 //
 //
 
-const ControlParticipant = () => {
+const ControlLiveParticipant = () => {
 	const questionSetId = Number(useParams().questionSetId);
 
 	const { refreshParticipants, handleSumbitParticipants, handleSubmitWinner } =
@@ -51,13 +51,13 @@ const ControlParticipant = () => {
 			rightContent={renderSubmitButtons()}
 		>
 			<div className="flex flex-col gap-gap-11">
-				<ControlParticipantActiveMembers />
+				<ControlLiveParticipantActiveMembers />
 				<div className="flex items-stretch gap-gap-9">
 					<div className="flex flex-[2]">
-						<ControlParticipantScorerRanking />
+						<ControlLiveParticipantScorerRanking />
 					</div>
 					<div className="flex flex-[3]">
-						<ControlParticipantCorrectRanking />
+						<ControlLiveParticipantCorrectRanking />
 					</div>
 				</div>
 			</div>
@@ -65,4 +65,4 @@ const ControlParticipant = () => {
 	);
 };
 
-export default ControlParticipant;
+export default ControlLiveParticipant;
