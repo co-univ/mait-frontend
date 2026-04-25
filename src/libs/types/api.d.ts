@@ -609,6 +609,26 @@ export interface paths {
         patch: operations["updateTeamUserRole"];
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/study-mode/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 학습모드 문제셋 시작
+         * @description 관리자가 학습 모드 문제 셋을 시작합니다.
+         */
+        patch: operations["startStudyQuestionSet"];
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/study-mode/drafts/{questionId}": {
         parameters: {
             query?: never;
@@ -3596,6 +3616,28 @@ export interface operations {
                 "application/json": components["schemas"]["UpdateTeamUserRoleApiRequest"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    startStudyQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
