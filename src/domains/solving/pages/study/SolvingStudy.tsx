@@ -60,11 +60,6 @@ const SolvingStudy = () => {
 		setGradeResults,
 		reset,
 	} = useSolvingStudyAnswerStore();
-
-	const { mutate: updateLastViewedQuestion } = apiHooks.useMutation(
-		"put",
-		"/api/v1/question-sets/{questionSetId}/questions/last-viewed",
-	);
 	const { mutateAsync: gradeStudyAsync, isPending: isGrading } =
 		apiHooks.useMutation(
 			"post",
@@ -258,24 +253,7 @@ const SolvingStudy = () => {
 		}
 
 		setAnswerInitInfo(questionId, type as QuestionType);
-		updateLastViewedQuestion({
-			params: {
-				path: {
-					questionSetId,
-				},
-			},
-			body: {
-				questionId,
-			},
-		});
-	}, [
-		question,
-		type,
-		questionId,
-		questionSetId,
-		setAnswerInitInfo,
-		updateLastViewedQuestion,
-	]);
+	}, [question, type, questionId, setAnswerInitInfo]);
 
 	useEffect(() => {
 		questions.forEach((studyQuestion) => {

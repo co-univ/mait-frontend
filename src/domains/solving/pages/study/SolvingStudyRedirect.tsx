@@ -52,29 +52,6 @@ const SolvingStudyRedirect = () => {
 					);
 				}
 
-				const lastViewedResponse = await apiClient.GET(
-					"/api/v1/question-sets/{questionSetId}/questions/last-viewed",
-					{
-						params: {
-							path: {
-								questionSetId,
-							},
-						},
-					},
-				);
-				const lastViewedQuestionId = lastViewedResponse.data?.data?.id;
-
-				if (lastViewedQuestionId) {
-					navigate(
-						createPath(SOLVING_ROUTE_PATH.STUDY, {
-							questionSetId,
-							questionId: lastViewedQuestionId,
-						}),
-						{ replace: true },
-					);
-					return;
-				}
-
 				const questionsResponse = await apiClient.GET(
 					"/api/v1/question-sets/{questionSetId}/questions",
 					{
