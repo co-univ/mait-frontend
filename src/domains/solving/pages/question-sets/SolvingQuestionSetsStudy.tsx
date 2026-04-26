@@ -1,7 +1,7 @@
 import QuestionSetsLable from '@/components/question-sets/QuestionSetsLable';
 import QuestionSetsCardsLayout from '@/layouts/question-sets/QuestionSetsCardsLayout';
 import SolvingQuestionSetsStudyCard from '../../components/question-sets/SolvingQuestionSetsStudyCard';
-import type { QuestionSetDto, QuestionSetGroup } from '@/libs/types';
+import type { StudyQuestionSetDto, QuestionSetGroup } from '@/libs/types';
 
 //
 //
@@ -20,15 +20,18 @@ const SolvingQuestionSetsStudy = ({
   questionSetGroup,
   isLoading,
 }: SolvingQuestionSetsStudyProps) => {
-  const questionSets = Object.values(questionSetGroup ?? {}).flat() as QuestionSetDto[];
+  const questionSets = Object.values(questionSetGroup ?? {}).flat() as StudyQuestionSetDto[];
+	const visibleQuestionSets = questionSets.filter(
+		(questionSet) => questionSet.status !== "BEFORE",
+	);
 
-	const beforeQuestionSets = questionSets.filter(
+	const beforeQuestionSets = visibleQuestionSets.filter(
 		(questionSet) => questionSet.userStudyStatus === "BEFORE",
 	);
-	const ongoingQuestionSets = questionSets.filter(
+	const ongoingQuestionSets = visibleQuestionSets.filter(
 		(questionSet) => questionSet.userStudyStatus === "ONGOING",
 	);
-	const afterQuestionSets = questionSets.filter(
+	const afterQuestionSets = visibleQuestionSets.filter(
 		(questionSet) => questionSet.userStudyStatus === "AFTER",
 	);
 
