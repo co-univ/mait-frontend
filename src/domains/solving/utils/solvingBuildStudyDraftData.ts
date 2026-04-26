@@ -11,25 +11,27 @@ export const solvingBuildStudyDraftData = (
 	switch (questionType) {
 		case "SHORT":
 			return {
-				type: "ShortQuestionSubmitApiRequest" as const,
-				submitAnswers: userAnswers as string[],
+				type: "SHORT" as const,
+				submitAnswers: (userAnswers as string[]).filter(
+					(answer) => answer.trim() !== "",
+				),
 			};
 
 		case "MULTIPLE":
 			return {
-				type: "MultipleQuestionSubmitApiRequest" as const,
+				type: "MULTIPLE" as const,
 				submitAnswers: userAnswers as number[],
 			};
 
 		case "FILL_BLANK":
 			return {
-				type: "FillBlankQuestionSubmitApiRequest" as const,
+				type: "FILL_BLANK" as const,
 				submitAnswers: userAnswers as FillBlankSubmitAnswer[],
 			};
 
 		case "ORDERING":
 			return {
-				type: "OrderingQuestionSubmitApiRequest" as const,
+				type: "ORDERING" as const,
 				submitAnswers: userAnswers as number[],
 			};
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { apiClient } from "@/libs/api";
 import ErrorDetect from "@/pages/ErrorDetect";
 import Loading from "@/pages/Loading";
@@ -16,7 +16,16 @@ const SolvingStudyRedirect = () => {
 	const [isPending, setIsPending] = useState(true);
 	const [isError, setIsError] = useState(false);
 
+	const location = useLocation();
 	const navigate = useNavigate();
+	const userStudyStatus =
+		(
+			location.state as
+				| {
+						userStudyStatus?: "BEFORE" | "ONGOING" | "AFTER";
+				  }
+				| null
+		)?.userStudyStatus ?? "BEFORE";
 
 	//
 	//
@@ -30,13 +39,18 @@ const SolvingStudyRedirect = () => {
 
 		const startStudy = async () => {
 			try {
-				await apiClient.POST("/api/v1/question-sets/{questionSetId}/study-mode", {
-					params: {
-						path: {
-							questionSetId,
+				if (userStudyStatus !== "ONGOING") {
+					await apiClient.POST(
+						"/api/v1/question-sets/{questionSetId}/study-mode",
+						{
+							params: {
+								path: {
+									questionSetId,
+								},
+							},
 						},
-					},
-				});
+					);
+				}
 
 				const lastViewedResponse = await apiClient.GET(
 					"/api/v1/question-sets/{questionSetId}/questions/last-viewed",
@@ -98,7 +112,7 @@ const SolvingStudyRedirect = () => {
 		};
 
 		void startStudy();
-	}, [questionSetId, navigate]);
+	}, [questionSetId, navigate, userStudyStatus]);
 
 	if (isPending) {
 		return <Loading />;

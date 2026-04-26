@@ -33,6 +33,11 @@ const SolvingQuestionSetsStudyCard = ({
 			createPath(SOLVING_ROUTE_PATH.STUDY_REDIRECT, {
 				questionSetId: questionSet.id ?? 0,
 			}),
+			{
+				state: {
+					userStudyStatus,
+				},
+			},
 		);
 	};
 
