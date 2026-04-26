@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import QuestionContent from "@/components/QuestionContent";
-import { apiHooks } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import ErrorDetect from "@/pages/ErrorDetect";
 import Loading from "@/pages/Loading";
+import { notify } from "@/components/Toast";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 import useSolvingStudyQuestions from "../../hooks/study/useSolvingStudyQuestions";
@@ -15,6 +16,10 @@ import SolvingStudyOrderingAnswers from "./answers/SolvingStudyOrderingAnswers";
 import SolvingStudyShortAnswers from "./answers/SolvingStudyShortAnswers";
 import SolvingStudyHeader from "./SolvingStudyHeader";
 import type { QuestionType } from "@/libs/types";
+import {
+	hasStudyAnswers,
+	solvingBuildStudyDraftData,
+} from "../../utils/solvingBuildStudyDraftData";
 
 //
 //
@@ -33,12 +38,50 @@ const SolvingStudy = () => {
 			questionId,
 			mode: "STUDY",
 		});
-	const { setAnswerInitInfo, reset } = useSolvingStudyAnswerStore();
+	const { getUserAnswers, setAnswerInitInfo, reset } = useSolvingStudyAnswerStore();
 
 	const { mutate: updateLastViewedQuestion } = apiHooks.useMutation(
 		"put",
 		"/api/v1/question-sets/{questionSetId}/questions/last-viewed",
 	);
+
+	/**
+	 *
+	 */
+	const handleQuestionNavigate = async (targetQuestionId: number) => {
+		if (targetQuestionId === questionId || !type) {
+			return;
+		}
+
+		const userAnswers = getUserAnswers(questionId);
+
+		if (!hasStudyAnswers(userAnswers, type as QuestionType)) {
+			return;
+		}
+
+		try {
+			const body = solvingBuildStudyDraftData(
+				userAnswers,
+				type as QuestionType,
+			);
+
+			await apiClient.PATCH(
+				"/api/v1/question-sets/{questionSetId}/study-mode/drafts/{questionId}",
+				{
+					params: {
+						path: {
+							questionSetId,
+							questionId,
+						},
+					},
+					// biome-ignore lint/suspicious/noExplicitAny: openapi union body requires runtime discriminator shape
+					body: body as any,
+				},
+			);
+		} catch {
+			notify.error("답안 저장에 실패했습니다.");
+		}
+	};
 
 	/**
 	 *
@@ -126,10 +169,11 @@ const SolvingStudy = () => {
 				questionId={questionId}
 				number={number}
 				questions={questions}
+				onQuestionNavigate={handleQuestionNavigate}
 			/>
 			<QuestionContent content={content} />
 			{renderQuestionAnswers()}
-			<SolvingQuizImage imgUrl={imageUrl} />
+			<SolvingQuizImage src={imageUrl} />
 		</SolvingLayout>
 	);
 };

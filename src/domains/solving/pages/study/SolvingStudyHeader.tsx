@@ -19,6 +19,7 @@ interface SolvingStudyHeaderProps {
 	questionId: number;
 	number?: number;
 	questions?: QuestionResponseType[];
+	onQuestionNavigate?: (targetQuestionId: number) => void | Promise<void>;
 }
 
 //
@@ -30,13 +31,16 @@ const SolvingStudyHeader = ({
 	questionId,
 	number,
 	questions,
+	onQuestionNavigate,
 }: SolvingStudyHeaderProps) => {
 	const navigate = useNavigate();
 
 	/**
 	 *
 	 */
-	const handleQuestionNavigationClick = (targetQuestionId: number) => {
+	const handleQuestionNavigationClick = async (targetQuestionId: number) => {
+		await onQuestionNavigate?.(targetQuestionId);
+
 		navigate(
 			createPath(SOLVING_ROUTE_PATH.STUDY, {
 				questionSetId,
@@ -70,7 +74,7 @@ const SolvingStudyHeader = ({
 					isActive={isActive}
 					isMouseOver={isMouseOver}
 					number={index + 1}
-					onClick={() => handleQuestionNavigationClick(question.id)}
+					onClick={() => void handleQuestionNavigationClick(question.id)}
 				/>
 			</div>
 		);
