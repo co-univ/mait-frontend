@@ -4,9 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import QuestionContent from "@/components/QuestionContent";
 import { useConfirm } from "@/components/confirm";
 import { apiClient, apiHooks } from "@/libs/api";
+import type { QuestionType } from "@/libs/types";
 import ErrorDetect from "@/pages/ErrorDetect";
 import Loading from "@/pages/Loading";
 import { notify } from "@/components/Toast";
+import QuestionAnswerString from "@/utils/question-answer-string";
 import { createPath } from "@/utils/create-path";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
@@ -20,7 +22,7 @@ import SolvingStudyMultipleAnswers from "./answers/SolvingStudyMultipleAnswers";
 import SolvingStudyOrderingAnswers from "./answers/SolvingStudyOrderingAnswers";
 import SolvingStudyShortAnswers from "./answers/SolvingStudyShortAnswers";
 import SolvingStudyHeader from "./SolvingStudyHeader";
-import type { QuestionType } from "@/libs/types";
+import SolvingReviewExplanation from "../review/SolvingReviewExplanation";
 import {
 	hasStudyAnswers,
 	solvingBuildStudyDraftData,
@@ -78,6 +80,14 @@ const SolvingStudy = () => {
 	const firstQuestionId =
 		questions.find((studyQuestion) => studyQuestion.number === 1)?.id ??
 		questions[0]?.id;
+	const isCurrentQuestionCorrect = result[questionId]?.isCorrect ?? null;
+	const isCorrectMap = questions.reduce<Record<number, boolean | null>>(
+		(acc, studyQuestion) => {
+			acc[studyQuestion.id] = result[studyQuestion.id]?.isCorrect ?? null;
+			return acc;
+		},
+		{},
+	);
 
 	/**
 	 *
@@ -142,14 +152,15 @@ const SolvingStudy = () => {
 		const isConfirmed = await confirm(
 			unansweredQuestionCount > 0
 				? {
-						title: "풀지 않은 문제가 있습니다. 그래도 제출하시겠습니까?",
+						title: "이대로 제출하시겠습니까?",
+						description: "아직 풀지 않은 문제가 있어요. 그래도 제출하시겠어요?",
 						confirmText: "확인",
 						cancelText: "취소",
 					}
 				: {
-						title: "제출하시겠습니까?",
+						title: "이대로 제출하시겠습니까?",
 						description:
-							"문제셋 전체가 채점됩니다. 원하시는 상태로 복구가 어렵습니다.",
+							"문제를 모두 풀었어요. 제출하면 전체 채점이 완료되며, 이후에는 다시 풀 수 없어요.",
 						confirmText: "확인",
 						cancelText: "취소",
 					},
@@ -216,6 +227,7 @@ const SolvingStudy = () => {
 						questionSetId={questionSetId}
 						questionId={questionId}
 						readOnly={isGraded}
+						isCorrect={isCurrentQuestionCorrect}
 					/>
 				);
 			case "SHORT":
@@ -224,6 +236,7 @@ const SolvingStudy = () => {
 						questionSetId={questionSetId}
 						questionId={questionId}
 						readOnly={isGraded}
+						isCorrect={isCurrentQuestionCorrect}
 					/>
 				);
 			case "ORDERING":
@@ -232,6 +245,7 @@ const SolvingStudy = () => {
 						questionSetId={questionSetId}
 						questionId={questionId}
 						readOnly={isGraded}
+						isCorrect={isCurrentQuestionCorrect}
 					/>
 				);
 			case "FILL_BLANK":
@@ -240,6 +254,7 @@ const SolvingStudy = () => {
 						questionSetId={questionSetId}
 						questionId={questionId}
 						readOnly={isGraded}
+						isCorrect={isCurrentQuestionCorrect}
 					/>
 				);
 			default:
@@ -300,12 +315,22 @@ const SolvingStudy = () => {
 				number={number}
 				questions={questions}
 				answeredQuestionIds={answeredQuestionIds}
+				isGraded={isGraded}
+				isCorrectMap={isCorrectMap}
 				isSubmitting={isGrading}
 				onQuestionNavigate={handleQuestionNavigate}
 				onSubmit={handleAnswersSubmit}
 			/>
 			<QuestionContent content={content} />
 			{renderQuestionAnswers()}
+			{isGraded && (
+				<SolvingReviewExplanation
+					isExplanationShown
+					isCorrect={isCurrentQuestionCorrect}
+					answer={QuestionAnswerString(question)}
+					explanation={question.explanation}
+				/>
+			)}
 			<SolvingQuizImage src={imageUrl} />
 		</SolvingLayout>
 	);

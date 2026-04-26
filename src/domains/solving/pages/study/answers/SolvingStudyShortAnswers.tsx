@@ -11,6 +11,8 @@ import useSolvingStudyAnswerStore from "@/domains/solving/stores/study/useSolvin
 interface SolvingStudyShortAnswersProps {
 	questionSetId: number;
 	questionId: number;
+	readOnly?: boolean;
+	isCorrect: boolean | null;
 }
 
 //
@@ -20,6 +22,8 @@ interface SolvingStudyShortAnswersProps {
 const SolvingStudyShortAnswers = ({
 	questionSetId,
 	questionId,
+	readOnly = false,
+	isCorrect,
 }: SolvingStudyShortAnswersProps) => {
 	const { question } = useSolvingQuestion({
 		questionSetId,
@@ -37,9 +41,26 @@ const SolvingStudyShortAnswers = ({
 	 *
 	 */
 	const handleAnswerChange = (index: number, value: string) => {
+		if (readOnly) {
+			return;
+		}
+
 		const newAnswers = [...userAnswers];
 		newAnswers[index] = value;
 		setUserAnswers(questionId, newAnswers);
+	};
+
+	const getVariation = (index: number) => {
+		const answer = userAnswers[index] ?? "";
+		if (answer === "") {
+			return "default";
+		}
+
+		if (!readOnly) {
+			return "focused";
+		}
+
+		return isCorrect ? "correct" : "incorrect";
 	};
 
 	useEffect(() => {
@@ -57,8 +78,8 @@ const SolvingStudyShortAnswers = ({
 				<SolvingAnswerShort
 					// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
 					key={index}
-					readOnly={false}
-					variation={answer === "" ? "default" : "focused"}
+					readOnly={readOnly}
+					variation={getVariation(index)}
 					answer={answer}
 					onChange={(value) => handleAnswerChange(index, value)}
 				/>

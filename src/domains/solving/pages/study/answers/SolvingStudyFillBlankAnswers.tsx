@@ -14,6 +14,8 @@ import useSolvingStudyAnswerStore from "@/domains/solving/stores/study/useSolvin
 interface SolvingStudyFillBlankAnswersProps {
 	questionSetId: number;
 	questionId: number;
+	readOnly?: boolean;
+	isCorrect: boolean | null;
 }
 
 //
@@ -23,6 +25,8 @@ interface SolvingStudyFillBlankAnswersProps {
 const SolvingStudyFillBlankAnswers = ({
 	questionSetId,
 	questionId,
+	readOnly = false,
+	isCorrect,
 }: SolvingStudyFillBlankAnswersProps) => {
 	const { question } = useSolvingQuestion({
 		questionSetId,
@@ -42,11 +46,31 @@ const SolvingStudyFillBlankAnswers = ({
 	 *
 	 */
 	const handleAnswerChange = (number: number, answer: string) => {
+		if (readOnly) {
+			return;
+		}
+
 		const updatedAnswers = userAnswers.map((ans) =>
 			ans.number === number ? { number, answer } : ans,
 		);
 
 		setUserAnswers(questionId, updatedAnswers);
+	};
+
+	const getVariation = (number: number) => {
+		const answer = userAnswers.find(
+			(userAnswer) => userAnswer.number === number,
+		);
+
+		if (!answer || answer.answer === "") {
+			return "default";
+		}
+
+		if (!readOnly) {
+			return "focused";
+		}
+
+		return isCorrect ? "correct" : "incorrect";
 	};
 
 	useEffect(() => {
@@ -66,9 +90,9 @@ const SolvingStudyFillBlankAnswers = ({
 			{userAnswers.map((answer) => (
 				<SolvingAnswerFillBlank
 					key={answer.number}
-					readOnly={false}
+					readOnly={readOnly}
 					answer={answer}
-					variation={answer.answer === "" ? "default" : "focused"}
+					variation={getVariation(answer.number)}
 					onAnswerChange={handleAnswerChange}
 				/>
 			))}

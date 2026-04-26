@@ -10,6 +10,8 @@ import useSolvingStudyAnswerStore from "@/domains/solving/stores/study/useSolvin
 interface SolvingStudyMultipleAnswersProps {
 	questionSetId: number;
 	questionId: number;
+	readOnly?: boolean;
+	isCorrect: boolean | null;
 }
 
 //
@@ -19,6 +21,8 @@ interface SolvingStudyMultipleAnswersProps {
 const SolvingStudyMultipleAnswers = ({
 	questionSetId,
 	questionId,
+	readOnly = false,
+	isCorrect,
 }: SolvingStudyMultipleAnswersProps) => {
 	const { question } = useSolvingQuestion({
 		questionSetId,
@@ -36,11 +40,31 @@ const SolvingStudyMultipleAnswers = ({
 	 *
 	 */
 	const handleChoiceClick = (choiceNumber: number) => {
+		if (readOnly) {
+			return;
+		}
+
 		const newAnswers = userAnswers.includes(choiceNumber)
 			? userAnswers.filter((num) => num !== choiceNumber)
 			: [...userAnswers, choiceNumber];
 
 		setUserAnswers(questionId, newAnswers);
+	};
+
+	const getAnswerVariation = (
+		choiceNumber: number,
+	): "default" | "focused" | "correct" | "incorrect" => {
+		const selected = userAnswers.includes(choiceNumber);
+
+		if (!selected) {
+			return "default";
+		}
+
+		if (!readOnly) {
+			return "focused";
+		}
+
+		return isCorrect ? "correct" : "incorrect";
 	};
 
 	return (
@@ -50,7 +74,7 @@ const SolvingStudyMultipleAnswers = ({
 					key={choice.id}
 					choice={choice}
 					onChoiceClick={handleChoiceClick}
-					variation={userAnswers.includes(choice.number) ? "focused" : "default"}
+					variation={getAnswerVariation(choice.number)}
 				/>
 			))}
 		</div>

@@ -20,6 +20,8 @@ import useSolvingStudyAnswerStore from "@/domains/solving/stores/study/useSolvin
 interface SolvingStudyOrderingAnswersProps {
 	questionSetId: number;
 	questionId: number;
+	readOnly?: boolean;
+	isCorrect: boolean | null;
 }
 
 //
@@ -29,6 +31,8 @@ interface SolvingStudyOrderingAnswersProps {
 const SolvingStudyOrderingAnswers = ({
 	questionSetId,
 	questionId,
+	readOnly = false,
+	isCorrect,
 }: SolvingStudyOrderingAnswersProps) => {
 	const { question } = useSolvingQuestion({
 		questionSetId,
@@ -54,6 +58,10 @@ const SolvingStudyOrderingAnswers = ({
 	 *
 	 */
 	const handleDragEnd = (result: DropResult) => {
+		if (readOnly) {
+			return;
+		}
+
 		if (!result.destination) {
 			return;
 		}
@@ -70,6 +78,16 @@ const SolvingStudyOrderingAnswers = ({
 		updatedAnswers.splice(destinationIndex, 0, movedAnswer);
 
 		setUserAnswers(questionId, updatedAnswers);
+	};
+
+	const getVariation = (
+		isDragging: boolean,
+	): "default" | "focused" | "correct" | "incorrect" => {
+		if (readOnly) {
+			return isCorrect ? "correct" : "incorrect";
+		}
+
+		return isDragging ? "focused" : "default";
 	};
 
 	useEffect(() => {
@@ -106,7 +124,7 @@ const SolvingStudyOrderingAnswers = ({
 										{...provided.dragHandleProps}
 									>
 										<SolvingAnswerOrdering
-											variation={snapshot.isDragging ? "focused" : "default"}
+											variation={getVariation(snapshot.isDragging)}
 											option={option}
 										/>
 									</div>
