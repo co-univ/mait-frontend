@@ -368,12 +368,14 @@ const SolvingStudy = () => {
 			<QuestionContent content={content} />
 			{renderQuestionAnswers()}
 			{isGraded && (
-					<SolvingReviewExplanation
-						isExplanationShown
-						isCorrect={isCurrentQuestionCorrect}
-						answer={questionAnswerString(question as QuestionResponseType)}
-						explanation={question.explanation}
-					/>
+						<SolvingReviewExplanation
+							isExplanationShown
+							isCorrect={isCurrentQuestionCorrect}
+							answer={questionAnswerString(
+								question as unknown as QuestionResponseType,
+							)}
+							explanation={question.explanation}
+						/>
 			)}
 			<SolvingQuizImage src={imageUrl} />
 		</SolvingLayout>
