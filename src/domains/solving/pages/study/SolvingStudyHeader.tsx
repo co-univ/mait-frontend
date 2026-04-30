@@ -3,6 +3,7 @@ import { ChevronRight, Puzzle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
 import QuestionNavigation, {
+	QuestionNavigationButton,
 } from "@/components/question-navigation";
 import type { QuestionNavigationButtonRenderProps } from "@/components/question-navigation/QuestionNavigationList";
 import useBreakpoint from "@/hooks/useBreakpoint";
@@ -97,37 +98,38 @@ const SolvingStudyHeader = ({
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
 			>
-				<button
-					type="button"
+				<QuestionNavigationButton
+					isActive={isActive}
+					isMouseOver={isMouseOver}
+					number={index + 1}
 					onClick={() => void handleQuestionNavigationClick(question.id)}
-					aria-label={`Question ${index + 1}${isActive ? " (active)" : ""}`}
-					className={clsx(
-						"relative overflow-hidden rounded-medium1 flex items-center justify-center",
-						isMobile ? "typo-heading-xsmall" : "typo-heading-small",
-						{
-							"w-[40px] h-[40px]": isMobile,
-							"w-[48px] h-[48px]": !isMobile,
-							"bg-color-primary-5 text-color-primary-50 border border-color-primary-50":
-								isActive && !isGraded,
-							"bg-color-success-5 text-color-success-50 border border-color-success-50":
-								isGraded && isCorrect === true,
-							"bg-color-point-5 text-color-point-50 border border-color-point-50":
-								isGraded && isCorrect === false,
-							"text-color-alpha-black100":
-								!isActive && !isGraded,
-							"hover:bg-color-gray-5": !isActive && isMouseOver,
-							"border border-color-primary-50":
-								!isGraded && isAnswered,
-							"border border-transparent":
-								!isGraded && !isAnswered && !isActive,
-						},
-					)}
-				>
-					{!isGraded && isAnswered && (
-						<span className="absolute inset-x-0 bottom-0 h-[13px] bg-color-primary-50" />
-					)}
-					<span className="relative z-10">{index + 1}</span>
-				</button>
+					variation={isMobile ? "small" : "default"}
+					className={clsx("relative overflow-hidden", {
+						"bg-color-primary-5 text-color-primary-50 border border-color-primary-50":
+							isActive && !isGraded,
+						"bg-color-success-5 text-color-success-50 border border-color-success-50":
+							isGraded && isCorrect === true,
+						"bg-color-point-5 text-color-point-50 border border-color-point-50":
+							isGraded && isCorrect === false,
+						"text-color-alpha-black100":
+							!isActive && !isGraded,
+						"hover:bg-color-gray-5": !isActive && isMouseOver,
+						"border border-color-primary-50":
+							!isGraded && isAnswered,
+						"border border-transparent":
+							!isGraded && !isAnswered && !isActive,
+					})}
+				/>
+				{!isGraded && isAnswered && (
+					<span
+						className={clsx(
+							"absolute inset-x-0 bottom-0 h-[13px] bg-color-primary-50 pointer-events-none rounded-b-medium1",
+							{
+								"left-px right-px": true,
+							},
+						)}
+					/>
+				)}
 			</div>
 		);
 	};
