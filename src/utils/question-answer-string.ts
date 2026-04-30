@@ -14,7 +14,7 @@ import type {
 /**
  * Get a string representation of the correct answers for display purposes
  */
-const QuestionAnswerString = (question: QuestionResponseType) => {
+const questionAnswerString = (question: QuestionResponseType) => {
 	switch (question.type as QuestionType) {
 		case "MULTIPLE": {
 			const choices = (question as MultipleQuestionApiResponse).choices;
@@ -65,4 +65,4 @@ const QuestionAnswerString = (question: QuestionResponseType) => {
 	}
 };
 
-export default QuestionAnswerString;
+export default questionAnswerString;

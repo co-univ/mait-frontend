@@ -5,7 +5,7 @@ import type { QuestionApiResponse, QuestionType } from "@/libs/types";
 //
 //
 
-type QuestionMode = "LIVE_TIME" | "REVIEW";
+type QuestionMode = "LIVE_TIME" | "REVIEW" | "STUDY";
 
 interface UseQuestionProps {
 	questionSetId: number;

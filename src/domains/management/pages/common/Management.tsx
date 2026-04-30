@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
+import useStudyQuestionSets from "@/hooks/useStudyQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import type { DeliveryMode } from "@/libs/types";
@@ -10,6 +11,7 @@ import ManagementCreateQuestionButton from "../../components/common/ManagementCr
 import ManagementLiveTime from "./ManagementLiveTime";
 import ManagementMaking from "./ManagementMaking";
 import ManagementReview from "./ManagementReview";
+import ManagementStudy from "./ManagementStudy";
 
 //
 //
@@ -18,6 +20,7 @@ import ManagementReview from "./ManagementReview";
 const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
 	making: "MAKING",
 	"live-time": "LIVE_TIME",
+	"study": "STUDY",
 	review: "REVIEW",
 };
 
@@ -40,6 +43,15 @@ const Management = () => {
 		mode: QUESTION_SET_MODES[mode],
 	});
 
+	const {
+		questionSetGroup: studyQuestionSetGroup,
+		invalidateQuestionSetsQuery: studyInvalidateQuestionSetsQuery,
+		isLoading: studyIsLoading,
+	} = useStudyQuestionSets({
+		teamId: activeTeam?.teamId ?? 0,
+		target: "management",
+	});
+
 	/**
 	 *
 	 */
@@ -59,7 +71,9 @@ const Management = () => {
 				className="flex flex-col gap-gap-11"
 			>
 				<div className="flex justify-between items-end">
-					<QuestionSetsTabs modes={["making", "live-time", "review"]} />
+					<QuestionSetsTabs
+						modes={["making", "live-time", "study", "review"]}
+					/>
 					<ManagementCreateQuestionButton />
 				</div>
 
@@ -76,6 +90,14 @@ const Management = () => {
 						questionSetGroup={questionSetGroup}
 						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 						isLoading={isLoading}
+					/>
+				</Tabs.Content>
+
+				<Tabs.Content value="study">
+					<ManagementStudy
+						questionSetGroup={studyQuestionSetGroup}
+						invalidateQuestionSetsQuery={studyInvalidateQuestionSetsQuery}
+						isLoading={studyIsLoading}
 					/>
 				</Tabs.Content>
 
