@@ -2,34 +2,34 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { QuestionResponseType } from "@/app.constants";
-import QuestionContent from "@/components/QuestionContent";
 import { useConfirm } from "@/components/confirm";
+import QuestionContent from "@/components/QuestionContent";
+import { notify } from "@/components/Toast";
 import { apiClient, apiHooks } from "@/libs/api";
 import type { QuestionType } from "@/libs/types";
 import ErrorDetect from "@/pages/ErrorDetect";
 import Loading from "@/pages/Loading";
-import { notify } from "@/components/Toast";
-import questionAnswerString from "@/utils/question-answer-string";
 import { createPath } from "@/utils/create-path";
+import questionAnswerString from "@/utils/question-answer-string";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 import useSolvingStudyDrafts from "../../hooks/study/useSolvingStudyDrafts";
 import useSolvingStudyQuestions from "../../hooks/study/useSolvingStudyQuestions";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
-import useSolvingStudyAnswerStore from "../../stores/study/useSolvingStudyAnswerStore";
 import { SOLVING_ROUTE_PATH } from "../../solving.routes";
-import SolvingStudyFillBlankAnswers from "./answers/SolvingStudyFillBlankAnswers";
-import SolvingStudyMultipleAnswers from "./answers/SolvingStudyMultipleAnswers";
-import SolvingStudyOrderingAnswers from "./answers/SolvingStudyOrderingAnswers";
-import SolvingStudyShortAnswers from "./answers/SolvingStudyShortAnswers";
-import SolvingStudyHeader from "./SolvingStudyHeader";
-import SolvingReviewExplanation from "../review/SolvingReviewExplanation";
+import useSolvingStudyAnswerStore from "../../stores/study/useSolvingStudyAnswerStore";
 import {
 	hasStudyAnswers,
 	solvingBuildStudyDraftData,
 } from "../../utils/solvingBuildStudyDraftData";
 import { solvingIsStudyQuestionAnswered } from "../../utils/solvingIsStudyQuestionAnswered";
 import { solvingParseStudyDraftData } from "../../utils/solvingParseStudyDraftData";
+import SolvingReviewExplanation from "../review/SolvingReviewExplanation";
+import SolvingStudyFillBlankAnswers from "./answers/SolvingStudyFillBlankAnswers";
+import SolvingStudyMultipleAnswers from "./answers/SolvingStudyMultipleAnswers";
+import SolvingStudyOrderingAnswers from "./answers/SolvingStudyOrderingAnswers";
+import SolvingStudyShortAnswers from "./answers/SolvingStudyShortAnswers";
+import SolvingStudyHeader from "./SolvingStudyHeader";
 
 //
 //
@@ -42,9 +42,11 @@ const SolvingStudy = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { questions, isLoading: isQuestionsLoading } = useSolvingStudyQuestions({
-		questionSetId,
-	});
+	const { questions, isLoading: isQuestionsLoading } = useSolvingStudyQuestions(
+		{
+			questionSetId,
+		},
+	);
 	const { drafts, isLoading: isDraftsLoading } = useSolvingStudyDrafts({
 		questionSetId,
 	});
@@ -119,7 +121,9 @@ const SolvingStudy = () => {
 			return true;
 		}
 
-		sessionStorage.removeItem(`study_draft_cleared_${questionSetId}_${questionId}`);
+		sessionStorage.removeItem(
+			`study_draft_cleared_${questionSetId}_${questionId}`,
+		);
 
 		try {
 			const body = solvingBuildStudyDraftData(
@@ -146,8 +150,7 @@ const SolvingStudy = () => {
 					Array.isArray(query.queryKey) &&
 					query.queryKey.some(
 						(key) =>
-							typeof key === "string" &&
-							key.includes("study-mode/drafts"),
+							typeof key === "string" && key.includes("study-mode/drafts"),
 					),
 			});
 
@@ -337,7 +340,13 @@ const SolvingStudy = () => {
 				markOrderingInteracted(draft.questionId);
 			}
 		});
-	}, [drafts, questions, replaceUserAnswers, markOrderingInteracted, questionSetId]);
+	}, [
+		drafts,
+		questions,
+		replaceUserAnswers,
+		markOrderingInteracted,
+		questionSetId,
+	]);
 
 	useEffect(() => {
 		return () => reset();
@@ -366,18 +375,18 @@ const SolvingStudy = () => {
 				onSubmit={handleAnswersSubmit}
 			/>
 			<QuestionContent content={content} />
+			<SolvingQuizImage src={imageUrl} />
 			{renderQuestionAnswers()}
 			{isGraded && (
-						<SolvingReviewExplanation
-							isExplanationShown
-							isCorrect={isCurrentQuestionCorrect}
-							answer={questionAnswerString(
-								question as unknown as QuestionResponseType,
-							)}
-							explanation={question.explanation}
-						/>
+				<SolvingReviewExplanation
+					isExplanationShown
+					isCorrect={isCurrentQuestionCorrect}
+					answer={questionAnswerString(
+						question as unknown as QuestionResponseType,
+					)}
+					explanation={question.explanation}
+				/>
 			)}
-			<SolvingQuizImage src={imageUrl} />
 		</SolvingLayout>
 	);
 };
