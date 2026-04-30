@@ -22,6 +22,7 @@ interface SolvingStudyAnswerState {
 			submittedAnswer?: string;
 		}
 	>;
+	interactedOrderingQuestionIds: Set<number>;
 }
 
 interface SolvingStudyAnswerActions {
@@ -30,6 +31,7 @@ interface SolvingStudyAnswerActions {
 	setAnswerInitInfo: (questionId: number, type: QuestionType) => void;
 	setUserAnswers: (questionId: number, answers: StudyAnswersType) => void;
 	replaceUserAnswers: (questionId: number, answers: StudyAnswersType) => void;
+	markOrderingInteracted: (questionId: number) => void;
 	setGradeResults: (results: QuestionAnswerSubmitApiResponse[]) => void;
 	reset: () => void;
 }
@@ -43,6 +45,7 @@ const useSolvingStudyAnswerStore = create<
 >((set, get) => ({
 	isGraded: false,
 	result: {},
+	interactedOrderingQuestionIds: new Set<number>(),
 
 	getUserAnswers: (questionId: number) => {
 		return get().result[questionId]?.userAnswers ?? [];
@@ -94,6 +97,15 @@ const useSolvingStudyAnswerStore = create<
 		}));
 	},
 
+	markOrderingInteracted: (questionId: number) => {
+		set((state) => ({
+			interactedOrderingQuestionIds: new Set([
+				...state.interactedOrderingQuestionIds,
+				questionId,
+			]),
+		}));
+	},
+
 	setGradeResults: (results: QuestionAnswerSubmitApiResponse[]) => {
 		set((state) => ({
 			isGraded: true,
@@ -113,6 +125,7 @@ const useSolvingStudyAnswerStore = create<
 		set(() => ({
 			isGraded: false,
 			result: {},
+			interactedOrderingQuestionIds: new Set<number>(),
 		})),
 }));
 

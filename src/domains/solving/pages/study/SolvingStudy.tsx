@@ -56,9 +56,11 @@ const SolvingStudy = () => {
 	const {
 		isGraded,
 		result,
+		interactedOrderingQuestionIds,
 		getUserAnswers,
 		setAnswerInitInfo,
 		replaceUserAnswers,
+		markOrderingInteracted,
 		setGradeResults,
 		reset,
 	} = useSolvingStudyAnswerStore();
@@ -69,12 +71,15 @@ const SolvingStudy = () => {
 		);
 
 	const answeredQuestionIds = questions
-		.filter((studyQuestion) =>
-			solvingIsStudyQuestionAnswered(
+		.filter((studyQuestion) => {
+			if (result[studyQuestion.id]?.type === "ORDERING") {
+				return interactedOrderingQuestionIds.has(studyQuestion.id);
+			}
+			return solvingIsStudyQuestionAnswered(
 				result[studyQuestion.id]?.userAnswers ?? [],
 				result[studyQuestion.id]?.type,
-			),
-		)
+			);
+		})
 		.map((studyQuestion) => studyQuestion.id);
 	const unansweredQuestionCount = questions.length - answeredQuestionIds.length;
 	const firstQuestionId =
@@ -319,12 +324,21 @@ const SolvingStudy = () => {
 				return;
 			}
 
-			replaceUserAnswers(
-				draft.questionId,
-				solvingParseStudyDraftData(draft.submittedAnswer),
+			const parsed = solvingParseStudyDraftData(draft.submittedAnswer);
+			replaceUserAnswers(draft.questionId, parsed);
+
+			const isOrdering = questions.some(
+				(q) => q.id === draft.questionId && q.type === "OrderingQuestionApiResponse",
 			);
+			if (isOrdering) {
+				const order = parsed as number[];
+				const isDefaultOrder = order.every((val, idx) => val === idx + 1);
+				if (!isDefaultOrder) {
+					markOrderingInteracted(draft.questionId);
+				}
+			}
 		});
-	}, [drafts, replaceUserAnswers, questionSetId]);
+	}, [drafts, questions, replaceUserAnswers, markOrderingInteracted, questionSetId]);
 
 	useEffect(() => {
 		return () => reset();

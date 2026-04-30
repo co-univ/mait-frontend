@@ -43,7 +43,7 @@ const SolvingStudyOrderingAnswers = ({
 	const orderingQuestion = question as OrderingQuestionApiResponse | undefined;
 	const questionOptions = orderingQuestion?.options ?? [];
 
-	const { getUserAnswers, setUserAnswers } = useSolvingStudyAnswerStore();
+	const { getUserAnswers, setUserAnswers, markOrderingInteracted } = useSolvingStudyAnswerStore();
 	const userAnswers = getUserAnswers(questionId) as number[];
 
 	const options = userAnswers
@@ -78,6 +78,7 @@ const SolvingStudyOrderingAnswers = ({
 		updatedAnswers.splice(destinationIndex, 0, movedAnswer);
 
 		setUserAnswers(questionId, updatedAnswers);
+		markOrderingInteracted(questionId);
 	};
 
 	const getVariation = (
