@@ -59,6 +59,24 @@ const ManagementStudyCard = ({
 			},
 		},
 	);
+	const { mutate: endStudyQuestionSet } = apiHooks.useMutation(
+		"patch",
+		"/api/v1/question-sets/{questionSetId}/study-mode/end",
+		{
+			onSuccess: () => {
+				notify.success(`${questionSet.title}의 학습모드가 종료되었습니다.`);
+				invalidateQuestionSetsQuery?.();
+				queryClient.invalidateQueries({
+					predicate: (query) =>
+						Array.isArray(query.queryKey) &&
+						query.queryKey.includes("/api/v1/question-sets/study/progress"),
+				});
+			},
+			onError: () => {
+				notify.error("학습모드 종료에 실패했습니다.");
+			},
+		},
+	);
 
 	/**
 	 *
@@ -88,11 +106,13 @@ const ManagementStudyCard = ({
 	 *
 	 */
 	const handleControlButtonClick = () => {
-		navigate(
-			createPath(CONTROL_ROUTE_PATH.STUDY_ROOT, {
-				questionSetId: questionSet.id ?? 0,
-			}),
-		);
+		endStudyQuestionSet({
+			params: {
+				path: {
+					questionSetId: questionSet.id ?? 0,
+				},
+			},
+		});
 	};
 
 	/**
@@ -144,7 +164,7 @@ const ManagementStudyCard = ({
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
-					item="풀이 관리"
+					item="종료하기"
 					onClick={handleControlButtonClick}
 				/>
 			);

@@ -78,6 +78,7 @@ const ManagementStudy = ({
 									<ManagementStudyCard
 										key={questionSet.id}
 										questionSet={questionSet}
+										invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
 									/>
 								))}
 							</QuestionSetsCardsLayout>
