@@ -1,4 +1,5 @@
 import { Coins } from "lucide-react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { Table } from "@/components/table";
 import type { UserApiResponse } from "@/libs/types";
@@ -79,10 +80,9 @@ const ControlLiveParticipantScorerRanking = () => {
 				<Table.Divider />
 				<Table.Body>
 					{ranking?.map(({ users }, index) => (
-						<>
+						// biome-ignore lint/suspicious/noArrayIndexKey: ranking order is stable and only user data changes
+						<React.Fragment key={index}>
 							<ControlParticipantRankingPanel.TableRow
-								// biome-ignore lint/suspicious/noArrayIndexKey: ranking order is stable and only user data changes
-								key={index}
 								checked={checkIsAllUsersActive(users)}
 								rankCell={`${index + 1}등`}
 								nameCell={renderNameCell(users)}
@@ -91,7 +91,7 @@ const ControlLiveParticipantScorerRanking = () => {
 								}
 							/>
 							{index < (ranking?.length ?? 0) - 1 && <Table.Divider />}
-						</>
+						</React.Fragment>
 					))}
 				</Table.Body>
 			</Table.Root>
