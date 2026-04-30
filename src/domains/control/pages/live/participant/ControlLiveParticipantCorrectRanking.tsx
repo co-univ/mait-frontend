@@ -1,22 +1,23 @@
-import { Coins } from "lucide-react";
+import { Award } from "lucide-react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { Table } from "@/components/table";
 import type { UserApiResponse } from "@/libs/types";
-import ControlParticipantRankingUser from "../../components/participant/ControlParticipantRankingUser";
-import { ControlParticipantRankingPanel } from "../../components/participant/ranking-panel";
-import useControlParticipantRanking from "../../hooks/paticipant/useControlParticipantRanking";
+import ControlParticipantRankingUser from "../../../components/participant/ControlParticipantRankingUser";
+import { ControlParticipantRankingPanel } from "../../../components/participant/ranking-panel";
+import useControlParticipantRanking from "../../../hooks/paticipant/useControlParticipantRanking";
 
 //
 //
 //
 
-const ControlParticipantScorerRanking = () => {
+const ControlLiveParticipantCorrectRanking = () => {
 	const questionSetId = Number(useParams().questionSetId);
 
 	const {
 		ranking,
-		eliminatedParticipants,
 		handleRankingRowParticipantsChange,
+		eliminatedParticipants,
 		checkIsAllUsersActive,
 		selectedRank,
 		handleSelectRank,
@@ -25,7 +26,7 @@ const ControlParticipantScorerRanking = () => {
 		handleEliminateAllParticipants,
 	} = useControlParticipantRanking({
 		questionSetId,
-		type: "SCORER" as const,
+		type: "CORRECT" as const,
 	});
 
 	/**
@@ -37,6 +38,20 @@ const ControlParticipantScorerRanking = () => {
 		} else {
 			handleEliminateAllParticipants();
 		}
+	};
+
+	/**
+	 *
+	 */
+	const renderRankCell = (rank: number, count: number) => {
+		return (
+			<span className="flex items-center gap-gap-5">
+				<span>{rank}등</span>
+				<span className="px-padding-5 py-padding-1 bg-color-primary-10 rounded-full typo-body-xsmall-bold text-color-primary-50">
+					{count}명
+				</span>
+			</span>
+		);
 	};
 
 	/**
@@ -62,11 +77,11 @@ const ControlParticipantScorerRanking = () => {
 	return (
 		<ControlParticipantRankingPanel.Root>
 			<ControlParticipantRankingPanel.Header
-				icon={<Coins />}
-				title="선착순 기준 등수"
+				icon={<Award />}
+				title="정답수 기준 등수"
 			/>
 			<ControlParticipantRankingPanel.Selector
-				ranking="선착순"
+				ranking="정답자"
 				selectedRank={selectedRank}
 				onRankChange={handleSelectRank}
 				onApplySelection={handleApplyRankSelection}
@@ -79,19 +94,18 @@ const ControlParticipantScorerRanking = () => {
 				<Table.Divider />
 				<Table.Body>
 					{ranking?.map(({ users }, index) => (
-						<>
+						// biome-ignore lint/suspicious/noArrayIndexKey: ranking order is stable and only user data changes
+						<React.Fragment key={index}>
 							<ControlParticipantRankingPanel.TableRow
-								// biome-ignore lint/suspicious/noArrayIndexKey: ranking order is stable and only user data changes
-								key={index}
 								checked={checkIsAllUsersActive(users)}
-								rankCell={`${index + 1}등`}
+								rankCell={renderRankCell(index + 1, users?.length ?? 0)}
 								nameCell={renderNameCell(users)}
 								onChange={(checked) =>
 									handleRankingRowParticipantsChange(checked, users)
 								}
 							/>
 							{index < (ranking?.length ?? 0) - 1 && <Table.Divider />}
-						</>
+						</React.Fragment>
 					))}
 				</Table.Body>
 			</Table.Root>
@@ -99,4 +113,4 @@ const ControlParticipantScorerRanking = () => {
 	);
 };
 
-export default ControlParticipantScorerRanking;
+export default ControlLiveParticipantCorrectRanking;
