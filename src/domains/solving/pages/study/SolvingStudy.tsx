@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import type { QuestionResponseType } from "@/app.constants";
 import QuestionContent from "@/components/QuestionContent";
 import { useConfirm } from "@/components/confirm";
 import { apiClient, apiHooks } from "@/libs/api";
@@ -8,7 +9,7 @@ import type { QuestionType } from "@/libs/types";
 import ErrorDetect from "@/pages/ErrorDetect";
 import Loading from "@/pages/Loading";
 import { notify } from "@/components/Toast";
-import QuestionAnswerString from "@/utils/question-answer-string";
+import questionAnswerString from "@/utils/question-answer-string";
 import { createPath } from "@/utils/create-path";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
@@ -328,7 +329,9 @@ const SolvingStudy = () => {
 			replaceUserAnswers(draft.questionId, parsed);
 
 			const isOrdering = questions.some(
-				(q) => q.id === draft.questionId && q.type === "ORDERING",
+				(q) =>
+					q.id === draft.questionId &&
+					(q.type as QuestionType | undefined) === "ORDERING",
 			);
 			if (isOrdering) {
 				markOrderingInteracted(draft.questionId);
@@ -365,12 +368,12 @@ const SolvingStudy = () => {
 			<QuestionContent content={content} />
 			{renderQuestionAnswers()}
 			{isGraded && (
-				<SolvingReviewExplanation
-					isExplanationShown
-					isCorrect={isCurrentQuestionCorrect}
-					answer={QuestionAnswerString(question)}
-					explanation={question.explanation}
-				/>
+					<SolvingReviewExplanation
+						isExplanationShown
+						isCorrect={isCurrentQuestionCorrect}
+						answer={questionAnswerString(question as QuestionResponseType)}
+						explanation={question.explanation}
+					/>
 			)}
 			<SolvingQuizImage src={imageUrl} />
 		</SolvingLayout>
