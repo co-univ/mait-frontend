@@ -328,14 +328,10 @@ const SolvingStudy = () => {
 			replaceUserAnswers(draft.questionId, parsed);
 
 			const isOrdering = questions.some(
-				(q) => q.id === draft.questionId && q.type === "OrderingQuestionApiResponse",
+				(q) => q.id === draft.questionId && q.type === "ORDERING",
 			);
 			if (isOrdering) {
-				const order = parsed as number[];
-				const isDefaultOrder = order.every((val, idx) => val === idx + 1);
-				if (!isDefaultOrder) {
-					markOrderingInteracted(draft.questionId);
-				}
+				markOrderingInteracted(draft.questionId);
 			}
 		});
 	}, [drafts, questions, replaceUserAnswers, markOrderingInteracted, questionSetId]);

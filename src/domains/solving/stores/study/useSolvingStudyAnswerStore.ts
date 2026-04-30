@@ -28,6 +28,7 @@ interface SolvingStudyAnswerState {
 interface SolvingStudyAnswerActions {
 	getUserAnswers: (questionId: number) => StudyAnswersType;
 	getIsCorrect: (questionId: number) => boolean | null;
+	hasOrderingInteracted: (questionId: number) => boolean;
 	setAnswerInitInfo: (questionId: number, type: QuestionType) => void;
 	setUserAnswers: (questionId: number, answers: StudyAnswersType) => void;
 	replaceUserAnswers: (questionId: number, answers: StudyAnswersType) => void;
@@ -53,6 +54,10 @@ const useSolvingStudyAnswerStore = create<
 
 	getIsCorrect: (questionId: number) => {
 		return get().result[questionId]?.isCorrect ?? null;
+	},
+
+	hasOrderingInteracted: (questionId: number) => {
+		return get().interactedOrderingQuestionIds.has(questionId);
 	},
 
 	setAnswerInitInfo: (questionId: number, type: QuestionType) => {
