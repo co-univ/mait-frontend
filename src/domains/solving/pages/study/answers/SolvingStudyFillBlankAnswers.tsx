@@ -74,16 +74,18 @@ const SolvingStudyFillBlankAnswers = ({
 	};
 
 	useEffect(() => {
-		if (blankCount > 0 && userAnswers.length !== blankCount) {
-			setUserAnswers(
-				questionId,
-				Array.from({ length: blankCount }, (_, index) => ({
-					number: index + 1,
+		if (blankCount > 0 && userAnswers.length < blankCount) {
+			const existingNumbers = new Set(userAnswers.map((answer) => answer.number));
+			const missingAnswers = Array.from({ length: blankCount }, (_, index) => index + 1)
+				.filter((number) => !existingNumbers.has(number))
+				.map((number) => ({
+					number,
 					answer: "",
-				})),
-			);
+				}));
+
+			setUserAnswers(questionId, [...userAnswers, ...missingAnswers]);
 		}
-	}, [blankCount, userAnswers.length, questionId, setUserAnswers]);
+	}, [blankCount, userAnswers, questionId, setUserAnswers]);
 
 	return (
 		<div className="w-full flex flex-col gap-gap-11">

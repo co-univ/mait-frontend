@@ -64,13 +64,13 @@ const SolvingStudyShortAnswers = ({
 	};
 
 	useEffect(() => {
-		if (answerCount > 0 && userAnswers.length !== answerCount) {
-			setUserAnswers(
-				questionId,
-				Array.from({ length: answerCount }, () => ""),
-			);
+		if (answerCount > 0 && userAnswers.length < answerCount) {
+			setUserAnswers(questionId, [
+				...userAnswers,
+				...Array.from({ length: answerCount - userAnswers.length }, () => ""),
+			]);
 		}
-	}, [answerCount, userAnswers.length, questionId, setUserAnswers]);
+	}, [answerCount, userAnswers, questionId, setUserAnswers]);
 
 	return (
 		<div className="flex flex-col w-full gap-gap-11">

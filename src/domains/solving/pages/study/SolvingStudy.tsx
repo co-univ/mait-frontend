@@ -98,10 +98,22 @@ const SolvingStudy = () => {
 		}
 
 		const userAnswers = getUserAnswers(questionId);
+		const hasAnswers = hasStudyAnswers(userAnswers, type as QuestionType);
 
-		if (!hasStudyAnswers(userAnswers, type as QuestionType)) {
+		if (!hasAnswers) {
+			const hasDraftOnServer = drafts.some(
+				(draft) => draft.questionId === questionId && !!draft.submittedAnswer,
+			);
+			if (hasDraftOnServer) {
+				sessionStorage.setItem(
+					`study_draft_cleared_${questionSetId}_${questionId}`,
+					"true",
+				);
+			}
 			return true;
 		}
+
+		sessionStorage.removeItem(`study_draft_cleared_${questionSetId}_${questionId}`);
 
 		try {
 			const body = solvingBuildStudyDraftData(
@@ -122,6 +134,16 @@ const SolvingStudy = () => {
 					body: body as any,
 				},
 			);
+
+			queryClient.invalidateQueries({
+				predicate: (query) =>
+					Array.isArray(query.queryKey) &&
+					query.queryKey.some(
+						(key) =>
+							typeof key === "string" &&
+							key.includes("study-mode/drafts"),
+					),
+			});
 
 			return true;
 		} catch {
@@ -288,12 +310,21 @@ const SolvingStudy = () => {
 				return;
 			}
 
+			const isCleared =
+				sessionStorage.getItem(
+					`study_draft_cleared_${questionSetId}_${draft.questionId}`,
+				) === "true";
+
+			if (isCleared) {
+				return;
+			}
+
 			replaceUserAnswers(
 				draft.questionId,
 				solvingParseStudyDraftData(draft.submittedAnswer),
 			);
 		});
-	}, [drafts, replaceUserAnswers]);
+	}, [drafts, replaceUserAnswers, questionSetId]);
 
 	useEffect(() => {
 		return () => reset();

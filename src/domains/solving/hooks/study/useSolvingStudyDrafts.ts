@@ -36,6 +36,8 @@ const useSolvingStudyDrafts = ({
 		},
 		{
 			enabled: questionSetId > 0,
+			staleTime: 0,
+			refetchOnMount: true,
 		},
 	);
 
