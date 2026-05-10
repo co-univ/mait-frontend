@@ -74,7 +74,6 @@ const SolvingReview = () => {
 		showExplanation,
 		hideExplanation,
 	} = useSolvingReviewExplanation({
-		questionSetId,
 		questionId,
 		question,
 	});

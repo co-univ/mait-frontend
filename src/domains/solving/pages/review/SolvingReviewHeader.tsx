@@ -118,7 +118,7 @@ const SolvingReviewHeader = ({
 					lable={`Q${number ?? ""}`}
 				/>
 				<div className="flex gap-gap-5">
-					{!isExplanationShown && (
+					{isSubmitted && !isExplanationShown && (
 						<SolvingButton
 							color={getBadgeColor()}
 							icon={<ChevronDown />}
@@ -126,7 +126,7 @@ const SolvingReviewHeader = ({
 							onClick={showExplanation}
 						/>
 					)}
-					{isExplanationShown && (
+					{isSubmitted && isExplanationShown && (
 						<SolvingButton
 							color={getBadgeColor()}
 							icon={<ChevronUp />}
