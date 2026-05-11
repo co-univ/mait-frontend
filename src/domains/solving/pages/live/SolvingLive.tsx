@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: live solving manages websocket and tracking effects manually */
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SolvingBell from "src/domains/solving/components/common/SolvingBell";
 import SolvingLiveNextStage from "src/domains/solving/pages/live/SolvingLiveNextStage";
 import SolvingLiveWinner from "src/domains/solving/pages/live/SolvingLiveWinner";
@@ -21,6 +21,7 @@ import {
 import SolvingLiveParticipantElluminationConfirm from "./SolvingLiveParticipantEliminationConfirm";
 import SolvingLiveQuestion from "./SolvingLiveQuestion";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
+import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
 //
 //
@@ -73,6 +74,8 @@ const SolvingLive = () => {
 	const userIdRef = useRef<number | null>(null);
 
 	const location = useLocation();
+
+	const navigate = useNavigate();
 
 	const { user } = useUser();
 
@@ -290,7 +293,10 @@ const SolvingLive = () => {
 			<SolvingLiveWinner
 				open={showWinner}
 				activeParticipants={activeParticipants}
-				onClose={() => setShowWinner(false)}
+				onClose={() => {
+					setShowWinner(false);
+					navigate(SOLVING_ROUTE_PATH.ROOT);
+				}}
 			/>
 			<SolvingBell open={isSubmitAllowed} />
 			{!showQualifierView &&
