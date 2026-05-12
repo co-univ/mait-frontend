@@ -1,16 +1,15 @@
 import clsx from "clsx";
 import { Bell, Search, UserRound, X } from "lucide-react";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { SIDEBAR_TRANSITION } from "@/app.constants";
 import { MYPAGE_ROUTE_PATH } from "@/domains/my-page/mypage.routes";
 import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
-import { hasValidPath } from "@/utils/path";
 import { NAVIGATION_ITEMS } from "./SideBar";
 import SideBarDropdown from "./SideBarDropdown";
-import SidebarItem from "./SidebarItem";
+import SideBarNavItem from "./SideBarNavItem";
 
 //
 //
@@ -20,7 +19,6 @@ const MobileSidebar = () => {
 	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
 	const { activeTeam } = useTeams();
-	const location = useLocation();
 	const [searchQuery, setSearchQuery] = useState("");
 
 	return (
@@ -73,24 +71,7 @@ const MobileSidebar = () => {
 						{activeTeam &&
 							NAVIGATION_ITEMS.filter(
 								(item) => !item.isMakerOnly || activeTeam.role !== "PLAYER",
-							).map((item) => (
-								<SidebarItem
-									key={item.path}
-									className={clsx("text-color-gray-30", {
-										"text-color-primary-50 !typo-heading-xsmall bg-primary-5":
-											hasValidPath(item.activePaths, location.pathname),
-									})}
-								>
-									<Link
-										to={item.path}
-										className="flex items-center gap-gap-5"
-										onClick={toggleSidebarOpen}
-									>
-										{item.icon}
-										<span>{item.label}</span>
-									</Link>
-								</SidebarItem>
-							))}
+							).map((item) => <SideBarNavItem key={item.label} item={item} />)}
 					</div>
 				</div>
 

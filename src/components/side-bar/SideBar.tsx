@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
 import { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
 	HEADER_HEIGHT,
 	SIDEBAR_TRANSITION,
@@ -16,15 +16,15 @@ import useUser from "@/hooks/useUser";
 import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
-import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SideBarDropdown from "./SideBarDropdown";
+import type { NavItem } from "./SideBarNavItem";
+import SideBarNavItem from "./SideBarNavItem";
 import SidebarItem from "./SidebarItem";
-
 //
 //
 //
 
-export const NAVIGATION_ITEMS = [
+export const NAVIGATION_ITEMS: NavItem[] = [
 	{
 		icon: <SquarePen />,
 		label: "문제 관리",
@@ -49,9 +49,22 @@ export const NAVIGATION_ITEMS = [
 	{
 		icon: <Users />,
 		label: "팀 관리",
-		path: TEAM_MANAGEMENT_ROUTE_PATH.USERS,
 		activePaths: ["/team-management"],
 		isMakerOnly: false,
+		subItems: [
+			{
+				label: "멤버 관리",
+				path: TEAM_MANAGEMENT_ROUTE_PATH.USERS,
+				activePaths: ["/team-management/users"],
+				isMakerOnly: false,
+			},
+			{
+				label: "카테고리 관리",
+				path: TEAM_MANAGEMENT_ROUTE_PATH.CATEGORY,
+				activePaths: ["/team-management/category"],
+				isMakerOnly: true,
+			},
+		],
 	},
 ];
 
@@ -103,19 +116,6 @@ const SideBar = () => {
 		}
 	}, [sidebarVariant]);
 
-	/**
-	 *
-	 */
-	const handleNavigationItemClick = (path: string) => {
-		if (path !== "/dashboard") {
-			return;
-		}
-
-		trackEvent(GTM_EVENT_NAMES.dashboardNavClick, {
-			entry_source: "sidebar",
-		});
-	};
-
 	//
 	useEffect(() => {
 		if (isGradationSecondaryRadialPage && isSidebarOpen) {
@@ -152,29 +152,7 @@ const SideBar = () => {
 					{activeTeam &&
 						NAVIGATION_ITEMS.filter(
 							(item) => !item.isMakerOnly || activeTeam.role !== "PLAYER",
-						).map((item) => (
-							<SidebarItem
-								key={item.path}
-								className={clsx("text-color-gray-30", {
-									"text-color-primary-50 !typo-heading-xsmall bg-primary-5":
-										hasValidPath(item.activePaths, location.pathname),
-								})}
-							>
-								<Link
-									to={item.path}
-									state={
-										item.path === "/dashboard"
-											? { entrySource: "sidebar" }
-											: undefined
-									}
-									className="flex items-center gap-gap-5"
-									onClick={() => handleNavigationItemClick(item.path)}
-								>
-									{item.icon}
-									<span>{item.label}</span>
-								</Link>
-							</SidebarItem>
-						))}
+						).map((item) => <SideBarNavItem key={item.label} item={item} />)}
 				</div>
 			</nav>
 		</aside>
