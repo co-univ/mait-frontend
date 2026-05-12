@@ -1,92 +1,104 @@
-import {
-	DragDropContext,
-	type DragStart,
-	type DropResult,
-} from "@hello-pangea/dnd";
-import { useState } from "react";
+import { flip, offset, useFloating } from "@floating-ui/react-dom";
+import { NotebookPen } from "lucide-react";
+import { useRef, useState } from "react";
+import Button from "@/components/Button";
 import useTeams from "@/hooks/useTeams";
-import useTeamManagementUsers from "../../hooks/users/useTeamManagementUsers";
-import TeamManagementUsersMakerPanel from "./TeamManagementUsersMakerPanel";
-import TeamManagementUsersPlayerPanel from "./TeamManagementUsersPlayerPanel";
-
-//
-//
-//
+import LabeledPageLayout from "@/layouts/LabeledPageLayout";
+import TeamManagementUsersAccountAddPopover from "../../components/users/TeamManagementUsersAccountAddPopover";
+import TeamManagementUsersAdditionalButton from "../../components/users/TeamManagementUsersAdditionalButton";
+import useTeamManagementUsersActions from "../../hooks/users/useTeamManagementUsersActions";
+import TeamManagementUsersContainer from "./TeamManagementUsersContainer";
+import TeamManagementUsersLinkCreateModal from "./TeamManagementUsersLinkCreateModal";
+import TeamManagementUsersLinkManageModal from "./TeamManagementUsersLinkManageModal";
 
 //
 //
 //
 
 const TeamManagementUsers = () => {
-	const [draggingSourceId, setDraggingSourceId] = useState<string | null>(null);
+	const [isLinkCreateModalOpen, setIsLinkCreateModalOpen] = useState(false);
+	const [isLinkManageModalOpen, setIsLinkManageModalOpen] = useState(false);
+	const [isAccountAddCardOpen, setIsAccountAddCardOpen] = useState(false);
 
-	const { activeTeam } = useTeams();
+	const accountAddButtonRef = useRef<HTMLButtonElement>(null);
 
-	const {
-		owners,
-		makers,
-		players,
-		applicants,
-		handleRoleUpdate,
-		handleUserDelete,
-		handleApproveUser,
-		handleRejectUser,
-		isLoading,
-	} = useTeamManagementUsers({ teamId: activeTeam?.teamId ?? 0 });
+	const { activeTeam, isMakerOrAbove } = useTeams();
+	const { handleLeave, handleDelete } = useTeamManagementUsersActions();
+
+	const isOwner = activeTeam?.role === "OWNER";
+
+	const { refs, floatingStyles } = useFloating({
+		placement: "bottom-end",
+		middleware: [offset(10), flip()],
+	});
 
 	/**
 	 *
 	 */
-	const handleDragStart = (start: DragStart) => {
-		setDraggingSourceId(start.source.droppableId);
+	const handleLinkManageModalOpen = () => {
+		setIsLinkCreateModalOpen(false);
+		setIsLinkManageModalOpen(true);
 	};
 
 	/**
 	 *
 	 */
-	const handleDragEnd = (result: DropResult) => {
-		setDraggingSourceId(null);
-
-		if (!result.destination) {
-			return;
+	const renderInviteButtons = () => {
+		if (!isMakerOrAbove) {
+			return null;
 		}
 
-		const teamUserId = Number(result.draggableId);
-		const sourceDroppableId = result.source.droppableId;
-		const destinationDroppableId = result.destination.droppableId;
-
-		if (sourceDroppableId !== destinationDroppableId) {
-			const newRole =
-				destinationDroppableId === "droppable-maker" ? "MAKER" : "PLAYER";
-			handleRoleUpdate(teamUserId, newRole);
-		}
+		return (
+			<div ref={refs.setReference} className="flex gap-gap-5">
+				<Button
+					item="초대 링크 생성"
+					className="border-none bg-color-primary-5 text-color-primary-50 !typo-heading-xsmall"
+					onClick={() => setIsLinkCreateModalOpen(true)}
+				/>
+				<Button
+					ref={accountAddButtonRef}
+					item="계정 추가"
+					className="border-none bg-color-primary-5 text-color-primary-50 !typo-heading-xsmall"
+					onClick={() => setIsAccountAddCardOpen(true)}
+				/>
+			</div>
+		);
 	};
 
 	return (
-		<div className="flex gap-gap-9 w-full">
-			<DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-				<div className="flex-1">
-					<TeamManagementUsersMakerPanel
-						isLoading={isLoading}
-						draggingSourceId={draggingSourceId}
-						owners={owners}
-						makers={makers}
-						applicants={applicants}
-						onUserDelete={handleUserDelete}
-						onApproveUser={handleApproveUser}
-						onRejectUser={handleRejectUser}
-					/>
-				</div>
-				<div className="flex-1">
-					<TeamManagementUsersPlayerPanel
-						draggingSourceId={draggingSourceId}
-						isLoading={isLoading}
-						players={players}
-						onUserDelete={handleUserDelete}
-					/>
-				</div>
-			</DragDropContext>
-		</div>
+		<>
+			<LabeledPageLayout
+				icon={<NotebookPen />}
+				label={
+					<div className="flex items-center gap-gap-3">
+						{activeTeam?.teamName ?? ""}
+						<TeamManagementUsersAdditionalButton
+							isOwner={isOwner}
+							onLeave={handleLeave}
+							onDelete={handleDelete}
+						/>
+					</div>
+				}
+				rightContent={renderInviteButtons()}
+			>
+				<TeamManagementUsersContainer />
+			</LabeledPageLayout>
+			<TeamManagementUsersLinkCreateModal
+				open={isLinkCreateModalOpen}
+				onClose={() => setIsLinkCreateModalOpen(false)}
+				onLinkManageClick={handleLinkManageModalOpen}
+			/>
+			<TeamManagementUsersLinkManageModal
+				open={isLinkManageModalOpen}
+				onClose={() => setIsLinkManageModalOpen(false)}
+			/>
+			<TeamManagementUsersAccountAddPopover
+				open={isAccountAddCardOpen}
+				onClose={() => setIsAccountAddCardOpen(false)}
+				setFloating={refs.setFloating}
+				floatingStyles={floatingStyles}
+			/>
+		</>
 	);
 };
 

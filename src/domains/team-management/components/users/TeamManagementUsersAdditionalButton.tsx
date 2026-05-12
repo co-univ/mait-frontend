@@ -16,7 +16,7 @@ interface TeamManagementAdditionalButtonProps {
 //
 //
 
-const TeamManagementAdditionalButton = ({
+const TeamManagementUsersAdditionalButton = ({
 	isOwner,
 	onLeave,
 	onDelete,
@@ -42,4 +42,4 @@ const TeamManagementAdditionalButton = ({
 	);
 };
 
-export default TeamManagementAdditionalButton;
+export default TeamManagementUsersAdditionalButton;

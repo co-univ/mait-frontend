@@ -5,8 +5,8 @@ import type {
 	ApplyTeamUserApiResponse,
 	JoinedTeamUserApiResponse,
 } from "@/libs/types";
-import TeamManagementPendingBox from "../../components/common/TeamManagementPendingBox";
-import TeamManagementUsersBox from "../../components/users/TeamManagementUsersBox";
+import TeamManagementUsersPendingBox from "../../components/users/TeamManagementUsersPendingBox";
+import TeamManagementUsersUserBox from "../../components/users/TeamManagementUsersUserBox";
 import TeamManagementUsersPanel from "../../components/users/TeamManagementUsersPanel";
 
 //
@@ -52,7 +52,7 @@ const TeamManagementUsersMakerPanel = ({
 		<TeamManagementUsersPanel icon={<UserRound />} title="메이커">
 			<div className="flex flex-col gap-gap-5">
 				{applicants?.map((user) => (
-					<TeamManagementPendingBox
+					<TeamManagementUsersPendingBox
 						key={user.id}
 						user={user}
 						onApprove={onApproveUser}
@@ -62,7 +62,7 @@ const TeamManagementUsersMakerPanel = ({
 			</div>
 			<div className="flex flex-col gap-gap-5">
 				{owners?.map((user) => (
-					<TeamManagementUsersBox key={user.teamUserId} user={user} />
+					<TeamManagementUsersUserBox key={user.teamUserId} user={user} />
 				))}
 			</div>
 			<Droppable
@@ -88,7 +88,7 @@ const TeamManagementUsersMakerPanel = ({
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
 									>
-										<TeamManagementUsersBox
+										<TeamManagementUsersUserBox
 											editable={!isLoading && isMakerOrAbove}
 											isDragging={snapshot.isDragging}
 											user={user}

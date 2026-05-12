@@ -17,7 +17,7 @@ interface UseTeamManagementActionsReturn {
 //
 //
 
-const useTeamManagementActions = (): UseTeamManagementActionsReturn => {
+const useTeamManagementUsersActions = (): UseTeamManagementActionsReturn => {
 	const navigate = useNavigate();
 	const { activeTeam, refetch } = useTeams();
 	const { confirm } = useConfirm();
@@ -93,4 +93,4 @@ const useTeamManagementActions = (): UseTeamManagementActionsReturn => {
 	return { handleLeave, handleDelete };
 };
 
-export default useTeamManagementActions;
+export default useTeamManagementUsersActions;

@@ -15,7 +15,7 @@ interface TeamManagementPendingBoxProps {
 //
 //
 
-const TeamManagementPendingBox = ({ user, onApprove, onReject }: TeamManagementPendingBoxProps) => {
+const TeamManagementUsersPendingBox = ({ user, onApprove, onReject }: TeamManagementPendingBoxProps) => {
 	const handleApproveUser = () => {
 		onApprove(user.id, user.name, user.nickname);
 	};
@@ -45,4 +45,4 @@ const TeamManagementPendingBox = ({ user, onApprove, onReject }: TeamManagementP
 	);
 };
 
-export default TeamManagementPendingBox;
+export default TeamManagementUsersPendingBox;
