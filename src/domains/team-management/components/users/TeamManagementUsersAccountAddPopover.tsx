@@ -26,7 +26,7 @@ interface TeamManagementAccountAddPopoverProps {
 //
 //
 
-const TeamManagementAccountAddPopover = ({
+const TeamManagementUsersAccountAddPopover = ({
 	open,
 	onClose,
 	setFloating,
@@ -296,4 +296,4 @@ const TeamManagementAccountAddPopover = ({
 	return createPortal(cardContent, portalContainer);
 };
 
-export default TeamManagementAccountAddPopover;
+export default TeamManagementUsersAccountAddPopover;

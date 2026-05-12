@@ -20,7 +20,7 @@ dayjs.tz.setDefault("Asia/Seoul");
 //
 //
 
-interface TeamManagementLinkManageModalProps {
+interface TeamManagementUsersLinkManageModalProps {
 	open: boolean;
 	onClose: () => void;
 }
@@ -29,10 +29,10 @@ interface TeamManagementLinkManageModalProps {
 //
 //
 
-const TeamManagementLinkManageModal = ({
+const TeamManagementUsersLinkManageModal = ({
 	open,
 	onClose,
-}: TeamManagementLinkManageModalProps) => {
+}: TeamManagementUsersLinkManageModalProps) => {
 	const { activeTeam, isMakerOrAbove } = useTeams();
 
 	const { data, refetch } = apiHooks.useQuery(
@@ -163,4 +163,4 @@ const TeamManagementLinkManageModal = ({
 	);
 };
 
-export default TeamManagementLinkManageModal;
+export default TeamManagementUsersLinkManageModal;

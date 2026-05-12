@@ -49,7 +49,7 @@ export const NAVIGATION_ITEMS = [
 	{
 		icon: <Users />,
 		label: "팀 관리",
-		path: TEAM_MANAGEMENT_ROUTE_PATH.ROOT,
+		path: TEAM_MANAGEMENT_ROUTE_PATH.USERS,
 		activePaths: ["/team-management"],
 		isMakerOnly: false,
 	},

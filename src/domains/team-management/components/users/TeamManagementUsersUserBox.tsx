@@ -7,7 +7,7 @@ import type { JoinedTeamUserApiResponse } from "@/libs/types";
 //
 //
 
-interface TeamManagementUsersBoxProps {
+interface TeamManagementUsersUserBoxProps {
 	editable?: boolean;
 	isDragging?: boolean;
 	user: JoinedTeamUserApiResponse;
@@ -18,12 +18,12 @@ interface TeamManagementUsersBoxProps {
 //
 //
 
-const TeamManagementUsersBox = ({
+const TeamManagementUsersUserBox = ({
 	editable = false,
 	isDragging = false,
 	user,
 	onUserDelete,
-}: TeamManagementUsersBoxProps) => {
+}: TeamManagementUsersUserBoxProps) => {
 	const [isMouseOver, setIsMouseOver] = useState(false);
 
 	return (
@@ -54,4 +54,4 @@ const TeamManagementUsersBox = ({
 	);
 };
 
-export default TeamManagementUsersBox;
+export default TeamManagementUsersUserBox;

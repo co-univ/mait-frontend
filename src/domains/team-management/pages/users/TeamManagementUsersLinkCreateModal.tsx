@@ -15,7 +15,7 @@ import CopyButton from "../../../../components/CopyButton";
 //
 //
 
-interface TeamManagementLinkCreateModalProps {
+interface TeamManagementUsersLinkCreateModalProps {
 	open: boolean;
 	onClose: () => void;
 	onLinkManageClick: () => void;
@@ -25,11 +25,11 @@ interface TeamManagementLinkCreateModalProps {
 //
 //
 
-const TeamManagementLinkCreateModal = ({
+const TeamManagementUsersLinkCreateModal = ({
 	open,
 	onClose,
 	onLinkManageClick,
-}: TeamManagementLinkCreateModalProps) => {
+}: TeamManagementUsersLinkCreateModalProps) => {
 	const [role, setRole] = useState<CreateTeamInviteApiRequest["role"]>("MAKER");
 	const [duration, setDuration] =
 		useState<CreateTeamInviteApiRequest["duration"]>("ONE_DAY");
@@ -277,4 +277,4 @@ const TeamManagementLinkCreateModal = ({
 	);
 };
 
-export default TeamManagementLinkCreateModal;
+export default TeamManagementUsersLinkCreateModal;
