@@ -62,8 +62,8 @@ const SolvingLiveQuestion = ({
 
 	const { submitAnswer, isSubmitting } = useSolvingLiveAnswerSubmit();
 
-	// 제출 비활성화 조건: 탈락했거나 제출 비허용이거나 제출 중인 상태인 경우
-	const isSubmitDisabled = isFailed || !isSubmitAllowed || isSubmitting;
+	// 제출 비활성화 조건: 탈락했거나 제출 비허용이거나 제출 중인 상태거나 맞은 경우
+	const isSubmitDisabled = isFailed || !isSubmitAllowed || isSubmitting || (isSubmitted && !!isCorrect);
 
 	// 답안 입력 비활성화 조건: 탈락한 경우만
 	const isAnswerDisabled = isFailed;
