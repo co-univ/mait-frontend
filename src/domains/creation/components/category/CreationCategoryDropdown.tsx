@@ -77,15 +77,23 @@ const CreationCategoryDropdown = ({
 
 				{!isSearching && searchedCategories.length > 0 && (
 					<div className="self-start w-full flex flex-wrap gap-gap-3 pt-[16px]">
-						{searchedCategories.map((category) => (
-							<button
-								key={category.id}
-								type="button"
-								onClick={() => onCategoryAdd(category)}
-							>
-								<CreationCategoryBadge category={category} variant="gray" />
-							</button>
-						))}
+						{searchedCategories
+							.filter(
+								(searchedCategory) =>
+									!selectedCategories.some(
+										(selectedCategory) =>
+											selectedCategory.id === searchedCategory.id,
+									),
+							)
+							.map((category) => (
+								<button
+									key={category.id}
+									type="button"
+									onClick={() => onCategoryAdd(category)}
+								>
+									<CreationCategoryBadge category={category} variant="gray" />
+								</button>
+							))}
 					</div>
 				)}
 
@@ -94,8 +102,7 @@ const CreationCategoryDropdown = ({
 					searchValue &&
 					!selectedCategories.some((selectedCategory) =>
 						searchedCategories.some(
-							(searchedCategory) =>
-								searchedCategory.id === selectedCategory.id,
+							(searchedCategory) => searchedCategory.id === selectedCategory.id,
 						),
 					) && (
 						<p className="pt-[16px] text-center typo-body-xsmall text-color-gray-95">
