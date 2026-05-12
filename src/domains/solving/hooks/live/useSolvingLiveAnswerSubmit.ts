@@ -87,10 +87,10 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 						notify.error("풀이 불가한 문제입니다.");
 						break;
 					case "QS-002":
-						notify.error("참여자만 답안을 제출할 수 있습니다.");
+						notify.warn("참여자만 답안을 제출할 수 있습니다.");
 						break;
 					case "QS-003":
-						notify.error("이미 정답 처리된 문제입니다.");
+						notify.warn("이미 정답 처리된 문제입니다.");
 						break;
 					default:
 						notify.error("답안 제출에 실패하였습니다.");
