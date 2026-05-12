@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Field } from "@/components/field";
 import type { QuestionSetCategoryApiResponse } from "@/libs/types";
-import useCreationNewCategories from "../../hooks/new/useCreationNewCategories";
-import CreationNewLeftPanelCategoryDropdown from "./CreationNewLeftPanelCategoryDropdown";
-import CreationNewLeftPanelCategoryTrigger from "./CreationNewLeftPanelCategoryTrigger";
+import useCreationCategories from "../../hooks/category/useCreationCategories";
+import CreationCategoryDropdown from "./CreationCategoryDropdown";
+import CreationCategoryTrigger from "./CreationCategoryTrigger";
 
 //
 //
 //
 
-interface CreationNewLeftPanelCategoryFieldProps {
+interface CreationCategoryFieldProps {
 	selectedCategories?: QuestionSetCategoryApiResponse[];
 	onCategoryAdd: (category: QuestionSetCategoryApiResponse) => void;
 	onCategoryRemove: (categoryId: number) => void;
@@ -19,11 +19,11 @@ interface CreationNewLeftPanelCategoryFieldProps {
 //
 //
 
-const CreationNewLeftPanelCategoryField = ({
+const CreationCategoryField = ({
 	selectedCategories = [],
 	onCategoryAdd,
 	onCategoryRemove,
-}: CreationNewLeftPanelCategoryFieldProps) => {
+}: CreationCategoryFieldProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +34,7 @@ const CreationNewLeftPanelCategoryField = ({
 		searchValue,
 		onSearchChange,
 		createCategory,
-	} = useCreationNewCategories(onCategoryAdd);
+	} = useCreationCategories(onCategoryAdd);
 
 	const filteredCategories = searchedCategories.filter(
 		(c) => !selectedCategories.some((s) => s.id === c.id),
@@ -49,7 +49,7 @@ const CreationNewLeftPanelCategoryField = ({
 	};
 
 	const handleCategoryAdd = (category: QuestionSetCategoryApiResponse) => {
-		onCategoryAdd?.(category);
+		onCategoryAdd(category);
 		onSearchChange("");
 	};
 
@@ -79,14 +79,14 @@ const CreationNewLeftPanelCategoryField = ({
 		<Field.Root>
 			<Field.Label className="typo-body-large">카테고리</Field.Label>
 			<div ref={containerRef} className="relative">
-				<CreationNewLeftPanelCategoryTrigger
+				<CreationCategoryTrigger
 					isOpen={isOpen}
 					selectedCategories={selectedCategories}
 					onToggle={handleToggle}
 					onCategoryRemove={onCategoryRemove}
 				/>
 				{isOpen && (
-					<CreationNewLeftPanelCategoryDropdown
+					<CreationCategoryDropdown
 						selectedCategories={selectedCategories}
 						searchedCategories={filteredCategories}
 						isSearching={isSearching}
@@ -102,4 +102,4 @@ const CreationNewLeftPanelCategoryField = ({
 	);
 };
 
-export default CreationNewLeftPanelCategoryField;
+export default CreationCategoryField;

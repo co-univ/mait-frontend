@@ -249,7 +249,7 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 	/**
 	 *
 	 */
-	const submitModifiedCategory = (_id: number, _name: string) => {
+	const submitModifiedCategory = (id: number, name: string) => {
 		// TODO: need API
 	};
 

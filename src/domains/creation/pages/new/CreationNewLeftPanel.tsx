@@ -7,7 +7,7 @@ import type {
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 import type { CreationNewQuestionSetState } from "../../reducers/new/CreationNewQuestionSetReducer";
-import CreationNewLeftPanelCategoryField from "./CreationNewLeftPanelCategoryField";
+import CreationCategoryField from "../../components/category/CreationCategoryField";
 import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 
 //
@@ -87,7 +87,7 @@ const CreationNewLeftPanel = ({
 	 */
 	const renderCategoryField = () => {
 		return (
-			<CreationNewLeftPanelCategoryField
+			<CreationCategoryField
 				selectedCategories={categories}
 				onCategoryAdd={onCategoryAdd}
 				onCategoryRemove={onCategoryRemove}

@@ -6,7 +6,7 @@ import type { QuestionSetCategoryApiResponse } from "@/libs/types";
 //
 //
 
-interface CreationNewLeftPanelCategoryBadgeProps {
+interface CreationCategoryBadgeProps {
 	category: QuestionSetCategoryApiResponse;
 	variant?: "primary" | "gray";
 	onRemove?: (id: number) => void;
@@ -16,11 +16,11 @@ interface CreationNewLeftPanelCategoryBadgeProps {
 //
 //
 
-const CreationNewLeftPanelCategoryBadge = ({
+const CreationCategoryBadge = ({
 	category,
 	variant = "primary",
 	onRemove,
-}: CreationNewLeftPanelCategoryBadgeProps) => {
+}: CreationCategoryBadgeProps) => {
 	return (
 		<span
 			className={clsx(
@@ -48,4 +48,4 @@ const CreationNewLeftPanelCategoryBadge = ({
 	);
 };
 
-export default CreationNewLeftPanelCategoryBadge;
+export default CreationCategoryBadge;

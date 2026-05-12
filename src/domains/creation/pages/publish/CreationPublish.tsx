@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, PencilLine } from "lucide-react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
@@ -9,7 +9,11 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient, apiHooks } from "@/libs/api";
-import type { QuestionSetSolveMode, QuestionSetVisibility } from "@/libs/types";
+import type {
+	QuestionSetCategoryApiResponse,
+	QuestionSetSolveMode,
+	QuestionSetVisibility,
+} from "@/libs/types";
 import {
 	CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	creationPublishQuestionSetReducer,
@@ -33,6 +37,10 @@ const CreationPublish = () => {
 	const [questionSet, dispatch] = useReducer(
 		creationPublishQuestionSetReducer,
 		CREATION_PUBLISH_QUESTION_INITIAL_STATE,
+	);
+
+	const [categories, setCategories] = useState<QuestionSetCategoryApiResponse[]>(
+		[],
 	);
 
 	const { data } = apiHooks.useQuery(
@@ -101,6 +109,38 @@ const CreationPublish = () => {
 	/**
 	 *
 	 */
+	const handleCategoryAdd = async (category: QuestionSetCategoryApiResponse) => {
+		await apiClient.POST(
+			"/api/v1/question-sets/{questionSetId}/categories/{categoryId}",
+			{
+				params: {
+					path: { questionSetId, categoryId: category.id },
+				},
+			},
+		);
+
+		setCategories((prev) => [...prev, category]);
+	};
+
+	/**
+	 *
+	 */
+	const handleCategoryRemove = async (categoryId: number) => {
+		await apiClient.DELETE(
+			"/api/v1/question-sets/{questionSetId}/categories/{categoryId}",
+			{
+				params: {
+					path: { questionSetId, categoryId },
+				},
+			},
+		);
+
+		setCategories((prev) => prev.filter((c) => c.id !== categoryId));
+	};
+
+	/**
+	 *
+	 */
 	const handlePublishButtonClick = async () => {
 		try {
 			await apiClient.PUT("/api/v1/question-sets/{questionSetId}", {
@@ -141,14 +181,22 @@ const CreationPublish = () => {
 	//
 	useEffect(() => {
 		if (data?.data) {
-			const { title, subject, difficulty } = data.data;
+			const { title, subject, difficulty, categories: apiCategories } =
+				data.data;
 
 			dispatch({ type: "SET_TITLE", payload: title ?? "" });
 			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
-			dispatch({
-				type: "SET_DIFFICULTY",
-				payload: difficulty ?? "",
-			});
+			dispatch({ type: "SET_DIFFICULTY", payload: difficulty ?? "" });
+
+			setCategories(
+				(apiCategories ?? [])
+					.filter((c) => c.id != null && c.name != null)
+					.map((c) => ({
+						id: c.id as number,
+						teamId: c.teamId ?? 0,
+						name: c.name as string,
+					})),
+			);
 		}
 	}, [data?.data]);
 
@@ -180,8 +228,11 @@ const CreationPublish = () => {
 						creationType={data?.data?.creationType}
 						difficulty={questionSet.difficulty}
 						subject={questionSet.subject}
+						categories={categories}
 						onChangeDifficulty={handleDifficultyChange}
 						onChangeSubject={handleSubjectChange}
+						onCategoryAdd={handleCategoryAdd}
+						onCategoryRemove={handleCategoryRemove}
 					/>
 				</div>
 			</div>

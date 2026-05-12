@@ -13,7 +13,7 @@ import type {
 //
 //
 
-interface UseCreationNewCategoriesReturn {
+interface UseCreationCategoriesReturn {
 	searchedCategories: QuestionSetCategoryApiResponse[];
 	isSearching: boolean;
 	searchValue: string;
@@ -25,9 +25,9 @@ interface UseCreationNewCategoriesReturn {
 //
 //
 
-const useCreationNewCategories = (
+const useCreationCategories = (
 	onCategoryAdd?: (category: QuestionSetCategoryApiResponse) => void,
-): UseCreationNewCategoriesReturn => {
+): UseCreationCategoriesReturn => {
 	const [searchValue, setSearchValue] = useState("");
 	const [searchedCategories, setSearchedCategories] = useState<
 		QuestionSetCategoryApiResponse[]
@@ -219,4 +219,4 @@ const useCreationNewCategories = (
 	};
 };
 
-export default useCreationNewCategories;
+export default useCreationCategories;

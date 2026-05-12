@@ -3,13 +3,13 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import { Spinner } from "@/components/shadcn-ui/spinner";
 import type { QuestionSetCategoryApiResponse } from "@/libs/types";
-import CreationNewLeftPanelCategoryBadge from "./CreationNewLeftPanelCategoryBadge";
+import CreationCategoryBadge from "./CreationCategoryBadge";
 
 //
 //
 //
 
-interface CreationNewLeftPanelCategoryDropdownProps {
+interface CreationCategoryDropdownProps {
 	selectedCategories: QuestionSetCategoryApiResponse[];
 	searchedCategories: QuestionSetCategoryApiResponse[];
 	isSearching: boolean;
@@ -24,7 +24,7 @@ interface CreationNewLeftPanelCategoryDropdownProps {
 //
 //
 
-const CreationNewLeftPanelCategoryDropdown = ({
+const CreationCategoryDropdown = ({
 	selectedCategories,
 	searchedCategories,
 	isSearching,
@@ -33,14 +33,14 @@ const CreationNewLeftPanelCategoryDropdown = ({
 	onCategoryAdd,
 	onCategoryRemove,
 	onCreateCategory,
-}: CreationNewLeftPanelCategoryDropdownProps) => {
+}: CreationCategoryDropdownProps) => {
 	const [isFocused, setIsFocused] = useState(false);
 
 	return (
 		<div className="absolute top-full left-0 right-0 z-50 mt-[2px] bg-color-gray-5 rounded-radius-medium1 shadow-xl px-padding-11 py-padding-10">
 			<div className="flex flex-wrap gap-gap-3 mb-[16px]">
 				{selectedCategories.map((category) => (
-					<CreationNewLeftPanelCategoryBadge
+					<CreationCategoryBadge
 						key={category.id}
 						category={category}
 						variant="primary"
@@ -83,10 +83,7 @@ const CreationNewLeftPanelCategoryDropdown = ({
 								type="button"
 								onClick={() => onCategoryAdd(category)}
 							>
-								<CreationNewLeftPanelCategoryBadge
-									category={category}
-									variant="gray"
-								/>
+								<CreationCategoryBadge category={category} variant="gray" />
 							</button>
 						))}
 					</div>
@@ -95,10 +92,10 @@ const CreationNewLeftPanelCategoryDropdown = ({
 				{!isSearching &&
 					searchedCategories.length === 0 &&
 					searchValue &&
-					!selectedCategories.some((selectedCategoriy) =>
+					!selectedCategories.some((selectedCategory) =>
 						searchedCategories.some(
 							(searchedCategory) =>
-								searchedCategory.id === selectedCategoriy.id,
+								searchedCategory.id === selectedCategory.id,
 						),
 					) && (
 						<p className="pt-[16px] text-center typo-body-xsmall text-color-gray-95">
@@ -119,4 +116,4 @@ const CreationNewLeftPanelCategoryDropdown = ({
 	);
 };
 
-export default CreationNewLeftPanelCategoryDropdown;
+export default CreationCategoryDropdown;
