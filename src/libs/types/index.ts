@@ -177,6 +177,7 @@ export type UpdateQuestionAnswerApiRequest = components["schemas"]["UpdateQuesti
 export type UpdateQuestionApiRequest = components["schemas"]["UpdateQuestionApiRequest"];
 export type UpdateQuestionOrderApiRequest = components["schemas"]["UpdateQuestionOrderApiRequest"];
 export type UpdateQuestionSetApiRequest = components["schemas"]["UpdateQuestionSetApiRequest"];
+export type UpdateQuestionSetCategoryApiRequest = components["schemas"]["UpdateQuestionSetCategoryApiRequest"];
 export type UpdateQuestionSetFieldApiRequest = components["schemas"]["UpdateQuestionSetFieldApiRequest"];
 export type UpdateQuestionSetReviewApiRequest = components["schemas"]["UpdateQuestionSetReviewApiRequest"];
 export type UpdateQuestionStatusApiRequest = components["schemas"]["UpdateQuestionStatusApiRequest"];

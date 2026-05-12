@@ -848,6 +848,30 @@ export interface paths {
         patch: operations["endLiveQuestionSet"];
         trace?: never;
     };
+    "/api/v1/question-sets/categories/{categoryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 문제 셋 카테고리 삭제 API
+         * @description 팀 카테고리를 soft delete 합니다. 이미 삭제된 카테고리는 멱등 처리됩니다.
+         */
+        delete: operations["deleteCategory"];
+        options?: never;
+        head?: never;
+        /**
+         * 문제 셋 카테고리 이름 수정 API
+         * @description 활성 팀 카테고리의 이름을 수정합니다. 기존 문제 셋 매핑은 유지됩니다.
+         */
+        patch: operations["updateCategoryName"];
+        trace?: never;
+    };
     "/api/v1/users/nickname/random": {
         parameters: {
             query?: never;
@@ -1360,26 +1384,6 @@ export interface paths {
         post?: never;
         /** 초대 링크 삭제 API */
         delete: operations["deleteTeamInvitation"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/question-sets/categories/{categoryId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * 문제 셋 카테고리 삭제 API
-         * @description 팀 카테고리를 soft delete 합니다. 이미 삭제된 카테고리는 멱등 처리됩니다.
-         */
-        delete: operations["deleteCategory"];
         options?: never;
         head?: never;
         patch?: never;
@@ -2240,6 +2244,9 @@ export interface components {
              * @description 바로 뒤에 올 문제 ID (없으면 null)
              */
             nextQuestionId?: number;
+        };
+        UpdateQuestionSetCategoryApiRequest: {
+            name: string;
         };
         ApiResponseRandomNicknameResponse: {
             isSuccess?: boolean;
@@ -4140,6 +4147,54 @@ export interface operations {
             };
         };
     };
+    deleteCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    updateCategoryName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateQuestionSetCategoryApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetCategoryApiResponse"];
+                };
+            };
+        };
+    };
     getRandomNickname: {
         parameters: {
             query?: never;
@@ -4775,28 +4830,6 @@ export interface operations {
             header?: never;
             path: {
                 invitationId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseVoid"];
-                };
-            };
-        };
-    };
-    deleteCategory: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                categoryId: number;
             };
             cookie?: never;
         };
