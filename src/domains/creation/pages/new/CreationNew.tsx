@@ -8,7 +8,10 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiClient } from "@/libs/api";
-import type { QuestionCount } from "@/libs/types";
+import type {
+	QuestionCount,
+	QuestionSetCategoryApiResponse,
+} from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import { CREATION_ROUTE_PATH } from "../../creation.routes";
 import {
@@ -54,6 +57,23 @@ const CreationNew = () => {
 		type: CreationNewQuestionSetState["creationType"],
 	) => {
 		dispatch({ type: "SET_CREATION_TYPE", payload: type });
+	};
+
+	/**
+	 *
+	 */
+	const handleCategoryAdd = (category: QuestionSetCategoryApiResponse) => {
+		dispatch({
+			type: "ADD_CATEGORIES",
+			payload: category,
+		});
+	};
+
+	/**
+	 *
+	 */
+	const handleCategoryRemove = (categoryId: number) => {
+		dispatch({ type: "REMOVE_CATEGORY", payload: categoryId });
 	};
 
 	/**
@@ -157,9 +177,14 @@ const CreationNew = () => {
 	 *
 	 */
 	const handleCreateButtonClick = async () => {
+		const questionSetRequestBody = {
+			...questionSet,
+			categoryIds: questionSet.categories?.map((category) => category.id) ?? [],
+		};
+
 		const res = await apiClient.POST("/api/v1/question-sets", {
 			body: {
-				...questionSet,
+				...questionSetRequestBody,
 				materials: questionSet.materials?.map((material) => ({
 					id: material.id,
 					url: material.url,
@@ -216,9 +241,12 @@ const CreationNew = () => {
 				<div className="flex gap-gap-5 w-full">
 					<CreationNewLeftPanel
 						creationType={questionSet.creationType}
+						categories={questionSet.categories}
 						subject={questionSet.subject}
 						counts={questionSet.counts}
 						onCreationTypeChange={handleCreationTypeChange}
+						onCategoryAdd={handleCategoryAdd}
+						onCategoryRemove={handleCategoryRemove}
 						onSubjectChange={handleSubjectChange}
 						onQuestionCountCheck={handleQuestionCountCheck}
 						onQuestionCountCountChange={handleQuestionCountCountChange}

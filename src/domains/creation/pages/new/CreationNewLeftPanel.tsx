@@ -1,9 +1,13 @@
 import { Field } from "@/components/field";
 import { Radio } from "@/components/radio";
-import type { QuestionCount } from "@/libs/types";
+import type {
+	QuestionCount,
+	QuestionSetCategoryApiResponse,
+} from "@/libs/types";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 import type { CreationNewQuestionSetState } from "../../reducers/new/CreationNewQuestionSetReducer";
+import CreationNewLeftPanelCategoryField from "./CreationNewLeftPanelCategoryField";
 import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 
 //
@@ -12,11 +16,14 @@ import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 
 interface CreationNewLeftPanelProps {
 	creationType: CreationNewQuestionSetState["creationType"];
+	categories: QuestionSetCategoryApiResponse[];
 	subject: string;
 	counts?: QuestionCount[];
 	onCreationTypeChange: (
 		type: CreationNewQuestionSetState["creationType"],
 	) => void;
+	onCategoryAdd: (category: QuestionSetCategoryApiResponse) => void;
+	onCategoryRemove: (categoryId: number) => void;
 	onSubjectChange: (subject: string) => void;
 	onQuestionCountCheck: (
 		checked: boolean,
@@ -34,9 +41,12 @@ interface CreationNewLeftPanelProps {
 
 const CreationNewLeftPanel = ({
 	creationType,
+	categories,
 	subject,
 	counts,
 	onCreationTypeChange,
+	onCategoryAdd,
+	onCategoryRemove,
 	onSubjectChange,
 	onQuestionCountCheck,
 	onQuestionCountCountChange,
@@ -75,12 +85,26 @@ const CreationNewLeftPanel = ({
 	/**
 	 *
 	 */
+	const renderCategoryField = () => {
+		return (
+			<CreationNewLeftPanelCategoryField
+				selectedCategories={categories}
+				onCategoryAdd={onCategoryAdd}
+				onCategoryRemove={onCategoryRemove}
+			/>
+		);
+	};
+
+	/**
+	 *
+	 */
 	const renderSubjectField = () => {
 		return (
 			<Field.Root>
 				<Field.Label className="typo-body-large">주제</Field.Label>
 				<CreationPanelTextarea
 					placeholder="ex. 네트워크"
+					minRows={1}
 					value={subject}
 					onChange={(e) => onSubjectChange(e.target.value)}
 				/>
@@ -91,6 +115,7 @@ const CreationNewLeftPanel = ({
 	return (
 		<CreationPanel>
 			{renderCreationTypeField()}
+			{renderCategoryField()}
 			{renderSubjectField()}
 			<CreationNewLeftPanelCountsField
 				counts={counts}

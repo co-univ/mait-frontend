@@ -2,6 +2,7 @@ import type {
 	CreateQuestionSetApiRequest,
 	MaterialDto,
 	QuestionCount,
+	QuestionSetCategoryApiResponse,
 } from "@/libs/types";
 
 //
@@ -12,6 +13,7 @@ export type CreationNewQuestionSetState = Omit<
 	CreateQuestionSetApiRequest,
 	"materials"
 > & {
+	categories: QuestionSetCategoryApiResponse[];
 	materials:
 		| ({
 				file: File;
@@ -23,6 +25,14 @@ type CreationNewQuestionSetAction =
 	| {
 			type: "SET_CREATION_TYPE";
 			payload: CreationNewQuestionSetState["creationType"];
+	  }
+	| {
+			type: "ADD_CATEGORIES";
+			payload: QuestionSetCategoryApiResponse;
+	  }
+	| {
+			type: "REMOVE_CATEGORY";
+			payload: number;
 	  }
 	| { type: "SET_SUBJECT"; payload: string }
 	| {
@@ -67,6 +77,7 @@ export const creationNewQuestionSetInitialState = (
 ): CreationNewQuestionSetState => ({
 	teamId,
 	creationType: "AI_GENERATED",
+	categories: [],
 	subject: "",
 	counts: [],
 	difficulty: "",
@@ -87,6 +98,18 @@ export const creationNewQuestionSetReducer = (
 			return {
 				...state,
 				creationType: action.payload,
+			};
+		case "ADD_CATEGORIES":
+			return {
+				...state,
+				categories: [...state.categories, action.payload],
+			};
+		case "REMOVE_CATEGORY":
+			return {
+				...state,
+				categories: state.categories.filter(
+					(category) => category.id !== action.payload,
+				),
 			};
 		case "SET_SUBJECT":
 			return {
