@@ -22,7 +22,7 @@ const TeamManagementCategoriesItem = ({
 	onDelete,
 }: TeamManagementCategoriesItemProps) => {
 	return (
-		<div className="flex gap-gap-5 overflow-hidden">
+		<div className="w-full flex gap-gap-5 overflow-hidden">
 			<span className="flex-1 min-w-0 typo-body-small truncate">
 				{category.name}
 			</span>
