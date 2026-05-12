@@ -36,10 +36,6 @@ const CreationCategoryField = ({
 		createCategory,
 	} = useCreationCategories(onCategoryAdd);
 
-	const filteredCategories = searchedCategories.filter(
-		(c) => !selectedCategories.some((s) => s.id === c.id),
-	);
-
 	const handleToggle = () => {
 		setIsOpen((prev) => !prev);
 
@@ -88,7 +84,7 @@ const CreationCategoryField = ({
 				{isOpen && (
 					<CreationCategoryDropdown
 						selectedCategories={selectedCategories}
-						searchedCategories={filteredCategories}
+						searchedCategories={searchedCategories}
 						isSearching={isSearching}
 						searchValue={searchValue}
 						onSearchChange={onSearchChange}

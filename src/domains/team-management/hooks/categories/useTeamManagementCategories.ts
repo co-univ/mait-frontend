@@ -293,9 +293,10 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 			categoriesQueryOptions.queryKey,
 			(prev) => ({
 				...prev,
-				data: prev?.data?.map((item) =>
-					item.id === id ? { ...item, name: category.name } : item,
-				) ?? [],
+				data:
+					prev?.data?.map((item) =>
+						item.id === id ? { ...item, name: category.name } : item,
+					) ?? [],
 			}),
 		);
 
@@ -339,6 +340,16 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 	 *
 	 */
 	const deleteCategory = async (id: number) => {
+		const confirmRes = await confirm({
+			title: "카테고리를 삭제할까요?",
+			description:
+				"삭제 후 해당 카테고리는 새 문제셋에서 사용할 수 없습니다.\n기존 문제셋과 대시보드에는 영향을 주지 않습니다.",
+		});
+
+		if (!confirmRes) {
+			return;
+		}
+
 		await queryClient.cancelQueries({
 			queryKey: categoriesQueryOptions.queryKey,
 		});
