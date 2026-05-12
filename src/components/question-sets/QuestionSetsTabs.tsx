@@ -1,4 +1,4 @@
-import { CalendarClock, CalendarPlus, ListTodo } from "lucide-react";
+import { CalendarClock, CalendarPlus, ListTodo, PencilRuler } from "lucide-react";
 import { Tabs } from "@/components/tabs";
 
 //
@@ -6,7 +6,7 @@ import { Tabs } from "@/components/tabs";
 //
 
 interface QuestionSetsTabsProps {
-	modes: ("making" | "live-time" | "review")[];
+	modes: ("making" | "live-time" | "study" | "review")[];
 }
 
 //
@@ -28,6 +28,11 @@ const QuestionSetsTabs = ({ modes }: QuestionSetsTabsProps) => {
 			{modes.includes("live-time") && (
 				<Tabs.Trigger value="live-time" icon={<CalendarClock />}>
 					실시간 풀이
+				</Tabs.Trigger>
+			)}
+			{modes.includes("study") && (
+				<Tabs.Trigger value="study" icon={<PencilRuler />}>
+					학습모드
 				</Tabs.Trigger>
 			)}
 			{modes.includes("review") && (

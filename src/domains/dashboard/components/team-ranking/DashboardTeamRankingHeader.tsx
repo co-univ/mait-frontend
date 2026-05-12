@@ -1,4 +1,4 @@
-import { ChessQueen } from "lucide-react";
+import { Trophy } from "lucide-react";
 
 //
 //
@@ -7,7 +7,7 @@ import { ChessQueen } from "lucide-react";
 const DashboardTeamRankingHeader = () => {
 	return (
 		<div className="flex gap-gap-5 items-center typo-heading-medium">
-			<ChessQueen />
+			<Trophy />
 			<h2>우리팀 랭킹</h2>
 		</div>
 	);

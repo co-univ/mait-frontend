@@ -11,6 +11,10 @@ const SolvingQuestionSets = lazy(
 const SolvingReviewRedirect = lazy(
 	() => import("./pages/review/SolvingReviewRedirect"),
 );
+const SolvingStudy = lazy(() => import("./pages/study/SolvingStudy"));
+const SolvingStudyRedirect = lazy(
+	() => import("./pages/study/SolvingStudyRedirect"),
+);
 
 //
 //
@@ -20,6 +24,8 @@ const SolvingReviewRedirect = lazy(
  * @property {string} ROOT `/solving`
  * @property {string} LIVE `/solving/live/:id`
  * @property {string} QUESTION_SETS `/solving/question-sets`
+ * @property {string} STUDY `/solving/study/question-sets/:questionSetId/question/:questionId`
+ * @property {string} STUDY_REDIRECT `/solving/study/question-sets/:questionSetId`
  * @property {string} REVIEW `/solving/review/question-sets/:questionSetId/question/:questionId`
  * @property {string} REVIEW_REDIRECT `/solving/review/question-sets/:questionSetId`
  */
@@ -27,6 +33,8 @@ export const SOLVING_ROUTE_PATH = {
 	ROOT: "/solving",
 	LIVE: "/solving/live/:id",
 	QUESTION_SETS: "/solving/question-sets",
+	STUDY: "/solving/study/question-sets/:questionSetId/question/:questionId",
+	STUDY_REDIRECT: "/solving/study/question-sets/:questionSetId",
 	REVIEW: "/solving/review/question-sets/:questionSetId/question/:questionId",
 	REVIEW_REDIRECT: "/solving/review/question-sets/:questionSetId",
 };
@@ -47,6 +55,14 @@ export const solvingRouter: RouteObject[] = [
 	{
 		path: SOLVING_ROUTE_PATH.ROOT,
 		element: <SolvingRedirect />,
+	},
+	{
+		path: SOLVING_ROUTE_PATH.STUDY,
+		element: <SolvingStudy />,
+	},
+	{
+		path: SOLVING_ROUTE_PATH.STUDY_REDIRECT,
+		element: <SolvingStudyRedirect />,
 	},
 	{
 		path: SOLVING_ROUTE_PATH.REVIEW,

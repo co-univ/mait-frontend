@@ -1,7 +1,5 @@
 import type React from "react";
-import { useNavigate } from "react-router-dom";
 import { CommandType, QuestionStatusType } from "src/enums/solving.enum";
-import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
 
 //
 //
@@ -41,8 +39,6 @@ export const useSolvingLiveQuizController = ({
 	onQuestionInfo,
 	userIdRef,
 }: UseSolvingLiveQuizControllerProps) => {
-	const navigate = useNavigate();
-
 	/**
 	 *
 	 */
@@ -93,10 +89,6 @@ export const useSolvingLiveQuizController = ({
 				}
 				case CommandType.LIVE_END: {
 					setIsFailed(false);
-					setTimeout(() => {
-						setShowWinner(false);
-						navigate(SOLVING_ROUTE_PATH.ROOT);
-					}, 5000);
 					break;
 				}
 			}

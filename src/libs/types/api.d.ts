@@ -475,6 +475,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/categories/{categoryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 문제 셋에 카테고리 단건 매핑 추가 API
+         * @description 문제 셋에 카테고리 1개를 매핑한다. 이미 매핑된 경우 멱등 처리.
+         */
+        post: operations["attachCategory"];
+        /**
+         * 문제 셋에서 카테고리 단건 매핑 제거 API
+         * @description 문제 셋에서 카테고리 1개의 매핑을 제거한다. 이미 매핑되어 있지 않으면 멱등 처리.
+         */
+        delete: operations["detachCategory"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/materials": {
         parameters: {
             query?: never;
@@ -489,6 +513,50 @@ export interface paths {
          * @description 문제 셋 생성 과정에서 사용될 파일을 업로드합니다.
          */
         post: operations["uploadQuestionSetFiles"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 문제 셋 카테고리 목록 조회 API
+         * @description 팀의 활성 카테고리 목록을 조회합니다. 팀 멤버만 조회 가능합니다.
+         */
+        get: operations["getCategories"];
+        put?: never;
+        /**
+         * 문제 셋 카테고리 생성 API
+         * @description 팀 단위로 새로운 문제 셋 카테고리를 생성합니다.
+         */
+        post: operations["createCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/categories/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 문제 셋 카테고리 복구 API
+         * @description 팀과 이름으로 식별되는 soft delete 된 카테고리를 복구합니다. 동일 이름 활성 카테고리가 존재하면 409 를 반환합니다.
+         */
+        post: operations["restoreCategory"];
         delete?: never;
         options?: never;
         head?: never;
@@ -607,6 +675,46 @@ export interface paths {
         head?: never;
         /** 팀 유저 역할 변경 API */
         patch: operations["updateTeamUserRole"];
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/study-mode/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 학습모드 문제셋 시작
+         * @description 관리자가 학습 모드 문제 셋을 시작합니다.
+         */
+        patch: operations["startStudyQuestionSet"];
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/study-mode/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 학습모드 문제셋 종료
+         * @description 관리자가 학습 모드 문제 셋을 종료합니다.
+         */
+        patch: operations["endStudyQuestionSet"];
         trace?: never;
     };
     "/api/v1/question-sets/{questionSetId}/study-mode/drafts/{questionId}": {
@@ -738,6 +846,30 @@ export interface paths {
         head?: never;
         /** 실시간 문제셋 종료 */
         patch: operations["endLiveQuestionSet"];
+        trace?: never;
+    };
+    "/api/v1/question-sets/categories/{categoryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 문제 셋 카테고리 삭제 API
+         * @description 팀 카테고리를 soft delete 합니다. 이미 삭제된 카테고리는 멱등 처리됩니다.
+         */
+        delete: operations["deleteCategory"];
+        options?: never;
+        head?: never;
+        /**
+         * 문제 셋 카테고리 이름 수정 API
+         * @description 활성 팀 카테고리의 이름을 수정합니다. 기존 문제 셋 매핑은 유지됩니다.
+         */
+        patch: operations["updateCategoryName"];
         trace?: never;
     };
     "/api/v1/users/nickname/random": {
@@ -1115,6 +1247,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/categories/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 문제 셋 카테고리 검색 API
+         * @description 팀의 활성 카테고리를 이름 부분 일치로 검색합니다. 팀 멤버만 조회 가능합니다.
+         */
+        get: operations["searchCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/policies": {
         parameters: {
             query?: never;
@@ -1287,8 +1439,19 @@ export interface components {
             /** Format: int64 */
             questionCount: number;
             difficulty?: string;
+            /** @description 문제 셋에 부착된 카테고리 목록 */
+            categories: components["schemas"]["QuestionSetCategoryDto"][];
             /** Format: date-time */
             updatedAt: string;
+        };
+        /** @description 문제 셋에 부착된 카테고리 목록 */
+        QuestionSetCategoryDto: {
+            /** Format: int64 */
+            id?: number;
+            /** Format: int64 */
+            teamId?: number;
+            name?: string;
+            deleted?: boolean;
         };
         /**
          * @description 문제 셋 생성 유형
@@ -1620,6 +1783,8 @@ export interface components {
             difficulty?: string;
             /** @description 문제 셋에 대한 보충 설명, AI 생성인 경우에만 활용 */
             instruction?: string;
+            /** @description 문제 셋에 부착할 카테고리 ID 목록 */
+            categoryIds?: number[];
         };
         /** @description 업로드한 해당 문제 셋의 파일 목록 */
         MaterialDto: {
@@ -1971,6 +2136,39 @@ export interface components {
             /** @description 업로드된 자료가 저장된 url */
             materialUrl: string;
         };
+        CreateQuestionSetCategoryApiRequest: {
+            /** Format: int64 */
+            teamId: number;
+            name: string;
+        };
+        ApiResponseQuestionSetCategoryApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionSetCategoryApiResponse"];
+        };
+        QuestionSetCategoryApiResponse: {
+            /**
+             * Format: int64
+             * @description 카테고리 ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 카테고리가 속한 팀 ID
+             * @example 10
+             */
+            teamId: number;
+            /**
+             * @description 카테고리 이름 (최대 40자)
+             * @example 알고리즘
+             */
+            name: string;
+        };
+        RestoreQuestionSetCategoryApiRequest: {
+            /** Format: int64 */
+            teamId: number;
+            name: string;
+        };
         CheckPoliciesApiRequest: {
             /** @description 체크할 정책 목록 */
             policyChecks: components["schemas"]["PolicyCheckRequest"][];
@@ -2046,6 +2244,9 @@ export interface components {
              * @description 바로 뒤에 올 문제 ID (없으면 null)
              */
             nextQuestionId?: number;
+        };
+        UpdateQuestionSetCategoryApiRequest: {
+            name: string;
         };
         ApiResponseRandomNicknameResponse: {
             isSuccess?: boolean;
@@ -2276,6 +2477,7 @@ export interface components {
             questionCount?: number;
             difficulty?: string;
             materials?: components["schemas"]["MaterialDto"][];
+            categories?: components["schemas"]["QuestionSetCategoryDto"][];
             /** Format: date-time */
             updatedAt?: string;
         };
@@ -2561,6 +2763,10 @@ export interface components {
         ApiResponseQuestionSetGroup: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetGroup"];
+        };
+        ApiResponseListQuestionSetCategoryApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionSetCategoryApiResponse"][];
         };
         ApiResponseListLatestPoliciesApiResponse: {
             isSuccess?: boolean;
@@ -3443,6 +3649,52 @@ export interface operations {
             };
         };
     };
+    attachCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    detachCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
     uploadQuestionSetFiles: {
         parameters: {
             query?: never;
@@ -3466,6 +3718,76 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionSetMaterialApiResponse"];
+                };
+            };
+        };
+    };
+    getCategories: {
+        parameters: {
+            query: {
+                teamId: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListQuestionSetCategoryApiResponse"];
+                };
+            };
+        };
+    };
+    createCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateQuestionSetCategoryApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetCategoryApiResponse"];
+                };
+            };
+        };
+    };
+    restoreCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RestoreQuestionSetCategoryApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetCategoryApiResponse"];
                 };
             };
         };
@@ -3596,6 +3918,50 @@ export interface operations {
                 "application/json": components["schemas"]["UpdateTeamUserRoleApiRequest"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    startStudyQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    endStudyQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -3777,6 +4143,54 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    deleteCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    updateCategoryName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateQuestionSetCategoryApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetCategoryApiResponse"];
                 };
             };
         };
@@ -4249,6 +4663,29 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionSetGroup"];
+                };
+            };
+        };
+    };
+    searchCategories: {
+        parameters: {
+            query: {
+                teamId: number;
+                keyword: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListQuestionSetCategoryApiResponse"];
                 };
             };
         };

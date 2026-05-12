@@ -2,7 +2,7 @@ import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { UsersRound } from "lucide-react";
 import useTeams from "@/hooks/useTeams";
 import type { JoinedTeamUserApiResponse } from "@/libs/types";
-import TeamManagementUsersBox from "../../components/users/TeamManagementUsersBox";
+import TeamManagementUsersUserBox from "../../components/users/TeamManagementUsersUserBox";
 import TeamManagementUsersPanel from "../../components/users/TeamManagementUsersPanel";
 
 //
@@ -53,7 +53,7 @@ const TeamManagementUsersPlayerPanel = ({
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
 									>
-										<TeamManagementUsersBox
+										<TeamManagementUsersUserBox
 											editable={!isLoading && isMakerOrAbove}
 											isDragging={snapshot.isDragging}
 											user={user}

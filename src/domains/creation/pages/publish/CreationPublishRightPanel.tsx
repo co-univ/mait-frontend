@@ -1,5 +1,9 @@
 import { Field } from "@/components/field";
-import type { QuestionSetCreationType } from "@/libs/types";
+import type {
+	QuestionSetCategoryApiResponse,
+	QuestionSetCreationType,
+} from "@/libs/types";
+import CreationCategoryField from "../../components/category/CreationCategoryField";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 
@@ -11,8 +15,11 @@ type CreationPublishRightPanelProps = {
 	creationType?: QuestionSetCreationType;
 	difficulty?: string;
 	subject?: string;
+	categories: QuestionSetCategoryApiResponse[];
 	onChangeDifficulty: (difficulty: string) => void;
 	onChangeSubject: (subject: string) => void;
+	onCategoryAdd: (category: QuestionSetCategoryApiResponse) => void;
+	onCategoryRemove: (categoryId: number) => void;
 };
 
 //
@@ -23,9 +30,15 @@ const CreationPublishRightPanel = ({
 	creationType,
 	difficulty,
 	subject,
+	categories,
 	onChangeDifficulty,
 	onChangeSubject,
+	onCategoryAdd,
+	onCategoryRemove,
 }: CreationPublishRightPanelProps) => {
+	/**
+	 *
+	 */
 	const renderDifficultyField = () => {
 		if (creationType === "MANUAL") {
 			return null;
@@ -49,6 +62,19 @@ const CreationPublishRightPanel = ({
 	/**
 	 *
 	 */
+	const renderCategoryField = () => {
+		return (
+			<CreationCategoryField
+				selectedCategories={categories}
+				onCategoryAdd={onCategoryAdd}
+				onCategoryRemove={onCategoryRemove}
+			/>
+		);
+	};
+
+	/**
+	 *
+	 */
 	const renderSubjectField = () => {
 		return (
 			<Field.Root>
@@ -66,6 +92,7 @@ const CreationPublishRightPanel = ({
 	return (
 		<CreationPanel>
 			{renderDifficultyField()}
+			{renderCategoryField()}
 			{renderSubjectField()}
 		</CreationPanel>
 	);
