@@ -1223,6 +1223,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/categories/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 문제 셋 카테고리 검색 API
+         * @description 팀의 활성 카테고리를 이름 부분 일치로 검색합니다. 팀 멤버만 조회 가능합니다.
+         */
+        get: operations["searchCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/policies": {
         parameters: {
             query?: never;
@@ -4588,6 +4608,29 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionSetGroup"];
+                };
+            };
+        };
+    };
+    searchCategories: {
+        parameters: {
+            query: {
+                teamId: number;
+                keyword: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListQuestionSetCategoryApiResponse"];
                 };
             };
         };
