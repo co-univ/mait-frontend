@@ -10,6 +10,7 @@ export interface ConfirmOptions {
 	cancelText?: string;
 	confirmText?: string;
 	disableHistoryTrap?: boolean;
+	hideCancelButton?: boolean;
 }
 
 interface ConfirmContextValue {
