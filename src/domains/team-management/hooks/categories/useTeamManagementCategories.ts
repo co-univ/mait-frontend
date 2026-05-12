@@ -1,9 +1,13 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import useTeams from "@/hooks/useTeams";
 import { apiHooks } from "@/libs/api";
-import type { QuestionSetCategoryApiResponse } from "@/libs/types";
+import type {
+	ApiResponseListQuestionSetCategoryApiResponse,
+	QuestionSetCategoryApiResponse,
+} from "@/libs/types";
 import generateTemporaryId from "@/utils/generate-temporary-id";
 
 //
@@ -39,7 +43,21 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 
 	const { confirm } = useConfirm();
 
-	const { data, isLoading, refetch } = apiHooks.useQuery(
+	const queryClient = useQueryClient();
+
+	const categoriesQueryOptions = apiHooks.queryOptions(
+		"get",
+		"/api/v1/question-sets/categories",
+		{
+			params: {
+				query: {
+					teamId: activeTeam?.teamId ?? 0,
+				},
+			},
+		},
+	);
+
+	const { data, isLoading } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/categories",
 		{
@@ -94,12 +112,50 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 	/**
 	 *
 	 */
-	const submitNewCategory = (temporaryId: number) => {
+	const submitNewCategory = async (temporaryId: number) => {
 		const category = newCategories.find((item) => item.id === temporaryId);
 
 		if (!category) {
 			return;
 		}
+
+		const isDuplicate = categories?.some((item) => item.name === category.name);
+
+		if (isDuplicate) {
+			notify.error("이미 존재하는 카테고리 이름입니다.");
+			return;
+		}
+
+		const categoryIndex = newCategories.findIndex(
+			(item) => item.id === temporaryId,
+		);
+
+		await queryClient.cancelQueries({
+			queryKey: categoriesQueryOptions.queryKey,
+		});
+
+		const previousData =
+			queryClient.getQueryData<ApiResponseListQuestionSetCategoryApiResponse>(
+				categoriesQueryOptions.queryKey,
+			);
+
+		queryClient.setQueryData<ApiResponseListQuestionSetCategoryApiResponse>(
+			categoriesQueryOptions.queryKey,
+			(prev) => ({
+				...prev,
+				data: [...(prev?.data ?? []), category],
+			}),
+		);
+
+		setNewCategories((prev) => prev.filter((item) => item.id !== temporaryId));
+
+		const rollbackNewCategories = () => {
+			setNewCategories((prev) => {
+				const next = [...prev];
+				next.splice(categoryIndex, 0, category);
+				return next;
+			});
+		};
 
 		postCategoryMutate(
 			{
@@ -112,23 +168,13 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 				onSuccess: () => {
 					notify.success("카테고리가 추가되었습니다.");
 
-					refetch();
-
-					setNewCategories((prev) =>
-						prev.filter((item) => item.id !== temporaryId),
-					);
+					queryClient.invalidateQueries({
+						queryKey: categoriesQueryOptions.queryKey,
+					});
 				},
 
 				onError: async (err) => {
-					const error = err as {
-						code: string;
-					};
-
-					if (error.code === "QSC-001") {
-						notify.error("이미 존재하는 카테고리 이름입니다.");
-
-						return;
-					}
+					const error = err as { code: string };
 
 					if (error.code === "QSC-002") {
 						const confirmRes = await confirm({
@@ -148,26 +194,40 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 									onSuccess: () => {
 										notify.success("카테고리가 복구되었습니다.");
 
-										refetch();
-
-										setNewCategories((prev) =>
-											prev.filter((item) => item.id !== temporaryId),
-										);
+										queryClient.invalidateQueries({
+											queryKey: categoriesQueryOptions.queryKey,
+										});
 									},
 
 									onError: () => {
 										notify.error("카테고리 복구에 실패했습니다.");
+
+										rollbackNewCategories();
+										queryClient.setQueryData(
+											categoriesQueryOptions.queryKey,
+											previousData,
+										);
 									},
 								},
 							);
 						} else {
-							notify.error("카테고리 추가에 실패했습니다.");
+							rollbackNewCategories();
+							queryClient.setQueryData(
+								categoriesQueryOptions.queryKey,
+								previousData,
+							);
 						}
 
 						return;
 					}
 
 					notify.error("카테고리 추가에 실패했습니다.");
+
+					rollbackNewCategories();
+					queryClient.setQueryData(
+						categoriesQueryOptions.queryKey,
+						previousData,
+					);
 				},
 			},
 		);
@@ -189,14 +249,31 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 	/**
 	 *
 	 */
-	const submitModifiedCategory = (id: number, name: string) => {
+	const submitModifiedCategory = (_id: number, _name: string) => {
 		// TODO: need API
 	};
 
 	/**
 	 *
 	 */
-	const deleteCategory = (id: number) => {
+	const deleteCategory = async (id: number) => {
+		await queryClient.cancelQueries({
+			queryKey: categoriesQueryOptions.queryKey,
+		});
+
+		const previousData =
+			queryClient.getQueryData<ApiResponseListQuestionSetCategoryApiResponse>(
+				categoriesQueryOptions.queryKey,
+			);
+
+		queryClient.setQueryData<ApiResponseListQuestionSetCategoryApiResponse>(
+			categoriesQueryOptions.queryKey,
+			(prev) => ({
+				...prev,
+				data: prev?.data?.filter((item) => item.id !== id) ?? [],
+			}),
+		);
+
 		deleteCategoryMutate(
 			{
 				params: {
@@ -209,11 +286,18 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 				onSuccess: () => {
 					notify.success("카테고리가 삭제되었습니다.");
 
-					refetch();
+					queryClient.invalidateQueries({
+						queryKey: categoriesQueryOptions.queryKey,
+					});
 				},
 
 				onError: () => {
 					notify.error("카테고리 삭제에 실패했습니다.");
+
+					queryClient.setQueryData(
+						categoriesQueryOptions.queryKey,
+						previousData,
+					);
 				},
 			},
 		);
