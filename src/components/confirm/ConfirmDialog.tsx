@@ -12,6 +12,7 @@ interface ConfirmDialogProps {
 	onCancel: () => void;
 	onConfirm: () => void;
 	disableHistoryTrap?: boolean;
+	hideCancelButton?: boolean;
 }
 
 //
@@ -29,6 +30,7 @@ const ConfirmDialog = ({
 	onCancel,
 	onConfirm,
 	disableHistoryTrap = false,
+	hideCancelButton = false,
 }: ConfirmDialogProps) => {
 	const titleId = useId();
 	const descriptionId = useId();
@@ -152,14 +154,16 @@ const ConfirmDialog = ({
 				</div>
 
 				<div className="flex gap-gap-5 items-center justify-end w-full">
-					<button
-						ref={cancelButtonRef}
-						type="button"
-						onClick={onCancel}
-						className="bg-color-alpha-white100 flex items-center justify-center px-padding-8 py-padding-4 rounded-md border border-color-gray-10 typo-body-xsmall"
-					>
-						{cancelText}
-					</button>
+					{!hideCancelButton && (
+						<button
+							ref={cancelButtonRef}
+							type="button"
+							onClick={onCancel}
+							className="bg-color-alpha-white100 flex items-center justify-center px-padding-8 py-padding-4 rounded-md border border-color-gray-10 typo-body-xsmall"
+						>
+							{cancelText}
+						</button>
+					)}
 					<button
 						ref={confirmButtonRef}
 						type="button"
