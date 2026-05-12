@@ -19,16 +19,16 @@ const Home = () => {
 			style={{ scrollbarWidth: "none" }}
 		>
 			{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
-			<HomeSlide id="home_1">
+			<HomeSlide id="hero">
 				<HomeFirst />
 			</HomeSlide>
 			{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
-			<HomeSlide id="home_2">
+			<HomeSlide id="guide">
 				{isLg && <HomeSecond />}
 				{!isLg && <HomeSecondMobile />}
 			</HomeSlide>
 			{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
-			<HomeSlide id="home_3">
+			<HomeSlide id="features">
 				{isLg && <HomeThird />}
 				{!isLg && <HomeThirdMobile />}
 			</HomeSlide>
