@@ -60,8 +60,8 @@ export const NAVIGATION_ITEMS: NavItem[] = [
 			},
 			{
 				label: "카테고리 관리",
-				path: TEAM_MANAGEMENT_ROUTE_PATH.CATEGORY,
-				activePaths: ["/team-management/category"],
+				path: TEAM_MANAGEMENT_ROUTE_PATH.CATEGORIES,
+				activePaths: ["/team-management/categories"],
 				isMakerOnly: true,
 			},
 		],

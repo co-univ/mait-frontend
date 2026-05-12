@@ -7,8 +7,8 @@ import TeamMakerGuard from "@/guards/TeamMakerGuard";
 const TeamManagementUsers = lazy(
 	() => import("./pages/users/TeamManagementUsers"),
 );
-const TeamManagementCategory = lazy(
-	() => import("./pages/category/TeamManagementCategory"),
+const TeamManagementCategories = lazy(
+	() => import("./pages/categories/TeamManagementCategories"),
 );
 
 //
@@ -18,12 +18,12 @@ const TeamManagementCategory = lazy(
 /**
  * @property {string} ROOT `/team-management`
  * @property {string} USERS `/team-management/users`
- * @property {string} CATEGORY `/team-management/category`
+ * @property {string} CATEGORIES `/team-management/categories`
  */
 export const TEAM_MANAGEMENT_ROUTE_PATH = {
 	ROOT: "/team-management",
 	USERS: "/team-management/users",
-	CATEGORY: "/team-management/category",
+	CATEGORIES: "/team-management/categories",
 };
 
 //
@@ -44,10 +44,10 @@ export const teamManagementRouter: RouteObject[] = [
 		),
 	},
 	{
-		path: TEAM_MANAGEMENT_ROUTE_PATH.CATEGORY,
+		path: TEAM_MANAGEMENT_ROUTE_PATH.CATEGORIES,
 		element: (
 			<TeamMakerGuard>
-				<TeamManagementCategory />
+				<TeamManagementCategories />
 			</TeamMakerGuard>
 		),
 	},
