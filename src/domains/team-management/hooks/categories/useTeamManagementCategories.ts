@@ -22,7 +22,8 @@ interface UseTeamManagementCategoriesReturn {
 	changeNewCategoryValue: (id: number, value: string) => void;
 	submitNewCategory: (id: number) => void;
 	modifyCategory: (id: number) => void;
-	submitModifiedCategory: (id: number, name: string) => void;
+	changeModifiedCategoryValue: (id: number, value: string) => void;
+	submitModifiedCategory: (id: number) => void;
 	deleteCategory: (id: number) => void;
 	isLoading: boolean;
 }
@@ -72,6 +73,11 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 	const { mutate: postCategoryMutate } = apiHooks.useMutation(
 		"post",
 		"/api/v1/question-sets/categories",
+	);
+
+	const { mutate: patchCategoryMutate } = apiHooks.useMutation(
+		"patch",
+		"/api/v1/question-sets/categories/{categoryId}",
 	);
 
 	const { mutate: deleteCategoryMutate } = apiHooks.useMutation(
@@ -249,8 +255,84 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 	/**
 	 *
 	 */
-	const submitModifiedCategory = (id: number, name: string) => {
-		// TODO: need API
+	const changeModifiedCategoryValue = (id: number, value: string) => {
+		setModifyingCategory((prev) =>
+			prev.map((item) => (item.id === id ? { ...item, name: value } : item)),
+		);
+	};
+
+	/**
+	 *
+	 */
+	const submitModifiedCategory = async (id: number) => {
+		const category = modifyingCategory.find((item) => item.id === id);
+
+		if (!category) {
+			return;
+		}
+
+		const isDuplicate = categories?.some(
+			(item) => item.name === category.name && item.id !== category.id,
+		);
+
+		if (isDuplicate) {
+			notify.error("이미 존재하는 카테고리 이름입니다.");
+			return;
+		}
+
+		await queryClient.cancelQueries({
+			queryKey: categoriesQueryOptions.queryKey,
+		});
+
+		const previousData =
+			queryClient.getQueryData<ApiResponseListQuestionSetCategoryApiResponse>(
+				categoriesQueryOptions.queryKey,
+			);
+
+		queryClient.setQueryData<ApiResponseListQuestionSetCategoryApiResponse>(
+			categoriesQueryOptions.queryKey,
+			(prev) => ({
+				...prev,
+				data: prev?.data?.map((item) =>
+					item.id === id ? { ...item, name: category.name } : item,
+				) ?? [],
+			}),
+		);
+
+		setModifyingCategory((prev) => prev.filter((item) => item.id !== id));
+
+		patchCategoryMutate(
+			{
+				params: {
+					path: {
+						categoryId: category.id,
+					},
+				},
+				body: {
+					name: category.name,
+				},
+			},
+			{
+				onSuccess: () => {
+					notify.success("카테고리가 수정되었습니다.");
+
+					queryClient.invalidateQueries({
+						queryKey: categoriesQueryOptions.queryKey,
+					});
+				},
+
+				onError: () => {
+					notify.error("카테고리 수정에 실패했습니다.");
+
+					queryClient.setQueryData(
+						categoriesQueryOptions.queryKey,
+						previousData,
+					);
+
+					setModifyingCategory((prev) => [...prev, category]);
+				},
+			},
+		);
 	};
 
 	/**
@@ -311,6 +393,7 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 		submitNewCategory,
 		addNewCategory,
 		modifyCategory,
+		changeModifiedCategoryValue,
 		submitModifiedCategory,
 		deleteCategory,
 		isLoading,

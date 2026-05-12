@@ -20,6 +20,8 @@ const TeamManagementCategories = () => {
 		changeNewCategoryValue,
 		submitNewCategory,
 		modifyCategory,
+		changeModifiedCategoryValue,
+		submitModifiedCategory,
 		deleteCategory,
 	} = useTeamManagementCategories();
 
@@ -27,15 +29,21 @@ const TeamManagementCategories = () => {
 	 *
 	 */
 	const renderCategoryItem = (category: QuestionSetCategoryApiResponse) => {
-		if (modifyingCategory.find((item) => item.id === category.id)) {
+		const modifyingCategoryIndex = modifyingCategory.findIndex(
+			(item) => item.id === category.id,
+		);
+
+		if (modifyingCategoryIndex !== -1) {
 			return (
 				<TeamManagementCategoriesInput
 					key={category.id}
-					value={category.name}
+					value={modifyingCategory[modifyingCategoryIndex].name}
 					onChange={(value) => {
-						changeNewCategoryValue(category.id, value);
+						changeModifiedCategoryValue(category.id, value);
 					}}
-					onSubmit={() => {}}
+					onSubmit={() => {
+						submitModifiedCategory(category.id);
+					}}
 				/>
 			);
 		}
