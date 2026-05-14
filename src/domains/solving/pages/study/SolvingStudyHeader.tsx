@@ -99,8 +99,8 @@ const SolvingStudyHeader = ({
 				onMouseLeave={onMouseLeave}
 			>
 				<QuestionNavigationButton
-					isActive={isActive}
-					isMouseOver={isMouseOver}
+					isActive={isGraded ? false : isActive}
+					isMouseOver={isGraded ? false : isMouseOver}
 					number={index + 1}
 					onClick={() => void handleQuestionNavigationClick(question.id)}
 					variation={isMobile ? "small" : "default"}
@@ -113,7 +113,7 @@ const SolvingStudyHeader = ({
 							isGraded && isCorrect === false,
 						"text-color-alpha-black100":
 							!isActive && !isGraded,
-						"hover:bg-color-gray-5": !isActive && isMouseOver,
+						"hover:bg-color-gray-5": !isActive && isMouseOver && !isGraded,
 						"border border-color-primary-50":
 							!isGraded && isAnswered,
 						"border border-transparent":
