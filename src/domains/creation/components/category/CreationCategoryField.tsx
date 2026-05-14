@@ -34,7 +34,7 @@ const CreationCategoryField = ({
 		searchValue,
 		onSearchChange,
 		createCategory,
-	} = useCreationCategories(onCategoryAdd);
+	} = useCreationCategories({ onCategoryAdd, onCategoryRemove });
 
 	const handleToggle = () => {
 		setIsOpen((prev) => !prev);
