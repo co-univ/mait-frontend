@@ -38,7 +38,9 @@ const useQuestionSetTabMode = (
 		if (!(validModes as string[]).includes(value)) {
 			return;
 		}
+
 		const newParams = new URLSearchParams(searchParams);
+
 		newParams.set("mode", value);
 		setSearchParams(newParams);
 		setRecentTab(value as QuestionSetTabMode);

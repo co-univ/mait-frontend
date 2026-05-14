@@ -1,13 +1,12 @@
 import { SquarePen } from "lucide-react";
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
+import useQuestionSetTabMode from "@/hooks/useQuestionSetTabMode";
 import useStudyQuestionSets from "@/hooks/useStudyQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import type { DeliveryMode } from "@/libs/types";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingQuestionSetsLiveTime from "./SolvingQuestionSetsLiveTime";
 import SolvingQuestionSetsReview from "./SolvingQuestionSetsReview";
@@ -17,44 +16,24 @@ import SolvingQuestionSetsStudy from "./SolvingQuestionSetsStudy";
 //
 //
 
-const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
-	"live-time": "LIVE_TIME",
-	"study": "STUDY",
-	review: "REVIEW",
-};
-
-//
-//
-//
-
 const SolvingQuestionSets = () => {
 	const { activeTeam } = useTeams();
-	const [searchParams, setSearchParams] = useSearchParams();
-	const mode = searchParams.get("mode") || "live-time";
+
+	const { mode, deliveryMode, handleModeChange } = useQuestionSetTabMode(
+		["live-time", "study", "review"],
+		"live-time",
+	);
 
 	const { questionSetList, questionSetGroup, isLoading } = useQuestionSets({
 		teamId: activeTeam?.teamId ?? 0,
-		mode: QUESTION_SET_MODES[mode],
+		mode: deliveryMode,
 	});
 
-	const {
-		questionSetGroup: studyQuestionSetGroup,
-		isLoading: studyIsLoading,
-	} = useStudyQuestionSets({
-		teamId: activeTeam?.teamId ?? 0,
-		target: "progress",
-	});
-
-	/**
-	 *
-	 */
-	const handleModeChange = (value: string) => {
-		const newParams = new URLSearchParams(searchParams);
-
-		newParams.set("mode", value);
-
-		setSearchParams(newParams);
-	};
+	const { questionSetGroup: studyQuestionSetGroup, isLoading: studyIsLoading } =
+		useStudyQuestionSets({
+			teamId: activeTeam?.teamId ?? 0,
+			target: "progress",
+		});
 
 	//
 	useEffect(() => {

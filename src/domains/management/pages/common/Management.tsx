@@ -1,12 +1,11 @@
 import { SquarePen } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
+import useQuestionSetTabMode from "@/hooks/useQuestionSetTabMode";
 import useStudyQuestionSets from "@/hooks/useStudyQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import type { DeliveryMode } from "@/libs/types";
 import ManagementCreateQuestionButton from "../../components/common/ManagementCreateQuestionButton";
 import ManagementLiveTime from "./ManagementLiveTime";
 import ManagementMaking from "./ManagementMaking";
@@ -17,21 +16,13 @@ import ManagementStudy from "./ManagementStudy";
 //
 //
 
-const QUESTION_SET_MODES: Record<string, DeliveryMode> = {
-	making: "MAKING",
-	"live-time": "LIVE_TIME",
-	"study": "STUDY",
-	review: "REVIEW",
-};
-
-//
-//
-//
-
 const Management = () => {
 	const { activeTeam } = useTeams();
-	const [searchParams, setSearchParams] = useSearchParams();
-	const mode = searchParams.get("mode") || "making";
+
+	const { mode, deliveryMode, handleModeChange } = useQuestionSetTabMode(
+		["making", "live-time", "study", "review"],
+		"making",
+	);
 
 	const {
 		questionSetList,
@@ -40,7 +31,7 @@ const Management = () => {
 		isLoading,
 	} = useQuestionSets({
 		teamId: activeTeam?.teamId ?? 0,
-		mode: QUESTION_SET_MODES[mode],
+		mode: deliveryMode,
 	});
 
 	const {
@@ -51,17 +42,6 @@ const Management = () => {
 		teamId: activeTeam?.teamId ?? 0,
 		target: "management",
 	});
-
-	/**
-	 *
-	 */
-	const handleModeChange = (value: string) => {
-		const newParams = new URLSearchParams(searchParams);
-
-		newParams.set("mode", value);
-
-		setSearchParams(newParams);
-	};
 
 	return (
 		<LabeledPageLayout icon={<SquarePen />} label="문제 관리">
