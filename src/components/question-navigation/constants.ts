@@ -12,7 +12,7 @@ export const BUTTON_SIZES = {
 } as const;
 
 export const GAPS = {
-	default: 2,
+	default: 28,
 	small: 12,
 } as const;
 
