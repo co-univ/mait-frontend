@@ -771,8 +771,8 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * 종료된 문제 셋을 실시간 풀이 진행중으로 변경
-         * @description 종료된 문제 셋을 다시 실시간 상태로 되돌린다.
+         * 종료된 문제 셋을 풀이 진행중으로 변경
+         * @description 종료된 학습/실시간 모드의 문제 셋을 다시 풀이 진행 상태로 되돌린다.
          */
         patch: operations["restartQuestionSet"];
         trace?: never;
