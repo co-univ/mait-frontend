@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, PencilLine } from "lucide-react";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { notify } from "@/components/Toast";
@@ -37,10 +37,6 @@ const CreationPublish = () => {
 	const [questionSet, dispatch] = useReducer(
 		creationPublishQuestionSetReducer,
 		CREATION_PUBLISH_QUESTION_INITIAL_STATE,
-	);
-
-	const [categories, setCategories] = useState<QuestionSetCategoryApiResponse[]>(
-		[],
 	);
 
 	const { data } = apiHooks.useQuery(
@@ -109,33 +105,17 @@ const CreationPublish = () => {
 	/**
 	 *
 	 */
-	const handleCategoryAdd = async (category: QuestionSetCategoryApiResponse) => {
-		await apiClient.POST(
-			"/api/v1/question-sets/{questionSetId}/categories/{categoryId}",
-			{
-				params: {
-					path: { questionSetId, categoryId: category.id },
-				},
-			},
-		);
-
-		setCategories((prev) => [...prev, category]);
+	const handleCategoryAdd = async (
+		category: QuestionSetCategoryApiResponse,
+	) => {
+		dispatch({ type: "ADD_CATEGORIES", payload: category });
 	};
 
 	/**
 	 *
 	 */
 	const handleCategoryRemove = async (categoryId: number) => {
-		await apiClient.DELETE(
-			"/api/v1/question-sets/{questionSetId}/categories/{categoryId}",
-			{
-				params: {
-					path: { questionSetId, categoryId },
-				},
-			},
-		);
-
-		setCategories((prev) => prev.filter((c) => c.id !== categoryId));
+		dispatch({ type: "REMOVE_CATEGORY", payload: categoryId });
 	};
 
 	/**
@@ -149,7 +129,14 @@ const CreationPublish = () => {
 						questionSetId,
 					},
 				},
-				body: questionSet,
+				body: {
+					title: questionSet.title,
+					subject: questionSet.subject,
+					difficulty: questionSet.difficulty,
+					visibility: questionSet.visibility,
+					solveMode: questionSet.solveMode,
+					categoryIds: questionSet.categories.map((category) => category.id),
+				},
 			});
 
 			notify.success("문제 셋을 생성했습니다.");
@@ -170,7 +157,11 @@ const CreationPublish = () => {
 				).queryKey,
 			});
 
-			navigate(`${MANAGEMENT_ROUTE_PATH.ROOT}?mode=live-time`);
+			navigate(
+				`${MANAGEMENT_ROUTE_PATH.ROOT}?mode=${
+					{ LIVE_TIME: "live-time", STUDY: "study" }[questionSet.solveMode]
+				}`,
+			);
 		} catch {
 			notify.error("문제 셋 생성에 실패했습니다.");
 		}
@@ -181,22 +172,21 @@ const CreationPublish = () => {
 	//
 	useEffect(() => {
 		if (data?.data) {
-			const { title, subject, difficulty, categories: apiCategories } =
-				data.data;
+			const { title, subject, difficulty, categories } = data.data;
 
 			dispatch({ type: "SET_TITLE", payload: title ?? "" });
 			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
 			dispatch({ type: "SET_DIFFICULTY", payload: difficulty ?? "" });
-
-			setCategories(
-				(apiCategories ?? [])
-					.filter((c) => c.id != null && c.name != null)
-					.map((c) => ({
-						id: c.id as number,
-						teamId: c.teamId ?? 0,
-						name: c.name as string,
+			dispatch({
+				type: "SET_CATEGORIES",
+				payload: (categories ?? [])
+					.filter((category) => category.id != null && category.name != null)
+					.map((category) => ({
+						id: category.id as number,
+						teamId: category.teamId ?? 0,
+						name: category.name as string,
 					})),
-			);
+			});
 		}
 	}, [data?.data]);
 
@@ -228,7 +218,7 @@ const CreationPublish = () => {
 						creationType={data?.data?.creationType}
 						difficulty={questionSet.difficulty}
 						subject={questionSet.subject}
-						categories={categories}
+						categories={questionSet.categories}
 						onChangeDifficulty={handleDifficultyChange}
 						onChangeSubject={handleSubjectChange}
 						onCategoryAdd={handleCategoryAdd}

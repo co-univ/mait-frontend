@@ -8,10 +8,16 @@ import type {
 	ApiResponseListQuestionSetCategoryApiResponse,
 	QuestionSetCategoryApiResponse,
 } from "@/libs/types";
+import generateTemporaryId from "@/utils/generate-temporary-id";
 
 //
 //
 //
+
+interface UseCreationCategoriesProps {
+	onCategoryAdd: (category: QuestionSetCategoryApiResponse) => void;
+	onCategoryRemove: (categoryId: number) => void;
+}
 
 interface UseCreationCategoriesReturn {
 	searchedCategories: QuestionSetCategoryApiResponse[];
@@ -25,9 +31,10 @@ interface UseCreationCategoriesReturn {
 //
 //
 
-const useCreationCategories = (
-	onCategoryAdd?: (category: QuestionSetCategoryApiResponse) => void,
-): UseCreationCategoriesReturn => {
+const useCreationCategories = ({
+	onCategoryAdd,
+	onCategoryRemove,
+}: UseCreationCategoriesProps): UseCreationCategoriesReturn => {
 	const [searchValue, setSearchValue] = useState("");
 	const [searchedCategories, setSearchedCategories] = useState<
 		QuestionSetCategoryApiResponse[]
@@ -78,10 +85,12 @@ const useCreationCategories = (
 		}
 
 		const optimisticCategory: QuestionSetCategoryApiResponse = {
-			id: Date.now(),
+			id: generateTemporaryId(),
 			teamId,
 			name,
 		};
+
+		onCategoryAdd(optimisticCategory);
 
 		await queryClient.cancelQueries({
 			queryKey: categoriesQueryOptions.queryKey,
@@ -103,10 +112,16 @@ const useCreationCategories = (
 		setSearchedCategories((prev) => [...prev, optimisticCategory]);
 
 		const rollback = () => {
-			queryClient.setQueryData(categoriesQueryOptions.queryKey, previousData);
-			setSearchedCategories((prev) =>
-				prev.filter((c) => c.id !== optimisticCategory.id),
+			queryClient.setQueryData<ApiResponseListQuestionSetCategoryApiResponse>(
+				categoriesQueryOptions.queryKey,
+				previousData,
 			);
+
+			setSearchedCategories((prev) =>
+				prev.filter((category) => category.id !== optimisticCategory.id),
+			);
+
+			onCategoryRemove(optimisticCategory.id);
 		};
 
 		createCategoryMutate(
@@ -121,11 +136,24 @@ const useCreationCategories = (
 						queryKey: categoriesQueryOptions.queryKey,
 					});
 
-					const created = res.data;
+					const createdCategory = res.data;
 
-					if (created) {
-						onCategoryAdd?.(created);
+					if (!createdCategory) {
+						rollback();
+						return;
 					}
+
+					setSearchValue("");
+					setSearchedCategories((prev) =>
+						prev.map((category) =>
+							category.id === optimisticCategory.id
+								? createdCategory
+								: category,
+						),
+					);
+
+					onCategoryRemove(optimisticCategory.id);
+					onCategoryAdd(createdCategory);
 				},
 
 				onError: async (err) => {
@@ -150,11 +178,24 @@ const useCreationCategories = (
 											queryKey: categoriesQueryOptions.queryKey,
 										});
 
-										const restored = res.data;
+										const restoredCategory = res.data;
 
-										if (restored) {
-											onCategoryAdd?.(restored);
+										if (!restoredCategory) {
+											rollback();
+											return;
 										}
+
+										setSearchValue("");
+										setSearchedCategories((prev) =>
+											prev.map((category) =>
+												category.id === optimisticCategory.id
+													? restoredCategory
+													: category,
+											),
+										);
+
+										onCategoryRemove(optimisticCategory.id);
+										onCategoryAdd(restoredCategory);
 									},
 
 									onError: () => {
