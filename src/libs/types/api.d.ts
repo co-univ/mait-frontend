@@ -1412,6 +1412,8 @@ export interface components {
             /** @description 문제 셋 난이도 설명 */
             difficulty?: string;
             visibility?: components["schemas"]["QuestionSetVisibility"];
+            /** @description 문제 셋에 매핑할 카테고리 ID 목록. null 또는 빈 목록이면 기존 매핑을 모두 제거한다. */
+            categoryIds?: number[];
         };
         ApiResponseQuestionSetApiResponse: {
             isSuccess?: boolean;
@@ -2420,12 +2422,19 @@ export interface components {
             teamId: number;
             /** @description 팀 이름 */
             teamName: string;
-            /**
-             * @description 팀 내 유저 역할
-             * @enum {string}
-             */
-            role: "MAKER" | "OWNER" | "PLAYER";
+            teamType: components["schemas"]["TeamType"];
+            role: components["schemas"]["TeamUserRole"];
         };
+        /**
+         * @description 팀 타입 (개인 워크스페이스 / 단체 팀)
+         * @enum {string}
+         */
+        TeamType: "PERSONAL" | "GROUP";
+        /**
+         * @description 팀 내 유저 역할
+         * @enum {string}
+         */
+        TeamUserRole: "MAKER" | "OWNER" | "PLAYER";
         ApiResponseTeamInviteApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["TeamInviteApiResponse"];
