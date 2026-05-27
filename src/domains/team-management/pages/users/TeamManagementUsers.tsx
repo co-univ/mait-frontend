@@ -74,6 +74,7 @@ const TeamManagementUsers = () => {
 						{activeTeam?.teamName ?? ""}
 						<TeamManagementUsersAdditionalButton
 							isOwner={isOwner}
+							isMakerOrAbove={isMakerOrAbove}
 							onLeave={handleLeave}
 							onDelete={handleDelete}
 						/>
