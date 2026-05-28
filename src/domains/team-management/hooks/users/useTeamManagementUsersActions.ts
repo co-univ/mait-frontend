@@ -1,9 +1,11 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { notify } from "@/components/Toast";
 import useTeams from "@/hooks/useTeams";
 import { apiHooks } from "@/libs/api";
+import type { TeamApiResponse } from "@/libs/types";
 
 //
 //
@@ -15,6 +17,7 @@ interface UseTeamManagementActionsReturn {
 	editTeamName: () => void;
 	cancelEditTeamName: () => void;
 	handleTeamNameChange: (newTeamName: string) => void;
+	submitChangedTeamName: () => void;
 	handleLeave: () => void;
 	handleDelete: () => void;
 }
@@ -30,6 +33,19 @@ const useTeamManagementUsersActions = (): UseTeamManagementActionsReturn => {
 	const navigate = useNavigate();
 	const { activeTeam, refetch } = useTeams();
 	const { confirm } = useConfirm();
+
+	const queryClient = useQueryClient();
+
+	const teamsQueryKey = apiHooks.queryOptions(
+		"get",
+		"/api/v1/teams/joined",
+		{},
+	).queryKey;
+
+	const { mutate: patchTeamNameMutate } = apiHooks.useMutation(
+		"patch",
+		"/api/v1/teams/{teamId}/name",
+	);
 
 	const { mutate: leaveTeam } = apiHooks.useMutation(
 		"delete",
@@ -86,6 +102,58 @@ const useTeamManagementUsersActions = (): UseTeamManagementActionsReturn => {
 	/**
 	 *
 	 */
+	const submitChangedTeamName = () => {
+		if (!activeTeam?.teamId) {
+			return;
+		}
+
+		const teamId = activeTeam.teamId;
+
+		queryClient.cancelQueries({ queryKey: teamsQueryKey });
+
+		const previousData = queryClient.getQueryData<{
+			data?: TeamApiResponse[];
+		}>(teamsQueryKey);
+
+		queryClient.setQueryData<{
+			data?: TeamApiResponse[];
+		}>(teamsQueryKey, (prev) => {
+			if (!prev?.data) {
+				return prev;
+			}
+
+			return {
+				...prev,
+				data: prev.data.map((team) =>
+					team.teamId === teamId
+						? { ...team, teamName: changedTeamName }
+						: team,
+				),
+			};
+		});
+
+		setIsTeamNameEditing(false);
+
+		patchTeamNameMutate(
+			{
+				params: { path: { teamId } },
+				body: { name: changedTeamName },
+			},
+			{
+				onSuccess: () => {
+					notify.success("팀 이름이 변경되었습니다.");
+				},
+				onError: () => {
+					notify.error("팀 이름 변경에 실패했습니다.");
+					queryClient.setQueryData(teamsQueryKey, previousData);
+				},
+			},
+		);
+	};
+
+	/**
+	 *
+	 */
 	const handleLeave = async () => {
 		if (!activeTeam?.teamId) {
 			return;
@@ -134,6 +202,7 @@ const useTeamManagementUsersActions = (): UseTeamManagementActionsReturn => {
 		editTeamName,
 		cancelEditTeamName,
 		handleTeamNameChange,
+		submitChangedTeamName,
 		handleLeave,
 		handleDelete,
 	};

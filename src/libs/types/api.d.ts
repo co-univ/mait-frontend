@@ -660,6 +660,23 @@ export interface paths {
         patch: operations["updateUserNickname"];
         trace?: never;
     };
+    "/api/v1/teams/{teamId}/name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 팀 이름 변경 API */
+        patch: operations["updateTeamName"];
+        trace?: never;
+    };
     "/api/v1/teams/team-users/{teamUserId}/role": {
         parameters: {
             query?: never;
@@ -2215,6 +2232,9 @@ export interface components {
             nickname: string;
             /** @description 사용자 전체 닉네임 */
             fullNickname: string;
+        };
+        UpdateTeamNameApiRequest: {
+            name: string;
         };
         UpdateTeamUserRoleApiRequest: {
             /** @enum {string} */
@@ -3941,6 +3961,32 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseUpdateNicknameResponse"];
+                };
+            };
+        };
+    };
+    updateTeamName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTeamNameApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };

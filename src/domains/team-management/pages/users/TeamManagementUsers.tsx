@@ -29,6 +29,7 @@ const TeamManagementUsers = () => {
 		handleTeamNameChange,
 		editTeamName,
 		cancelEditTeamName,
+		submitChangedTeamName,
 		handleLeave,
 		handleDelete,
 	} = useTeamManagementUsersActions();
@@ -70,6 +71,7 @@ const TeamManagementUsers = () => {
 					</button>
 					<button
 						type="button"
+						onClick={submitChangedTeamName}
 						className="flex items-center justify-center px-padding-8 py-padding-4 rounded-md typo-body-xsmall bg-color-primary-50 text-color-alpha-white100"
 					>
 						저장

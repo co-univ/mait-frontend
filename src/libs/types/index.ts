@@ -185,6 +185,7 @@ export type UpdateQuestionSetFieldApiRequest = components["schemas"]["UpdateQues
 export type UpdateQuestionSetReviewApiRequest = components["schemas"]["UpdateQuestionSetReviewApiRequest"];
 export type UpdateQuestionStatusApiRequest = components["schemas"]["UpdateQuestionStatusApiRequest"];
 export type UpdateShortQuestionApiRequest = components["schemas"]["UpdateShortQuestionApiRequest"];
+export type UpdateTeamNameApiRequest = components["schemas"]["UpdateTeamNameApiRequest"];
 export type UpdateTeamUserRoleApiRequest = components["schemas"]["UpdateTeamUserRoleApiRequest"];
 export type UpdateWinnerApiRequest = components["schemas"]["UpdateWinnerApiRequest"];
 export type UserApiResponse = components["schemas"]["UserApiResponse"];
