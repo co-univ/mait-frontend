@@ -1139,6 +1139,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/live/scorer-ranks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 득점자 랭킹 및 내 등수 조회 API
+         * @description 실시간 풀이가 완료된 문제 셋에서 참여자 득점 랭킹(상위 rankCount)과 요청자 본인의 등수를 함께 조회한다.
+         */
+        get: operations["getScorerRanks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/live-status/rank/correct": {
         parameters: {
             query?: never;
@@ -1713,10 +1733,6 @@ export interface components {
         };
         UpdateWinnerApiRequest: {
             winners: components["schemas"]["ParticipantDto"][];
-        };
-        ApiResponseObject: {
-            isSuccess?: boolean;
-            data?: Record<string, never>;
         };
         PolicyCheckRequest: {
             /**
@@ -2670,6 +2686,22 @@ export interface components {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionScorerApiResponse"];
         };
+        ApiResponseQuestionSetScorerRankApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionSetScorerRankApiResponse"];
+        };
+        QuestionSetScorerRankApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            questionSetId: number;
+            /** @description 득점자 전체 랭킹(요청한 rankCount 상위만 노출) */
+            rankings: components["schemas"]["RankDto"][];
+            userRank?: components["schemas"]["RankDto"];
+            /** @description 요청한 rankCount 범위 내에 내 랭킹(userRank)이 포함되는지 여부 */
+            containsUserRank: boolean;
+        };
         ApiResponseParticipantsCorrectAnswerRankResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["ParticipantsCorrectAnswerRankResponse"];
@@ -3129,7 +3161,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseObject"];
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };
@@ -4540,6 +4572,31 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionScorerApiResponse"];
+                };
+            };
+        };
+    };
+    getScorerRanks: {
+        parameters: {
+            query?: {
+                /** @description 노출할 랭크 개수 */
+                rankCount?: number;
+            };
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetScorerRankApiResponse"];
                 };
             };
         };
