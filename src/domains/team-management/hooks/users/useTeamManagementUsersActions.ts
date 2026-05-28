@@ -196,6 +196,14 @@ const useTeamManagementUsersActions = (): UseTeamManagementActionsReturn => {
 		}
 	}, [activeTeam]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Cleanup team name change state on active team change
+	useEffect(() => {
+		return () => {
+			setChangedTeamName("");
+			setIsTeamNameEditing(false);
+		};
+	}, [activeTeam?.teamId]);
+
 	return {
 		isTeamNameEditing,
 		changedTeamName,
