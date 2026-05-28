@@ -8,7 +8,6 @@ import AdditionalButtonTrigger from "@/domains/management/components/common/card
 
 interface TeamManagementAdditionalButtonProps {
 	isOwner: boolean;
-	isMakerOrAbove: boolean;
 	editTeamName: () => void;
 	onLeave: () => void;
 	onDelete: () => void;
@@ -20,7 +19,6 @@ interface TeamManagementAdditionalButtonProps {
 
 const TeamManagementUsersAdditionalButton = ({
 	isOwner,
-	isMakerOrAbove,
 	editTeamName,
 	onLeave,
 	onDelete,
@@ -28,7 +26,7 @@ const TeamManagementUsersAdditionalButton = ({
 	const [open, setOpen] = useState(false);
 
 	const dropdownItemList = [
-		isMakerOrAbove && {
+		isOwner && {
 			label: "팀명 수정",
 			value: "edit",
 			onClick: editTeamName,
