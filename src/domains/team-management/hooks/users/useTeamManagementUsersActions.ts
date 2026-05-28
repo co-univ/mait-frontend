@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { notify } from "@/components/Toast";
@@ -9,6 +10,11 @@ import { apiHooks } from "@/libs/api";
 //
 
 interface UseTeamManagementActionsReturn {
+	isTeamNameEditing: boolean;
+	changedTeamName: string;
+	editTeamName: () => void;
+	cancelEditTeamName: () => void;
+	handleTeamNameChange: (newTeamName: string) => void;
 	handleLeave: () => void;
 	handleDelete: () => void;
 }
@@ -18,6 +24,9 @@ interface UseTeamManagementActionsReturn {
 //
 
 const useTeamManagementUsersActions = (): UseTeamManagementActionsReturn => {
+	const [isTeamNameEditing, setIsTeamNameEditing] = useState(false);
+	const [changedTeamName, setChangedTeamName] = useState("");
+
 	const navigate = useNavigate();
 	const { activeTeam, refetch } = useTeams();
 	const { confirm } = useConfirm();
@@ -51,6 +60,28 @@ const useTeamManagementUsersActions = (): UseTeamManagementActionsReturn => {
 			},
 		},
 	);
+
+	/**
+	 *
+	 */
+	const editTeamName = () => {
+		setIsTeamNameEditing(true);
+	};
+
+	/**
+	 *
+	 */
+	const cancelEditTeamName = () => {
+		setChangedTeamName(activeTeam?.teamName ?? "");
+		setIsTeamNameEditing(false);
+	};
+
+	/**
+	 *
+	 */
+	const handleTeamNameChange = (newTeamName: string) => {
+		setChangedTeamName(newTeamName);
+	};
 
 	/**
 	 *
@@ -90,7 +121,22 @@ const useTeamManagementUsersActions = (): UseTeamManagementActionsReturn => {
 		}
 	};
 
-	return { handleLeave, handleDelete };
+	//
+	useEffect(() => {
+		if (activeTeam) {
+			setChangedTeamName(activeTeam.teamName);
+		}
+	}, [activeTeam]);
+
+	return {
+		isTeamNameEditing,
+		changedTeamName,
+		editTeamName,
+		cancelEditTeamName,
+		handleTeamNameChange,
+		handleLeave,
+		handleDelete,
+	};
 };
 
 export default useTeamManagementUsersActions;

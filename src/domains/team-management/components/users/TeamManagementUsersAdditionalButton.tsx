@@ -9,6 +9,7 @@ import AdditionalButtonTrigger from "@/domains/management/components/common/card
 interface TeamManagementAdditionalButtonProps {
 	isOwner: boolean;
 	isMakerOrAbove: boolean;
+	editTeamName: () => void;
 	onLeave: () => void;
 	onDelete: () => void;
 }
@@ -20,6 +21,7 @@ interface TeamManagementAdditionalButtonProps {
 const TeamManagementUsersAdditionalButton = ({
 	isOwner,
 	isMakerOrAbove,
+	editTeamName,
 	onLeave,
 	onDelete,
 }: TeamManagementAdditionalButtonProps) => {
@@ -29,7 +31,7 @@ const TeamManagementUsersAdditionalButton = ({
 		isMakerOrAbove && {
 			label: "팀명 수정",
 			value: "edit",
-			onClick: () => {},
+			onClick: editTeamName,
 			classNames: {
 				label: "text-color-alpha-black100 font-pretendard",
 				button: "hover:!bg-color-alpha-white100 !bg-color-alpha-white100",
