@@ -23,15 +23,16 @@ type CreationPublishQuestionSetAction =
 	| { type: "ADD_CATEGORIES"; payload: QuestionSetCategoryApiResponse }
 	| { type: "REMOVE_CATEGORY"; payload: number };
 
-export const CREATION_PUBLISH_QUESTION_INITIAL_STATE: CreationPublishQuestionSetState =
-	{
-		title: "",
-		subject: "",
-		solveMode: "LIVE_TIME" as QuestionSetSolveMode,
-		difficulty: "",
-		visibility: "PUBLIC" as QuestionSetVisibility,
-		categories: [],
-	};
+export const getCreationPublishQuestionInitialState = (
+	teamType?: string,
+): CreationPublishQuestionSetState => ({
+	title: "",
+	subject: "",
+	solveMode: (teamType === "PERSONAL" ? "STUDY" : "LIVE_TIME") as QuestionSetSolveMode,
+	difficulty: "",
+	visibility: "PUBLIC" as QuestionSetVisibility,
+	categories: [],
+});
 
 //
 //
