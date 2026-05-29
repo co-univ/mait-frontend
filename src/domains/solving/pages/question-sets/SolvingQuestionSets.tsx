@@ -3,7 +3,9 @@ import { useEffect } from "react";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
-import useQuestionSetTabMode from "@/hooks/useQuestionSetTabMode";
+import useQuestionSetTabMode, {
+	type QuestionSetTabMode,
+} from "@/hooks/useQuestionSetTabMode";
 import useStudyQuestionSets from "@/hooks/useStudyQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
@@ -19,9 +21,15 @@ import SolvingQuestionSetsStudy from "./SolvingQuestionSetsStudy";
 const SolvingQuestionSets = () => {
 	const { activeTeam } = useTeams();
 
+	const validModes = (
+		activeTeam?.teamType === "PERSONAL"
+			? ["study", "review"]
+			: ["live-time", "study", "review"]
+	) as QuestionSetTabMode[];
+
 	const { mode, deliveryMode, handleModeChange } = useQuestionSetTabMode(
-		["live-time", "study", "review"],
-		"live-time",
+		validModes,
+		validModes.includes("live-time") ? "live-time" : "study",
 	);
 
 	const { questionSetList, questionSetGroup, isLoading } = useQuestionSets({
@@ -54,28 +62,33 @@ const SolvingQuestionSets = () => {
 				onValueChange={handleModeChange}
 				className="flex flex-col gap-gap-11"
 			>
-				<QuestionSetsTabs modes={["live-time", "study", "review"]} />
+				<QuestionSetsTabs modes={validModes} />
+				{validModes.includes("live-time") && (
+					<Tabs.Content value="live-time">
+						<SolvingQuestionSetsLiveTime
+							questionSetGroup={questionSetGroup}
+							isLoading={isLoading}
+						/>
+					</Tabs.Content>
+				)}
 
-				<Tabs.Content value="live-time">
-					<SolvingQuestionSetsLiveTime
-						questionSetGroup={questionSetGroup}
-						isLoading={isLoading}
-					/>
-				</Tabs.Content>
+				{validModes.includes("study") && (
+					<Tabs.Content value="study">
+						<SolvingQuestionSetsStudy
+							questionSetGroup={studyQuestionSetGroup}
+							isLoading={studyIsLoading}
+						/>
+					</Tabs.Content>
+				)}
 
-				<Tabs.Content value="study">
-					<SolvingQuestionSetsStudy
-						questionSetGroup={studyQuestionSetGroup}
-						isLoading={studyIsLoading}
-					/>
-				</Tabs.Content>
-
-				<Tabs.Content value="review" className="h-full">
-					<SolvingQuestionSetsReview
-						questionSets={questionSetList ?? []}
-						isLoading={isLoading}
-					/>
-				</Tabs.Content>
+				{validModes.includes("review") && (
+					<Tabs.Content value="review" className="h-full">
+						<SolvingQuestionSetsReview
+							questionSets={questionSetList ?? []}
+							isLoading={isLoading}
+						/>
+					</Tabs.Content>
+				)}
 			</Tabs.Root>
 		</LabeledPageLayout>
 	);
