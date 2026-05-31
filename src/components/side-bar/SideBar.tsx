@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { LayoutDashboard, Puzzle, SquarePen, Users } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
@@ -8,65 +7,15 @@ import {
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
-import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
-import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
-import { TEAM_MANAGEMENT_ROUTE_PATH } from "@/domains/team-management/team-management.routes";
 import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
 import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
 import SideBarDropdown from "./SideBarDropdown";
-import type { NavItem } from "./SideBarNavItem";
 import SideBarNavItem from "./SideBarNavItem";
 import SidebarItem from "./SidebarItem";
-//
-//
-//
-
-export const NAVIGATION_ITEMS: NavItem[] = [
-	{
-		icon: <SquarePen />,
-		label: "문제 관리",
-		path: MANAGEMENT_ROUTE_PATH.ROOT,
-		activePaths: ["/management", "/creation", "/control"],
-		isMakerOnly: true,
-	},
-	{
-		icon: <Puzzle />,
-		label: "문제 풀기",
-		path: SOLVING_ROUTE_PATH.ROOT,
-		activePaths: ["/solving"],
-		isMakerOnly: false,
-	},
-	{
-		icon: <LayoutDashboard />,
-		label: "풀이 결과 대시보드",
-		path: "/dashboard",
-		activePaths: ["/dashboard"],
-		isMakerOnly: false,
-	},
-	{
-		icon: <Users />,
-		label: "팀 관리",
-		activePaths: ["/team-management"],
-		isMakerOnly: false,
-		subItems: [
-			{
-				label: "멤버 관리",
-				path: TEAM_MANAGEMENT_ROUTE_PATH.USERS,
-				activePaths: ["/team-management/users"],
-				isMakerOnly: false,
-			},
-			{
-				label: "카테고리 관리",
-				path: TEAM_MANAGEMENT_ROUTE_PATH.CATEGORIES,
-				activePaths: ["/team-management/categories"],
-				isMakerOnly: true,
-			},
-		],
-	},
-];
+import { getNavigationItems } from "./sidebar.constants";
 
 //
 //
@@ -150,9 +99,9 @@ const SideBar = () => {
 
 				<div className="w-full flex flex-col gap-gap-5">
 					{activeTeam &&
-						NAVIGATION_ITEMS.filter(
-							(item) => !item.isMakerOnly || activeTeam.role !== "PLAYER",
-						).map((item) => <SideBarNavItem key={item.label} item={item} />)}
+						getNavigationItems(activeTeam)
+							.filter((item) => !item.isMakerOnly || activeTeam.role !== "PLAYER")
+							.map((item) => <SideBarNavItem key={item.label} item={item} />)}
 				</div>
 			</nav>
 		</aside>
