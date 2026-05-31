@@ -2,8 +2,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import { notify } from "@/components/Toast";
-import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
+import useTeams from "@/hooks/useTeams";
 import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
@@ -15,12 +15,12 @@ import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/
 //
 
 interface ManagementStudyCardProps {
-  questionSet: QuestionSetDto;
-  onReviewStatusModalOpen?: (questionSetId: number) => void;
-  invalidateQuestionSetsQuery?: (params?: {
-    teamId?: number;
-    mode?: DeliveryMode;
-  }) => void;
+	questionSet: QuestionSetDto;
+	onReviewStatusModalOpen?: (questionSetId: number) => void;
+	invalidateQuestionSetsQuery?: (params?: {
+		teamId?: number;
+		mode?: DeliveryMode;
+	}) => void;
 }
 
 //
@@ -28,12 +28,15 @@ interface ManagementStudyCardProps {
 //
 
 const ManagementStudyCard = ({
-  questionSet,
+	questionSet,
 	onReviewStatusModalOpen,
 	invalidateQuestionSetsQuery,
 }: ManagementStudyCardProps) => {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+
+	const { activeTeam } = useTeams();
+
 	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
 		questionSetId: questionSet.id ?? 0,
 		invalidateQuestionSetsQuery,
@@ -140,11 +143,11 @@ const ManagementStudyCard = ({
 			if (!res.data?.isSuccess) {
 				throw new Error("Failed to restart question set");
 			}
-				invalidateQuestionSetsQuery?.({
-					mode: "STUDY",
-				});
-				notify.success("문제셋이 재시작되었습니다.");
-			} catch {
+			invalidateQuestionSetsQuery?.({
+				mode: "STUDY",
+			});
+			notify.success("문제셋이 재시작되었습니다.");
+		} catch {
 			notify.error("문제셋 재시작에 실패했습니다.");
 		}
 	};
@@ -160,7 +163,10 @@ const ManagementStudyCard = ({
 	 *
 	 */
 	const renderSecondButton = () => {
-		if (questionSetStatus === "ONGOING") {
+		if (
+			questionSetStatus === "ONGOING" &&
+			activeTeam?.teamType !== "PERSONAL"
+		) {
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
@@ -193,25 +199,25 @@ const ManagementStudyCard = ({
 		return null;
 	};
 
-		return (
-			<QuestionSetsCard.Root>
-				<QuestionSetsCard.Header>
-					<QuestionSetsCard.Header.Title title={questionSet.title} />
-					{questionSetStatus === "BEFORE" && (
-						<ManagementQuestionSetCardAdditionalButton
-							status={questionSetStatus}
-							onEdit={handleCreationButtonClick}
-							onDelete={handleDeleteButtonClick}
-						/>
-					)}
-					{questionSetStatus === "AFTER" && (
-						<ManagementQuestionSetCardAdditionalButton
-							status={questionSetStatus}
-							onRestart={handleRestartButtonClick}
-							onDelete={handleDeleteButtonClick}
-						/>
-					)}
-				</QuestionSetsCard.Header>
+	return (
+		<QuestionSetsCard.Root>
+			<QuestionSetsCard.Header>
+				<QuestionSetsCard.Header.Title title={questionSet.title} />
+				{questionSetStatus === "BEFORE" && (
+					<ManagementQuestionSetCardAdditionalButton
+						status={questionSetStatus}
+						onEdit={handleCreationButtonClick}
+						onDelete={handleDeleteButtonClick}
+					/>
+				)}
+				{questionSetStatus === "AFTER" && (
+					<ManagementQuestionSetCardAdditionalButton
+						status={questionSetStatus}
+						onRestart={handleRestartButtonClick}
+						onDelete={handleDeleteButtonClick}
+					/>
+				)}
+			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>
 				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />

@@ -7,9 +7,9 @@ import { MYPAGE_ROUTE_PATH } from "@/domains/my-page/mypage.routes";
 import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
-import { NAVIGATION_ITEMS } from "./SideBar";
 import SideBarDropdown from "./SideBarDropdown";
 import SideBarNavItem from "./SideBarNavItem";
+import { getNavigationItems } from "./sidebar.constants";
 
 //
 //
@@ -69,9 +69,9 @@ const MobileSidebar = () => {
 				<div className="flex-1 overflow-y-auto p-padding-4">
 					<div className="flex flex-col gap-gap-5">
 						{activeTeam &&
-							NAVIGATION_ITEMS.filter(
-								(item) => !item.isMakerOnly || activeTeam.role !== "PLAYER",
-							).map((item) => <SideBarNavItem key={item.label} item={item} />)}
+							getNavigationItems(activeTeam)
+							.filter((item) => !item.isMakerOnly || activeTeam.role !== "PLAYER")
+							.map((item) => <SideBarNavItem key={item.label} item={item} />)}
 					</div>
 				</div>
 

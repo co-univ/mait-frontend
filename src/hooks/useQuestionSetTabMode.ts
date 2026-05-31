@@ -13,7 +13,7 @@ const QUESTION_SET_MODES = {
 	review: "REVIEW",
 } as const satisfies Record<string, DeliveryMode>;
 
-type QuestionSetTabMode = keyof typeof QUESTION_SET_MODES;
+export type QuestionSetTabMode = keyof typeof QUESTION_SET_MODES;
 
 //
 //

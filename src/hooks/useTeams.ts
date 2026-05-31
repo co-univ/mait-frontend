@@ -1,5 +1,5 @@
 import type { QueryObserverResult } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { apiHooks } from "@/libs/api";
 import type { TeamApiResponse } from "@/libs/types";
 import type { components } from "@/libs/types/api";
@@ -55,7 +55,21 @@ const useTeams = (): UseTeamsReturn => {
 		},
 	);
 
-	const teams = data?.data;
+	const teams = useMemo(
+		() =>
+			data?.data?.slice().sort((a, b) => {
+				if (a.teamType === "PERSONAL") {
+					return -1;
+				}
+
+				if (b.teamType === "PERSONAL") {
+					return 1;
+				}
+
+				return 0;
+			}),
+		[data?.data],
+	);
 	const activeTeam = teams?.find((team) => team.teamId === activeTeamId);
 	const isMakerOrAbove = activeTeam
 		? ROLE_LEVEL[activeTeam.role] >= ROLE_LEVEL.MAKER
