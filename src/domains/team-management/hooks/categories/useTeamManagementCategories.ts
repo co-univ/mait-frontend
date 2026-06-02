@@ -21,9 +21,11 @@ interface UseTeamManagementCategoriesReturn {
 	addNewCategory: () => void;
 	changeNewCategoryValue: (id: number, value: string) => void;
 	submitNewCategory: (id: number) => void;
+	cancelNewCategory: (id: number) => void;
 	modifyCategory: (id: number) => void;
 	changeModifiedCategoryValue: (id: number, value: string) => void;
 	submitModifiedCategory: (id: number) => void;
+	cancelModifyingCategory: (id: number) => void;
 	deleteCategory: (id: number) => void;
 	isLoading: boolean;
 }
@@ -242,6 +244,13 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 	/**
 	 *
 	 */
+	const cancelNewCategory = (id: number) => {
+		setNewCategories((prev) => prev.filter((item) => item.id !== id));
+	};
+
+	/**
+	 *
+	 */
 	const modifyCategory = (id: number) => {
 		const category = categories?.find((item) => item.id === id);
 
@@ -250,6 +259,13 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 		}
 
 		setModifyingCategory((prev) => [...prev, category]);
+	};
+
+	/**
+	 *
+	 */
+	const cancelModifyingCategory = (id: number) => {
+		setModifyingCategory((prev) => prev.filter((item) => item.id !== id));
 	};
 
 	/**
@@ -400,12 +416,14 @@ const useTeamManagementCategories = (): UseTeamManagementCategoriesReturn => {
 		categories: categories ?? [],
 		newCategories,
 		modifyingCategory,
+		addNewCategory,
 		changeNewCategoryValue,
 		submitNewCategory,
-		addNewCategory,
+		cancelNewCategory,
 		modifyCategory,
 		changeModifiedCategoryValue,
 		submitModifiedCategory,
+		cancelModifyingCategory,
 		deleteCategory,
 		isLoading,
 	};

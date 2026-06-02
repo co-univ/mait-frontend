@@ -19,9 +19,11 @@ const TeamManagementCategories = () => {
 		addNewCategory,
 		changeNewCategoryValue,
 		submitNewCategory,
+		cancelNewCategory,
 		modifyCategory,
 		changeModifiedCategoryValue,
 		submitModifiedCategory,
+		cancelModifyingCategory,
 		deleteCategory,
 	} = useTeamManagementCategories();
 
@@ -43,6 +45,9 @@ const TeamManagementCategories = () => {
 					}}
 					onSubmit={() => {
 						submitModifiedCategory(category.id);
+					}}
+					onCancel={() => {
+						cancelModifyingCategory(category.id);
 					}}
 				/>
 			);
@@ -74,6 +79,9 @@ const TeamManagementCategories = () => {
 						}}
 						onSubmit={() => {
 							submitNewCategory(category.id);
+						}}
+						onCancel={() => {
+							cancelNewCategory(category.id);
 						}}
 					/>
 				)),
