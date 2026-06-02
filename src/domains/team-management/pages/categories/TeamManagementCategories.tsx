@@ -19,9 +19,11 @@ const TeamManagementCategories = () => {
 		addNewCategory,
 		changeNewCategoryValue,
 		submitNewCategory,
+		cancelNewCategory,
 		modifyCategory,
 		changeModifiedCategoryValue,
 		submitModifiedCategory,
+		cancelModifyingCategory,
 		deleteCategory,
 	} = useTeamManagementCategories();
 
@@ -43,6 +45,9 @@ const TeamManagementCategories = () => {
 					}}
 					onSubmit={() => {
 						submitModifiedCategory(category.id);
+					}}
+					onCancel={() => {
+						cancelModifyingCategory(category.id);
 					}}
 				/>
 			);
@@ -75,6 +80,9 @@ const TeamManagementCategories = () => {
 						onSubmit={() => {
 							submitNewCategory(category.id);
 						}}
+						onCancel={() => {
+							cancelNewCategory(category.id);
+						}}
 					/>
 				)),
 			)
@@ -86,36 +94,15 @@ const TeamManagementCategories = () => {
 			);
 
 		return (
-			<div className="flex border border-color-gray-20 rounded-radius-medium1">
-				<div className="flex-1 overflow-hidden">
-					{nodes
-						.filter((_, index) => index % 2 === 0)
-						.map((node, index) => (
-							<TeamManagementCategoriesBox
-								key={node.key}
-								hasRightBorder
-								hasBottomBorder={
-									index * 2 + 2 !== nodes.length + (nodes.length % 2)
-								}
-							>
-								{node}
-							</TeamManagementCategoriesBox>
-						))}
-				</div>
-				<div className="flex-1 overflow-hidden">
-					{nodes
-						.filter((_, index) => index % 2 === 1)
-						.map((node, index) => (
-							<TeamManagementCategoriesBox
-								key={node.key}
-								hasBottomBorder={
-									index * 2 + 2 !== nodes.length + (nodes.length % 2)
-								}
-							>
-								{node}
-							</TeamManagementCategoriesBox>
-						))}
-				</div>
+			<div className="border border-color-gray-20 rounded-radius-medium1">
+				{nodes.map((node, index) => (
+					<TeamManagementCategoriesBox
+						key={node.key}
+						hasBottomBorder={index !== nodes.length - 1}
+					>
+						{node}
+					</TeamManagementCategoriesBox>
+				))}
 			</div>
 		);
 	};

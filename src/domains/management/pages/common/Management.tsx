@@ -2,7 +2,9 @@ import { SquarePen } from "lucide-react";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
-import useQuestionSetTabMode from "@/hooks/useQuestionSetTabMode";
+import useQuestionSetTabMode, {
+	type QuestionSetTabMode,
+} from "@/hooks/useQuestionSetTabMode";
 import useStudyQuestionSets from "@/hooks/useStudyQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
@@ -19,8 +21,14 @@ import ManagementStudy from "./ManagementStudy";
 const Management = () => {
 	const { activeTeam } = useTeams();
 
+	const validModes = (
+		activeTeam?.teamType === "PERSONAL"
+			? ["making", "study", "review"]
+			: ["making", "live-time", "study", "review"]
+	) as QuestionSetTabMode[];
+
 	const { mode, deliveryMode, handleModeChange } = useQuestionSetTabMode(
-		["making", "live-time", "study", "review"],
+		validModes,
 		"making",
 	);
 
@@ -51,43 +59,49 @@ const Management = () => {
 				className="flex flex-col gap-gap-11"
 			>
 				<div className="flex justify-between items-end">
-					<QuestionSetsTabs
-						modes={["making", "live-time", "study", "review"]}
-					/>
+					<QuestionSetsTabs modes={validModes} />
 					<ManagementCreateQuestionButton />
 				</div>
 
-				<Tabs.Content value="making">
-					<ManagementMaking
-						questionSets={questionSetList ?? []}
-						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-						isLoading={isLoading}
-					/>
-				</Tabs.Content>
+				{validModes.includes("making") && (
+					<Tabs.Content value="making">
+						<ManagementMaking
+							questionSets={questionSetList ?? []}
+							invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+							isLoading={isLoading}
+						/>
+					</Tabs.Content>
+				)}
 
-				<Tabs.Content value="live-time">
-					<ManagementLiveTime
-						questionSetGroup={questionSetGroup}
-						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-						isLoading={isLoading}
-					/>
-				</Tabs.Content>
+				{validModes.includes("live-time") && (
+					<Tabs.Content value="live-time">
+						<ManagementLiveTime
+							questionSetGroup={questionSetGroup}
+							invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+							isLoading={isLoading}
+						/>
+					</Tabs.Content>
+				)}
 
-				<Tabs.Content value="study">
-					<ManagementStudy
-						questionSetGroup={studyQuestionSetGroup}
-						invalidateQuestionSetsQuery={studyInvalidateQuestionSetsQuery}
-						isLoading={studyIsLoading}
-					/>
-				</Tabs.Content>
+				{validModes.includes("study") && (
+					<Tabs.Content value="study">
+						<ManagementStudy
+							questionSetGroup={studyQuestionSetGroup}
+							invalidateQuestionSetsQuery={studyInvalidateQuestionSetsQuery}
+							isLoading={studyIsLoading}
+						/>
+					</Tabs.Content>
+				)}
 
-				<Tabs.Content value="review">
-					<ManagementReview
-						questionSets={questionSetList ?? []}
-						invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-						isLoading={isLoading}
-					/>
-				</Tabs.Content>
+				{validModes.includes("review") && (
+					<Tabs.Content value="review">
+						<ManagementReview
+							questionSets={questionSetList ?? []}
+							invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+							isLoading={isLoading}
+						/>
+					</Tabs.Content>
+				)}
 			</Tabs.Root>
 		</LabeledPageLayout>
 	);

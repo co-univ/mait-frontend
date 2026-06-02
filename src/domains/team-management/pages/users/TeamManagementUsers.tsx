@@ -23,7 +23,16 @@ const TeamManagementUsers = () => {
 	const accountAddButtonRef = useRef<HTMLButtonElement>(null);
 
 	const { activeTeam, isMakerOrAbove } = useTeams();
-	const { handleLeave, handleDelete } = useTeamManagementUsersActions();
+	const {
+		isTeamNameEditing,
+		changedTeamName,
+		handleTeamNameChange,
+		editTeamName,
+		cancelEditTeamName,
+		submitChangedTeamName,
+		handleLeave,
+		handleDelete,
+	} = useTeamManagementUsersActions();
 
 	const isOwner = activeTeam?.role === "OWNER";
 
@@ -38,6 +47,50 @@ const TeamManagementUsers = () => {
 	const handleLinkManageModalOpen = () => {
 		setIsLinkCreateModalOpen(false);
 		setIsLinkManageModalOpen(true);
+	};
+
+	/**
+	 *
+	 */
+	const renderLabel = () => {
+		if (isTeamNameEditing) {
+			return (
+				<div className="flex items-center gap-gap-3">
+					<input
+						type="text"
+						value={changedTeamName}
+						onChange={(e) => handleTeamNameChange(e.target.value)}
+						className="bg-transparent border-b-2 border-color-alpha-black100 focus-visible:outline-none"
+					/>
+					<button
+						type="button"
+						onClick={cancelEditTeamName}
+						className="flex items-center justify-center px-padding-8 py-padding-4 rounded-md border border-color-gray-10 typo-body-xsmall"
+					>
+						취소
+					</button>
+					<button
+						type="button"
+						onClick={submitChangedTeamName}
+						className="flex items-center justify-center px-padding-8 py-padding-4 rounded-md typo-body-xsmall bg-color-primary-50 text-color-alpha-white100"
+					>
+						저장
+					</button>
+				</div>
+			);
+		}
+
+		return (
+			<div className="flex items-center gap-gap-3">
+				{activeTeam?.teamName ?? ""}
+				<TeamManagementUsersAdditionalButton
+					isOwner={isOwner}
+					editTeamName={editTeamName}
+					onLeave={handleLeave}
+					onDelete={handleDelete}
+				/>
+			</div>
+		);
 	};
 
 	/**
@@ -69,16 +122,7 @@ const TeamManagementUsers = () => {
 		<>
 			<LabeledPageLayout
 				icon={<NotebookPen />}
-				label={
-					<div className="flex items-center gap-gap-3">
-						{activeTeam?.teamName ?? ""}
-						<TeamManagementUsersAdditionalButton
-							isOwner={isOwner}
-							onLeave={handleLeave}
-							onDelete={handleDelete}
-						/>
-					</div>
-				}
+				label={renderLabel()}
 				rightContent={renderInviteButtons()}
 			>
 				<TeamManagementUsersContainer />

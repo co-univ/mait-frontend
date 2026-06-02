@@ -1,5 +1,6 @@
 import { Field } from "@/components/field";
 import { Radio } from "@/components/radio";
+import useTeams from "@/hooks/useTeams";
 import type { QuestionSetSolveMode, QuestionSetVisibility } from "@/libs/types";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
@@ -29,6 +30,8 @@ const CreationPublishLeftPanel = ({
 	onChangeVisibility,
 	onChangeSolveMode,
 }: CreationPublishLeftPanelProps) => {
+	const { activeTeam } = useTeams();
+
 	/**
 	 *
 	 */
@@ -65,10 +68,12 @@ const CreationPublishLeftPanel = ({
 							<Radio.Input />
 							<Radio.Label>전체공개</Radio.Label>
 						</Radio.Item>
-						<Radio.Item value="GROUP" className="flex-1 min-w-[100px]">
-							<Radio.Input />
-							<Radio.Label>그룹공개</Radio.Label>
-						</Radio.Item>
+						{activeTeam?.teamType === "GROUP" && (
+							<Radio.Item value="GROUP" className="flex-1 min-w-[100px]">
+								<Radio.Input />
+								<Radio.Label>그룹공개</Radio.Label>
+							</Radio.Item>
+						)}
 						<Radio.Item value="PRIVATE" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>비공개</Radio.Label>
@@ -89,13 +94,17 @@ const CreationPublishLeftPanel = ({
 				<div className="flex justify-between py-padding-10 px-padding-11 bg-color-gray-5 rounded-radius-medium1">
 					<Radio.Group
 						value={solveMode}
-						onChange={(value) => onChangeSolveMode(value as QuestionSetSolveMode)}
+						onChange={(value) =>
+							onChangeSolveMode(value as QuestionSetSolveMode)
+						}
 						className="flex flex-1 flex-wrap gap-gap-8 justify-between"
 					>
-						<Radio.Item value="LIVE_TIME" className="flex-1 min-w-[100px]">
-							<Radio.Input />
-							<Radio.Label>실시간 풀이</Radio.Label>
-						</Radio.Item>
+						{activeTeam?.teamType === "GROUP" && (
+							<Radio.Item value="LIVE_TIME" className="flex-1 min-w-[100px]">
+								<Radio.Input />
+								<Radio.Label>실시간 풀이</Radio.Label>
+							</Radio.Item>
+						)}
 						<Radio.Item value="STUDY" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>학습 풀이</Radio.Label>

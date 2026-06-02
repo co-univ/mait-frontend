@@ -660,6 +660,23 @@ export interface paths {
         patch: operations["updateUserNickname"];
         trace?: never;
     };
+    "/api/v1/teams/{teamId}/name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** 팀 이름 변경 API */
+        patch: operations["updateTeamName"];
+        trace?: never;
+    };
     "/api/v1/teams/team-users/{teamUserId}/role": {
         parameters: {
             query?: never;
@@ -1048,6 +1065,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/user/result": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 본인의 문제 셋 풀이 기록 조회 API
+         * @description 특정 문제 셋에 대한 본인의 풀이 기록(전체 문제 수, 맞춘 문제 수, 100점 만점 점수, 문제별 상세)을 조회한다.
+         */
+        get: operations["getMySolveRecord"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/study-mode/drafts": {
         parameters: {
             query?: never;
@@ -1131,6 +1168,46 @@ export interface paths {
         };
         /** 문제별 득점자 조회 API */
         get: operations["getScorer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/questions/wrong-rates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 문제 셋 문제별 오답률 조회 API
+         * @description 문제 셋의 문제별 오답률(최초 제출 기준)을 높은 순으로 조회한다.
+         */
+        get: operations["getWrongRates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/{questionSetId}/live/scorer-ranks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 득점자 랭킹 및 내 등수 조회 API
+         * @description 실시간 풀이가 완료된 문제 셋에서 참여자 득점 랭킹(상위 rankCount)과 요청자 본인의 등수를 함께 조회한다.
+         */
+        get: operations["getScorerRanks"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1239,6 +1316,23 @@ export interface paths {
         };
         /** 학습 모드 관리 - 문제 셋 상태별 목록 조회 */
         get: operations["getStudyManagementQuestionSets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/question-sets/statistics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 본인이 특정 팀에서 풀었던 문제 셋 정보 */
+        get: operations["getQuestionStatistics"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1412,6 +1506,8 @@ export interface components {
             /** @description 문제 셋 난이도 설명 */
             difficulty?: string;
             visibility?: components["schemas"]["QuestionSetVisibility"];
+            /** @description 문제 셋에 매핑할 카테고리 ID 목록. null 또는 빈 목록이면 기존 매핑을 모두 제거한다. */
+            categoryIds?: number[];
         };
         ApiResponseQuestionSetApiResponse: {
             isSuccess?: boolean;
@@ -1711,10 +1807,6 @@ export interface components {
         };
         UpdateWinnerApiRequest: {
             winners: components["schemas"]["ParticipantDto"][];
-        };
-        ApiResponseObject: {
-            isSuccess?: boolean;
-            data?: Record<string, never>;
         };
         PolicyCheckRequest: {
             /**
@@ -2198,6 +2290,9 @@ export interface components {
             /** @description 사용자 전체 닉네임 */
             fullNickname: string;
         };
+        UpdateTeamNameApiRequest: {
+            name: string;
+        };
         UpdateTeamUserRoleApiRequest: {
             /** @enum {string} */
             role: "MAKER" | "OWNER" | "PLAYER";
@@ -2420,12 +2515,19 @@ export interface components {
             teamId: number;
             /** @description 팀 이름 */
             teamName: string;
-            /**
-             * @description 팀 내 유저 역할
-             * @enum {string}
-             */
-            role: "MAKER" | "OWNER" | "PLAYER";
+            teamType: components["schemas"]["TeamType"];
+            role: components["schemas"]["TeamUserRole"];
         };
+        /**
+         * @description 팀 타입 (개인 워크스페이스 / 단체 팀)
+         * @enum {string}
+         */
+        TeamType: "PERSONAL" | "GROUP";
+        /**
+         * @description 팀 내 유저 역할
+         * @enum {string}
+         */
+        TeamUserRole: "MAKER" | "OWNER" | "PLAYER";
         ApiResponseTeamInviteApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["TeamInviteApiResponse"];
@@ -2502,6 +2604,51 @@ export interface components {
              */
             mode?: "MANAGING" | "MAKING" | "LIVE_TIME" | "STUDY" | "REVIEW";
             content?: components["schemas"]["QuestionSetContainer"];
+        };
+        ApiResponseUserSolvingResultApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["UserSolvingResultApiResponse"];
+        };
+        /** @description 문제별 풀이 상세 (전 문제, 미응답 포함) */
+        QuestionSolveResultApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 PK
+             */
+            questionId: number;
+            /** @description 정/오답 여부 (미응답 문제는 false) */
+            isCorrect: boolean;
+            /** @description 제출한 답안 (미응답 문제는 null) */
+            submittedAnswer?: string;
+        };
+        UserSolvingResultApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            questionSetId: number;
+            /**
+             * @description 풀이 모드
+             * @enum {string}
+             */
+            solveMode: "LIVE_TIME" | "STUDY";
+            /**
+             * Format: int32
+             * @description 전체 문제 수
+             */
+            totalCount: number;
+            /**
+             * Format: int32
+             * @description 맞춘 문제 수
+             */
+            correctCount: number;
+            /**
+             * Format: double
+             * @description 100점 만점 기준 점수 (소수 첫째 자리까지)
+             */
+            score: number;
+            /** @description 문제별 풀이 상세 (전 문제, 미응답 포함) */
+            results: components["schemas"]["QuestionSolveResultApiResponse"][];
         };
         ApiResponseListStudyAnswerDraftApiResponse: {
             isSuccess?: boolean;
@@ -2661,6 +2808,53 @@ export interface components {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionScorerApiResponse"];
         };
+        ApiResponseListQuestionStatisticApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionStatisticApiResponse"][];
+        };
+        QuestionStatisticApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 PK
+             */
+            questionId: number;
+            /**
+             * Format: int64
+             * @description 문제 번호
+             */
+            questionNumber?: number;
+            /**
+             * Format: int64
+             * @description 해당 문제를 제출한 유저 수(오답률 분모)
+             */
+            submittedUserCount: number;
+            /**
+             * Format: int64
+             * @description 최초 제출이 오답인 유저 수(오답률 분자)
+             */
+            firstWrongUserCount: number;
+            /**
+             * Format: double
+             * @description 최초 제출 기준 오답률(%). 제출자가 없으면 null
+             */
+            wrongRate?: number;
+        };
+        ApiResponseQuestionSetScorerRankApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionSetScorerRankApiResponse"];
+        };
+        QuestionSetScorerRankApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            questionSetId: number;
+            /** @description 득점자 전체 랭킹(요청한 rankCount 상위만 노출) */
+            rankings: components["schemas"]["RankDto"][];
+            userRank?: components["schemas"]["RankDto"];
+            /** @description 요청한 rankCount 범위 내에 내 랭킹(userRank)이 포함되는지 여부 */
+            containsUserRank: boolean;
+        };
         ApiResponseParticipantsCorrectAnswerRankResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["ParticipantsCorrectAnswerRankResponse"];
@@ -2763,6 +2957,53 @@ export interface components {
         ApiResponseQuestionSetGroup: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetGroup"];
+        };
+        ApiResponseListQuestionSetStatisticApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionSetStatisticApiResponse"][];
+        };
+        QuestionSetStatisticApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 ID
+             */
+            questionSetId: number;
+            /** @description 문제 셋 제목 */
+            title: string;
+            /**
+             * @description 풀이 모드 (LIVE_TIME: 실시간, STUDY: 학습)
+             * @enum {string}
+             */
+            solveMode: "LIVE_TIME" | "STUDY";
+            /**
+             * Format: date-time
+             * @description 풀이 날짜
+             */
+            solvedAt: string;
+            /** @description 우승자 목록 (실시간 전용, 없으면 빈 배열) */
+            winners: components["schemas"]["QuestionSetWinnerDto"][];
+            /**
+             * Format: double
+             * @description 내 정답률 (%, 소수 첫째 자리, 풀지 않은 경우 null)
+             */
+            myCorrectRate?: number;
+            /**
+             * Format: double
+             * @description 전체 평균 정답률 (%, 소수 첫째 자리)
+             */
+            averageCorrectRate: number;
+        };
+        /** @description 우승자 목록 (실시간 전용, 없으면 빈 배열) */
+        QuestionSetWinnerDto: {
+            /**
+             * Format: int64
+             * @description 우승자 사용자 ID
+             */
+            userId: number;
+            /** @description 우승자 이름 */
+            name: string;
+            /** @description 우승자 닉네임 */
+            nickname: string;
         };
         ApiResponseListQuestionSetCategoryApiResponse: {
             isSuccess?: boolean;
@@ -3120,7 +3361,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseObject"];
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };
@@ -3904,6 +4145,32 @@ export interface operations {
             };
         };
     };
+    updateTeamName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTeamNameApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
     updateTeamUserRole: {
         parameters: {
             query?: never;
@@ -4417,6 +4684,28 @@ export interface operations {
             };
         };
     };
+    getMySolveRecord: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserSolvingResultApiResponse"];
+                };
+            };
+        };
+    };
     getStudyDrafts: {
         parameters: {
             query?: never;
@@ -4531,6 +4820,53 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionScorerApiResponse"];
+                };
+            };
+        };
+    };
+    getWrongRates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListQuestionStatisticApiResponse"];
+                };
+            };
+        };
+    };
+    getScorerRanks: {
+        parameters: {
+            query?: {
+                /** @description 노출할 랭크 개수 */
+                rankCount?: number;
+            };
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetScorerRankApiResponse"];
                 };
             };
         };
@@ -4663,6 +4999,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionSetGroup"];
+                };
+            };
+        };
+    };
+    getQuestionStatistics: {
+        parameters: {
+            query: {
+                teamId: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListQuestionSetStatisticApiResponse"];
                 };
             };
         };

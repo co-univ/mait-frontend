@@ -15,8 +15,8 @@ import type {
 	QuestionSetVisibility,
 } from "@/libs/types";
 import {
-	CREATION_PUBLISH_QUESTION_INITIAL_STATE,
 	creationPublishQuestionSetReducer,
+	getCreationPublishQuestionInitialState,
 } from "../../reducers/publish/CreationPublishQuestionSetReducer";
 import CreationPublishLeftPanel from "./CreationPublishLeftPanel";
 import CreationPublishRightPanel from "./CreationPublishRightPanel";
@@ -36,7 +36,8 @@ const CreationPublish = () => {
 
 	const [questionSet, dispatch] = useReducer(
 		creationPublishQuestionSetReducer,
-		CREATION_PUBLISH_QUESTION_INITIAL_STATE,
+		activeTeam?.teamType,
+		getCreationPublishQuestionInitialState,
 	);
 
 	const { data } = apiHooks.useQuery(
@@ -178,6 +179,10 @@ const CreationPublish = () => {
 			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
 			dispatch({ type: "SET_DIFFICULTY", payload: difficulty ?? "" });
 			dispatch({
+				type: "SET_MODE",
+				payload: activeTeam?.teamType === "PERSONAL" ? "STUDY" : "LIVE_TIME",
+			});
+			dispatch({
 				type: "SET_CATEGORIES",
 				payload: (categories ?? [])
 					.filter((category) => category.id != null && category.name != null)
@@ -188,7 +193,7 @@ const CreationPublish = () => {
 					})),
 			});
 		}
-	}, [data?.data]);
+	}, [data?.data, activeTeam?.teamType]);
 
 	return (
 		<LabeledPageLayout
