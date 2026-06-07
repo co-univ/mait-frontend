@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
 import { createPath } from "@/utils/create-path";
 import useControlSolvings from "../../hooks/solving/question/useControlSolvingQuestions";
 
@@ -16,7 +17,8 @@ interface ControlRedirectProps {
 //
 
 const ControlRedirect = ({ routePath }: ControlRedirectProps) => {
-	const questionSetId = Number(useParams().questionSetId);
+	const { questionSetId: questionSetIdParam } = useParams();
+	const questionSetId = Number(questionSetIdParam);
 
 	const { questions, isLoading } = useControlSolvings({ questionSetId });
 
@@ -26,6 +28,11 @@ const ControlRedirect = ({ routePath }: ControlRedirectProps) => {
 	//
 	//
 	useEffect(() => {
+		if (!questionSetIdParam) {
+			navigate(MANAGEMENT_ROUTE_PATH.ROOT, { replace: true });
+			return;
+		}
+
 		if (!isLoading && questions) {
 			const firstQuestionId = questions[0]?.id;
 
@@ -39,7 +46,14 @@ const ControlRedirect = ({ routePath }: ControlRedirectProps) => {
 				);
 			}
 		}
-	}, [questions, isLoading, navigate, questionSetId, routePath]);
+	}, [
+		questions,
+		isLoading,
+		navigate,
+		questionSetIdParam,
+		questionSetId,
+		routePath,
+	]);
 
 	return null;
 };

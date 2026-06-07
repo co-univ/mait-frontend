@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import AuthGuard from "@/guards/AuthGuard";
+import TeamGuard from "@/guards/TeamGuard";
 
 const Dashboard = lazy(() => import("./pages/common/Dashboard"));
 
@@ -25,5 +26,9 @@ export const dashboardRouter = [
 	},
 ].map((route) => ({
 	...route,
-	element: <AuthGuard>{route.element}</AuthGuard>,
+	element: (
+		<TeamGuard rootPath={DASHBOARD_ROUTE_PATH.ROOT}>
+			<AuthGuard>{route.element}</AuthGuard>
+		</TeamGuard>
+	),
 }));

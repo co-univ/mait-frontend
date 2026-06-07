@@ -1,5 +1,7 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
+import TeamGuard from "@/guards/TeamGuard";
 import TeamMakerGuard from "@/guards/TeamMakerGuard";
 
 const ControlRedirect = lazy(() => import("./pages/common/ControlRedirect"));
@@ -40,27 +42,33 @@ export const CONTROL_ROUTE_PATH = {
 //
 
 export const controlRouter: RouteObject[] = [
-	{
-		path: CONTROL_ROUTE_PATH.LIVE_SOLVING,
-		element: <ControlLiveSolving />,
-	},
-	{
-		path: CONTROL_ROUTE_PATH.LIVE_PARTICIPANT,
-		element: <ControlLiveParticipant />,
-	},
-	{
-		path: CONTROL_ROUTE_PATH.STUDY_SOLVING,
-		element: <ControlStudySolving />,
-	},
-	{
-		path: CONTROL_ROUTE_PATH.LIVE_ROOT,
-		element: <ControlRedirect routePath={CONTROL_ROUTE_PATH.LIVE_SOLVING} />,
-	},
-	{
-		path: CONTROL_ROUTE_PATH.STUDY_ROOT,
-		element: <ControlRedirect routePath={CONTROL_ROUTE_PATH.STUDY_SOLVING} />,
-	},
-].map((route) => ({
-	...route,
-	element: <TeamMakerGuard>{route.element}</TeamMakerGuard>,
-}));
+	...[
+		{
+			path: CONTROL_ROUTE_PATH.LIVE_SOLVING,
+			element: <ControlLiveSolving />,
+		},
+		{
+			path: CONTROL_ROUTE_PATH.LIVE_PARTICIPANT,
+			element: <ControlLiveParticipant />,
+		},
+		{
+			path: CONTROL_ROUTE_PATH.STUDY_SOLVING,
+			element: <ControlStudySolving />,
+		},
+		{
+			path: CONTROL_ROUTE_PATH.LIVE_ROOT,
+			element: <ControlRedirect routePath={CONTROL_ROUTE_PATH.LIVE_SOLVING} />,
+		},
+		{
+			path: CONTROL_ROUTE_PATH.STUDY_ROOT,
+			element: <ControlRedirect routePath={CONTROL_ROUTE_PATH.STUDY_SOLVING} />,
+		},
+	].map((route) => ({
+		...route,
+		element: (
+			<TeamGuard rootPath={MANAGEMENT_ROUTE_PATH.ROOT}>
+				<TeamMakerGuard>{route.element}</TeamMakerGuard>
+			</TeamGuard>
+		),
+	})),
+];

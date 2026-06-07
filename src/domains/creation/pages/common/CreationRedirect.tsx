@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useCreationQuestionSet from "@/domains/creation/hooks/question/useCreationQuestionSet";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
 import { createPath } from "@/utils/create-path";
 import { CREATION_ROUTE_PATH } from "../../creation.routes";
 
@@ -11,7 +12,8 @@ import { CREATION_ROUTE_PATH } from "../../creation.routes";
 const CreationRedirect = () => {
 	const navigate = useNavigate();
 
-	const questionSetId = Number(useParams().questionSetId);
+	const { questionSetId: questionSetIdParam } = useParams();
+	const questionSetId = Number(questionSetIdParam);
 
 	const { questions, isQuestionsLoading: isLoading } = useCreationQuestionSet({
 		questionSetId,
@@ -21,6 +23,11 @@ const CreationRedirect = () => {
 	//
 	//
 	useEffect(() => {
+		if (!questionSetIdParam) {
+			navigate(MANAGEMENT_ROUTE_PATH.ROOT, { replace: true });
+			return;
+		}
+
 		if (questions && !isLoading) {
 			const firstQuestionId = questions[0]?.id ?? 0;
 
@@ -32,7 +39,7 @@ const CreationRedirect = () => {
 				{ replace: true },
 			);
 		}
-	}, [questions, questionSetId, isLoading, navigate]);
+	}, [questions, questionSetIdParam, questionSetId, isLoading, navigate]);
 
 	return null;
 };

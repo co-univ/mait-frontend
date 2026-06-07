@@ -1,5 +1,7 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
+import TeamGuard from "@/guards/TeamGuard";
 import TeamMakerGuard from "@/guards/TeamMakerGuard";
 
 const CreationRedirect = lazy(
@@ -61,5 +63,9 @@ export const creationRouter: RouteObject[] = [
 	},
 ].map((route) => ({
 	...route,
-	element: <TeamMakerGuard>{route.element}</TeamMakerGuard>,
+	element: (
+		<TeamGuard rootPath={MANAGEMENT_ROUTE_PATH.ROOT}>
+			<TeamMakerGuard>{route.element}</TeamMakerGuard>
+		</TeamGuard>
+	),
 }));
