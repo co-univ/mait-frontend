@@ -1,12 +1,14 @@
 import { flip, offset, useFloating } from "@floating-ui/react-dom";
 import { NotebookPen } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import TeamManagementUsersAccountAddPopover from "../../components/users/TeamManagementUsersAccountAddPopover";
 import TeamManagementUsersAdditionalButton from "../../components/users/TeamManagementUsersAdditionalButton";
 import useTeamManagementUsersActions from "../../hooks/users/useTeamManagementUsersActions";
+import { TEAM_MANAGEMENT_ROUTE_PATH } from "../../team-management.routes";
 import TeamManagementUsersContainer from "./TeamManagementUsersContainer";
 import TeamManagementUsersLinkCreateModal from "./TeamManagementUsersLinkCreateModal";
 import TeamManagementUsersLinkManageModal from "./TeamManagementUsersLinkManageModal";
@@ -22,7 +24,10 @@ const TeamManagementUsers = () => {
 
 	const accountAddButtonRef = useRef<HTMLButtonElement>(null);
 
+	const navigate = useNavigate();
+
 	const { activeTeam, isMakerOrAbove } = useTeams();
+
 	const {
 		isTeamNameEditing,
 		changedTeamName,
@@ -117,6 +122,13 @@ const TeamManagementUsers = () => {
 			</div>
 		);
 	};
+
+	//
+	useEffect(() => {
+		if (activeTeam?.teamType === "PERSONAL") {
+			navigate(TEAM_MANAGEMENT_ROUTE_PATH.CATEGORIES, { replace: true });
+		}
+	}, [activeTeam?.teamType, navigate]);
 
 	return (
 		<>
