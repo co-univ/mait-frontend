@@ -1014,6 +1014,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/teams/{teamId}/categories/{categoryId}/correct-rate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 카테고리별 정답률 조회 API
+         * @description 카테고리에 속한 종료된 문제 셋들의 모든 문제를 통째로 모아 본인 정답률과 전체 평균 정답률(첫 제출 기준)을 조회한다.
+         */
+        get: operations["getCategoryCorrectRate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/{teamId}/categories/correct-rates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 팀 카테고리별 정답률 랭킹 조회 API
+         * @description 팀에 속한 모든 카테고리의 본인 정답률을 높은 순으로 조회한다. 미응시 카테고리는 정답률 null로 맨 뒤에 위치한다.
+         */
+        get: operations["getCategoryCorrectRates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teams/{teamId}/applicants": {
         parameters: {
             query?: never;
@@ -1350,7 +1390,7 @@ export interface paths {
         };
         /**
          * 문제 셋 카테고리 검색 API
-         * @description 팀의 활성 카테고리를 이름 부분 일치로 검색합니다. 팀 멤버만 조회 가능합니다.
+         * @description 팀의 활성 카테고리를 이름 부분 일치로 검색합니다. keyword 가 없으면 팀의 전체 활성 카테고리를 반환합니다. 팀 멤버만 조회 가능합니다.
          */
         get: operations["searchCategories"];
         put?: never;
@@ -1956,6 +1996,11 @@ export interface components {
             isCorrect: boolean;
             /** @description 제출한 답안 */
             submittedAnswer?: string;
+            /**
+             * Format: int64
+             * @description 첫 제출과 본인 정답 제출의 시간차(ms). 정답일 때만 채워지며 본인이 첫 제출이면 0
+             */
+            timeGapMillis?: number;
         };
         StudyGradeResultApiResponse: {
             /**
@@ -2482,6 +2527,38 @@ export interface components {
              * @description 팀 초대 만료 일시
              */
             expiredAt: string;
+        };
+        ApiResponseCategoryCorrectRateApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["CategoryCorrectRateApiResponse"];
+        };
+        CategoryCorrectRateApiResponse: {
+            /**
+             * Format: int64
+             * @description 카테고리 ID
+             */
+            categoryId: number;
+            /** @description 카테고리 이름 */
+            categoryName: string;
+            /**
+             * Format: int32
+             * @description 정답률 계산 대상 문제 셋 수 (종료된 문제 셋 기준)
+             */
+            questionSetCount: number;
+            /**
+             * Format: double
+             * @description 내 정답률 (%, 소수 첫째 자리, 풀지 않은 경우 null)
+             */
+            myCorrectRate?: number;
+            /**
+             * Format: double
+             * @description 전체 평균 정답률 (%, 소수 첫째 자리)
+             */
+            averageCorrectRate: number;
+        };
+        ApiResponseListCategoryCorrectRateApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["CategoryCorrectRateApiResponse"][];
         };
         ApiResponseListApplyTeamUserApiResponse: {
             isSuccess?: boolean;
@@ -4620,6 +4697,51 @@ export interface operations {
             };
         };
     };
+    getCategoryCorrectRate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+                categoryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCategoryCorrectRateApiResponse"];
+                };
+            };
+        };
+    };
+    getCategoryCorrectRates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListCategoryCorrectRateApiResponse"];
+                };
+            };
+        };
+    };
     getTeamApplicants: {
         parameters: {
             query?: never;
@@ -5029,7 +5151,7 @@ export interface operations {
         parameters: {
             query: {
                 teamId: number;
-                keyword: string;
+                keyword?: string;
             };
             header?: never;
             path?: never;
