@@ -25,7 +25,7 @@ const FEATURES = [
 const HomeThirdMobileFirst = () => {
 	return (
 		<div className="w-full h-full">
-			<div className="flex flex-col items-center md:gap-[84px] gap-[48px] w-full h-full md:py-[100px] py-[72px] md:px-[96px] px-[32px]">
+			<div className="flex flex-col items-center justify-center md:gap-[84px] gap-[48px] w-full h-full pt-[96px] md:px-[96px] px-[32px]">
 				<h2 className="md:typo-heading-xlarge typo-heading-medium text-color-gray-80 w-full text-center">
 					학습이 더 쉬워지는 기능들,
 					<br />
