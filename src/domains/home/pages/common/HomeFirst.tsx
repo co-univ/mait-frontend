@@ -88,7 +88,7 @@ const HomeFirst = () => {
 				</div>
 				<div
 					ref={lottieRef}
-					className="w-full h-[40vh] px-[10vw] overflow-visible pointer-events-none"
+					className="w-full h-[40vh] overflow-visible pointer-events-none"
 				>
 					<Lottie options={LOTTIE_OPTIONS} width="100%" height="100%" />
 					{/* <img src={yeah} alt="yeah" className="w-full h-auto" /> */}
