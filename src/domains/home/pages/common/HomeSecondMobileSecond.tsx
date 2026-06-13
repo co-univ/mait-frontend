@@ -14,9 +14,14 @@ const HomeSecondMobileSecond = () => {
 	//
 	//
 	useEffect(() => {
+		let timer: ReturnType<typeof setTimeout>;
+
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				setIsVisible(entry.isIntersecting);
+				if (entry.isIntersecting) {
+					setIsVisible(true);
+					timer = setTimeout(() => setIsVisible(false), 2000);
+				}
 			},
 			{
 				threshold: 0.5,
@@ -28,6 +33,8 @@ const HomeSecondMobileSecond = () => {
 		}
 
 		return () => {
+			clearTimeout(timer);
+
 			if (containerRef.current) {
 				observer.unobserve(containerRef.current);
 			}
