@@ -17,7 +17,7 @@ interface StatusBarProps {
 //
 //
 
-const StatusBar = ({ percentage, height = 12, className }: StatusBarProps) => {
+const StatusBar = ({ percentage, height = 10, className }: StatusBarProps) => {
 	const clamped = Math.min(100, Math.max(0, percentage));
 	const [active, setActive] = useState(false);
 

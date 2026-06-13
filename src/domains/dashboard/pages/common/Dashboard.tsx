@@ -5,6 +5,7 @@ import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import DashboardMySolving from "../../components/my-solving/DashboardMySolving";
 import DashboardTeamRanking from "../../components/team-ranking/DashboardTeamRanking";
 import DashboardLayout from "../../layouts/common/DashboardLayout";
+import DashboardCategory from "../category/DashboardCategory";
 
 //
 //
@@ -44,6 +45,8 @@ const Dashboard = () => {
 					<DashboardMySolving />
 				</div>
 			</div>
+
+			<DashboardCategory />
 		</DashboardLayout>
 	);
 };
