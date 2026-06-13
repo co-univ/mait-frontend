@@ -17,6 +17,7 @@ interface SubmitAnswerParams {
 
 interface UseSolvingLiveAnswerSubmitReturn {
 	submitAnswer: (params: SubmitAnswerParams) => Promise<boolean>;
+	timeGap: number;
 	isSubmitting: boolean;
 }
 
@@ -26,6 +27,7 @@ interface UseSolvingLiveAnswerSubmitReturn {
 
 const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [timeGap, setTimeGap] = useState(0);
 	const { user } = useUser();
 
 	const { getUserAnswers, getQuestionType, setSubmitResult } =
@@ -100,7 +102,9 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 			}
 
 			const isCorrect = data?.data?.isCorrect ?? false;
+			const timeGap = data.data?.timeGapMillis ?? 0;
 			setSubmitResult(isCorrect);
+			setTimeGap(timeGap);
 
 			return true;
 		} catch {
@@ -113,6 +117,7 @@ const useSolvingLiveAnswerSubmit = (): UseSolvingLiveAnswerSubmitReturn => {
 
 	return {
 		submitAnswer,
+		timeGap,
 		isSubmitting,
 	};
 };
