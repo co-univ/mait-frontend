@@ -1,11 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { Trophy } from "lucide-react";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs } from "@/components/tabs";
 import useTeams from "@/hooks/useTeams";
 import { apiHooks } from "@/libs/api";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
-import DashboardTeamRankingHeader from "./DashboardTeamRankingHeader";
+import DashboardHeader from "../common/DashboardHeader";
 import DashboardTeamRankingTable from "./DashboardTeamRankingTable";
 import DashboardTeamRankingTabsTrigger from "./DashboardTeamRankingTabsTrigger";
 
@@ -101,7 +102,7 @@ const DashboardTeamRanking = () => {
 
 	return (
 		<div className="flex w-full h-full flex-col gap-gap-9 rounded-radius-large2 border border-color-gray-10 bg-color-gray-5 p-padding-11 shadow-base">
-			<DashboardTeamRankingHeader />
+			<DashboardHeader icon={<Trophy />} title="우리팀 랭킹" />
 			<Tabs.Root
 				defaultValue="scorer"
 				value={rankingType}

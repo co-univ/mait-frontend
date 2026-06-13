@@ -1,8 +1,8 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ClipboardList } from "lucide-react";
 import { useState } from "react";
 import useTeams from "@/hooks/useTeams";
 import { apiHooks } from "@/libs/api";
-import DashboardCategoryHeader from "../../components/category/DashboardCategoryHeader";
+import DashboardHeader from "../../components/common/DashboardHeader";
 import DashboardCategoryItem from "../../components/category/DashboardCategoryItem";
 
 //
@@ -47,7 +47,7 @@ const DashboardCategory = () => {
 
 	return (
 		<div className="flex flex-col w-full gap-gap-9">
-			<DashboardCategoryHeader />
+			<DashboardHeader icon={<ClipboardList />} title="카테고리별 정답률" />
 
 			<div className="flex gap-gap-9">
 				<div className="flex-1 flex flex-col gap-gap-5">

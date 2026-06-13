@@ -6,6 +6,7 @@ import DashboardMySolving from "../../components/my-solving/DashboardMySolving";
 import DashboardTeamRanking from "../../components/team-ranking/DashboardTeamRanking";
 import DashboardLayout from "../../layouts/common/DashboardLayout";
 import DashboardCategory from "../category/DashboardCategory";
+import DashboardQuestionSets from "../question-sets/DashboardQuestionSets";
 
 //
 //
@@ -47,6 +48,8 @@ const Dashboard = () => {
 			</div>
 
 			<DashboardCategory />
+
+			<DashboardQuestionSets />
 		</DashboardLayout>
 	);
 };
