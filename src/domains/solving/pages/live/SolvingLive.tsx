@@ -132,7 +132,6 @@ const SolvingLive = () => {
 	 * 수신된 웹소켓 메시지 핸들러 (quizController 호출부)
 	 */
 	const handleWebSocketMessage = (msg: WebSocketMessage) => {
-		console.log("[WS]", msg);
 		const questionId = msg.questionId; // 문제 id
 		const statusType = msg?.statusType; // 문제 풀이 상태
 		const commandType = msg?.commandType; // 명령 타입
