@@ -12,6 +12,7 @@ interface SolvingSubmitResultProps {
 	correct: boolean;
 	show?: boolean;
 	onAnimationComplete?: () => void;
+	timeGap: number;
 }
 
 //
@@ -19,9 +20,10 @@ interface SolvingSubmitResultProps {
 //
 
 const SolvingSubmitResult = ({
-	correct,
+	correct = false,
 	show = true,
 	onAnimationComplete,
+	timeGap,
 }: SolvingSubmitResultProps) => {
 	const { isMobile } = useBreakpoint();
 
@@ -59,6 +61,7 @@ const SolvingSubmitResult = ({
 					/>
 					<motion.span
 						className={clsx(
+							"flex flex-col items-center justify-center",
 							isMobile ? "typo-heading-medium" : "typo-heading-xlarge",
 							{
 								"text-success-50": correct,
@@ -75,6 +78,14 @@ const SolvingSubmitResult = ({
 						}}
 					>
 						{correct ? "정답!" : "오답!"}
+						<div></div>
+						<span
+							className={clsx(
+								isMobile ? "typo-heading-xxsmall" : "typo-heading-medium",
+							)}
+						>
+							{timeGap}초 늦었어요 😆
+						</span>
 					</motion.span>
 				</motion.div>
 			)}
