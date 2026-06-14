@@ -18,10 +18,10 @@ import {
 	PARTICIPANT_STATUS,
 	type ParticipantStatus,
 } from "../../solving.constants";
+import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 import SolvingLiveParticipantElluminationConfirm from "./SolvingLiveParticipantEliminationConfirm";
 import SolvingLiveQuestion from "./SolvingLiveQuestion";
 import SolvingLiveWaiting from "./SolvingLiveWaiting";
-import { SOLVING_ROUTE_PATH } from "../../solving.routes";
 
 //
 //
@@ -292,6 +292,7 @@ const SolvingLive = () => {
 			/>
 			<SolvingLiveWinner
 				open={showWinner}
+				questionSetId={questionSetId}
 				activeParticipants={activeParticipants}
 				onClose={() => {
 					setShowWinner(false);
