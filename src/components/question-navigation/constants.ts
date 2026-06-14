@@ -16,4 +16,4 @@ export const GAPS = {
 	small: 12,
 } as const;
 
-export type QuestionNavigationVariation = keyof typeof BUTTON_SIZES;
+export type QuestionNavigationSize = keyof typeof BUTTON_SIZES;
