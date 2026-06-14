@@ -96,7 +96,7 @@ const SolvingReviewHeader = ({
 					isMouseOver={isMouseOver}
 					number={index + 1}
 					onClick={() => handleQuestionNavigationClick(question.id)}
-					variation={isMobile ? "small" : "default"}
+					size={isMobile ? "small" : "default"}
 				/>
 			</div>
 		);
@@ -106,7 +106,7 @@ const SolvingReviewHeader = ({
 		<div className="flex flex-col gap-gap-11">
 			<QuestionNavigation
 				orientation="horizontal"
-				variation={isMobile ? "small" : "default"}
+				size={isMobile ? "small" : "default"}
 				activeQuestionId={questionId}
 				questions={questions ?? []}
 				renderQuestionNavigationButton={renderQuestionNavigationButton}

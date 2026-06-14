@@ -1,11 +1,11 @@
 import { useEffect } from "react";
+import SolvingAnswerShort from "@/domains/solving/components/common/answer/SolvingAnswerShort";
 import useSolvingQuestion from "@/domains/solving/hooks/common/useSolvingQuestion";
+import useSolvingReviewAnswerResultStore from "@/domains/solving/stores/review/useSolvingReviewAnswerResultStore";
 import type {
 	GradedAnswerShortResult,
 	ShortQuestionApiResponse,
 } from "@/libs/types";
-import SolvingAnswerShort from "@/domains/solving/components/common/answer/SolvingAnswerShort";
-import useSolvingReviewAnswerResultStore from "@/domains/solving/stores/review/useSolvingReviewAnswerResultStore";
 
 //
 //

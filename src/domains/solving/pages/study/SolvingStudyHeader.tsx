@@ -103,7 +103,7 @@ const SolvingStudyHeader = ({
 					isMouseOver={isGraded ? false : isMouseOver}
 					number={index + 1}
 					onClick={() => void handleQuestionNavigationClick(question.id)}
-					variation={isMobile ? "small" : "default"}
+					size={isMobile ? "small" : "default"}
 					className={clsx("relative overflow-hidden", {
 						"bg-color-primary-5 text-color-primary-50 border border-color-primary-50":
 							isActive && !isGraded,
@@ -138,7 +138,7 @@ const SolvingStudyHeader = ({
 		<div className="flex flex-col gap-gap-11">
 			<QuestionNavigation
 				orientation="horizontal"
-				variation={isMobile ? "small" : "default"}
+				size={isMobile ? "small" : "default"}
 				activeQuestionId={questionId}
 				questions={questions ?? []}
 				renderQuestionNavigationButton={renderQuestionNavigationButton}
