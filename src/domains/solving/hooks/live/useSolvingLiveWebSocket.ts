@@ -78,6 +78,10 @@ export const useSolvingLiveWebSocket = ({
 				client.publish({
 					destination: `/app/question-sets/${questionSetId}/participation-status`,
 				});
+
+				client.publish({
+					destination: `/app/question-sets/${questionSetId}/participant-count/sync`,
+				});
 			},
 		});
 
