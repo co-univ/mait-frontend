@@ -31,6 +31,7 @@ interface SolvingLiveQuestionProps {
 	liveStage: LiveStage;
 	isSubmitAllowed: boolean;
 	isFailed: boolean;
+	currentParticipants: number;
 }
 
 //
@@ -45,6 +46,7 @@ const SolvingLiveQuestion = ({
 	liveStage,
 	isSubmitAllowed,
 	isFailed,
+	currentParticipants,
 }: SolvingLiveQuestionProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 
@@ -161,6 +163,7 @@ const SolvingLiveQuestion = ({
 				quizTitle={questionSetTitle}
 				questionNum={number ?? 0}
 				totalQuestionNum={totalQuestionNum}
+				currentParticipants={currentParticipants}
 				isSubmitted={isSubmitted}
 				isCorrect={isCorrect}
 				isFailed={isFailed}

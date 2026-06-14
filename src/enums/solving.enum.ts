@@ -8,6 +8,7 @@ export enum CommandType {
 	ACTIVE_PARTICIPANTS = "ACTIVE_PARTICIPANTS",
 	WINNER = "WINNER",
 	LIVE_END = "LIVE_END",
+	PARTICIPANT_COUNT = "PARTICIPANT_COUNT",
 }
 
 export enum QuestionType {

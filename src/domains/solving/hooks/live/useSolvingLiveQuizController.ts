@@ -13,6 +13,7 @@ interface UseSolvingLiveQuizControllerProps {
 	isFailed: boolean;
 	setIsFailed: (failed: boolean) => void;
 	setShowWinner: (show: boolean) => void;
+	setCurrentParticipants: (participants: number) => void;
 	onQuestionInfo: (questionId: number) => void;
 	userIdRef: React.RefObject<number | null>;
 }
@@ -36,6 +37,7 @@ export const useSolvingLiveQuizController = ({
 	isFailed,
 	setIsFailed,
 	setShowWinner,
+	setCurrentParticipants,
 	onQuestionInfo,
 	userIdRef,
 }: UseSolvingLiveQuizControllerProps) => {
@@ -47,6 +49,7 @@ export const useSolvingLiveQuizController = ({
 		statusType?: QuestionStatusType,
 		commandType?: CommandType,
 		activeParticipants?: ActiveParticipant[],
+		currentParticipants?: number,
 	) => {
 		// 탈락자는 어떤 경우에도 상호작용 불가 유지
 		if (isFailed) {
@@ -89,6 +92,10 @@ export const useSolvingLiveQuizController = ({
 				}
 				case CommandType.LIVE_END: {
 					setIsFailed(false);
+					break;
+				}
+				case CommandType.PARTICIPANT_COUNT: {
+					setCurrentParticipants(currentParticipants || 1);
 					break;
 				}
 			}
