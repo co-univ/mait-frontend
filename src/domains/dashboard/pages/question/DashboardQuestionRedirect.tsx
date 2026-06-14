@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createPath } from "@/utils/create-path";
 import { DASHBOARD_ROUTE_PATH } from "../../dashboard.routes";
-import useDashboardQuestions from "../hooks/question/useDashboardQuestions";
+import useDashboardQuestions from "../../hooks/question/useDashboardQuestions";
 
 //
 //

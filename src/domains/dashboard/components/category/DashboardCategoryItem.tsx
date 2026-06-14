@@ -25,7 +25,7 @@ const DashboardCategoryItem = ({
 				{category}
 			</span>
 			<div className="min-w-0 flex-1">
-				<StatusBar percentage={clamped} />
+				<StatusBar rate={clamped} />
 			</div>
 			<span className="w-[60px] shrink-0 text-center">{clamped}%</span>
 		</div>
