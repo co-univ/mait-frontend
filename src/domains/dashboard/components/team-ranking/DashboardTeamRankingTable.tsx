@@ -18,6 +18,7 @@ const RANKING_ICON: Record<number, string> = {
 };
 
 interface DashboardTeamRankingTableProps {
+	hideCount?: boolean;
 	teamRankings?: RankDto[];
 	userRank?: RankDto;
 }
@@ -27,6 +28,7 @@ interface DashboardTeamRankingTableProps {
 //
 
 const DashboardTeamRankingTable = ({
+	hideCount = false,
 	teamRankings,
 	userRank,
 }: DashboardTeamRankingTableProps) => {
@@ -68,7 +70,7 @@ const DashboardTeamRankingTable = ({
 				<Table.HeaderCell width="24px" />
 				<Table.HeaderCell width="112px">순위</Table.HeaderCell>
 				<Table.HeaderCell grow>이름</Table.HeaderCell>
-				<Table.HeaderCell width="144px">문제</Table.HeaderCell>
+				{!hideCount && <Table.HeaderCell width="144px">문제</Table.HeaderCell>}
 			</Table.Header>
 
 			<Table.Divider />
@@ -83,7 +85,7 @@ const DashboardTeamRankingTable = ({
 						<DashboardTeamRankingTableRowCell
 							key={ranking.rank}
 							rank={ranking.rank}
-							count={ranking.count}
+							count={hideCount ? undefined : ranking.count}
 							users={ranking?.users ?? []}
 							rankIcon={
 								<img
@@ -102,7 +104,7 @@ const DashboardTeamRankingTable = ({
 					<DashboardTeamRankingTableRowCell
 						users={userRank.user ? [userRank.user] : []}
 						rank={`${userRank.rank}등 [내 등수]`}
-						count={userRank.count}
+						count={hideCount ? undefined : userRank.count}
 						rankIcon={
 							<div className="size-[12px] bg-color-point-50 rounded-radius-max" />
 						}
