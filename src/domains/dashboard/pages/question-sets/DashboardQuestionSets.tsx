@@ -1,16 +1,21 @@
 import dayjs from "dayjs";
 import { ArrowRight, ClipboardPenLine } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { Table } from "@/components/table";
 import useTeams from "@/hooks/useTeams";
 import { apiHooks } from "@/libs/api";
+import { createPath } from "@/utils/create-path";
 import DashboardHeader from "../../components/common/DashboardHeader";
+import { DASHBOARD_ROUTE_PATH } from "../../dashboard.routes";
 
 //
 //
 //
 
 const DashboardQuestionSets = () => {
+	const navigate = useNavigate();
+
 	const { activeTeam } = useTeams();
 
 	const { data } = apiHooks.useQuery(
@@ -77,6 +82,13 @@ const DashboardQuestionSets = () => {
 									icon={<ArrowRight />}
 									item="자세히보기"
 									className="bg-color-primary-5 text-color-primary-50 border-none !p-padding-4 typo-body-xsmall-bold flex-row-reverse"
+									onClick={() =>
+										navigate(
+											createPath(DASHBOARD_ROUTE_PATH.QUESTION_ROOT, {
+												questionSetId: questionSet.questionSetId,
+											}),
+										)
+									}
 								/>
 							</Table.Cell>
 						</Table.Row>
