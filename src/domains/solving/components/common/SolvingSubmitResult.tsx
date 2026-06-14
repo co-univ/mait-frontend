@@ -30,58 +30,64 @@ const SolvingSubmitResult = ({
 	return (
 		<AnimatePresence mode="wait">
 			{show && (
-			<motion.div
-				initial={{ y: -200, opacity: 0 }}
-				animate={{ y: 0, opacity: 1 }}
-				exit={{ y: -200, opacity: 0 }}
-				transition={{
-					type: "spring",
-					damping: 15,
-					stiffness: 300,
-					mass: 1,
-					duration: 0.8,
-				}}
-				onAnimationComplete={onAnimationComplete}
-				className="fixed top-20 left-1/2 transform !-translate-x-1/2 flex flex-col items-center justify-center z-50 pointer-events-none"
-			>
-				<motion.img
-					src={correct ? quizCorrect : quizIncorrect}
-					alt={correct ? "Quiz Success" : "Quiz Fail"}
-					className={
-						isMobile ? "h-[64px] aspect-square" : "h-[95px] aspect-square"
-					}
-					initial={{ scale: 0, rotate: -180 }}
-					animate={{ scale: 1, rotate: 0 }}
+				<motion.div
+					initial={{ y: -200, opacity: 0 }}
+					animate={{ y: 0, opacity: 1 }}
+					exit={{ y: -200, opacity: 0 }}
 					transition={{
 						type: "spring",
-						damping: 12,
-						stiffness: 400,
-						delay: 0.2,
+						damping: 15,
+						stiffness: 300,
+						mass: 1,
+						duration: 0.8,
 					}}
-				/>
-				<motion.span
-					className={clsx(
-						"flex flex-col items-center justify-center",
-						isMobile ? "typo-heading-medium" : "typo-heading-xlarge",
-						{
-							"text-success-50": correct,
-							"text-point-50": !correct,
-						},
-					)}
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{
-						type: "spring",
-						damping: 10,
-						stiffness: 200,
-						delay: 0.4,
-					}}
+					onAnimationComplete={onAnimationComplete}
+					className="fixed top-20 left-1/2 transform !-translate-x-1/2 flex flex-col items-center justify-center z-50 pointer-events-none"
 				>
-					{correct ? "정답!" : "오답!"}
-					<div></div>
-					<span className="typo-heading-medium">{timeGap}초 늦었어요 😆</span>
-				</motion.span>
-			</motion.div>
+					<motion.img
+						src={correct ? quizCorrect : quizIncorrect}
+						alt={correct ? "Quiz Success" : "Quiz Fail"}
+						className={
+							isMobile ? "h-[64px] aspect-square" : "h-[95px] aspect-square"
+						}
+						initial={{ scale: 0, rotate: -180 }}
+						animate={{ scale: 1, rotate: 0 }}
+						transition={{
+							type: "spring",
+							damping: 12,
+							stiffness: 400,
+							delay: 0.2,
+						}}
+					/>
+					<motion.span
+						className={clsx(
+							"flex flex-col items-center justify-center",
+							isMobile ? "typo-heading-medium" : "typo-heading-xlarge",
+							{
+								"text-success-50": correct,
+								"text-point-50": !correct,
+							},
+						)}
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{
+							type: "spring",
+							damping: 10,
+							stiffness: 200,
+							delay: 0.4,
+						}}
+					>
+						{correct ? "정답!" : "오답!"}
+						<div></div>
+						<span
+							className={clsx(
+								isMobile ? "typo-heading-xxsmall" : "typo-heading-medium",
+							)}
+						>
+							{timeGap}초 늦었어요 😆
+						</span>
+					</motion.span>
+				</motion.div>
 			)}
 		</AnimatePresence>
 	);
