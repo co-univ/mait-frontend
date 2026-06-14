@@ -15,6 +15,7 @@ export interface WebSocketMessage {
 	activeParticipants?: any[];
 	participantStatus?: ParticipantStatus;
 	isInitialStatus?: boolean;
+	count: number;
 }
 
 interface UseSolvingLiveWebSocketProps {

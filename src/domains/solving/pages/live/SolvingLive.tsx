@@ -63,6 +63,7 @@ const SolvingLive = () => {
 	const [showWinner, setShowWinner] = useState(false); // 우승자 화면 표시 여부
 	const [isElluminationConfirmVisible, setIsElluminationConfirmVisible] =
 		useState(false);
+	const [currentParticipants, setCurrentParticipants] = useState(0); // 현재 참여자 수
 
 	const hasTrackedEnterRef = useRef(false);
 	const hasTrackedFirstQuestionViewRef = useRef(false);
@@ -96,6 +97,7 @@ const SolvingLive = () => {
 		isFailed,
 		setIsFailed,
 		setShowWinner,
+		setCurrentParticipants,
 		// SolvingLiveQuestion이 자체적으로 데이터를 fetch하므로 빈 함수 전달
 		onQuestionInfo: () => {},
 		userIdRef,
@@ -130,11 +132,13 @@ const SolvingLive = () => {
 	 * 수신된 웹소켓 메시지 핸들러 (quizController 호출부)
 	 */
 	const handleWebSocketMessage = (msg: WebSocketMessage) => {
+		console.log("[WS]", msg);
 		const questionId = msg.questionId; // 문제 id
 		const statusType = msg?.statusType; // 문제 풀이 상태
 		const commandType = msg?.commandType; // 명령 타입
 		const activeParticipants = msg?.activeParticipants; // 활성화된 참가자
 		const participantStatus = msg?.participantStatus; // 참여자 상태
+		const currentParticipants = msg?.count; // 현재 참여자수
 
 		if (participantStatus === PARTICIPANT_STATUS.ELIMINATED) {
 			setIsFailed(true);
@@ -153,6 +157,7 @@ const SolvingLive = () => {
 			statusType as QuestionStatusType,
 			commandType as CommandType,
 			activeParticipants,
+			currentParticipants,
 		);
 	};
 
@@ -310,6 +315,7 @@ const SolvingLive = () => {
 						liveStage={currentStage}
 						isSubmitAllowed={isSubmitAllowed && !isFailed}
 						isFailed={isFailed}
+						currentParticipants={currentParticipants}
 					/>
 				) : (
 					<SolvingLiveWaiting />
