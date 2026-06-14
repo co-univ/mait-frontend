@@ -1,11 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
 import { BookX, ChessQueen } from "lucide-react";
 import { useParams } from "react-router-dom";
 import useTeams from "@/hooks/useTeams";
-import { apiHooks } from "@/libs/api";
 import DashboardHeader from "../../components/common/DashboardHeader";
 import DashboardQuestionIncorrect from "../../components/question/DashboardQuestionIncorrect";
 import DashboardTeamRankingTable from "../../components/team-ranking/DashboardTeamRankingTable";
-import useDashboardQuestion from "../../hooks/question/useDashboardQuestionResults";
+import useDashboardQuestionResults from "../../hooks/question/useDashboardQuestionResults";
+import { teamRankingQueryOptions } from "../../queries/common/dashboardQueries";
+import { questionWrongRatesQueryOptions } from "../../queries/question/dashboardQuestionQueries";
 
 //
 //
@@ -15,41 +17,20 @@ const DashboardQuestionInformation = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const { solveMode } = useDashboardQuestion({
+	const { solveMode } = useDashboardQuestionResults({
 		questionSetId,
 		questionId,
 	});
 
 	const { activeTeam } = useTeams();
 
-	const { data: rankingData } = apiHooks.useQuery(
-		"get",
-		"/api/v1/teams/{teamId}/question-ranks",
-		{
-			params: {
-				path: {
-					teamId: activeTeam?.teamId ?? 0,
-				},
-				query: {
-					type: "SCORER",
-				},
-			},
-		},
-		{
-			enabled: !!activeTeam,
-		},
-	);
+	const { data: rankingData } = useQuery({
+		...teamRankingQueryOptions(activeTeam?.teamId ?? 0),
+		enabled: !!activeTeam,
+	});
 
-	const { data: wrongRatesData } = apiHooks.useQuery(
-		"get",
-		"/api/v1/question-sets/{questionSetId}/questions/wrong-rates",
-		{
-			params: {
-				path: {
-					questionSetId,
-				},
-			},
-		},
+	const { data: wrongRatesData } = useQuery(
+		questionWrongRatesQueryOptions(questionSetId),
 	);
 
 	const ranking = rankingData?.data;

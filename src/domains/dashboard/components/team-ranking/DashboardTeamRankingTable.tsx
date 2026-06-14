@@ -76,7 +76,7 @@ const DashboardTeamRankingTable = ({
 			<Table.Divider />
 
 			<Table.Body className="h-full">
-				{rankings.length === 0 && userRank == null ? (
+				{teamRankings !== undefined && rankings.length === 0 && userRank == null ? (
 					<DashboardTeamRankingEmpty />
 				) : null}
 

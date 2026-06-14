@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
+import LoadingView from "@/components/LoadingView";
 import QuestionContent from "@/components/QuestionContent";
 import SolvingQuizImage from "@/domains/solving/components/common/SolvingQuizImage";
 import type { QuestionType } from "@/libs/types";
 import DashboardQuestionBadge from "../../components/question/DashboardQuestionBadge";
 import DashboardQuestionNavigation from "../../components/question/DashboardQuestionNavigation";
 import DashboardQuestionScore from "../../components/question/DashboardQuestionScore";
+import useDashboardQuestionLoading from "../../hooks/question/useDashboardQuestionLoading";
 import useDashboardQuestionResults from "../../hooks/question/useDashboardQuestionResults";
 import useDashboardQuestions from "../../hooks/question/useDashboardQuestions";
 import DashboardQuestionFillBlankAnswers from "./DashboardQuestionFillBlankAnswers";
@@ -20,6 +22,8 @@ import DashboardQuestionShortAnswers from "./DashboardQuestionShortAnswers";
 const DashboardQuestion = () => {
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
+
+	const { isLoading } = useDashboardQuestionLoading({ questionSetId });
 
 	const { questions, targetQuestion: question } = useDashboardQuestions({
 		questionSetId,
@@ -51,6 +55,10 @@ const DashboardQuestion = () => {
 				return null;
 		}
 	};
+
+	if (isLoading) {
+		return <LoadingView />;
+	}
 
 	return (
 		<div className="w-full h-full flex flex-col gap-gap-14 py-padding-12">

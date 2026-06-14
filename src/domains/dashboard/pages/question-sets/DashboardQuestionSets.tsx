@@ -1,13 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { ArrowRight, ClipboardPenLine } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { Table } from "@/components/table";
 import useTeams from "@/hooks/useTeams";
-import { apiHooks } from "@/libs/api";
 import { createPath } from "@/utils/create-path";
 import DashboardHeader from "../../components/common/DashboardHeader";
 import { DASHBOARD_ROUTE_PATH } from "../../dashboard.routes";
+import { questionSetsStatisticsQueryOptions } from "../../queries/common/dashboardQueries";
 
 //
 //
@@ -18,16 +19,8 @@ const DashboardQuestionSets = () => {
 
 	const { activeTeam } = useTeams();
 
-	const { data } = apiHooks.useQuery(
-		"get",
-		"/api/v1/question-sets/statistics",
-		{
-			params: {
-				query: {
-					teamId: activeTeam?.teamId ?? 0,
-				},
-			},
-		},
+	const { data } = useQuery(
+		questionSetsStatisticsQueryOptions(activeTeam?.teamId ?? 0),
 	);
 
 	const questionSets = data?.data ?? [];

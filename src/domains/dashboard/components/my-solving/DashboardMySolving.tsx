@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { ChartColumnIncreasing } from "lucide-react";
 import useTeams from "@/hooks/useTeams";
-import { apiHooks } from "@/libs/api";
+import { userSolvingStatsQueryOptions } from "../../queries/common/dashboardQueries";
 import DashboardHeader from "../common/DashboardHeader";
 import DashboardMySolvingCircleStatus from "./DashboardMySolvingCircleStatus";
 import DashboardMySolvingDivider from "./DashboardMySolvingDivider";
@@ -13,17 +14,7 @@ import DashboardMySolvingRow from "./DashboardMySolvingRow";
 const DashboardMySolving = () => {
 	const { activeTeam } = useTeams();
 
-	const { data } = apiHooks.useQuery(
-		"get",
-		"/api/v1/teams/{teamId}/user-solving-stats",
-		{
-			params: {
-				path: {
-					teamId: activeTeam?.teamId ?? 0,
-				},
-			},
-		},
-	);
+	const { data } = useQuery(userSolvingStatsQueryOptions(activeTeam?.teamId ?? 0));
 
 	const solvingData = data?.data;
 

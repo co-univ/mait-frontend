@@ -1,9 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ClipboardList } from "lucide-react";
 import { useState } from "react";
 import useTeams from "@/hooks/useTeams";
-import { apiHooks } from "@/libs/api";
-import DashboardHeader from "../../components/common/DashboardHeader";
 import DashboardCategoryItem from "../../components/category/DashboardCategoryItem";
+import DashboardHeader from "../../components/common/DashboardHeader";
+import { categoryCorrectRatesQueryOptions } from "../../queries/common/dashboardQueries";
 
 //
 //
@@ -19,16 +20,8 @@ const DashboardCategory = () => {
 	const { activeTeam } = useTeams();
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	const { data } = apiHooks.useQuery(
-		"get",
-		"/api/v1/teams/{teamId}/categories/correct-rates",
-		{
-			params: {
-				path: {
-					teamId: activeTeam?.teamId ?? 0,
-				},
-			},
-		},
+	const { data } = useQuery(
+		categoryCorrectRatesQueryOptions(activeTeam?.teamId ?? 0),
 	);
 
 	const categories = data?.data ?? [];
@@ -46,7 +39,7 @@ const DashboardCategory = () => {
 	);
 
 	return (
-		<div className="flex flex-col w-full gap-gap-9">
+		<div className="flex flex-col w-full gap-gap-9 min-h-[222px]">
 			<DashboardHeader icon={<ClipboardList />} title="카테고리별 정답률" />
 
 			<div className="flex gap-gap-9">
