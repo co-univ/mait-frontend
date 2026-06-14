@@ -11,10 +11,12 @@ interface UseDashboardQuestionsProps {
 	questionId?: number;
 }
 
-interface UseDashboardQuestionsReturn {
+interface UseDashboardQuestionsReturn<
+	T extends QuestionResponseType = QuestionResponseType,
+> {
 	questions?: QuestionResponseType[];
 	firstQuestion?: QuestionResponseType;
-	targetQuestion?: QuestionResponseType;
+	targetQuestion?: T;
 	isLoading: boolean;
 }
 
@@ -22,11 +24,13 @@ interface UseDashboardQuestionsReturn {
 //
 //
 
-const useDashboardQuestions = ({
+const useDashboardQuestions = <
+	T extends QuestionResponseType = QuestionResponseType,
+>({
 	questionSetId,
 	questionId,
-}: UseDashboardQuestionsProps): UseDashboardQuestionsReturn => {
-	const { data, isLoading } = apiHooks.useQuery(
+}: UseDashboardQuestionsProps): UseDashboardQuestionsReturn<T> => {
+	const { data: questionsData, isLoading } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/questions",
 		{
@@ -41,10 +45,13 @@ const useDashboardQuestions = ({
 		},
 	);
 
-	const questions = data?.data;
+	const questions = questionsData?.data;
 	const firstQuestion = questions?.[0];
 	const targetQuestion = useMemo(
-		() => questions?.find((question) => question.id === questionId),
+		() =>
+			questions?.find((question) => question.id === questionId) as
+				| T
+				| undefined,
 		[questions, questionId],
 	);
 

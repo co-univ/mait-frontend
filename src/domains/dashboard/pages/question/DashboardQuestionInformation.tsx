@@ -5,6 +5,7 @@ import { apiHooks } from "@/libs/api";
 import DashboardHeader from "../../components/common/DashboardHeader";
 import DashboardQuestionIncorrect from "../../components/question/DashboardQuestionIncorrect";
 import DashboardTeamRankingTable from "../../components/team-ranking/DashboardTeamRankingTable";
+import useDashboardQuestion from "../../hooks/question/useDashboardQuestionResults";
 
 //
 //
@@ -12,20 +13,14 @@ import DashboardTeamRankingTable from "../../components/team-ranking/DashboardTe
 
 const DashboardQuestionInformation = () => {
 	const questionSetId = Number(useParams().questionSetId);
+	const questionId = Number(useParams().questionId);
+
+	const { solveMode } = useDashboardQuestion({
+		questionSetId,
+		questionId,
+	});
 
 	const { activeTeam } = useTeams();
-
-	const { data: questionSetData } = apiHooks.useQuery(
-		"get",
-		"/api/v1/question-sets/{questionSetId}",
-		{
-			params: {
-				path: {
-					questionSetId,
-				},
-			},
-		},
-	);
 
 	const { data: rankingData } = apiHooks.useQuery(
 		"get",
@@ -58,7 +53,6 @@ const DashboardQuestionInformation = () => {
 	);
 
 	const ranking = rankingData?.data;
-	const solveMode = questionSetData?.data?.solveMode;
 	const wrongRates = wrongRatesData?.data?.slice(0, 3) ?? [];
 
 	return (
