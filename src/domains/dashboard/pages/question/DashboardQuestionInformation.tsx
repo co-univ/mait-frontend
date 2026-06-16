@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { BookX, ChessQueen } from "lucide-react";
 import { useParams } from "react-router-dom";
-import useTeams from "@/hooks/useTeams";
 import DashboardHeader from "../../components/common/DashboardHeader";
 import DashboardQuestionIncorrect from "../../components/question/DashboardQuestionIncorrect";
 import DashboardTeamRankingTable from "../../components/team-ranking/DashboardTeamRankingTable";
 import useDashboardQuestionResults from "../../hooks/question/useDashboardQuestionResults";
-import { teamRankingQueryOptions } from "../../queries/common/dashboardQueries";
-import { questionWrongRatesQueryOptions } from "../../queries/question/dashboardQuestionQueries";
+import {
+	questionSetScorerRanksQueryOptions,
+	questionWrongRatesQueryOptions,
+} from "../../queries/question/dashboardQuestionQueries";
 
 //
 //
@@ -22,12 +23,9 @@ const DashboardQuestionInformation = () => {
 		questionId,
 	});
 
-	const { activeTeam } = useTeams();
-
-	const { data: rankingData } = useQuery({
-		...teamRankingQueryOptions(activeTeam?.teamId ?? 0),
-		enabled: !!activeTeam,
-	});
+	const { data: rankingData } = useQuery(
+		questionSetScorerRanksQueryOptions(questionSetId),
+	);
 
 	const { data: wrongRatesData } = useQuery(
 		questionWrongRatesQueryOptions(questionSetId),
@@ -44,7 +42,7 @@ const DashboardQuestionInformation = () => {
 						<DashboardHeader icon={<ChessQueen />} title="우리팀 랭킹" />
 						<DashboardTeamRankingTable
 							hideCount
-							teamRankings={ranking?.teamRankings}
+							teamRankings={ranking?.rankings}
 							userRank={
 								ranking?.containsUserRank ? undefined : ranking?.userRank
 							}
