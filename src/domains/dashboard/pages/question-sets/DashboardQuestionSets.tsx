@@ -1,14 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { ArrowRight, ClipboardPenLine } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "@/components/Button";
 import { Table } from "@/components/table";
 import useTeams from "@/hooks/useTeams";
 import { createPath } from "@/utils/create-path";
 import DashboardHeader from "../../components/common/DashboardHeader";
+import DashboardSortableHeaderCell from "../../components/question-sets/DashboardSortableHeaderCell";
 import { DASHBOARD_ROUTE_PATH } from "../../dashboard.routes";
 import { questionSetsStatisticsQueryOptions } from "../../queries/common/dashboardQueries";
+
+//
+//
+//
+
+type SortField = "solvedAt" | "myCorrectRate";
+type SortDirection = "asc" | "desc" | null;
+
+const SORT_FIELDS: SortField[] = ["solvedAt", "myCorrectRate"];
 
 //
 //
@@ -23,7 +34,55 @@ const DashboardQuestionSets = () => {
 		questionSetsStatisticsQueryOptions(activeTeam?.teamId ?? 0),
 	);
 
-	const questionSets = data?.data ?? [];
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const sortFieldParam = searchParams.get("sortField");
+	const sortField = SORT_FIELDS.includes(sortFieldParam as SortField)
+		? (sortFieldParam as SortField)
+		: null;
+	const sortDirection: SortDirection =
+		searchParams.get("sortDirection") === "asc" ||
+		searchParams.get("sortDirection") === "desc"
+			? (searchParams.get("sortDirection") as SortDirection)
+			: null;
+
+	/**
+	 *
+	 */
+	const handleSort = (field: SortField) => {
+		const newParams = new URLSearchParams(searchParams);
+
+		if (sortField !== field) {
+			newParams.set("sortField", field);
+			newParams.set("sortDirection", "asc");
+		} else if (sortDirection === "asc") {
+			newParams.set("sortDirection", "desc");
+		} else {
+			newParams.delete("sortField");
+			newParams.delete("sortDirection");
+		}
+
+		setSearchParams(newParams);
+	};
+
+	//
+	const questionSets = useMemo(() => {
+		const list = data?.data ?? [];
+
+		if (!sortField || !sortDirection) {
+			return list;
+		}
+
+		const sorted = [...list].sort((a, b) => {
+			if (sortField === "solvedAt") {
+				return dayjs(a.solvedAt).valueOf() - dayjs(b.solvedAt).valueOf();
+			}
+
+			return (a.myCorrectRate ?? -1) - (b.myCorrectRate ?? -1);
+		});
+
+		return sortDirection === "asc" ? sorted : sorted.reverse();
+	}, [data, sortField, sortDirection]);
 
 	return (
 		<Table.Root className="border-color-gray-20 shadow-base">
@@ -35,11 +94,24 @@ const DashboardQuestionSets = () => {
 				<Table.HeaderCell grow width="180px" className="max-w-[320px]">
 					문제셋 제목
 				</Table.HeaderCell>
-				<Table.HeaderCell width="160px">풀이 날짜</Table.HeaderCell>
+				<Table.HeaderCell width="120px">풀이 모드</Table.HeaderCell>
+				<DashboardSortableHeaderCell
+					width="160px"
+					direction={sortField === "solvedAt" ? sortDirection : null}
+					onClick={() => handleSort("solvedAt")}
+				>
+					풀이 날짜
+				</DashboardSortableHeaderCell>
 				<Table.HeaderCell grow width="280px">
 					우승자 이름
 				</Table.HeaderCell>
-				<Table.HeaderCell width="260px">내 정답률</Table.HeaderCell>
+				<DashboardSortableHeaderCell
+					width="132px"
+					direction={sortField === "myCorrectRate" ? sortDirection : null}
+					onClick={() => handleSort("myCorrectRate")}
+				>
+					내 정답률
+				</DashboardSortableHeaderCell>
 				<Table.HeaderCell width="132px">문제 셋 보기</Table.HeaderCell>
 			</Table.Header>
 
@@ -56,6 +128,11 @@ const DashboardQuestionSets = () => {
 							<Table.Cell grow width="180px" className="truncate max-w-[320px]">
 								{questionSet.title}
 							</Table.Cell>
+							<Table.Cell width="120px">
+								{{ LIVE_TIME: "실시간 모드", STUDY: "학습 모드" }[
+									questionSet.solveMode
+								] ?? ""}
+							</Table.Cell>
 							<Table.Cell width="160px">
 								{dayjs(questionSet.solvedAt).format("YYYY-MM-DD")}
 							</Table.Cell>
@@ -64,7 +141,7 @@ const DashboardQuestionSets = () => {
 									.map((winner) => `${winner.name}(${winner.nickname})`)
 									.join(", ")}
 							</Table.Cell>
-							<Table.Cell width="260px">
+							<Table.Cell width="132px">
 								{questionSet.myCorrectRate ?? "-"}
 							</Table.Cell>
 							<Table.Cell width="132px">
