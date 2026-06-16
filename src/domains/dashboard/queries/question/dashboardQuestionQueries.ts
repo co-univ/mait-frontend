@@ -46,3 +46,22 @@ export const questionWrongRatesQueryOptions = (questionSetId: number) =>
 			},
 		},
 	);
+
+/**
+ * @param questionSetId Question set ID
+ * @param rankCount Number of rankings to fetch
+ */
+export const questionSetScorerRanksQueryOptions = (
+	questionSetId: number,
+	rankCount?: number,
+) =>
+	apiHooks.queryOptions(
+		"get",
+		"/api/v1/question-sets/{questionSetId}/live/scorer-ranks",
+		{
+			params: {
+				path: { questionSetId },
+				query: { ...(rankCount !== undefined && { rankCount }) },
+			},
+		},
+	);
