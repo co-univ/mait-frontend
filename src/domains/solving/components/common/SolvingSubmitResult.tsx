@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { time } from "console";
 import { AnimatePresence, motion } from "framer-motion";
 import quizCorrect from "src/assets/images/quiz-correct.png";
 import quizIncorrect from "src/assets/images/quiz-incorrect.png";
@@ -26,6 +27,24 @@ const SolvingSubmitResult = ({
 	timeGap,
 }: SolvingSubmitResultProps) => {
 	const { isMobile } = useBreakpoint();
+
+	/**
+	 *
+	 */
+	const formatTimeGap = (ms: number): string => {
+		return (ms / 1000).toFixed(2);
+	};
+
+	/**
+	 *
+	 */
+	const renderTimeGap = (timeGap: number) => {
+		if (timeGap === 0) {
+			return <span>가장 먼저 제출했어요 🚀</span>;
+		}
+
+		return <span>{formatTimeGap(timeGap)}초 늦었어요 😆</span>;
+	};
 
 	return (
 		<AnimatePresence mode="wait">
@@ -84,7 +103,7 @@ const SolvingSubmitResult = ({
 								isMobile ? "typo-heading-xxsmall" : "typo-heading-medium",
 							)}
 						>
-							{timeGap}초 늦었어요 😆
+							{renderTimeGap(timeGap)}
 						</span>
 					</motion.span>
 				</motion.div>
