@@ -39,9 +39,7 @@ const DashboardQuestionSets = () => {
 				<Table.HeaderCell grow width="280px">
 					우승자 이름
 				</Table.HeaderCell>
-				<Table.HeaderCell width="260px">
-					내 정답률 / 전체 평균 정답률
-				</Table.HeaderCell>
+				<Table.HeaderCell width="260px">내 정답률</Table.HeaderCell>
 				<Table.HeaderCell width="132px">문제 셋 보기</Table.HeaderCell>
 			</Table.Header>
 
@@ -67,8 +65,7 @@ const DashboardQuestionSets = () => {
 									.join(", ")}
 							</Table.Cell>
 							<Table.Cell width="260px">
-								{questionSet.myCorrectRate ?? "-"} /{" "}
-								{questionSet.averageCorrectRate ?? "-"}
+								{questionSet.myCorrectRate ?? "-"}
 							</Table.Cell>
 							<Table.Cell width="132px">
 								<Button
