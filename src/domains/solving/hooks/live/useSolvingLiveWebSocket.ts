@@ -15,6 +15,7 @@ export interface WebSocketMessage {
 	activeParticipants?: any[];
 	participantStatus?: ParticipantStatus;
 	isInitialStatus?: boolean;
+	count: number;
 }
 
 interface UseSolvingLiveWebSocketProps {
@@ -76,6 +77,10 @@ export const useSolvingLiveWebSocket = ({
 
 				client.publish({
 					destination: `/app/question-sets/${questionSetId}/participation-status`,
+				});
+
+				client.publish({
+					destination: `/app/question-sets/${questionSetId}/participant-count/sync`,
 				});
 			},
 		});

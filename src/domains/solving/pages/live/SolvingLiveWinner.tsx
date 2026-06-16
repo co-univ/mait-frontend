@@ -6,7 +6,9 @@ import gold_bell from "src/assets/images/gold-bell.png";
 import winner_print from "src/assets/images/winner-print.png";
 import winner_stamp from "src/assets/images/winner-stamp.png";
 import Button from "@/components/Button";
+import { DASHBOARD_ROUTE_PATH } from "@/domains/dashboard/dashboard.routes";
 import useBreakpoint from "@/hooks/useBreakpoint";
+import { createPath } from "@/utils/create-path";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingFullModalLayout from "../../layouts/live/SolvingFullModalLayout";
 
@@ -16,6 +18,7 @@ import SolvingFullModalLayout from "../../layouts/live/SolvingFullModalLayout";
 
 // type SolvingWinnerProps = Omit<SolvingFullModalLayoutProps, "children">;
 interface SolvingLiveWinnerProps {
+	questionSetId: number;
 	activeParticipants: Array<{
 		participantId: number;
 		userId: number;
@@ -30,6 +33,7 @@ interface SolvingLiveWinnerProps {
 //
 
 const SolvingLiveWinner = ({
+	questionSetId,
 	activeParticipants,
 	open,
 	onClose,
@@ -44,11 +48,16 @@ const SolvingLiveWinner = ({
 	 */
 	const handleResultClick = () => {
 		trackEvent(GTM_EVENT_NAMES.solvingLiveResultCtaClick);
-		navigate("/dashboard", {
-			state: {
-				entrySource: "winner_cta",
+		navigate(
+			createPath(DASHBOARD_ROUTE_PATH.QUESTION_ROOT, {
+				questionSetId,
+			}),
+			{
+				state: {
+					entrySource: "winner_cta",
+				},
 			},
-		});
+		);
 	};
 
 	//

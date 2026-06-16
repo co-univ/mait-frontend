@@ -1,9 +1,12 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
-import { Navigate } from "react-router-dom";
 import AuthGuard from "@/guards/AuthGuard";
+import TeamGuard from "@/guards/TeamGuard";
 import TeamMakerGuard from "@/guards/TeamMakerGuard";
 
+const TeamManagementRedirect = lazy(
+	() => import("./pages/common/TeamManagementRedirect"),
+);
 const TeamManagementUsers = lazy(
 	() => import("./pages/users/TeamManagementUsers"),
 );
@@ -33,22 +36,26 @@ export const TEAM_MANAGEMENT_ROUTE_PATH = {
 export const teamManagementRouter: RouteObject[] = [
 	{
 		path: TEAM_MANAGEMENT_ROUTE_PATH.ROOT,
-		element: <Navigate to={TEAM_MANAGEMENT_ROUTE_PATH.USERS} replace />,
+		element: <TeamManagementRedirect />,
 	},
 	{
 		path: TEAM_MANAGEMENT_ROUTE_PATH.USERS,
 		element: (
-			<AuthGuard>
-				<TeamManagementUsers />
-			</AuthGuard>
+			<TeamGuard rootPath={TEAM_MANAGEMENT_ROUTE_PATH.ROOT}>
+				<AuthGuard>
+					<TeamManagementUsers />
+				</AuthGuard>
+			</TeamGuard>
 		),
 	},
 	{
 		path: TEAM_MANAGEMENT_ROUTE_PATH.CATEGORIES,
 		element: (
-			<TeamMakerGuard>
-				<TeamManagementCategories />
-			</TeamMakerGuard>
+			<TeamGuard rootPath={TEAM_MANAGEMENT_ROUTE_PATH.ROOT}>
+				<TeamMakerGuard>
+					<TeamManagementCategories />
+				</TeamMakerGuard>
+			</TeamGuard>
 		),
 	},
 ];

@@ -31,6 +31,7 @@ interface SolvingLiveQuestionProps {
 	liveStage: LiveStage;
 	isSubmitAllowed: boolean;
 	isFailed: boolean;
+	currentParticipants: number;
 }
 
 //
@@ -45,6 +46,7 @@ const SolvingLiveQuestion = ({
 	liveStage,
 	isSubmitAllowed,
 	isFailed,
+	currentParticipants,
 }: SolvingLiveQuestionProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 
@@ -60,7 +62,7 @@ const SolvingLiveQuestion = ({
 	const isSubmitted = getIsSubmitted();
 	const isCorrect = getIsCorrect();
 
-	const { submitAnswer, isSubmitting } = useSolvingLiveAnswerSubmit();
+	const { submitAnswer, timeGap, isSubmitting } = useSolvingLiveAnswerSubmit();
 
 	// 제출 비활성화 조건: 탈락했거나 제출 비허용이거나 제출 중인 상태거나 맞은 경우
 	const isSubmitDisabled = isFailed || !isSubmitAllowed || isSubmitting || (isSubmitted && !!isCorrect);
@@ -154,12 +156,14 @@ const SolvingLiveQuestion = ({
 				correct={!!isCorrect}
 				show={showCorrect}
 				onAnimationComplete={handleAnimationComplete}
+				timeGap={timeGap}
 			/>
 
 			<SolvingLiveHeader
 				quizTitle={questionSetTitle}
 				questionNum={number ?? 0}
 				totalQuestionNum={totalQuestionNum}
+				currentParticipants={currentParticipants}
 				isSubmitted={isSubmitted}
 				isCorrect={isCorrect}
 				isFailed={isFailed}

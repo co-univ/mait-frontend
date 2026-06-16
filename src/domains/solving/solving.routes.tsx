@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
 import AuthGuard from "@/guards/AuthGuard";
+import TeamGuard from "@/guards/TeamGuard";
 import SolvingReview from "./pages/review/SolvingReview";
 
 const SolvingRedirect = lazy(() => import("./pages/common/SolvingRedirect"));
@@ -74,5 +75,9 @@ export const solvingRouter: RouteObject[] = [
 	},
 ].map((route) => ({
 	...route,
-	element: <AuthGuard>{route.element}</AuthGuard>,
+	element: (
+		<TeamGuard rootPath={SOLVING_ROUTE_PATH.ROOT}>
+			<AuthGuard>{route.element}</AuthGuard>
+		</TeamGuard>
+	),
 }));

@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { time } from "console";
 import { AnimatePresence, motion } from "framer-motion";
 import quizCorrect from "src/assets/images/quiz-correct.png";
 import quizIncorrect from "src/assets/images/quiz-incorrect.png";
@@ -12,6 +13,7 @@ interface SolvingSubmitResultProps {
 	correct: boolean;
 	show?: boolean;
 	onAnimationComplete?: () => void;
+	timeGap: number;
 }
 
 //
@@ -19,11 +21,30 @@ interface SolvingSubmitResultProps {
 //
 
 const SolvingSubmitResult = ({
-	correct,
+	correct = false,
 	show = true,
 	onAnimationComplete,
+	timeGap,
 }: SolvingSubmitResultProps) => {
 	const { isMobile } = useBreakpoint();
+
+	/**
+	 *
+	 */
+	const formatTimeGap = (ms: number): string => {
+		return (ms / 1000).toFixed(2);
+	};
+
+	/**
+	 *
+	 */
+	const renderTimeGap = (timeGap: number) => {
+		if (timeGap === 0) {
+			return <span>가장 먼저 제출했어요 🚀</span>;
+		}
+
+		return <span>{formatTimeGap(timeGap)}초 늦었어요 😆</span>;
+	};
 
 	return (
 		<AnimatePresence mode="wait">
@@ -59,6 +80,7 @@ const SolvingSubmitResult = ({
 					/>
 					<motion.span
 						className={clsx(
+							"flex flex-col items-center justify-center",
 							isMobile ? "typo-heading-medium" : "typo-heading-xlarge",
 							{
 								"text-success-50": correct,
@@ -75,6 +97,14 @@ const SolvingSubmitResult = ({
 						}}
 					>
 						{correct ? "정답!" : "오답!"}
+						<div></div>
+						<span
+							className={clsx(
+								isMobile ? "typo-heading-xxsmall" : "typo-heading-medium",
+							)}
+						>
+							{renderTimeGap(timeGap)}
+						</span>
 					</motion.span>
 				</motion.div>
 			)}

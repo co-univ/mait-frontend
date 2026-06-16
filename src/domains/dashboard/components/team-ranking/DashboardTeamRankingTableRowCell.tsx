@@ -9,7 +9,7 @@ import type { UserDto } from "@/libs/types";
 
 interface DashboardTeamRankingTableRowCellProps {
 	rank: number | string;
-	count: number;
+	count?: number;
 	users: UserDto[];
 	rankIcon: React.ReactNode;
 }
@@ -51,7 +51,9 @@ const DashboardTeamRankingTableRowCell = ({
 					</span>
 				))}
 			</Table.Cell>
-			<Table.Cell width="144px">{count}문제</Table.Cell>
+			{count !== undefined && (
+				<Table.Cell width="144px">{count}문제</Table.Cell>
+			)}
 		</Table.Row>
 	);
 };

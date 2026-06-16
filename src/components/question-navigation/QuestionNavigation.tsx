@@ -7,7 +7,7 @@ import {
 	Plus,
 } from "lucide-react";
 import { useImperativeHandle } from "react";
-import { BUTTON_SIZES, GAPS, type QuestionNavigationVariation } from "./constants";
+import { BUTTON_SIZES, GAPS, type QuestionNavigationSize } from "./constants";
 import QuestionNavigationDirectionButton from "./QuestionNavigationDirectionButton";
 import QuestionNavigationList, {
 	type QuestionNavigationButtonRenderProps,
@@ -30,7 +30,7 @@ interface QuestionNavigationProps<T> {
 	hasAddButton?: boolean;
 	activeQuestionId?: number;
 	orientation?: "vertical" | "horizontal";
-	variation?: QuestionNavigationVariation;
+	size?: QuestionNavigationSize;
 	questions: T[];
 	onQuestionAdd?: () => void;
 	renderUpButton?: () => React.ReactNode;
@@ -50,14 +50,14 @@ const QuestionNavigation = <T extends { id: number }>({
 	questions,
 	activeQuestionId,
 	orientation = "vertical",
-	variation = "default",
+	size = "default",
 	onQuestionAdd,
 	renderUpButton,
 	renderDownButton,
 	renderQuestionNavigationButton,
 }: QuestionNavigationProps<T>) => {
-	const buttonSize = BUTTON_SIZES[variation];
-	const gap = GAPS[variation];
+	const buttonSize = BUTTON_SIZES[size];
+	const gap = GAPS[size];
 
 	const {
 		canScrollUp,

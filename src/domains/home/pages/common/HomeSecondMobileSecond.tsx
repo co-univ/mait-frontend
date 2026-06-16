@@ -14,12 +14,17 @@ const HomeSecondMobileSecond = () => {
 	//
 	//
 	useEffect(() => {
+		let timer: ReturnType<typeof setTimeout>;
+
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				setIsVisible(entry.isIntersecting);
+				if (entry.isIntersecting) {
+					setIsVisible(true);
+					timer = setTimeout(() => setIsVisible(false), 2000);
+				}
 			},
 			{
-				threshold: 0.5, // 50% 이상 보일 때 활성화
+				threshold: 0.5,
 			},
 		);
 
@@ -28,6 +33,8 @@ const HomeSecondMobileSecond = () => {
 		}
 
 		return () => {
+			clearTimeout(timer);
+
 			if (containerRef.current) {
 				observer.unobserve(containerRef.current);
 			}
@@ -36,7 +43,7 @@ const HomeSecondMobileSecond = () => {
 
 	return (
 		<div ref={containerRef} className="w-full h-full">
-			<div className="flex flex-col items-center md:gap-[76px] gap-[32px] w-full h-full md:py-[100px] py-[72px] md:px-[96px] px-[32px]">
+			<div className="flex flex-col items-center justify-center md:gap-[76px] gap-[32px] w-full h-full pt-[96px] md:px-[96px] px-[32px]">
 				<h2 className="md:typo-heading-xlarge typo-heading-medium text-color-gray-80 w-full">
 					Mait은 이렇게 사용할 수 있어요
 				</h2>

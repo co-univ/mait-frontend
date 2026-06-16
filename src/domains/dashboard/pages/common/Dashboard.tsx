@@ -1,10 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import LoadingView from "@/components/LoadingView";
 import useTeams from "@/hooks/useTeams";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import DashboardMySolving from "../../components/my-solving/DashboardMySolving";
 import DashboardTeamRanking from "../../components/team-ranking/DashboardTeamRanking";
+import useDashboardLoading from "../../hooks/common/useDashboardLoading";
 import DashboardLayout from "../../layouts/common/DashboardLayout";
+import DashboardCategory from "../category/DashboardCategory";
+import DashboardQuestionSets from "../question-sets/DashboardQuestionSets";
 
 //
 //
@@ -14,6 +18,7 @@ const Dashboard = () => {
 	const location = useLocation();
 
 	const { activeTeam } = useTeams();
+	const { isLoading } = useDashboardLoading();
 
 	const hasTrackedEnterRef = useRef(false);
 	const entrySource =
@@ -32,6 +37,10 @@ const Dashboard = () => {
 		hasTrackedEnterRef.current = true;
 	}, [entrySource]);
 
+	if (isLoading) {
+		return <LoadingView />;
+	}
+
 	return (
 		<DashboardLayout>
 			<div className="flex gap-gap-9">
@@ -44,6 +53,10 @@ const Dashboard = () => {
 					<DashboardMySolving />
 				</div>
 			</div>
+
+			<DashboardCategory />
+
+			<DashboardQuestionSets />
 		</DashboardLayout>
 	);
 };

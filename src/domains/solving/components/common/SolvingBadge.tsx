@@ -47,7 +47,7 @@ const SolvingBadge = ({
 				},
 				flexDirection,
 				{
-					"bg-gray-5 text-alpha-black100 stroke-color-alpha-black100":
+					"bg-gray-10 text-alpha-black100 stroke-color-alpha-black100":
 						color === "gray" && !disabled,
 					"bg-primary-5 text-primary-50 stroke-color-primary-50":
 						color === "primary" && !disabled,

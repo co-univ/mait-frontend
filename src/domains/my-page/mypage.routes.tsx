@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import AuthGuard from "@/guards/AuthGuard";
+import TeamGuard from "@/guards/TeamGuard";
 
 const MyPage = lazy(() => import("./pages/MyPage"));
 
@@ -22,9 +23,11 @@ export const myPageRouter = [
 	{
 		path: MYPAGE_ROUTE_PATH.ROOT,
 		element: (
-			<AuthGuard>
-				<MyPage />
-			</AuthGuard>
+			<TeamGuard rootPath={MYPAGE_ROUTE_PATH.ROOT}>
+				<AuthGuard>
+					<MyPage />
+				</AuthGuard>
+			</TeamGuard>
 		),
 	},
 ];

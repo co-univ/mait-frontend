@@ -1,8 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { ChartColumnIncreasing } from "lucide-react";
 import useTeams from "@/hooks/useTeams";
-import { apiHooks } from "@/libs/api";
+import { userSolvingStatsQueryOptions } from "../../queries/common/dashboardQueries";
+import DashboardHeader from "../common/DashboardHeader";
 import DashboardMySolvingCircleStatus from "./DashboardMySolvingCircleStatus";
 import DashboardMySolvingDivider from "./DashboardMySolvingDivider";
-import DashboardMySolvingHeader from "./DashboardMySolvingHeader";
 import DashboardMySolvingRow from "./DashboardMySolvingRow";
 
 //
@@ -12,23 +14,13 @@ import DashboardMySolvingRow from "./DashboardMySolvingRow";
 const DashboardMySolving = () => {
 	const { activeTeam } = useTeams();
 
-	const { data } = apiHooks.useQuery(
-		"get",
-		"/api/v1/teams/{teamId}/user-solving-stats",
-		{
-			params: {
-				path: {
-					teamId: activeTeam?.teamId ?? 0,
-				},
-			},
-		},
-	);
+	const { data } = useQuery(userSolvingStatsQueryOptions(activeTeam?.teamId ?? 0));
 
 	const solvingData = data?.data;
 
 	return (
 		<div className="flex w-full h-full flex-col gap-gap-9 rounded-radius-large2 border border-color-gray-20 bg-color-alpha-white100 p-padding-11 shadow-base">
-			<DashboardMySolvingHeader />
+			<DashboardHeader icon={<ChartColumnIncreasing />} title="내 풀이 정보" />
 
 			<DashboardMySolvingDivider />
 			<DashboardMySolvingRow label="총 풀이 문제 수">
