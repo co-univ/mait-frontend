@@ -39,7 +39,7 @@ const DashboardCategory = () => {
 	);
 
 	return (
-		<div className="flex flex-col w-full gap-gap-9 min-h-[222px]">
+		<div className="flex flex-col w-full gap-gap-9">
 			<DashboardHeader icon={<ClipboardList />} title="카테고리별 정답률" />
 
 			<div className="flex gap-gap-9">
@@ -63,14 +63,18 @@ const DashboardCategory = () => {
 				</div>
 			</div>
 
-			{!isExpanded && hiddenCount > 0 && (
+			{hiddenCount > 0 && (
 				<button
 					type="button"
-					onClick={() => setIsExpanded(true)}
+					onClick={() => setIsExpanded((prev) => !prev)}
 					className="self-end flex items-center gap-1 typo-body-medium text-color-alpha-black100 border-b border-color-alpha-black100"
 				>
-					<span>&nbsp;외 {hiddenCount}개 더보기</span>
-					<ChevronDown />
+					{isExpanded ? (
+						<span>&nbsp;접기</span>
+					) : (
+						<span>&nbsp;외 {hiddenCount}개 더보기</span>
+					)}
+					<ChevronDown className={isExpanded ? "rotate-180" : ""} />
 				</button>
 			)}
 		</div>
