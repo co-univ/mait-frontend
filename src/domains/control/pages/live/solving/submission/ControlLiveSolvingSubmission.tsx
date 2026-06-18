@@ -43,11 +43,8 @@ const ControlLiveSolvingSubmission = ({
 		},
 		{
 			retry: false,
-			refetchInterval: (query) => {
-				if (
-					questionStatusType === "SOLVE_PERMISSION" &&
-					query.state.status === "error"
-				) {
+			refetchInterval: () => {
+				if (questionStatusType === "SOLVE_PERMISSION") {
 					return SUBMIT_RECORDS_POLLING_INTERVAL;
 				}
 
