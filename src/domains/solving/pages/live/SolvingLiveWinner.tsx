@@ -8,6 +8,7 @@ import winner_stamp from "src/assets/images/winner-stamp.png";
 import Button from "@/components/Button";
 import { DASHBOARD_ROUTE_PATH } from "@/domains/dashboard/dashboard.routes";
 import useBreakpoint from "@/hooks/useBreakpoint";
+import useUser from "@/hooks/useUser";
 import { createPath } from "@/utils/create-path";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingFullModalLayout from "../../layouts/live/SolvingFullModalLayout";
@@ -41,7 +42,13 @@ const SolvingLiveWinner = ({
 	const navigate = useNavigate();
 	const hasTrackedViewRef = useRef(false);
 
+	const { user } = useUser();
+
 	const { isMobile } = useBreakpoint();
+
+	const isWinner = activeParticipants.some(
+		(participant) => participant.userId === user?.id,
+	);
 
 	/**
 	 *
@@ -116,7 +123,7 @@ const SolvingLiveWinner = ({
 									isMobile ? "typo-heading-xsmall" : "typo-heading-medium",
 								)}
 							>
-								축하드립니다!
+								{isWinner ? "축하드립니다!" : "수고하셨습니다"}
 							</div>
 							<PartyPopper className="stroke-color-warning-40 -scale-x-100" />
 						</div>
@@ -124,7 +131,7 @@ const SolvingLiveWinner = ({
 						<div className={clsx(isMobile ? "h-4" : "h-[34px]")} />
 
 						<div className="flex justify-center items-center py-[10px] w-[200px] border-t border-b border-dashed border-color-gray-40 typo-body-small text-color-warning-60">
-							{activeParticipants.length}명 중에 1등하셨습니다
+							이번 문제셋의 우승자입니다
 						</div>
 
 						<div className={clsx(isMobile ? "h-4" : "h-[34px]")} />
