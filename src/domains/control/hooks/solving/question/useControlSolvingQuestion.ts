@@ -82,35 +82,37 @@ const useControlSolvingQuestion = <
 
 				refetch();
 
-				queryClient.invalidateQueries({
-					queryKey: apiHooks.queryOptions(
-						"get",
-						"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorers",
-						{
-							params: {
-								path: {
-									questionSetId,
-									questionId,
+				setTimeout(() => {
+					queryClient.invalidateQueries({
+						queryKey: apiHooks.queryOptions(
+							"get",
+							"/api/v1/question-sets/{questionSetId}/questions/{questionId}/scorers",
+							{
+								params: {
+									path: {
+										questionSetId,
+										questionId,
+									},
 								},
 							},
-						},
-					).queryKey,
-				});
+						).queryKey,
+					});
 
-				queryClient.invalidateQueries({
-					queryKey: apiHooks.queryOptions(
-						"get",
-						"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit-records",
-						{
-							params: {
-								path: {
-									questionSetId,
-									questionId,
+					queryClient.invalidateQueries({
+						queryKey: apiHooks.queryOptions(
+							"get",
+							"/api/v1/question-sets/{questionSetId}/questions/{questionId}/submit-records",
+							{
+								params: {
+									path: {
+										questionSetId,
+										questionId,
+									},
 								},
 							},
-						},
-					).queryKey,
-				});
+						).queryKey,
+					});
+				}, 500);
 			},
 			onError: () => {
 				notify.error("정답 추가에 실패했습니다.");
