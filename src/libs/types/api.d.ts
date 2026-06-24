@@ -1455,6 +1455,83 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/teams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 모든 팀 목록 조회 API
+         * @description 삭제되지 않은 모든 팀(개인 워크스페이스 포함)을 조회한다.
+         */
+        get: operations["getAllTeams"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/teams/{teamId}/question-sets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 특정 팀의 문제 셋 목록 조회 API */
+        get: operations["getQuestionSets_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/question-sets/{questionSetId}/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 특정 문제 셋의 문제 목록 조회 API
+         * @description 어드민 조회이므로 실제 정답이 포함되어 응답된다.
+         */
+        get: operations["getQuestions_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/question-sets/{questionSetId}/questions/{questionId}/statistics/answer-distribution": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 문제별 제출 답안 분포 통계 조회 API
+         * @description 문제 유형과 무관하게, 동일한 제출 답안끼리 그룹화하여 그룹별 제출 수/정오답/제출 답안을 조회한다. firstSubmitOnly=true 면 유저당 최초 제출만 기준으로 응답을 구성한다.
+         */
+        get: operations["getAnswerDistribution"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teams/{teamId}": {
         parameters: {
             query?: never;
@@ -1904,9 +1981,11 @@ export interface components {
         CreateQuestionSetApiRequest: {
             /** Format: int64 */
             teamId: number;
-            subject: string;
+            title: string;
             /** @enum {string} */
             creationType: "AI_GENERATED" | "MANUAL";
+            solveMode: components["schemas"]["QuestionSetSolveMode"];
+            visibility: components["schemas"]["QuestionSetVisibility"];
             /** @description 업로드한 해당 문제 셋의 파일 목록 */
             materials?: components["schemas"]["MaterialDto"][];
             /** @description 제작 요청할 문제 개수 */
@@ -1998,7 +2077,7 @@ export interface components {
             submittedAnswer?: string;
             /**
              * Format: int64
-             * @description 첫 제출과 본인 정답 제출의 시간차(ms). 정답일 때만 채워지며 본인이 첫 제출이면 0
+             * @description 라이브 제출 API에서 첫 제출과 본인 제출의 시간차(ms). 정오답과 관계없이 채워지며 본인이 첫 제출이면 0
              */
             timeGapMillis?: number;
         };
@@ -3140,6 +3219,107 @@ export interface components {
         ApiResponseString: {
             isSuccess?: boolean;
             data?: string;
+        };
+        AdminTeamApiResponse: {
+            /**
+             * Format: int64
+             * @description 팀 PK
+             */
+            teamId: number;
+            /** @description 팀 이름 */
+            name: string;
+            type: components["schemas"]["TeamType"];
+            /**
+             * Format: int64
+             * @description 팀 생성자 PK
+             */
+            creatorId: number;
+            /**
+             * Format: date-time
+             * @description 팀 생성 일시
+             */
+            createdAt: string;
+        };
+        ApiResponseListAdminTeamApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["AdminTeamApiResponse"][];
+        };
+        AdminQuestionSetApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 PK
+             */
+            id: number;
+            /** @description 문제 셋 제목 */
+            title?: string;
+            /** @description 문제 셋 주제 */
+            subject?: string;
+            status: components["schemas"]["QuestionSetStatus"];
+            solveMode?: components["schemas"]["QuestionSetSolveMode"];
+            /**
+             * Format: int64
+             * @description 팀 PK
+             */
+            teamId: number;
+            /**
+             * Format: date-time
+             * @description 생성 일시
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 수정 일시
+             */
+            updatedAt: string;
+        };
+        ApiResponseListAdminQuestionSetApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["AdminQuestionSetApiResponse"][];
+        };
+        ApiResponseQuestionAnswerDistributionApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["QuestionAnswerDistributionApiResponse"];
+        };
+        QuestionAnswerDistributionApiResponse: {
+            /**
+             * Format: int64
+             * @description 문제 셋 PK
+             */
+            questionSetId: number;
+            question: components["schemas"]["FillBlankQuestionApiResponse"] | components["schemas"]["MultipleQuestionApiResponse"] | components["schemas"]["OrderingQuestionApiResponse"] | components["schemas"]["ShortQuestionApiResponse"];
+            /**
+             * Format: int64
+             * @description 해당 문제의 전체 제출 수
+             */
+            totalSubmitCount: number;
+            /**
+             * Format: int64
+             * @description 제출한 유저 수 (유저당 최초 제출 기준)
+             */
+            submittedUserCount: number;
+            /**
+             * Format: int64
+             * @description 정답 유저 수 (유저당 최초 제출 기준)
+             */
+            correctUserCount: number;
+            /**
+             * Format: double
+             * @description 정답률(%) (유저당 최초 제출 기준, 제출자가 없으면 null)
+             */
+            correctRate?: number;
+            /** @description 동일 답안끼리 그룹화한 제출 통계 목록 (제출 수 내림차순) */
+            groups: components["schemas"]["SubmittedAnswerGroupApiResponse"][];
+        };
+        /** @description 동일 답안끼리 그룹화한 제출 통계 목록 (제출 수 내림차순) */
+        SubmittedAnswerGroupApiResponse: {
+            /**
+             * Format: int64
+             * @description 해당 답안으로 제출한 횟수
+             */
+            submitCount: number;
+            /** @description 정/오답 여부 */
+            isCorrect: boolean;
+            submittedAnswer: components["schemas"]["SubmitAnswerDtoObject"];
         };
     };
     responses: never;
@@ -5234,6 +5414,95 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseString"];
+                };
+            };
+        };
+    };
+    getAllTeams: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListAdminTeamApiResponse"];
+                };
+            };
+        };
+    };
+    getQuestionSets_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListAdminQuestionSetApiResponse"];
+                };
+            };
+        };
+    };
+    getQuestions_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListQuestionApiResponse"];
+                };
+            };
+        };
+    };
+    getAnswerDistribution: {
+        parameters: {
+            query?: {
+                firstSubmitOnly?: boolean;
+            };
+            header?: never;
+            path: {
+                questionSetId: number;
+                questionId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionAnswerDistributionApiResponse"];
                 };
             };
         };
