@@ -583,6 +583,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/onboarding/screens/view": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 특정 온보딩 화면 열람 기록
+         * @description 해당 ID의 온보딩 화면을 본인이 열람했음을 기록합니다. 다시 보지 않기 선택 여부도 함께 저장합니다.
+         */
+        post: operations["recordView"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/reissue": {
         parameters: {
             query?: never;
@@ -637,6 +657,26 @@ export interface paths {
          * @description 사용자 로그인 API
          */
         post: operations["login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/onboarding/screens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 온보딩 화면 카탈로그 등록 API
+         * @description 온보딩 화면 데이터를 등록한다. 동일 code 가 존재하면 갱신된다.
+         */
+        post: operations["uploadScreen"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1435,6 +1475,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/onboarding/screens/{screenId}/view-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 특정 온보딩 화면 열람 여부 확인
+         * @description 해당 ID의 온보딩 화면을 본인이 열람했는지와 다시 보지 않기 선택 여부를 반환합니다.
+         */
+        get: operations["getViewStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/screens/unviewed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 본인이 아직 보지 않은 온보딩 화면 목록 조회
+         * @description 노출 대상이며 본인이 아직 열람하지 않은 온보딩 화면 목록을 반환합니다. 역할 조건(targetTeamRole)이 반영됩니다.
+         */
+        get: operations["findUnviewedScreens"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/access-token": {
         parameters: {
             query?: never;
@@ -1616,9 +1696,12 @@ export interface components {
         QuestionSetVisibility: "PUBLIC" | "GROUP" | "PRIVATE";
         UpdateQuestionSetApiRequest: {
             /** @description 문제 셋 제목 */
-            title: string;
-            /** @description 문제 셋 주제 */
-            subject: string;
+            title?: string;
+            /**
+             * @deprecated
+             * @description 문제 셋 제목(deprecated, title로 대체)
+             */
+            subject?: string;
             solveMode: components["schemas"]["QuestionSetSolveMode"];
             /** @description 문제 셋 난이도 설명 */
             difficulty?: string;
@@ -1638,10 +1721,13 @@ export interface components {
         QuestionSetApiResponse: {
             /** Format: int64 */
             id: number;
-            /** @description 문제 셋에서 다루는 주제 */
-            subject?: string;
             /** @description 문제 셋 제목 */
             title?: string;
+            /**
+             * @deprecated
+             * @description 문제 셋 제목(deprecated, title과 동일)
+             */
+            subject?: string;
             creationType: components["schemas"]["QuestionSetCreationType"];
             visibility: components["schemas"]["QuestionSetVisibility"];
             deliveryMode: components["schemas"]["DeliveryMode"];
@@ -1981,7 +2067,13 @@ export interface components {
         CreateQuestionSetApiRequest: {
             /** Format: int64 */
             teamId: number;
-            title: string;
+            /** @description 문제 셋 제목 */
+            title?: string;
+            /**
+             * @deprecated
+             * @description 문제 셋 제목(deprecated, title로 대체)
+             */
+            subject?: string;
             /** @enum {string} */
             creationType: "AI_GENERATED" | "MANUAL";
             solveMode: components["schemas"]["QuestionSetSolveMode"];
@@ -2020,7 +2112,12 @@ export interface components {
              * @description 생성된 문제 셋의 ID
              */
             questionSetId: number;
-            /** @description 문제 셋 주제 */
+            /** @description 문제 셋 제목 */
+            title: string;
+            /**
+             * @deprecated
+             * @description 문제 셋 제목(deprecated, title과 동일)
+             */
             subject: string;
         };
         ApiResponseUserStudyModeApiResponse: {
@@ -2397,9 +2494,65 @@ export interface components {
             /** @description 성공 메시지 */
             message: string;
         };
+        OnboardingViewRecordApiRequest: {
+            /**
+             * Format: int64
+             * @description 온보딩 화면 ID
+             * @example 1
+             */
+            screenId: number;
+            /**
+             * @description 다시 보지 않기 선택 여부
+             * @example false
+             */
+            dismissed: boolean;
+        };
         LoginApiRequest: {
             email: string;
             password: string;
+        };
+        /**
+         * @description 온보딩 화면 식별 코드
+         * @enum {string}
+         */
+        OnboardingScreenCode: "HOME_GUIDE" | "QUESTION_SOLVE" | "QUESTION_MANAGE";
+        OnboardingScreenUploadApiRequest: {
+            code: components["schemas"]["OnboardingScreenCode"];
+            /** @description 어드민 표시용 화면 이름 */
+            title: string;
+            targetTeamRole?: components["schemas"]["TeamUserRole"];
+        };
+        /**
+         * @description 노출 대상 팀 권한 (null 이면 전체 유저 대상)
+         * @enum {string}
+         */
+        TeamUserRole: "MAKER" | "OWNER" | "PLAYER";
+        ApiResponseOnboardingScreenApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["OnboardingScreenApiResponse"];
+        };
+        OnboardingScreenApiResponse: {
+            /**
+             * Format: int64
+             * @description 온보딩 화면 PK
+             */
+            id: number;
+            code: components["schemas"]["OnboardingScreenCode"];
+            /** @description 어드민 표시용 화면 이름 */
+            title: string;
+            /** @description 전역 노출 여부 */
+            exposed: boolean;
+            targetTeamRole?: components["schemas"]["TeamUserRole"];
+            /**
+             * Format: date-time
+             * @description 생성 일시
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 수정 일시
+             */
+            modifiedAt: string;
         };
         UpdateNicknameRequest: {
             nickname: string;
@@ -2422,7 +2575,13 @@ export interface components {
             role: "MAKER" | "OWNER" | "PLAYER";
         };
         UpdateQuestionSetFieldApiRequest: {
-            title: string;
+            /** @description 문제 셋 제목 */
+            title?: string;
+            /**
+             * @deprecated
+             * @description 문제 셋 제목(deprecated, title로 대체)
+             */
+            subject?: string;
         };
         ApiResponseStudyAnswerDraftApiResponse: {
             isSuccess?: boolean;
@@ -2679,11 +2838,6 @@ export interface components {
          * @enum {string}
          */
         TeamType: "PERSONAL" | "GROUP";
-        /**
-         * @description 팀 내 유저 역할
-         * @enum {string}
-         */
-        TeamUserRole: "MAKER" | "OWNER" | "PLAYER";
         ApiResponseTeamInviteApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["TeamInviteApiResponse"];
@@ -2719,7 +2873,6 @@ export interface components {
         QuestionSetDto: {
             /** Format: int64 */
             id?: number;
-            subject?: string;
             title?: string;
             /** @enum {string} */
             creationType?: "AI_GENERATED" | "MANUAL";
@@ -2738,6 +2891,11 @@ export interface components {
             categories?: components["schemas"]["QuestionSetCategoryDto"][];
             /** Format: date-time */
             updatedAt?: string;
+            /**
+             * @deprecated
+             * @description 문제 셋 제목(deprecated, title과 동일)
+             */
+            subject?: string;
         };
         /** @description 문제 셋 그룹 (진행 상태별로 그룹화된 Map 구조) */
         QuestionSetGroup: {
@@ -3078,8 +3236,6 @@ export interface components {
             id?: number;
             /** @description 문제 셋 제목 */
             title?: string;
-            /** @description 과목 */
-            subject?: string;
             /**
              * @description 전역 진행 상태
              * @enum {string}
@@ -3102,6 +3258,11 @@ export interface components {
              * @description 최종 수정 일시
              */
             updatedAt?: string;
+            /**
+             * @deprecated
+             * @description 문제 셋 제목(deprecated, title과 동일)
+             */
+            subject?: string;
         };
         /** @description 문제 셋 그룹 (학습 모드 - 사용자별 풀이 상태로 그룹화된 Map 구조) */
         StudyQuestionSetGroup: {
@@ -3216,6 +3377,45 @@ export interface components {
             timing: components["schemas"]["PolicyTiming"];
             category: components["schemas"]["PolicyCategory"];
         };
+        ApiResponseOnboardingViewStatusApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["OnboardingViewStatusApiResponse"];
+        };
+        OnboardingViewStatusApiResponse: {
+            /**
+             * @description 해당 온보딩 화면 열람 여부
+             * @example true
+             */
+            viewed?: boolean;
+            /**
+             * @description 다시 보지 않기 선택 여부 (열람하지 않았으면 false)
+             * @example false
+             */
+            dismissed?: boolean;
+        };
+        ApiResponseListUnviewedOnboardingScreenApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["UnviewedOnboardingScreenApiResponse"][];
+        };
+        UnviewedOnboardingScreenApiResponse: {
+            /**
+             * Format: int64
+             * @description 온보딩 화면 ID
+             * @example 1
+             */
+            id?: number;
+            /**
+             * @description 온보딩 화면 코드
+             * @example QUESTION_SOLVE
+             * @enum {string}
+             */
+            code?: "HOME_GUIDE" | "QUESTION_SOLVE" | "QUESTION_MANAGE";
+            /**
+             * @description 온보딩 화면 이름
+             * @example 문제 풀기 가이드
+             */
+            title?: string;
+        };
         ApiResponseString: {
             isSuccess?: boolean;
             data?: string;
@@ -3252,7 +3452,10 @@ export interface components {
             id: number;
             /** @description 문제 셋 제목 */
             title?: string;
-            /** @description 문제 셋 주제 */
+            /**
+             * @deprecated
+             * @description 문제 셋 제목(deprecated, title과 동일)
+             */
             subject?: string;
             status: components["schemas"]["QuestionSetStatus"];
             solveMode?: components["schemas"]["QuestionSetSolveMode"];
@@ -4314,6 +4517,30 @@ export interface operations {
             };
         };
     };
+    recordView: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OnboardingViewRecordApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
     reissue: {
         parameters: {
             query?: never;
@@ -4374,6 +4601,30 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    uploadScreen: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OnboardingScreenUploadApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseOnboardingScreenApiResponse"];
                 };
             };
         };
@@ -5392,6 +5643,48 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseListUnconfirmedPoliciesApiResponse"];
+                };
+            };
+        };
+    };
+    getViewStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                screenId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseOnboardingViewStatusApiResponse"];
+                };
+            };
+        };
+    };
+    findUnviewedScreens: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListUnviewedOnboardingScreenApiResponse"];
                 };
             };
         };
