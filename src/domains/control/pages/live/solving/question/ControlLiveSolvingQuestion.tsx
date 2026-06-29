@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Onboarding from "@/components/onboarding/Onboarding";
 import { Switch } from "@/components/switch/Switch";
 import Tooltip from "@/components/Tooltip";
 import useControlLiveSolvingQuestion from "@/domains/control/hooks/solving/question/useControlLiveSolvingQuestion";
 import ControlSolvingQuestionPanel from "@/domains/control/pages/common/solving/question/ControlSolvingQuestionPanel";
+import useOnboarding from "@/hooks/useOnboarding";
 import type { QuestionApiResponse } from "@/libs/types";
 
 //
@@ -17,6 +19,8 @@ const ControlLiveSolvingQuestion = () => {
 
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
+
+	const { isActive, currentStepKey, nextStep } = useOnboarding();
 
 	const {
 		isStatusUpdating,
@@ -80,27 +84,40 @@ const ControlLiveSolvingQuestion = () => {
 
 	const liveControls = (
 		<div className="flex gap-gap-9">
-			<Switch.Root
-				checked={allowedAccessTypes.includes(question?.questionStatusType)}
-				onChange={handleAccessSwitchChange}
+			<Onboarding
+				stepKey="access-open"
+				show={isActive && currentStepKey === "access-open"}
+				onNext={nextStep}
 			>
-				<Switch.Label>문제 공개</Switch.Label>
-				<Switch.Toggle />
-			</Switch.Root>
-			<Switch.Root
-				checked={allowedSolveType.includes(question?.questionStatusType)}
-				loading={isSolveSwitchLoading}
-				onChange={handleSolveSwitchChange}
-			>
-				<Switch.Label>제출 허용</Switch.Label>
-				<Tooltip
-					open={isSolveSwitchLoading}
-					message="제출 허용은 5초 이내에 활성화됩니다."
-					variant="primary"
+				<Switch.Root
+					checked={allowedAccessTypes.includes(question?.questionStatusType)}
+					onChange={handleAccessSwitchChange}
 				>
+					<Switch.Label>문제 공개</Switch.Label>
 					<Switch.Toggle />
-				</Tooltip>
-			</Switch.Root>
+				</Switch.Root>
+			</Onboarding>
+			<Onboarding
+				stepKey="access-solve"
+				show={isActive && currentStepKey === "access-solve"}
+				onNext={nextStep}
+			>
+				<Switch.Root
+					checked={allowedSolveType.includes(question?.questionStatusType)}
+					loading={isSolveSwitchLoading}
+					onChange={handleSolveSwitchChange}
+				>
+					<Switch.Label>제출 허용</Switch.Label>
+
+					<Tooltip
+						open={isSolveSwitchLoading}
+						message="제출 허용은 5초 이내에 활성화됩니다."
+						variant="primary"
+					>
+						<Switch.Toggle />
+					</Tooltip>
+				</Switch.Root>
+			</Onboarding>
 		</div>
 	);
 

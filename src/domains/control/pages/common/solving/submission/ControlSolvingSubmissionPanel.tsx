@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import Onboarding from "@/components/onboarding/Onboarding";
 import { Table } from "@/components/table";
 import { Tabs } from "@/components/tabs";
+import useOnboarding from "@/hooks/useOnboarding";
 import { apiHooks } from "@/libs/api";
 import ControlSolvingSubmissionTableBody from "./ControlSolvingSubmissionTableBody";
 import ControlSolvingSubmissionTableHeader from "./ControlSolvingSubmissionTableHeader";
@@ -28,6 +30,8 @@ const ControlSolvingSubmissionPanel = ({
 
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
+
+	const { isActive, currentStepKey, nextStep } = useOnboarding();
 
 	const { data: submitRecordsData } = apiHooks.useQuery(
 		"get",
@@ -77,24 +81,30 @@ const ControlSolvingSubmissionPanel = ({
 	return (
 		<div className="flex flex-col gap-gap-9 p-padding-11 border border-color-gray-10 rounded-radius-large2">
 			{headerContent}
-			<Tabs.Root
-				defaultValue="all"
-				onValueChange={(value) =>
-					handleSubmitTypeChange(value as "all" | "correct" | "incorrect")
-				}
-				className="flex flex-col gap-gap-9"
+			<Onboarding
+				stepKey="submission"
+				show={isActive && currentStepKey === "submission"}
+				onNext={nextStep}
 			>
-				<ControlSolvingSubmissionTabs
-					correctUserCounts={submitInfos?.correctUserCounts}
-					incorrectUserCounts={submitInfos?.incorrectUserCounts}
-				/>
+				<Tabs.Root
+					defaultValue="all"
+					onValueChange={(value) =>
+						handleSubmitTypeChange(value as "all" | "correct" | "incorrect")
+					}
+					className="flex flex-col gap-gap-9"
+				>
+					<ControlSolvingSubmissionTabs
+						correctUserCounts={submitInfos?.correctUserCounts}
+						incorrectUserCounts={submitInfos?.incorrectUserCounts}
+					/>
 
-				{(["all", "correct", "incorrect"] as const).map((value) => (
-					<Tabs.Content key={value} value={value}>
-						{renderTabContent()}
-					</Tabs.Content>
-				))}
-			</Tabs.Root>
+					{(["all", "correct", "incorrect"] as const).map((value) => (
+						<Tabs.Content key={value} value={value}>
+							{renderTabContent()}
+						</Tabs.Content>
+					))}
+				</Tabs.Root>
+			</Onboarding>
 		</div>
 	);
 };

@@ -1,6 +1,8 @@
 import { BellRing, RefreshCw } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Button from "@/components/Button";
+import Onboarding from "@/components/onboarding/Onboarding";
+import useOnboarding from "@/hooks/useOnboarding";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import useControlParticipants from "../../../hooks/paticipant/useControlParticipants";
 import ControlLiveParticipantActiveMembers from "./ControlLiveParticipantActiveMembers";
@@ -13,6 +15,8 @@ import ControlLiveParticipantScorerRanking from "./ControlLiveParticipantScorerR
 
 const ControlLiveParticipant = () => {
 	const questionSetId = Number(useParams().questionSetId);
+
+	const { isActive, currentStepKey, nextStep } = useOnboarding();
 
 	const { refreshParticipants, handleSumbitParticipants, handleSubmitWinner } =
 		useControlParticipants({
@@ -30,16 +34,28 @@ const ControlLiveParticipant = () => {
 					onClick={refreshParticipants}
 					className="border-none text-color-gray-50"
 				/>
-				<Button
-					item="진출자 선정"
-					onClick={handleSumbitParticipants}
-					className="border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50 disabled:bg-color-gray-5 disabled:text-color-gray-20"
-				/>
-				<Button
-					item="우승자 선정"
-					onClick={handleSubmitWinner}
-					className="border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50 disabled:bg-color-gray-5 disabled:text-color-gray-20"
-				/>
+				<Onboarding
+					stepKey="submit-participant"
+					show={isActive && currentStepKey === "submit-participant"}
+					onNext={nextStep}
+				>
+					<Button
+						item="진출자 선정"
+						onClick={handleSumbitParticipants}
+						className="border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50 disabled:bg-color-gray-5 disabled:text-color-gray-20"
+					/>
+				</Onboarding>
+				<Onboarding
+					stepKey="submit-winner"
+					show={isActive && currentStepKey === "submit-winner"}
+					onNext={nextStep}
+				>
+					<Button
+						item="우승자 선정"
+						onClick={handleSubmitWinner}
+						className="border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50 disabled:bg-color-gray-5 disabled:text-color-gray-20"
+					/>
+				</Onboarding>
 			</div>
 		);
 	};
@@ -51,7 +67,13 @@ const ControlLiveParticipant = () => {
 			rightContent={renderSubmitButtons()}
 		>
 			<div className="flex flex-col gap-gap-11">
-				<ControlLiveParticipantActiveMembers />
+				<Onboarding
+					stepKey="participant"
+					show={isActive && currentStepKey === "participant"}
+					onNext={nextStep}
+				>
+					<ControlLiveParticipantActiveMembers />
+				</Onboarding>
 				<div className="flex items-stretch gap-gap-9">
 					<div className="flex flex-[2]">
 						<ControlLiveParticipantScorerRanking />

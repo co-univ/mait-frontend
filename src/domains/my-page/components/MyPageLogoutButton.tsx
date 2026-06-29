@@ -16,6 +16,7 @@ const MyPageLogoutButton = () => {
 			console.log(err);
 		} finally {
 			localStorage.removeItem("token");
+			sessionStorage.removeItem("onboarding-completed-session");
 			window.location.href = "/";
 		}
 	};

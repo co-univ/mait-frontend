@@ -40,6 +40,7 @@ const useControlLiveSolvingQuestion = <
 				path: { questionSetId },
 			},
 		},
+		{},
 	);
 
 	const questionSet = questionSetData?.data;

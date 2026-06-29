@@ -68,6 +68,7 @@ const useControlParticipantRanking = <T extends "SCORER" | "CORRECT">({
 				},
 			},
 		},
+		{},
 	);
 
 	const ranking = data?.data?.ranksGroup as RankingType<T> | undefined;

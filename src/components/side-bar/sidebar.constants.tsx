@@ -24,6 +24,7 @@ const BASE_NAVIGATION_ITEMS: NavItem[] = [
 		label: "문제 풀기",
 		path: SOLVING_ROUTE_PATH.ROOT,
 		activePaths: ["/solving"],
+		onboardingStep: "solve",
 		isMakerOnly: false,
 	},
 	{
@@ -31,6 +32,7 @@ const BASE_NAVIGATION_ITEMS: NavItem[] = [
 		label: "풀이 결과 대시보드",
 		path: "/dashboard",
 		activePaths: ["/dashboard"],
+		onboardingStep: "dashboard",
 		isMakerOnly: false,
 	},
 ];
@@ -49,6 +51,7 @@ export const getNavigationItems = (activeTeam?: TeamApiResponse): NavItem[] => {
 				label: "카테고리 관리",
 				path: TEAM_MANAGEMENT_ROUTE_PATH.CATEGORIES,
 				activePaths: ["/team-management/categories"],
+				onboardingStep: "management",
 				isMakerOnly: true,
 			},
 		];
@@ -60,6 +63,7 @@ export const getNavigationItems = (activeTeam?: TeamApiResponse): NavItem[] => {
 			icon: <Users />,
 			label: "팀 관리",
 			activePaths: ["/team-management"],
+			onboardingStep: "management",
 			isMakerOnly: false,
 			subItems: [
 				{
