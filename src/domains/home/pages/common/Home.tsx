@@ -18,8 +18,13 @@ import HomeThirdMobile from "./HomeThirdMobile";
 const Home = () => {
 	const { isLg } = useBreakpoint();
 	const { confirm } = useConfirm();
-	const { isFinishModalOpen, isUnviewedLoaded, startOnboarding, reset } =
-		useOnboarding();
+	const {
+		isFinishModalOpen,
+		isUnviewedLoaded,
+		startOnboarding,
+		reset,
+		markCompletedForSession,
+	} = useOnboarding();
 
 	const { mutateAsync: postViewRecord } = apiHooks.useMutation(
 		"post",
@@ -39,7 +44,9 @@ const Home = () => {
 			confirmText: "시작하기",
 		});
 
-		if (!isDismissed) {
+		if (isDismissed) {
+			markCompletedForSession();
+		} else {
 			await Promise.all(
 				screenIds.map((screenId) =>
 					postViewRecord({ body: { screenId, dismissed: true } }),
@@ -48,7 +55,7 @@ const Home = () => {
 		}
 
 		reset();
-	}, [confirm, postViewRecord, reset]);
+	}, [confirm, postViewRecord, reset, markCompletedForSession]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: run only when isUnviewedLoaded changes
 	useEffect(() => {

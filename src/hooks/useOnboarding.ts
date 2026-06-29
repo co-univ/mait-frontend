@@ -13,6 +13,8 @@ import useOnboardingStore from "@/stores/useOnboardingStore";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { createPath } from "@/utils/create-path";
 
+const SESSION_COMPLETED_KEY = "onboarding-completed-session";
+
 //
 //
 //
@@ -79,8 +81,14 @@ const useOnboarding = () => {
 		? (ONBOARDING_STEPS_BY_CODE[currentCode][currentStepIndex] ?? null)
 		: null;
 
+	const hasCompletedThisSession =
+		sessionStorage.getItem(SESSION_COMPLETED_KEY) === "true";
+
 	const canStart =
-		!isActive && !isFinishModalOpen && pendingCodes.length === 0;
+		!isActive &&
+		!isFinishModalOpen &&
+		!hasCompletedThisSession &&
+		pendingCodes.length === 0;
 
 	//
 	//
@@ -183,6 +191,10 @@ const useOnboarding = () => {
 		setCurrentStepIndex(nextStepIndex);
 	};
 
+	const markCompletedForSession = () => {
+		sessionStorage.setItem(SESSION_COMPLETED_KEY, "true");
+	};
+
 	return {
 		isActive,
 		isFinishModalOpen,
@@ -194,6 +206,7 @@ const useOnboarding = () => {
 		nextStep,
 		reset,
 		setIsFinishModalOpen,
+		markCompletedForSession,
 	};
 };
 
