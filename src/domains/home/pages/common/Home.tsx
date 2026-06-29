@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useConfirm } from "@/components/confirm";
+import OnboardingFinishModal from "@/components/onboarding/OnboardingFinishModal";
 import useBreakpoint from "@/hooks/useBreakpoint";
 import useOnboarding from "@/hooks/useOnboarding";
 import { apiHooks } from "@/libs/api";
@@ -17,7 +17,6 @@ import HomeThirdMobile from "./HomeThirdMobile";
 
 const Home = () => {
 	const { isLg } = useBreakpoint();
-	const { confirm } = useConfirm();
 	const {
 		isFinishModalOpen,
 		isUnviewedLoaded,
@@ -31,31 +30,25 @@ const Home = () => {
 		"/api/v1/onboarding/screens/view",
 	);
 
-	const handleFinishConfirm = useCallback(async () => {
-		useOnboardingStore.getState().setIsFinishModalOpen(false);
+	const handleFinishConfirm = useCallback(
+		async (isDismissed: boolean) => {
+			useOnboardingStore.getState().setIsFinishModalOpen(false);
 
-		const screenIds = useOnboardingStore.getState().pendingScreenIds;
+			if (isDismissed) {
+				const screenIds = useOnboardingStore.getState().pendingScreenIds;
+				await Promise.all(
+					screenIds.map((screenId) =>
+						postViewRecord({ body: { screenId, dismissed: true } }),
+					),
+				);
+			} else {
+				markCompletedForSession();
+			}
 
-		const isDismissed = await confirm({
-			title: "온보딩이 완료되었습니다! 이제 MAIT 서비스를 시작해 보세요.",
-			description:
-				"필요하신 경우 설정에서 온보딩을 다시 확인할 수 있으며, '다시 보지 않기'를 선택하면 다음부터는 표시되지 않습니다.",
-			cancelText: "다시 보지 않기",
-			confirmText: "시작하기",
-		});
-
-		if (isDismissed) {
-			markCompletedForSession();
-		} else {
-			await Promise.all(
-				screenIds.map((screenId) =>
-					postViewRecord({ body: { screenId, dismissed: true } }),
-				),
-			);
-		}
-
-		reset();
-	}, [confirm, postViewRecord, reset, markCompletedForSession]);
+			reset();
+		},
+		[postViewRecord, reset, markCompletedForSession],
+	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: run only when isUnviewedLoaded changes
 	useEffect(() => {
@@ -66,35 +59,32 @@ const Home = () => {
 		startOnboarding();
 	}, [isUnviewedLoaded]);
 
-	//
-	useEffect(() => {
-		if (!isFinishModalOpen) {
-			return;
-		}
-
-		handleFinishConfirm();
-	}, [isFinishModalOpen, handleFinishConfirm]);
-
 	return (
-		<div
-			className="w-full h-screen overflow-y-scroll snap-mandatory snap-y overflow-x-hidden"
-			style={{ scrollbarWidth: "none" }}
-		>
-			{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
-			<HomeSlide id="hero">
-				<HomeFirst />
-			</HomeSlide>
-			{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
-			<HomeSlide id="guide">
-				{isLg && <HomeSecond />}
-				{!isLg && <HomeSecondMobile />}
-			</HomeSlide>
-			{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
-			<HomeSlide id="features">
-				{isLg && <HomeThird />}
-				{!isLg && <HomeThirdMobile />}
-			</HomeSlide>
-		</div>
+		<>
+			<div
+				className="w-full h-screen overflow-y-scroll snap-mandatory snap-y overflow-x-hidden"
+				style={{ scrollbarWidth: "none" }}
+			>
+				{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
+				<HomeSlide id="hero">
+					<HomeFirst />
+				</HomeSlide>
+				{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
+				<HomeSlide id="guide">
+					{isLg && <HomeSecond />}
+					{!isLg && <HomeSecondMobile />}
+				</HomeSlide>
+				{/** biome-ignore lint/nursery/useUniqueElementIds: ID for GA data */}
+				<HomeSlide id="features">
+					{isLg && <HomeThird />}
+					{!isLg && <HomeThirdMobile />}
+				</HomeSlide>
+			</div>
+
+			{isFinishModalOpen && (
+				<OnboardingFinishModal onConfirm={handleFinishConfirm} />
+			)}
+		</>
 	);
 };
 
