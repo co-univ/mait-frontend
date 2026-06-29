@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Onboarding from "@/components/onboarding/Onboarding";
 import { Switch } from "@/components/switch/Switch";
 import Tooltip from "@/components/Tooltip";
 import useControlLiveSolvingQuestion from "@/domains/control/hooks/solving/question/useControlLiveSolvingQuestion";
@@ -80,26 +81,30 @@ const ControlLiveSolvingQuestion = () => {
 
 	const liveControls = (
 		<div className="flex gap-gap-9">
-			<Switch.Root
-				checked={allowedAccessTypes.includes(question?.questionStatusType)}
-				onChange={handleAccessSwitchChange}
-			>
-				<Switch.Label>문제 공개</Switch.Label>
-				<Switch.Toggle />
-			</Switch.Root>
+			<Onboarding stepKey="access-open">
+				<Switch.Root
+					checked={allowedAccessTypes.includes(question?.questionStatusType)}
+					onChange={handleAccessSwitchChange}
+				>
+					<Switch.Label>문제 공개</Switch.Label>
+					<Switch.Toggle />
+				</Switch.Root>
+			</Onboarding>
 			<Switch.Root
 				checked={allowedSolveType.includes(question?.questionStatusType)}
 				loading={isSolveSwitchLoading}
 				onChange={handleSolveSwitchChange}
 			>
 				<Switch.Label>제출 허용</Switch.Label>
-				<Tooltip
-					open={isSolveSwitchLoading}
-					message="제출 허용은 5초 이내에 활성화됩니다."
-					variant="primary"
-				>
-					<Switch.Toggle />
-				</Tooltip>
+				<Onboarding stepKey="access-solve">
+					<Tooltip
+						open={isSolveSwitchLoading}
+						message="제출 허용은 5초 이내에 활성화됩니다."
+						variant="primary"
+					>
+						<Switch.Toggle />
+					</Tooltip>
+				</Onboarding>
 			</Switch.Root>
 		</div>
 	);

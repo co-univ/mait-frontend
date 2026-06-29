@@ -12,6 +12,7 @@ import useUser from "@/hooks/useUser";
 import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { hasValidPath } from "@/utils/path";
+import Onboarding from "../onboarding/Onboarding";
 import SideBarDropdown from "./SideBarDropdown";
 import SideBarNavItem from "./SideBarNavItem";
 import SidebarItem from "./SidebarItem";
@@ -100,8 +101,21 @@ const SideBar = () => {
 				<div className="w-full flex flex-col gap-gap-5">
 					{activeTeam &&
 						getNavigationItems(activeTeam)
-							.filter((item) => !item.isMakerOnly || activeTeam.role !== "PLAYER")
-							.map((item) => <SideBarNavItem key={item.label} item={item} />)}
+							.filter(
+								(item) => !item.isMakerOnly || activeTeam.role !== "PLAYER",
+							)
+							.map((item) =>
+								item.onboardingStep ? (
+									<Onboarding
+										key={item.onboardingStep}
+										stepKey={item.onboardingStep}
+									>
+										<SideBarNavItem key={item.label} item={item} />
+									</Onboarding>
+								) : (
+									<SideBarNavItem key={item.label} item={item} />
+								),
+							)}
 				</div>
 			</nav>
 		</aside>

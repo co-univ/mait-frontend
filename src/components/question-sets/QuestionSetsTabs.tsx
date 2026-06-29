@@ -1,4 +1,10 @@
-import { CalendarClock, CalendarPlus, ListTodo, PencilRuler } from "lucide-react";
+import {
+	CalendarClock,
+	CalendarPlus,
+	ListTodo,
+	PencilRuler,
+} from "lucide-react";
+import Onboarding from "@/components/onboarding/Onboarding";
 import { Tabs } from "@/components/tabs";
 
 //
@@ -26,19 +32,25 @@ const QuestionSetsTabs = ({ modes }: QuestionSetsTabsProps) => {
 				</Tabs.Trigger>
 			)}
 			{modes.includes("live-time") && (
-				<Tabs.Trigger value="live-time" icon={<CalendarClock />}>
-					실시간 풀이
-				</Tabs.Trigger>
+				<Onboarding stepKey="live">
+					<Tabs.Trigger value="live-time" icon={<CalendarClock />}>
+						실시간 풀이
+					</Tabs.Trigger>
+				</Onboarding>
 			)}
 			{modes.includes("study") && (
-				<Tabs.Trigger value="study" icon={<PencilRuler />}>
-					학습모드
-				</Tabs.Trigger>
+				<Onboarding stepKey="study">
+					<Tabs.Trigger value="study" icon={<PencilRuler />}>
+						학습모드
+					</Tabs.Trigger>
+				</Onboarding>
 			)}
 			{modes.includes("review") && (
-				<Tabs.Trigger value="review" icon={<ListTodo />}>
-					복습
-				</Tabs.Trigger>
+				<Onboarding stepKey="review">
+					<Tabs.Trigger value="review" icon={<ListTodo />}>
+						복습
+					</Tabs.Trigger>
+				</Onboarding>
 			)}
 		</Tabs.List>
 	);

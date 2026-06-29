@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import Onboading from "@/components/onboarding/Onboarding";
 import { Table } from "@/components/table";
 import { Tabs } from "@/components/tabs";
 import { apiHooks } from "@/libs/api";
@@ -77,24 +78,26 @@ const ControlSolvingSubmissionPanel = ({
 	return (
 		<div className="flex flex-col gap-gap-9 p-padding-11 border border-color-gray-10 rounded-radius-large2">
 			{headerContent}
-			<Tabs.Root
-				defaultValue="all"
-				onValueChange={(value) =>
-					handleSubmitTypeChange(value as "all" | "correct" | "incorrect")
-				}
-				className="flex flex-col gap-gap-9"
-			>
-				<ControlSolvingSubmissionTabs
-					correctUserCounts={submitInfos?.correctUserCounts}
-					incorrectUserCounts={submitInfos?.incorrectUserCounts}
-				/>
+			<Onboading stepKey="submission">
+				<Tabs.Root
+					defaultValue="all"
+					onValueChange={(value) =>
+						handleSubmitTypeChange(value as "all" | "correct" | "incorrect")
+					}
+					className="flex flex-col gap-gap-9"
+				>
+					<ControlSolvingSubmissionTabs
+						correctUserCounts={submitInfos?.correctUserCounts}
+						incorrectUserCounts={submitInfos?.incorrectUserCounts}
+					/>
 
-				{(["all", "correct", "incorrect"] as const).map((value) => (
-					<Tabs.Content key={value} value={value}>
-						{renderTabContent()}
-					</Tabs.Content>
-				))}
-			</Tabs.Root>
+					{(["all", "correct", "incorrect"] as const).map((value) => (
+						<Tabs.Content key={value} value={value}>
+							{renderTabContent()}
+						</Tabs.Content>
+					))}
+				</Tabs.Root>
+			</Onboading>
 		</div>
 	);
 };

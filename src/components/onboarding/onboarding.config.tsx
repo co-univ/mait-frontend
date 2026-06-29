@@ -62,19 +62,19 @@ export const ONBOARDING_STEPS: Record<string, OnboardingStep> = {
 		icon: <OnboardingCheckCircle />,
 		placement: "bottom",
 	},
-	new: {
-		description: "새로운 문제 셋을 생성해보세요!",
-		icon: <OnboardingAddCircle />,
-		placement: "bottom",
-	},
+	// new: {
+	// 	description: "새로운 문제 셋을 생성해보세요!",
+	// 	icon: <OnboardingAddCircle />,
+	// 	placement: "bottom",
+	// },
 
-	// QUESTION_MANAGE
-	"open-permission": {
+	// QUESTION_SOLVE
+	"access-open": {
 		description: "Player에게 문제가 공개돼요",
 		icon: <OnboardingLock />,
 		placement: "bottom",
 	},
-	"solve-permission": {
+	"access-solve": {
 		description: "Player가 문제를 제출할 수 있어요",
 		icon: <OnboardingUpload />,
 		placement: "top",
@@ -93,7 +93,7 @@ export const ONBOARDING_STEPS: Record<string, OnboardingStep> = {
 	winner: {
 		description: "다음 단계 진출자 또는 우승자를 선정할 수 있어요",
 		icon: <OnboardingBadge />,
-		placement: "bottom",
+		placement: "top",
 	},
 	"live-scorer": {
 		description: "가장 빠르게 정답을 제출한 순서대로 측정돼요",

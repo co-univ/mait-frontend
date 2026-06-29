@@ -24,7 +24,6 @@ import { ONBOARDING_STEPS } from "./onboarding.config";
 
 interface OnboardingProps {
 	stepKey: string;
-	show: boolean;
 	children: ReactNode;
 }
 
@@ -32,13 +31,15 @@ interface OnboardingProps {
 //
 //
 
-const Onboarding = ({ stepKey, show, children }: OnboardingProps) => {
+const Onboarding = ({ stepKey, children }: OnboardingProps) => {
 	const step = ONBOARDING_STEPS[stepKey];
 
 	const measureRef = useRef<HTMLDivElement>(null);
 	const arrowRef = useRef<SVGSVGElement>(null);
 
 	const [itemRect, setItemRect] = useState<DOMRect | null>(null);
+
+	const show = true;
 
 	const { refs, floatingStyles, placement, middlewareData } = useFloating({
 		placement: step?.placement ?? "right",

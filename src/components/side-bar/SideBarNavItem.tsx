@@ -19,6 +19,7 @@ export interface NavItem {
 	activePaths: string[];
 	isMakerOnly: boolean;
 	subItems?: NavItem[];
+	onboardingStep?: string;
 }
 
 interface SideBarNavItemProps {

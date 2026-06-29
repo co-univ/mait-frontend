@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@/components/Button";
+import Onboading from "@/components/onboarding/Onboarding";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import ControlSolvingSubmissionPanel from "@/domains/control/pages/common/solving/submission/ControlSolvingSubmissionPanel";
 import { apiHooks } from "@/libs/api";
@@ -90,16 +91,20 @@ const ControlLiveSolvingSubmission = ({
 				<h2 className="typo-heading-medium">{scorer?.userName}</h2>
 			</div>
 			<div className="flex gap-gap-5">
-				<Button
-					item="문제별 득점자"
-					className="bg-color-primary-5 typo-body-small text-color-primary-50 border-none"
-					onClick={handleScorerDialogOpen}
-				/>
-				<Button
-					item="진출자/우승자 관리"
-					className="bg-color-primary-5 typo-body-small text-color-primary-50 border-none"
-					onClick={handlePariticipantButtonClick}
-				/>
+				<Onboading stepKey="scorer">
+					<Button
+						item="문제별 득점자"
+						className="bg-color-primary-5 typo-body-small text-color-primary-50 border-none"
+						onClick={handleScorerDialogOpen}
+					/>
+				</Onboading>
+				<Onboading stepKey="winner">
+					<Button
+						item="진출자/우승자 관리"
+						className="bg-color-primary-5 typo-body-small text-color-primary-50 border-none"
+						onClick={handlePariticipantButtonClick}
+					/>
+				</Onboading>
 			</div>
 		</div>
 	);
