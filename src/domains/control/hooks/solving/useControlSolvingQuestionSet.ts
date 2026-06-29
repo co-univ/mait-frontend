@@ -48,6 +48,7 @@ const useControlSolvingQuestionSet = ({
 				},
 			},
 		},
+		{},
 	);
 
 	const questionSet = data?.data;

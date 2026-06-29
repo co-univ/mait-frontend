@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import Onboading from "@/components/onboarding/Onboarding";
+import Onboarding from "@/components/onboarding/Onboarding";
 import { Table } from "@/components/table";
 import { Tabs } from "@/components/tabs";
+import useOnboarding from "@/hooks/useOnboarding";
 import { apiHooks } from "@/libs/api";
 import ControlSolvingSubmissionTableBody from "./ControlSolvingSubmissionTableBody";
 import ControlSolvingSubmissionTableHeader from "./ControlSolvingSubmissionTableHeader";
@@ -29,6 +30,8 @@ const ControlSolvingSubmissionPanel = ({
 
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
+
+	const { isActive, currentStepKey, nextStep } = useOnboarding();
 
 	const { data: submitRecordsData } = apiHooks.useQuery(
 		"get",
@@ -78,7 +81,11 @@ const ControlSolvingSubmissionPanel = ({
 	return (
 		<div className="flex flex-col gap-gap-9 p-padding-11 border border-color-gray-10 rounded-radius-large2">
 			{headerContent}
-			<Onboading stepKey="submission">
+			<Onboarding
+				stepKey="submission"
+				show={isActive && currentStepKey === "submission"}
+				onNext={nextStep}
+			>
 				<Tabs.Root
 					defaultValue="all"
 					onValueChange={(value) =>
@@ -97,7 +104,7 @@ const ControlSolvingSubmissionPanel = ({
 						</Tabs.Content>
 					))}
 				</Tabs.Root>
-			</Onboading>
+			</Onboarding>
 		</div>
 	);
 };

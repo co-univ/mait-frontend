@@ -1,6 +1,5 @@
 import type { Placement } from "@floating-ui/react-dom";
 import type { ReactNode } from "react";
-import OnboardingAddCircle from "@/assets/icons/onboarding-add-circle.svg";
 import OnboardingBadge from "@/assets/icons/onboarding-badge.svg";
 import OnboardingBell from "@/assets/icons/onboarding-bell.svg";
 import OnboardingChart from "@/assets/icons/onboarding-chart.svg";
@@ -17,6 +16,41 @@ import OnboardingSearch from "@/assets/icons/onboarding-search.svg";
 import OnboardingSmiley from "@/assets/icons/onboarding-smiley.svg";
 import OnboardingUpload from "@/assets/icons/onboarding-upload.svg";
 import OnboardingUser from "@/assets/icons/onboarding-user.svg";
+
+//
+//
+//
+
+export type OnboardingCode =
+	| "HOME_GUIDE"
+	| "QUESTION_SOLVE"
+	| "QUESTION_MANAGE";
+
+export const ONBOARDING_CODE_ORDER: OnboardingCode[] = [
+	"HOME_GUIDE",
+	"QUESTION_SOLVE",
+	"QUESTION_MANAGE",
+];
+
+export const ONBOARDING_STEPS_BY_CODE: Record<OnboardingCode, string[]> = {
+	HOME_GUIDE: ["solve", "dashboard", "management"],
+	QUESTION_SOLVE: ["live", "study", "review"],
+	QUESTION_MANAGE: [
+		"access-open",
+		"access-solve",
+		"submission",
+		"scorer",
+		"winner",
+		"live-scorer",
+		"correct-scorer",
+		"participant",
+		"submit-participant",
+		"submit-winner",
+	],
+};
+
+// This step in QUESTION_MANAGE switches to the /control/live/participant/... path
+export const QUESTION_MANAGE_PARTICIPANT_START_INDEX = 5; // "live-scorer"
 
 //
 //
@@ -68,7 +102,7 @@ export const ONBOARDING_STEPS: Record<string, OnboardingStep> = {
 	// 	placement: "bottom",
 	// },
 
-	// QUESTION_SOLVE
+	// QUESTION_MANAGE
 	"access-open": {
 		description: "Player에게 문제가 공개돼요",
 		icon: <OnboardingLock />,

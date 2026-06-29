@@ -32,6 +32,7 @@ const useControlSolvingQuestions = ({
 				},
 			},
 		},
+		{},
 	);
 
 	const questions = data?.data;

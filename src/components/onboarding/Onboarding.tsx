@@ -24,6 +24,8 @@ import { ONBOARDING_STEPS } from "./onboarding.config";
 
 interface OnboardingProps {
 	stepKey: string;
+	show: boolean;
+	onNext?: () => void;
 	children: ReactNode;
 }
 
@@ -31,15 +33,13 @@ interface OnboardingProps {
 //
 //
 
-const Onboarding = ({ stepKey, children }: OnboardingProps) => {
+const Onboarding = ({ stepKey, show, onNext, children }: OnboardingProps) => {
 	const step = ONBOARDING_STEPS[stepKey];
 
 	const measureRef = useRef<HTMLDivElement>(null);
 	const arrowRef = useRef<SVGSVGElement>(null);
 
 	const [itemRect, setItemRect] = useState<DOMRect | null>(null);
-
-	const show = true;
 
 	const { refs, floatingStyles, placement, middlewareData } = useFloating({
 		placement: step?.placement ?? "right",
@@ -137,7 +137,13 @@ const Onboarding = ({ stepKey, children }: OnboardingProps) => {
 			{createPortal(
 				<>
 					{/* backdrop */}
-					<div className="fixed inset-0 z-[60] bg-gray-90 bg-opacity-70 backdrop-blur-sm" />
+					<div
+						className="fixed inset-0 z-[60] bg-gray-90 bg-opacity-70 backdrop-blur-sm cursor-pointer"
+						role="button"
+						tabIndex={-1}
+						onClick={onNext}
+						onKeyDown={(e) => e.key === "Enter" && onNext?.()}
+					/>
 
 					{/* item clone: positioned over original item, above backdrop */}
 					{itemRect && (

@@ -7,6 +7,7 @@ import {
 	SIDEBAR_WIDTH,
 	SMALL_PAGE_MARGIN_PATHS,
 } from "@/app.constants";
+import useOnboarding from "@/hooks/useOnboarding";
 import useTeams from "@/hooks/useTeams";
 import useUser from "@/hooks/useUser";
 import { GRADATION_SECONDARY_RADIAL_BACKGROUND_STYLE_PATHS } from "@/layouts/AppLayout";
@@ -26,6 +27,7 @@ const SideBar = () => {
 	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
 	const { user } = useUser();
 	const { activeTeam } = useTeams();
+	const { isActive, currentStepKey, nextStep } = useOnboarding();
 
 	const location = useLocation();
 
@@ -109,6 +111,8 @@ const SideBar = () => {
 									<Onboarding
 										key={item.onboardingStep}
 										stepKey={item.onboardingStep}
+										show={isActive && currentStepKey === item.onboardingStep}
+										onNext={nextStep}
 									>
 										<SideBarNavItem key={item.label} item={item} />
 									</Onboarding>

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import SideDialog from "@/components/side-dialog/SideDialog";
 import { Table } from "@/components/table";
-import useControlSolvingQuestion from "@/domains/control/hooks/solving/question/useControlSolvingQuestion";
 import { apiHooks } from "@/libs/api";
 
 //

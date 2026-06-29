@@ -40,13 +40,20 @@ const useControlSolvingQuestion = <
 	const queryClient = useQueryClient();
 
 	const { data: questionSetData, isPending: isQuestionSetLoading } =
-		apiHooks.useQuery("get", "/api/v1/question-sets/{questionSetId}", {
-			params: {
-				path: {
-					questionSetId,
+		apiHooks.useQuery(
+			"get",
+			"/api/v1/question-sets/{questionSetId}",
+			{
+				params: {
+					path: {
+						questionSetId,
+					},
 				},
 			},
-		});
+			{
+				enabled: questionSetId > 0,
+			},
+		);
 
 	const {
 		data: questionData,
