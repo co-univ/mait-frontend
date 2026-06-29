@@ -15,6 +15,7 @@ import {
 	useState,
 } from "react";
 import { createPortal } from "react-dom";
+import OnboardingCloseButton from "./OnboardingCloseButton";
 import OnboardingDashedLine from "./OnboardingDashedLine";
 import OnboardingProgressBar from "./OnboardingProgressBar";
 import { ONBOARDING_STEPS } from "./onboarding.config";
@@ -214,6 +215,9 @@ const Onboarding = ({ stepKey, show, onNext, children }: OnboardingProps) => {
 							</div>
 						</div>
 					)}
+
+					{/* close button */}
+					<OnboardingCloseButton />
 
 					{/* progress bar */}
 					<OnboardingProgressBar />

@@ -218,6 +218,13 @@ const useOnboarding = () => {
 		setCurrentStepIndex(nextStepIndex);
 	};
 
+	const closeOnboarding = () => {
+		setIsActive(false);
+		sessionStorage.setItem(SESSION_COMPLETED_KEY, "true");
+		reset();
+		navigate(HOME_ROUTE_PATH.ROOT);
+	};
+
 	const goToStep = (flatIndex: number) => {
 		if (!isActive) return;
 		const { codeIndex, stepIndex } = fromFlatIndex(flatIndex);
@@ -244,6 +251,7 @@ const useOnboarding = () => {
 		startOnboarding,
 		nextStep,
 		goToStep,
+		closeOnboarding,
 		reset,
 		setIsFinishModalOpen,
 		markCompletedForSession,
