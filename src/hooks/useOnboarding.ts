@@ -90,6 +90,33 @@ const useOnboarding = () => {
 		!hasCompletedThisSession &&
 		pendingCodes.length === 0;
 
+	const totalSteps = pendingCodes.reduce(
+		(sum, code) => sum + ONBOARDING_STEPS_BY_CODE[code].length,
+		0,
+	);
+
+	const getFlatIndex = (codeIdx: number, stepIdx: number): number => {
+		let flat = 0;
+		for (let i = 0; i < codeIdx; i++) {
+			flat += ONBOARDING_STEPS_BY_CODE[pendingCodes[i]].length;
+		}
+		return flat + stepIdx;
+	};
+
+	const fromFlatIndex = (
+		flat: number,
+	): { codeIndex: number; stepIndex: number } => {
+		let remaining = flat;
+		for (let i = 0; i < pendingCodes.length; i++) {
+			const len = ONBOARDING_STEPS_BY_CODE[pendingCodes[i]].length;
+			if (remaining < len) return { codeIndex: i, stepIndex: remaining };
+			remaining -= len;
+		}
+		return { codeIndex: pendingCodes.length - 1, stepIndex: 0 };
+	};
+
+	const currentFlatIndex = getFlatIndex(currentCodeIndex, currentStepIndex);
+
 	//
 	//
 	//
@@ -191,6 +218,16 @@ const useOnboarding = () => {
 		setCurrentStepIndex(nextStepIndex);
 	};
 
+	const goToStep = (flatIndex: number) => {
+		if (!isActive) return;
+		const { codeIndex, stepIndex } = fromFlatIndex(flatIndex);
+		const code = pendingCodes[codeIndex];
+		if (!code) return;
+		setCurrentCodeIndex(codeIndex);
+		setCurrentStepIndex(stepIndex);
+		navigate(getOnboardingPath(code, stepIndex));
+	};
+
 	const markCompletedForSession = () => {
 		sessionStorage.setItem(SESSION_COMPLETED_KEY, "true");
 	};
@@ -202,8 +239,11 @@ const useOnboarding = () => {
 		canStart,
 		currentCode,
 		currentStepKey,
+		totalSteps,
+		currentFlatIndex,
 		startOnboarding,
 		nextStep,
+		goToStep,
 		reset,
 		setIsFinishModalOpen,
 		markCompletedForSession,
