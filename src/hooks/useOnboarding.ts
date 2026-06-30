@@ -6,7 +6,7 @@ import {
 } from "@/components/onboarding/onboarding.config";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
-import { apiHooks } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { createPath } from "@/utils/create-path";
@@ -201,6 +201,17 @@ const useOnboarding = () => {
 		reset();
 	};
 
+	const neverShowOnboarding = () => {
+		const { pendingScreenIds: screenIds } = useOnboardingStore.getState();
+		setIsActive(false);
+		reset();
+		for (const screenId of screenIds) {
+			apiClient.POST("/api/v1/onboarding/screens/view", {
+				body: { screenId, dismissed: true },
+			});
+		}
+	};
+
 	const goToStep = (flatIndex: number) => {
 		if (!isActive) return;
 		const { codeIndex, stepIndex } = fromFlatIndex(flatIndex);
@@ -243,6 +254,7 @@ const useOnboarding = () => {
 		nextStep,
 		goToStep,
 		closeOnboarding,
+		neverShowOnboarding,
 		reset,
 		setIsFinishModalOpen,
 		markCompletedForSession,
