@@ -15,7 +15,6 @@ type CreationPublishQuestionSetState = UpdateQuestionSetApiRequest & {
 
 type CreationPublishQuestionSetAction =
 	| { type: "SET_TITLE"; payload: string }
-	| { type: "SET_SUBJECT"; payload: string }
 	| { type: "SET_MODE"; payload: QuestionSetSolveMode }
 	| { type: "SET_DIFFICULTY"; payload: string }
 	| { type: "SET_VISIBILITY"; payload: QuestionSetVisibility }
@@ -27,7 +26,6 @@ export const getCreationPublishQuestionInitialState = (
 	teamType?: string,
 ): CreationPublishQuestionSetState => ({
 	title: "",
-	subject: "",
 	solveMode: (teamType === "PERSONAL" ? "STUDY" : "LIVE_TIME") as QuestionSetSolveMode,
 	difficulty: "",
 	visibility: "PUBLIC" as QuestionSetVisibility,
@@ -45,8 +43,6 @@ export const creationPublishQuestionSetReducer = (
 	switch (action.type) {
 		case "SET_TITLE":
 			return { ...state, title: action.payload };
-		case "SET_SUBJECT":
-			return { ...state, subject: action.payload };
 		case "SET_MODE":
 			return { ...state, solveMode: action.payload };
 		case "SET_DIFFICULTY":

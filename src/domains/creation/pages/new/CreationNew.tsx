@@ -35,7 +35,7 @@ const CreationNew = () => {
 
 	const [questionSet, dispatch] = useReducer(
 		creationNewQuestionSetReducer,
-		creationNewQuestionSetInitialState(activeTeam?.teamId ?? 0),
+		creationNewQuestionSetInitialState(activeTeam?.teamId ?? 0, activeTeam?.teamType),
 	);
 
 	const { invalidateQuestionSetsQuery } = useQuestionSets({
@@ -46,7 +46,7 @@ const CreationNew = () => {
 	const disabledCreateQuestionSet = [
 		!questionSet.teamId,
 		!questionSet.creationType,
-		!questionSet.subject,
+		!questionSet.title,
 		questionSet.counts?.reduce((acc, cur) => acc + (cur?.count ?? 0), 0) === 0,
 	].some(Boolean);
 
@@ -79,8 +79,8 @@ const CreationNew = () => {
 	/**
 	 *
 	 */
-	const handleSubjectChange = (subject: string) => {
-		dispatch({ type: "SET_SUBJECT", payload: subject });
+	const handleTitleChange = (title: string) => {
+		dispatch({ type: "SET_TITLE", payload: title });
 	};
 
 	/**
@@ -242,12 +242,12 @@ const CreationNew = () => {
 					<CreationNewLeftPanel
 						creationType={questionSet.creationType}
 						categories={questionSet.categories}
-						subject={questionSet.subject}
+						title={questionSet.title}
 						counts={questionSet.counts}
 						onCreationTypeChange={handleCreationTypeChange}
 						onCategoryAdd={handleCategoryAdd}
 						onCategoryRemove={handleCategoryRemove}
-						onSubjectChange={handleSubjectChange}
+						onTitleChange={handleTitleChange}
 						onQuestionCountCheck={handleQuestionCountCheck}
 						onQuestionCountCountChange={handleQuestionCountCountChange}
 					/>

@@ -63,10 +63,7 @@ const CreationPublish = () => {
 			mode: "LIVE_TIME",
 		});
 
-	const disabledPublishQuestionSet = [
-		!questionSet.title,
-		!questionSet.subject,
-	].some(Boolean);
+	const disabledPublishQuestionSet = !questionSet.title;
 
 	/**
 	 *
@@ -99,13 +96,6 @@ const CreationPublish = () => {
 	/**
 	 *
 	 */
-	const handleSubjectChange = (subject: string) => {
-		dispatch({ type: "SET_SUBJECT", payload: subject });
-	};
-
-	/**
-	 *
-	 */
 	const handleCategoryAdd = async (
 		category: QuestionSetCategoryApiResponse,
 	) => {
@@ -132,7 +122,6 @@ const CreationPublish = () => {
 				},
 				body: {
 					title: questionSet.title,
-					subject: questionSet.subject,
 					difficulty: questionSet.difficulty,
 					visibility: questionSet.visibility,
 					solveMode: questionSet.solveMode,
@@ -173,10 +162,9 @@ const CreationPublish = () => {
 	//
 	useEffect(() => {
 		if (data?.data) {
-			const { title, subject, difficulty, categories } = data.data;
+			const { title, difficulty, categories } = data.data;
 
 			dispatch({ type: "SET_TITLE", payload: title ?? "" });
-			dispatch({ type: "SET_SUBJECT", payload: subject ?? "" });
 			dispatch({ type: "SET_DIFFICULTY", payload: difficulty ?? "" });
 			dispatch({
 				type: "SET_MODE",
@@ -222,10 +210,8 @@ const CreationPublish = () => {
 					<CreationPublishRightPanel
 						creationType={data?.data?.creationType}
 						difficulty={questionSet.difficulty}
-						subject={questionSet.subject}
 						categories={questionSet.categories}
 						onChangeDifficulty={handleDifficultyChange}
-						onChangeSubject={handleSubjectChange}
 						onCategoryAdd={handleCategoryAdd}
 						onCategoryRemove={handleCategoryRemove}
 					/>
