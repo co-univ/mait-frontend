@@ -7,7 +7,7 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import { apiClient, apiHooks } from "@/libs/api";
 import type {
-	ApiResponseQuestionSetApiResponse,
+	QuestionSetApiResponse,
 	QuestionSetCategoryApiResponse,
 	QuestionSetSolveMode,
 	QuestionSetVisibility,
@@ -28,13 +28,16 @@ interface UseCreationPublishQuestionSetProps {
 
 interface UseCreationPublishQuestionSetReturn {
 	questionSet: CreationPublishQuestionSetState;
-	data: ApiResponseQuestionSetApiResponse | undefined;
+	questionSetData: QuestionSetApiResponse | undefined;
+	isManualType: boolean;
 	disabledPublishQuestionSet: boolean;
 	handleTitleChange: (title: string) => void;
 	handleVisibilityChange: (visibility: QuestionSetVisibility) => void;
 	handleModeChange: (solveMode: QuestionSetSolveMode) => void;
 	handleDifficultyChange: (difficulty: string) => void;
-	handleCategoryAdd: (category: QuestionSetCategoryApiResponse) => Promise<void>;
+	handleCategoryAdd: (
+		category: QuestionSetCategoryApiResponse,
+	) => Promise<void>;
 	handleCategoryRemove: (categoryId: number) => Promise<void>;
 	handlePublishButtonClick: () => Promise<void>;
 }
@@ -82,6 +85,8 @@ const useCreationPublishQuestionSet = ({
 			mode: "LIVE_TIME",
 		});
 
+	const isManualType = data?.data?.creationType === "MANUAL";
+
 	const disabledPublishQuestionSet = !questionSet.title;
 
 	/**
@@ -115,7 +120,9 @@ const useCreationPublishQuestionSet = ({
 	/**
 	 *
 	 */
-	const handleCategoryAdd = async (category: QuestionSetCategoryApiResponse) => {
+	const handleCategoryAdd = async (
+		category: QuestionSetCategoryApiResponse,
+	) => {
 		dispatch({ type: "ADD_CATEGORIES", payload: category });
 	};
 
@@ -202,7 +209,8 @@ const useCreationPublishQuestionSet = ({
 
 	return {
 		questionSet,
-		data,
+		questionSetData: data?.data,
+		isManualType,
 		disabledPublishQuestionSet,
 		handleTitleChange,
 		handleVisibilityChange,
