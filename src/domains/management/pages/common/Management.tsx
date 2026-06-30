@@ -1,4 +1,5 @@
 import { SquarePen } from "lucide-react";
+import Onboarding from "@/components/onboarding/Onboarding";
 import QuestionSetsTabs from "@/components/question-sets/QuestionSetsTabs";
 import { Tabs } from "@/components/tabs";
 import useQuestionSets from "@/hooks/useQuestionSets";
@@ -60,7 +61,9 @@ const Management = () => {
 			>
 				<div className="flex justify-between items-end">
 					<QuestionSetsTabs modes={validModes} />
-					<ManagementCreateQuestionButton />
+					<Onboarding stepKey="new">
+						<ManagementCreateQuestionButton />
+					</Onboarding>
 				</div>
 
 				{validModes.includes("making") && (

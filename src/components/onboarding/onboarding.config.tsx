@@ -1,5 +1,6 @@
 import type { Placement } from "@floating-ui/react-dom";
 import type { ReactNode } from "react";
+import OnboardingAddCircle from "@/assets/icons/onboarding-add-circle.svg";
 import OnboardingBadge from "@/assets/icons/onboarding-badge.svg";
 import OnboardingBell from "@/assets/icons/onboarding-bell.svg";
 import OnboardingChart from "@/assets/icons/onboarding-chart.svg";
@@ -96,13 +97,12 @@ export const ONBOARDING_STEPS: Record<string, OnboardingStep> = {
 		icon: <OnboardingCheckCircle />,
 		placement: "bottom",
 	},
-	// new: {
-	// 	description: "새로운 문제 셋을 생성해보세요!",
-	// 	icon: <OnboardingAddCircle />,
-	// 	placement: "bottom",
-	// },
+	new: {
+		description: "새로운 문제 셋을 생성해보세요!",
+		icon: <OnboardingAddCircle />,
+		placement: "bottom",
+	},
 
-	// QUESTION_MANAGE
 	"access-open": {
 		description: "Player에게 문제가 공개돼요",
 		icon: <OnboardingLock />,

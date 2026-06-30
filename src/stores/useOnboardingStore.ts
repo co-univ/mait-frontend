@@ -13,6 +13,7 @@ interface OnboardingState {
 	currentStepIndex: number;
 	isActive: boolean;
 	isFinishModalOpen: boolean;
+	questionManageIds: { questionSetId: number; questionId: number } | null;
 }
 
 interface OnboardingStoreActions {
@@ -22,6 +23,7 @@ interface OnboardingStoreActions {
 	setCurrentStepIndex: (i: number) => void;
 	setIsActive: (v: boolean) => void;
 	setIsFinishModalOpen: (v: boolean) => void;
+	setQuestionManageIds: (ids: { questionSetId: number; questionId: number } | null) => void;
 	reset: () => void;
 }
 
@@ -36,6 +38,7 @@ const INITIAL_STATE: OnboardingState = {
 	currentStepIndex: 0,
 	isActive: false,
 	isFinishModalOpen: false,
+	questionManageIds: null,
 };
 
 //
@@ -52,6 +55,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 			setCurrentStepIndex: (i) => set({ currentStepIndex: i }),
 			setIsActive: (v) => set({ isActive: v }),
 			setIsFinishModalOpen: (v) => set({ isFinishModalOpen: v }),
+			setQuestionManageIds: (ids) => set({ questionManageIds: ids }),
 			reset: () => set(INITIAL_STATE),
 		}),
 		{
@@ -63,6 +67,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 				currentStepIndex: state.currentStepIndex,
 				isActive: state.isActive,
 				isFinishModalOpen: state.isFinishModalOpen,
+				questionManageIds: state.questionManageIds,
 			}),
 		},
 	),
