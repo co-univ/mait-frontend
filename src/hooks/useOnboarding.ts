@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
 	ONBOARDING_STEPS_BY_CODE,
@@ -6,7 +7,7 @@ import {
 } from "@/components/onboarding/onboarding.config";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
-import { apiHooks } from "@/libs/api";
+import { apiClient, apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { createPath } from "@/utils/create-path";
@@ -34,6 +35,7 @@ const getOnboardingPath = (code: OnboardingCode): string => {
 
 const useOnboarding = () => {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const {
 		pendingCodes,
@@ -201,6 +203,24 @@ const useOnboarding = () => {
 		reset();
 	};
 
+	const neverShowOnboarding = () => {
+		const { pendingCodes: codes, pendingScreenIds: screenIds } =
+			useOnboardingStore.getState();
+		setIsActive(false);
+		for (const code of codes) {
+			sessionStorage.setItem(getSessionKey(code), "true");
+		}
+		reset();
+		for (const screenId of screenIds) {
+			apiClient.POST("/api/v1/onboarding/screens/view", {
+				body: { screenId, dismissed: true },
+			});
+		}
+		queryClient.invalidateQueries({
+			queryKey: apiHooks.queryOptions("get", "/api/v1/onboarding/screens/unviewed", {}).queryKey,
+		});
+	};
+
 	const goToStep = (flatIndex: number) => {
 		if (!isActive) return;
 		const { codeIndex, stepIndex } = fromFlatIndex(flatIndex);
@@ -243,6 +263,7 @@ const useOnboarding = () => {
 		nextStep,
 		goToStep,
 		closeOnboarding,
+		neverShowOnboarding,
 		reset,
 		setIsFinishModalOpen,
 		markCompletedForSession,
