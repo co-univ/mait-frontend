@@ -9,7 +9,7 @@ import type {
 //
 //
 
-type CreationPublishQuestionSetState = UpdateQuestionSetApiRequest & {
+export type CreationPublishQuestionSetState = UpdateQuestionSetApiRequest & {
 	categories: QuestionSetCategoryApiResponse[];
 };
 
