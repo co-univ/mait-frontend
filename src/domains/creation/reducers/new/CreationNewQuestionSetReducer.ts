@@ -37,6 +37,8 @@ type CreationNewQuestionSetAction =
 			payload: number;
 	  }
 	| { type: "SET_TITLE"; payload: string }
+	| { type: "SET_SOLVE_MODE"; payload: QuestionSetSolveMode }
+	| { type: "SET_VISIBILITY"; payload: QuestionSetVisibility }
 	| {
 			type: "SET_QUESTION_COUNT_CHECK";
 			payload: { checked: boolean; type: QuestionCount["type"] };
@@ -120,6 +122,16 @@ export const creationNewQuestionSetReducer = (
 			return {
 				...state,
 				title: action.payload,
+			};
+		case "SET_SOLVE_MODE":
+			return {
+				...state,
+				solveMode: action.payload,
+			};
+		case "SET_VISIBILITY":
+			return {
+				...state,
+				visibility: action.payload,
 			};
 		case "SET_QUESTION_COUNT_CHECK": {
 			const newCounts = !action.payload.checked

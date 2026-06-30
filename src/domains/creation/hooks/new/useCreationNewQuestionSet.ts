@@ -5,8 +5,11 @@ import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import { apiClient } from "@/libs/api";
 import type {
+	CreateQuestionSetApiRequest,
 	QuestionCount,
 	QuestionSetCategoryApiResponse,
+	QuestionSetSolveMode,
+	QuestionSetVisibility,
 } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import { CREATION_ROUTE_PATH } from "../../creation.routes";
@@ -42,14 +45,19 @@ interface UseCreationQuestionSetReturn {
 	handleMaterialUpload: (file: File | null) => void;
 	handleMaterialsDelete: (index: number) => void;
 	handleInstructionChange: (instruction: string) => void;
+	handleSolveModeChange: (solveMode: QuestionSetSolveMode) => void;
+	handleVisibilityChange: (visibility: QuestionSetVisibility) => void;
 	handleCreateButtonClick: () => Promise<void>;
+	isManualType: boolean;
+	isQuestionTypeChecked: (type: QuestionCount["type"]) => boolean;
+	getQuestionCountCount: (type: QuestionCount["type"]) => number | undefined;
 }
 
 //
 //
 //
 
-const useCreationQuesetionSet = (): UseCreationQuestionSetReturn => {
+const useCreationNewQuestionSet = (): UseCreationQuestionSetReturn => {
 	const navigate = useNavigate();
 
 	const { activeTeam } = useTeams();
@@ -73,8 +81,21 @@ const useCreationQuesetionSet = (): UseCreationQuestionSetReturn => {
 		!questionSet.teamId,
 		!questionSet.creationType,
 		!questionSet.title,
-		questionSet.counts?.reduce((acc, cur) => acc + (cur?.count ?? 0), 0) === 0,
+		questionSet.creationType === "AI_GENERATED" &&
+			questionSet.counts?.reduce((acc, cur) => acc + (cur?.count ?? 0), 0) ===
+				0,
 	].some(Boolean);
+
+	const isManualType = questionSet.creationType === "MANUAL";
+
+	const isQuestionTypeChecked = (type: QuestionCount["type"]) =>
+		questionSet.creationType === "AI_GENERATED" &&
+		!!questionSet.counts?.some((c) => c.type === type);
+
+	const getQuestionCountCount = (type: QuestionCount["type"]) =>
+		questionSet.creationType === "AI_GENERATED"
+			? questionSet.counts?.find((c) => c.type === type)?.count
+			: undefined;
 
 	/**
 	 *
@@ -202,11 +223,34 @@ const useCreationQuesetionSet = (): UseCreationQuestionSetReturn => {
 	/**
 	 *
 	 */
+	const handleSolveModeChange = (solveMode: QuestionSetSolveMode) => {
+		dispatch({ type: "SET_SOLVE_MODE", payload: solveMode });
+	};
+
+	/**
+	 *
+	 */
+	const handleVisibilityChange = (visibility: QuestionSetVisibility) => {
+		dispatch({ type: "SET_VISIBILITY", payload: visibility });
+	};
+
+	/**
+	 *
+	 */
 	const handleCreateButtonClick = async () => {
 		const questionSetRequestBody = {
 			...questionSet,
 			categoryIds: questionSet.categories?.map((category) => category.id) ?? [],
-		};
+			counts:
+				questionSet.creationType === "AI_GENERATED"
+					? questionSet.counts
+					: [
+							{
+								type: "MULTIPLE",
+								count: 1,
+							},
+						],
+		} as CreateQuestionSetApiRequest;
 
 		const res = await apiClient.POST("/api/v1/question-sets", {
 			body: {
@@ -249,6 +293,9 @@ const useCreationQuesetionSet = (): UseCreationQuestionSetReturn => {
 		questionSet,
 		isFileUploading,
 		disabledCreateQuestionSet,
+		isManualType,
+		isQuestionTypeChecked,
+		getQuestionCountCount,
 		handleCreationTypeChange,
 		handleCategoryAdd,
 		handleCategoryRemove,
@@ -259,8 +306,10 @@ const useCreationQuesetionSet = (): UseCreationQuestionSetReturn => {
 		handleMaterialUpload,
 		handleMaterialsDelete,
 		handleInstructionChange,
+		handleSolveModeChange,
+		handleVisibilityChange,
 		handleCreateButtonClick,
 	};
 };
 
-export default useCreationQuesetionSet;
+export default useCreationNewQuestionSet;
