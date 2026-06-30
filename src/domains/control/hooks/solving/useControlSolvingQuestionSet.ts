@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { notify } from "@/components/Toast";
-import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
+import { DASHBOARD_ROUTE_PATH } from "@/domains/dashboard/dashboard.routes";
 import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
 import { apiHooks } from "@/libs/api";
@@ -79,15 +79,9 @@ const useControlSolvingQuestionSet = ({
 				refetch();
 
 				navigate(
-					createPath(
-						MANAGEMENT_ROUTE_PATH.ROOT,
-						{
-							questionSetId,
-						},
-						{
-							mode: "live-time",
-						},
-					),
+					createPath(DASHBOARD_ROUTE_PATH.QUESTION_ROOT, {
+						questionSetId: questionSetId,
+					}),
 				);
 			},
 			onError: () => {
