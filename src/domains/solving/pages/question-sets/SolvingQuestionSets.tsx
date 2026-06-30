@@ -49,7 +49,7 @@ const SolvingQuestionSets = () => {
 					),
 				);
 			} else {
-				markCompletedForSession("QUESTION_SOLVE");
+				markCompletedForSession("QUESTION_SOLVE_SET_LIST");
 			}
 
 			reset();
@@ -63,7 +63,7 @@ const SolvingQuestionSets = () => {
 			return;
 		}
 
-		startOnboardingForCode("QUESTION_SOLVE");
+		startOnboardingForCode("QUESTION_SOLVE_SET_LIST");
 	}, [isUnviewedLoaded]);
 
 	const validModes = (

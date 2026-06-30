@@ -49,7 +49,7 @@ const ControlLiveSolving = () => {
 					),
 				);
 			} else {
-				markCompletedForSession("QUESTION_MANAGE");
+				markCompletedForSession("QUESTION_MANAGE_DETAIL");
 			}
 
 			reset();
@@ -63,7 +63,7 @@ const ControlLiveSolving = () => {
 			return;
 		}
 
-		startOnboardingForCode("QUESTION_MANAGE", { questionSetId, questionId });
+		startOnboardingForCode("QUESTION_MANAGE_DETAIL", { questionSetId, questionId });
 	}, [isUnviewedLoaded]);
 
 	const { questionSet, handleQuestionSetStart, handleQuestionSetEnd } =

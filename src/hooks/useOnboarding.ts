@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	ONBOARDING_STEPS_BY_CODE,
 	type OnboardingCode,
-	QUESTION_MANAGE_PARTICIPANT_START_INDEX,
 } from "@/components/onboarding/onboarding.config";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
@@ -21,22 +21,11 @@ const getSessionKey = (code: OnboardingCode) =>
 const DUMMY_QUESTION_SET_ID = 0;
 const DUMMY_QUESTION_ID = 0;
 
-const getOnboardingPath = (code: OnboardingCode, stepIndex: number): string => {
-	if (code === "HOME_GUIDE" || code === "QUESTION_SOLVE") {
+const getOnboardingPath = (code: OnboardingCode): string => {
+	if (code === "HOME_GUIDE" || code === "QUESTION_SOLVE_SET_LIST" || code === "QUESTION_MANAGE_SET_LIST") {
 		return SOLVING_ROUTE_PATH.QUESTION_SETS;
 	}
-
-	if (stepIndex >= QUESTION_MANAGE_PARTICIPANT_START_INDEX) {
-		return createPath(CONTROL_ROUTE_PATH.LIVE_PARTICIPANT, {
-			questionSetId: DUMMY_QUESTION_SET_ID,
-			questionId: DUMMY_QUESTION_ID,
-		});
-	}
-
-	return createPath(CONTROL_ROUTE_PATH.LIVE_SOLVING, {
-		questionSetId: DUMMY_QUESTION_SET_ID,
-		questionId: DUMMY_QUESTION_ID,
-	});
+	return SOLVING_ROUTE_PATH.QUESTION_SETS;
 };
 
 //
@@ -73,11 +62,25 @@ const useOnboarding = () => {
 			{ staleTime: Infinity },
 		);
 
+	// If persisted state contains an unknown code (e.g. old enum values), reset it
+	useEffect(() => {
+		if (
+			pendingCodes.length > 0 &&
+			pendingCodes.some((c) => !ONBOARDING_STEPS_BY_CODE[c])
+		) {
+			reset();
+		}
+	}, [pendingCodes, reset]);
+
 	//
 	//
 	//
 
-	const currentCode = pendingCodes[currentCodeIndex] ?? null;
+	const currentCode =
+		pendingCodes[currentCodeIndex] &&
+		ONBOARDING_STEPS_BY_CODE[pendingCodes[currentCodeIndex]]
+			? pendingCodes[currentCodeIndex]
+			: null;
 	const currentStepKey = currentCode
 		? (ONBOARDING_STEPS_BY_CODE[currentCode][currentStepIndex] ?? null)
 		: null;
@@ -123,9 +126,17 @@ const useOnboarding = () => {
 	const startOnboardingForCode = (
 		code: OnboardingCode,
 		ids?: { questionSetId: number; questionId: number },
+		{ force = false }: { force?: boolean } = {},
 	) => {
-		if (!canStartCode(code)) {
+		if (!force && !canStartCode(code)) {
 			return;
+		}
+
+		// When forced, still check session and unviewed (skip only the isActive guard)
+		if (force) {
+			if (sessionStorage.getItem(getSessionKey(code)) === "true") return;
+			const unviewedScreens = unviewedScreensData?.data ?? [];
+			if (!unviewedScreens.some((s) => s.code === code)) return;
 		}
 
 		const unviewedScreens = unviewedScreensData?.data ?? [];
@@ -137,7 +148,7 @@ const useOnboarding = () => {
 		setCurrentCodeIndex(0);
 		setCurrentStepIndex(0);
 
-		if (code === "QUESTION_MANAGE" && ids) {
+		if ((code === "QUESTION_MANAGE_DETAIL" || code === "QUESTION_MANAGE_NEXT_ROUND") && ids) {
 			setQuestionManageIds(ids);
 		}
 
@@ -157,21 +168,6 @@ const useOnboarding = () => {
 	const finishOnboarding = () => {
 		setIsActive(false);
 		setIsFinishModalOpen(true);
-
-		// After QUESTION_MANAGE participant steps, navigate back to the solving page
-		const code = pendingCodes[currentCodeIndex];
-		if (
-			code === "QUESTION_MANAGE" &&
-			currentStepIndex >= QUESTION_MANAGE_PARTICIPANT_START_INDEX
-		) {
-			const ids = questionManageIds ?? {
-				questionSetId: DUMMY_QUESTION_SET_ID,
-				questionId: DUMMY_QUESTION_ID,
-			};
-			navigate(
-				createPath(CONTROL_ROUTE_PATH.LIVE_SOLVING, ids),
-			);
-		}
 	};
 
 	const finishCode = (nextCodeIndex: number) => {
@@ -191,19 +187,6 @@ const useOnboarding = () => {
 		if (nextStepIndex >= steps.length) {
 			finishCode(currentCodeIndex + 1);
 			return;
-		}
-
-		if (
-			currentCode === "QUESTION_MANAGE" &&
-			nextStepIndex === QUESTION_MANAGE_PARTICIPANT_START_INDEX
-		) {
-			const ids = questionManageIds ?? {
-				questionSetId: DUMMY_QUESTION_SET_ID,
-				questionId: DUMMY_QUESTION_ID,
-			};
-			navigate(
-				createPath(CONTROL_ROUTE_PATH.LIVE_PARTICIPANT, ids),
-			);
 		}
 
 		setCurrentStepIndex(nextStepIndex);
@@ -226,26 +209,20 @@ const useOnboarding = () => {
 		setCurrentCodeIndex(codeIndex);
 		setCurrentStepIndex(stepIndex);
 
-		if (
-			code === "QUESTION_MANAGE" &&
-			stepIndex >= QUESTION_MANAGE_PARTICIPANT_START_INDEX
-		) {
+		if (code === "QUESTION_MANAGE_NEXT_ROUND") {
 			const ids = questionManageIds ?? {
 				questionSetId: DUMMY_QUESTION_SET_ID,
 				questionId: DUMMY_QUESTION_ID,
 			};
 			navigate(createPath(CONTROL_ROUTE_PATH.LIVE_PARTICIPANT, ids));
-		} else if (
-			code === "QUESTION_MANAGE" &&
-			stepIndex < QUESTION_MANAGE_PARTICIPANT_START_INDEX
-		) {
+		} else if (code === "QUESTION_MANAGE_DETAIL") {
 			const ids = questionManageIds ?? {
 				questionSetId: DUMMY_QUESTION_SET_ID,
 				questionId: DUMMY_QUESTION_ID,
 			};
 			navigate(createPath(CONTROL_ROUTE_PATH.LIVE_SOLVING, ids));
 		} else {
-			navigate(getOnboardingPath(code, stepIndex));
+			navigate(getOnboardingPath(code));
 		}
 	};
 

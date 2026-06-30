@@ -110,7 +110,6 @@ export type MultipleQuestionApiResponse = components["schemas"]["MultipleQuestio
 export type MultipleQuestionSubmitAnswer = components["schemas"]["MultipleQuestionSubmitAnswer"];
 export type MultipleQuestionSubmitApiRequest = components["schemas"]["MultipleQuestionSubmitApiRequest"];
 export type OnboardingScreenApiResponse = components["schemas"]["OnboardingScreenApiResponse"];
-export type OnboardingScreenCode = components["schemas"]["OnboardingScreenCode"];
 export type OnboardingScreenUploadApiRequest = components["schemas"]["OnboardingScreenUploadApiRequest"];
 export type OnboardingViewRecordApiRequest = components["schemas"]["OnboardingViewRecordApiRequest"];
 export type OnboardingViewStatusApiResponse = components["schemas"]["OnboardingViewStatusApiResponse"];
