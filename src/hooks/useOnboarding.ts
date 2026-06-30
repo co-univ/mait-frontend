@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	ONBOARDING_STEPS_BY_CODE,
@@ -11,6 +11,7 @@ import { apiClient, apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { createPath } from "@/utils/create-path";
+import useUser from "./useUser";
 
 const getSessionKey = (code: OnboardingCode) =>
 	`onboarding-completed-session-${code}`;
@@ -23,7 +24,11 @@ const DUMMY_QUESTION_SET_ID = 0;
 const DUMMY_QUESTION_ID = 0;
 
 const getOnboardingPath = (code: OnboardingCode): string => {
-	if (code === "HOME_GUIDE" || code === "QUESTION_SOLVE_SET_LIST" || code === "QUESTION_MANAGE_SET_LIST") {
+	if (
+		code === "HOME_GUIDE" ||
+		code === "QUESTION_SOLVE_SET_LIST" ||
+		code === "QUESTION_MANAGE_SET_LIST"
+	) {
 		return SOLVING_ROUTE_PATH.QUESTION_SETS;
 	}
 	return SOLVING_ROUTE_PATH.QUESTION_SETS;
@@ -36,6 +41,7 @@ const getOnboardingPath = (code: OnboardingCode): string => {
 const useOnboarding = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+	const { user } = useUser();
 
 	const {
 		pendingCodes,
@@ -61,7 +67,7 @@ const useOnboarding = () => {
 			"get",
 			"/api/v1/onboarding/screens/unviewed",
 			{},
-			{ staleTime: Infinity },
+			{ staleTime: Infinity, enabled: !!user },
 		);
 
 	// If persisted state contains an unknown code (e.g. old enum values), reset it
@@ -150,7 +156,11 @@ const useOnboarding = () => {
 		setCurrentCodeIndex(0);
 		setCurrentStepIndex(0);
 
-		if ((code === "QUESTION_MANAGE_DETAIL" || code === "QUESTION_MANAGE_NEXT_ROUND") && ids) {
+		if (
+			(code === "QUESTION_MANAGE_DETAIL" ||
+				code === "QUESTION_MANAGE_NEXT_ROUND") &&
+			ids
+		) {
 			setQuestionManageIds(ids);
 		}
 
@@ -217,7 +227,11 @@ const useOnboarding = () => {
 			});
 		}
 		queryClient.invalidateQueries({
-			queryKey: apiHooks.queryOptions("get", "/api/v1/onboarding/screens/unviewed", {}).queryKey,
+			queryKey: apiHooks.queryOptions(
+				"get",
+				"/api/v1/onboarding/screens/unviewed",
+				{},
+			).queryKey,
 		});
 	};
 
