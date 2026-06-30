@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
 	ONBOARDING_STEPS_BY_CODE,
@@ -34,6 +35,7 @@ const getOnboardingPath = (code: OnboardingCode): string => {
 
 const useOnboarding = () => {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const {
 		pendingCodes,
@@ -202,14 +204,21 @@ const useOnboarding = () => {
 	};
 
 	const neverShowOnboarding = () => {
-		const { pendingScreenIds: screenIds } = useOnboardingStore.getState();
+		const { pendingCodes: codes, pendingScreenIds: screenIds } =
+			useOnboardingStore.getState();
 		setIsActive(false);
+		for (const code of codes) {
+			sessionStorage.setItem(getSessionKey(code), "true");
+		}
 		reset();
 		for (const screenId of screenIds) {
 			apiClient.POST("/api/v1/onboarding/screens/view", {
 				body: { screenId, dismissed: true },
 			});
 		}
+		queryClient.invalidateQueries({
+			queryKey: apiHooks.queryOptions("get", "/api/v1/onboarding/screens/unviewed", {}).queryKey,
+		});
 	};
 
 	const goToStep = (flatIndex: number) => {
