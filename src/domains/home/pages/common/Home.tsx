@@ -20,7 +20,7 @@ const Home = () => {
 	const {
 		isFinishModalOpen,
 		isUnviewedLoaded,
-		startOnboarding,
+		startOnboardingForCode,
 		reset,
 		markCompletedForSession,
 	} = useOnboarding();
@@ -42,7 +42,7 @@ const Home = () => {
 					),
 				);
 			} else {
-				markCompletedForSession();
+				markCompletedForSession("HOME_GUIDE");
 			}
 
 			reset();
@@ -56,7 +56,7 @@ const Home = () => {
 			return;
 		}
 
-		startOnboarding();
+		startOnboardingForCode("HOME_GUIDE");
 	}, [isUnviewedLoaded]);
 
 	return (

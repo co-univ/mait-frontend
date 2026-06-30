@@ -1,19 +1,18 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-	ONBOARDING_CODE_ORDER,
 	ONBOARDING_STEPS_BY_CODE,
 	type OnboardingCode,
-	QUESTION_MANAGE_PARTICIPANT_START_INDEX,
 } from "@/components/onboarding/onboarding.config";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
-import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
 import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
 import { apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import { createPath } from "@/utils/create-path";
 
-const SESSION_COMPLETED_KEY = "onboarding-completed-session";
+const getSessionKey = (code: OnboardingCode) =>
+	`onboarding-completed-session-${code}`;
 
 //
 //
@@ -22,22 +21,11 @@ const SESSION_COMPLETED_KEY = "onboarding-completed-session";
 const DUMMY_QUESTION_SET_ID = 0;
 const DUMMY_QUESTION_ID = 0;
 
-const getOnboardingPath = (code: OnboardingCode, stepIndex: number): string => {
-	if (code === "HOME_GUIDE" || code === "QUESTION_SOLVE") {
+const getOnboardingPath = (code: OnboardingCode): string => {
+	if (code === "HOME_GUIDE" || code === "QUESTION_SOLVE_SET_LIST" || code === "QUESTION_MANAGE_SET_LIST") {
 		return SOLVING_ROUTE_PATH.QUESTION_SETS;
 	}
-
-	if (stepIndex >= QUESTION_MANAGE_PARTICIPANT_START_INDEX) {
-		return createPath(CONTROL_ROUTE_PATH.LIVE_PARTICIPANT, {
-			questionSetId: DUMMY_QUESTION_SET_ID,
-			questionId: DUMMY_QUESTION_ID,
-		});
-	}
-
-	return createPath(CONTROL_ROUTE_PATH.LIVE_SOLVING, {
-		questionSetId: DUMMY_QUESTION_SET_ID,
-		questionId: DUMMY_QUESTION_ID,
-	});
+	return SOLVING_ROUTE_PATH.QUESTION_SETS;
 };
 
 //
@@ -53,12 +41,14 @@ const useOnboarding = () => {
 		currentStepIndex,
 		isActive,
 		isFinishModalOpen,
+		questionManageIds,
 		setPendingCodes,
 		setPendingScreenIds,
 		setCurrentCodeIndex,
 		setCurrentStepIndex,
 		setIsActive,
 		setIsFinishModalOpen,
+		setQuestionManageIds,
 		reset,
 	} = useOnboardingStore();
 
@@ -72,23 +62,35 @@ const useOnboarding = () => {
 			{ staleTime: Infinity },
 		);
 
+	// If persisted state contains an unknown code (e.g. old enum values), reset it
+	useEffect(() => {
+		if (
+			pendingCodes.length > 0 &&
+			pendingCodes.some((c) => !ONBOARDING_STEPS_BY_CODE[c])
+		) {
+			reset();
+		}
+	}, [pendingCodes, reset]);
+
 	//
 	//
 	//
 
-	const currentCode = pendingCodes[currentCodeIndex] ?? null;
+	const currentCode =
+		pendingCodes[currentCodeIndex] &&
+		ONBOARDING_STEPS_BY_CODE[pendingCodes[currentCodeIndex]]
+			? pendingCodes[currentCodeIndex]
+			: null;
 	const currentStepKey = currentCode
 		? (ONBOARDING_STEPS_BY_CODE[currentCode][currentStepIndex] ?? null)
 		: null;
 
-	const hasCompletedThisSession =
-		sessionStorage.getItem(SESSION_COMPLETED_KEY) === "true";
-
-	const canStart =
-		!isActive &&
-		!isFinishModalOpen &&
-		!hasCompletedThisSession &&
-		pendingCodes.length === 0;
+	const canStartCode = (code: OnboardingCode): boolean => {
+		if (isActive || isFinishModalOpen) return false;
+		if (sessionStorage.getItem(getSessionKey(code)) === "true") return false;
+		const unviewedScreens = unviewedScreensData?.data ?? [];
+		return unviewedScreens.some((s) => s.code === code);
+	};
 
 	const totalSteps = pendingCodes.reduce(
 		(sum, code) => sum + ONBOARDING_STEPS_BY_CODE[code].length,
@@ -121,80 +123,59 @@ const useOnboarding = () => {
 	//
 	//
 
-	/**
-	 * 
-	 */
-	const startOnboarding = () => {
-		if (!canStart) {
+	const startOnboardingForCode = (
+		code: OnboardingCode,
+		ids?: { questionSetId: number; questionId: number },
+		{ force = false }: { force?: boolean } = {},
+	) => {
+		if (!force && !canStartCode(code)) {
 			return;
+		}
+
+		// When forced, still check session and unviewed (skip only the isActive guard)
+		if (force) {
+			if (sessionStorage.getItem(getSessionKey(code)) === "true") return;
+			const unviewedScreens = unviewedScreensData?.data ?? [];
+			if (!unviewedScreens.some((s) => s.code === code)) return;
 		}
 
 		const unviewedScreens = unviewedScreensData?.data ?? [];
+		const screen = unviewedScreens.find((s) => s.code === code);
+		const screenId = screen?.id;
 
-		const unviewedCodes = unviewedScreens
-			.map((s) => s.code)
-			.filter((code): code is OnboardingCode => code !== undefined);
-
-		const orderedCodes = ONBOARDING_CODE_ORDER.filter((code) =>
-			unviewedCodes.includes(code),
-		);
-
-		if (orderedCodes.length === 0) {
-			return;
-		}
-
-		const screenIds = unviewedScreens
-			.map((s) => s.id)
-			.filter((id): id is number => id !== undefined);
-
-		const firstCode = orderedCodes[0];
-
-		setPendingCodes(orderedCodes);
-		setPendingScreenIds(screenIds);
+		setPendingCodes([code]);
+		setPendingScreenIds(screenId !== undefined ? [screenId] : []);
 		setCurrentCodeIndex(0);
 		setCurrentStepIndex(0);
-		setIsActive(true);
 
-		if (firstCode === "HOME_GUIDE" && !isSidebarOpen) {
+		if ((code === "QUESTION_MANAGE_DETAIL" || code === "QUESTION_MANAGE_NEXT_ROUND") && ids) {
+			setQuestionManageIds(ids);
+		}
+
+		const needsSidebarOpen = code === "HOME_GUIDE" && !isSidebarOpen;
+		if (needsSidebarOpen) {
 			toggleSidebarOpen();
 		}
 
-		navigate(getOnboardingPath(firstCode, 0));
+		// Wait for sidebar/layout transition (300ms) to finish before activating
+		// onboarding so that tooltip target positions are stable.
+		const delay = needsSidebarOpen || isSidebarOpen ? 350 : 0;
+		setTimeout(() => {
+			setIsActive(true);
+		}, delay);
 	};
 
-
-	/**
-	 * 
-	 */
 	const finishOnboarding = () => {
 		setIsActive(false);
 		setIsFinishModalOpen(true);
-		navigate(HOME_ROUTE_PATH.ROOT);
 	};
 
-	/**
-	 * 
-	 */
 	const finishCode = (nextCodeIndex: number) => {
 		if (nextCodeIndex >= pendingCodes.length) {
 			finishOnboarding();
-			return;
-		}
-
-		const nextCode = pendingCodes[nextCodeIndex];
-
-		setCurrentCodeIndex(nextCodeIndex);
-		setCurrentStepIndex(0);
-		navigate(getOnboardingPath(nextCode, 0));
-
-		if (nextCode === "HOME_GUIDE" && !isSidebarOpen) {
-			toggleSidebarOpen();
 		}
 	};
 
-	/**
-	 * 
-	 */
 	const nextStep = () => {
 		if (!currentCode) {
 			return;
@@ -208,21 +189,16 @@ const useOnboarding = () => {
 			return;
 		}
 
-		if (
-			currentCode === "QUESTION_MANAGE" &&
-			nextStepIndex === QUESTION_MANAGE_PARTICIPANT_START_INDEX
-		) {
-			navigate(getOnboardingPath(currentCode, nextStepIndex));
-		}
-
 		setCurrentStepIndex(nextStepIndex);
 	};
 
 	const closeOnboarding = () => {
+		const code = currentCode;
 		setIsActive(false);
-		sessionStorage.setItem(SESSION_COMPLETED_KEY, "true");
+		if (code) {
+			sessionStorage.setItem(getSessionKey(code), "true");
+		}
 		reset();
-		navigate(HOME_ROUTE_PATH.ROOT);
 	};
 
 	const goToStep = (flatIndex: number) => {
@@ -232,23 +208,38 @@ const useOnboarding = () => {
 		if (!code) return;
 		setCurrentCodeIndex(codeIndex);
 		setCurrentStepIndex(stepIndex);
-		navigate(getOnboardingPath(code, stepIndex));
+
+		if (code === "QUESTION_MANAGE_NEXT_ROUND") {
+			const ids = questionManageIds ?? {
+				questionSetId: DUMMY_QUESTION_SET_ID,
+				questionId: DUMMY_QUESTION_ID,
+			};
+			navigate(createPath(CONTROL_ROUTE_PATH.LIVE_PARTICIPANT, ids));
+		} else if (code === "QUESTION_MANAGE_DETAIL") {
+			const ids = questionManageIds ?? {
+				questionSetId: DUMMY_QUESTION_SET_ID,
+				questionId: DUMMY_QUESTION_ID,
+			};
+			navigate(createPath(CONTROL_ROUTE_PATH.LIVE_SOLVING, ids));
+		} else {
+			navigate(getOnboardingPath(code));
+		}
 	};
 
-	const markCompletedForSession = () => {
-		sessionStorage.setItem(SESSION_COMPLETED_KEY, "true");
+	const markCompletedForSession = (code: OnboardingCode) => {
+		sessionStorage.setItem(getSessionKey(code), "true");
 	};
 
 	return {
 		isActive,
 		isFinishModalOpen,
 		isUnviewedLoaded,
-		canStart,
+		canStartCode,
 		currentCode,
 		currentStepKey,
 		totalSteps,
 		currentFlatIndex,
-		startOnboarding,
+		startOnboardingForCode,
 		nextStep,
 		goToStep,
 		closeOnboarding,

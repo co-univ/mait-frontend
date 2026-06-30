@@ -2531,13 +2531,12 @@ export interface components {
             email: string;
             password: string;
         };
-        /**
-         * @description 온보딩 화면 식별 코드
-         * @enum {string}
-         */
-        OnboardingScreenCode: "HOME_GUIDE" | "QUESTION_SOLVE" | "QUESTION_MANAGE";
         OnboardingScreenUploadApiRequest: {
-            code: components["schemas"]["OnboardingScreenCode"];
+            /**
+             * @description 온보딩 화면 식별 코드
+             * @example QUESTION_SOLVE
+             */
+            code: string;
             /** @description 어드민 표시용 화면 이름 */
             title: string;
             targetTeamRole?: components["schemas"]["TeamUserRole"];
@@ -2557,7 +2556,11 @@ export interface components {
              * @description 온보딩 화면 PK
              */
             id: number;
-            code: components["schemas"]["OnboardingScreenCode"];
+            /**
+             * @description 온보딩 화면 식별 코드
+             * @example QUESTION_SOLVE
+             */
+            code: string;
             /** @description 어드민 표시용 화면 이름 */
             title: string;
             /** @description 전역 노출 여부 */
@@ -3424,12 +3427,12 @@ export interface components {
              * @example 1
              */
             id?: number;
+            targetTeamRole?: components["schemas"]["TeamUserRole"];
             /**
              * @description 온보딩 화면 코드
              * @example QUESTION_SOLVE
-             * @enum {string}
              */
-            code?: "HOME_GUIDE" | "QUESTION_SOLVE" | "QUESTION_MANAGE";
+            code?: string;
             /**
              * @description 온보딩 화면 이름
              * @example 문제 풀기 가이드
