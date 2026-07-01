@@ -11,6 +11,7 @@ interface OnboardingState {
 	pendingScreenIds: number[];
 	currentCodeIndex: number;
 	currentStepIndex: number;
+	startStepIndex: number;
 	isActive: boolean;
 	isFinishModalOpen: boolean;
 	questionManageIds: { questionSetId: number; questionId: number } | null;
@@ -22,6 +23,7 @@ interface OnboardingStoreActions {
 	setPendingScreenIds: (ids: number[]) => void;
 	setCurrentCodeIndex: (i: number) => void;
 	setCurrentStepIndex: (i: number) => void;
+	setStartStepIndex: (i: number) => void;
 	setIsActive: (v: boolean) => void;
 	setIsFinishModalOpen: (v: boolean) => void;
 	setQuestionManageIds: (ids: { questionSetId: number; questionId: number } | null) => void;
@@ -38,6 +40,7 @@ const INITIAL_STATE: OnboardingState = {
 	pendingScreenIds: [],
 	currentCodeIndex: 0,
 	currentStepIndex: 0,
+	startStepIndex: 0,
 	isActive: false,
 	isFinishModalOpen: false,
 	questionManageIds: null,
@@ -56,6 +59,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 			setPendingScreenIds: (ids) => set({ pendingScreenIds: ids }),
 			setCurrentCodeIndex: (i) => set({ currentCodeIndex: i }),
 			setCurrentStepIndex: (i) => set({ currentStepIndex: i }),
+			setStartStepIndex: (i) => set({ startStepIndex: i }),
 			setIsActive: (v) => set({ isActive: v }),
 			setIsFinishModalOpen: (v) => set({ isFinishModalOpen: v }),
 			setQuestionManageIds: (ids) => set({ questionManageIds: ids }),
@@ -70,6 +74,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 				pendingScreenIds: state.pendingScreenIds,
 				currentCodeIndex: state.currentCodeIndex,
 				currentStepIndex: state.currentStepIndex,
+				startStepIndex: state.startStepIndex,
 				isActive: state.isActive,
 				isFinishModalOpen: state.isFinishModalOpen,
 				questionManageIds: state.questionManageIds,

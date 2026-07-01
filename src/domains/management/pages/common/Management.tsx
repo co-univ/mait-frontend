@@ -68,7 +68,9 @@ const Management = () => {
 			return;
 		}
 
-		startOnboardingForCode("QUESTION_MANAGE_SET_LIST");
+		startOnboardingForCode("QUESTION_MANAGE_SET_LIST", {
+			initialStepIndex: activeTeam?.teamType === "PERSONAL" ? 1 : 0,
+		});
 	}, [isUnviewedLoaded]);
 
 	const validModes = (

@@ -37,12 +37,14 @@ const useOnboarding = () => {
 		pendingCodes,
 		currentCodeIndex,
 		currentStepIndex,
+		startStepIndex,
 		isActive,
 		isFinishModalOpen,
 		setPendingCodes,
 		setPendingScreenIds,
 		setCurrentCodeIndex,
 		setCurrentStepIndex,
+		setStartStepIndex,
 		setIsActive,
 		setIsFinishModalOpen,
 		reset,
@@ -91,20 +93,20 @@ const useOnboarding = () => {
 	const totalSteps = pendingCodes.reduce(
 		(sum, code) => sum + ONBOARDING_STEPS_BY_CODE[code].length,
 		0,
-	);
+	) - startStepIndex;
 
 	const getFlatIndex = (codeIdx: number, stepIdx: number): number => {
 		let flat = 0;
 		for (let i = 0; i < codeIdx; i++) {
 			flat += ONBOARDING_STEPS_BY_CODE[pendingCodes[i]].length;
 		}
-		return flat + stepIdx;
+		return flat + stepIdx - startStepIndex;
 	};
 
 	const fromFlatIndex = (
 		flat: number,
 	): { codeIndex: number; stepIndex: number } => {
-		let remaining = flat;
+		let remaining = flat + startStepIndex;
 		for (let i = 0; i < pendingCodes.length; i++) {
 			const len = ONBOARDING_STEPS_BY_CODE[pendingCodes[i]].length;
 			if (remaining < len) return { codeIndex: i, stepIndex: remaining };
@@ -121,7 +123,7 @@ const useOnboarding = () => {
 
 	const startOnboardingForCode = (
 		code: OnboardingCode,
-		{ force = false }: { force?: boolean } = {},
+		{ force = false, initialStepIndex = 0 }: { force?: boolean; initialStepIndex?: number } = {},
 	) => {
 		if (!force && !canStartCode(code)) {
 			return;
@@ -141,7 +143,8 @@ const useOnboarding = () => {
 		setPendingCodes([code]);
 		setPendingScreenIds(screenId !== undefined ? [screenId] : []);
 		setCurrentCodeIndex(0);
-		setCurrentStepIndex(0);
+		setCurrentStepIndex(initialStepIndex);
+		setStartStepIndex(initialStepIndex);
 
 		const needsSidebarOpen = code === "HOME_GUIDE" && !isSidebarOpen;
 		if (needsSidebarOpen) {
