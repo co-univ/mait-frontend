@@ -28,6 +28,7 @@ const ControlLiveSolving = () => {
 		isFinishModalOpen,
 		isUnviewedLoaded,
 		startOnboardingForCode,
+		cancelOnboarding,
 		reset,
 		markCompletedForSession,
 	} = useOnboarding();
@@ -65,6 +66,13 @@ const ControlLiveSolving = () => {
 
 		startOnboardingForCode("QUESTION_MANAGE_DETAIL", { questionSetId, questionId });
 	}, [isUnviewedLoaded]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: cancel onboarding on SPA navigation away (not on refresh)
+	useEffect(() => {
+		return () => {
+			cancelOnboarding();
+		};
+	}, []);
 
 	const { questionSet, handleQuestionSetStart, handleQuestionSetEnd } =
 		useControlSolvingQuestionSet({ questionSetId });

@@ -213,6 +213,12 @@ const useOnboarding = () => {
 		reset();
 	};
 
+	const cancelOnboarding = () => {
+		if (isActive || isFinishModalOpen) {
+			reset();
+		}
+	};
+
 	const neverShowOnboarding = () => {
 		const { pendingCodes: codes, pendingScreenIds: screenIds } =
 			useOnboardingStore.getState();
@@ -277,6 +283,7 @@ const useOnboarding = () => {
 		nextStep,
 		goToStep,
 		closeOnboarding,
+		cancelOnboarding,
 		neverShowOnboarding,
 		reset,
 		setIsFinishModalOpen,
