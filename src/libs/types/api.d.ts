@@ -1781,7 +1781,7 @@ export interface components {
          * @description 문제 셋 상태
          * @enum {string}
          */
-        QuestionSetStatus: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
+        QuestionSetStatus: "MAKING" | "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
         FillBlankAnswerDto: {
             /** Format: int64 */
             id?: number;
@@ -2904,7 +2904,7 @@ export interface components {
             /** @enum {string} */
             solveMode?: "LIVE_TIME" | "STUDY";
             /** @enum {string} */
-            status?: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
+            status?: "MAKING" | "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
             /** Format: int64 */
             teamId?: number;
             /** Format: int64 */
@@ -3263,7 +3263,7 @@ export interface components {
              * @description 전역 진행 상태
              * @enum {string}
              */
-            status?: "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
+            status?: "MAKING" | "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
             /** @description 난이도 */
             difficulty?: string;
             /**
