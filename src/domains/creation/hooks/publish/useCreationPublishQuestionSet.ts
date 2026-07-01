@@ -186,13 +186,15 @@ const useCreationPublishQuestionSet = ({
 	//
 	useEffect(() => {
 		if (data?.data) {
-			const { title, difficulty, categories } = data.data;
+			const { title, difficulty, categories, solveMode } = data.data;
 
 			dispatch({ type: "SET_TITLE", payload: title ?? "" });
 			dispatch({ type: "SET_DIFFICULTY", payload: difficulty ?? "" });
 			dispatch({
 				type: "SET_MODE",
-				payload: activeTeam?.teamType === "PERSONAL" ? "STUDY" : "LIVE_TIME",
+				payload:
+					solveMode ??
+					(activeTeam?.teamType === "PERSONAL" ? "STUDY" : "LIVE_TIME"),
 			});
 			dispatch({
 				type: "SET_CATEGORIES",
