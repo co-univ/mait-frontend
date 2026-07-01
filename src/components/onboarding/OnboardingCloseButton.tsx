@@ -1,7 +1,7 @@
 import { CircleX } from "lucide-react";
-import { useState } from "react";
 import CheckBox from "@/components/CheckBox";
 import useOnboarding from "@/hooks/useOnboarding";
+import useOnboardingStore from "@/stores/useOnboardingStore";
 
 //
 //
@@ -9,10 +9,11 @@ import useOnboarding from "@/hooks/useOnboarding";
 
 const OnboardingCloseButton = () => {
 	const { closeOnboarding, neverShowOnboarding } = useOnboarding();
-	const [neverShow, setNeverShow] = useState(false);
+	const isDismissed = useOnboardingStore((s) => s.isDismissed);
+	const setIsDismissed = useOnboardingStore((s) => s.setIsDismissed);
 
 	const handleClose = () => {
-		if (neverShow) {
+		if (isDismissed) {
 			neverShowOnboarding();
 		} else {
 			closeOnboarding();
@@ -24,10 +25,10 @@ const OnboardingCloseButton = () => {
 			<button
 				type="button"
 				className="flex items-center gap-gap-9"
-				onClick={() => setNeverShow((prev) => !prev)}
+				onClick={() => setIsDismissed(!isDismissed)}
 			>
 				<CheckBox
-					checked={neverShow}
+					checked={isDismissed}
 					size={32}
 					onChange={() => {}}
 					className="text-color-alpha-white100 pointer-events-none"

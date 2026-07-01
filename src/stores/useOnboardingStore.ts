@@ -14,6 +14,7 @@ interface OnboardingState {
 	isActive: boolean;
 	isFinishModalOpen: boolean;
 	questionManageIds: { questionSetId: number; questionId: number } | null;
+	isDismissed: boolean;
 }
 
 interface OnboardingStoreActions {
@@ -24,6 +25,7 @@ interface OnboardingStoreActions {
 	setIsActive: (v: boolean) => void;
 	setIsFinishModalOpen: (v: boolean) => void;
 	setQuestionManageIds: (ids: { questionSetId: number; questionId: number } | null) => void;
+	setIsDismissed: (v: boolean) => void;
 	reset: () => void;
 }
 
@@ -39,6 +41,7 @@ const INITIAL_STATE: OnboardingState = {
 	isActive: false,
 	isFinishModalOpen: false,
 	questionManageIds: null,
+	isDismissed: false,
 };
 
 //
@@ -56,6 +59,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 			setIsActive: (v) => set({ isActive: v }),
 			setIsFinishModalOpen: (v) => set({ isFinishModalOpen: v }),
 			setQuestionManageIds: (ids) => set({ questionManageIds: ids }),
+			setIsDismissed: (v) => set({ isDismissed: v }),
 			reset: () => set(INITIAL_STATE),
 		}),
 		{
@@ -69,6 +73,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 				isActive: state.isActive,
 				isFinishModalOpen: state.isFinishModalOpen,
 				questionManageIds: state.questionManageIds,
+				isDismissed: state.isDismissed,
 			}),
 		},
 	),
