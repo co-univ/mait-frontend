@@ -1757,7 +1757,11 @@ export interface components {
             status?: components["schemas"]["QuestionSetStatus"];
             /** Format: int64 */
             questionCount: number;
+            /** @description 문제 유형별 개수 (전체 유형 포함, 없는 유형은 0) */
+            questionTypeCounts: components["schemas"]["QuestionTypeCount"][];
             difficulty?: string;
+            /** @description 문제 셋 보충 설명 */
+            instruction?: string;
             /** @description 문제 셋에 부착된 카테고리 목록 */
             categories: components["schemas"]["QuestionSetCategoryDto"][];
             /** Format: date-time */
@@ -1782,6 +1786,13 @@ export interface components {
          * @enum {string}
          */
         QuestionSetStatus: "MAKING" | "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
+        /** @description 문제 유형별 개수 (전체 유형 포함, 없는 유형은 0) */
+        QuestionTypeCount: {
+            /** @enum {string} */
+            type?: "SHORT" | "MULTIPLE" | "ORDERING" | "FILL_BLANK";
+            /** Format: int64 */
+            count?: number;
+        };
         FillBlankAnswerDto: {
             /** Format: int64 */
             id?: number;
@@ -2910,8 +2921,10 @@ export interface components {
             /** Format: int64 */
             questionCount?: number;
             difficulty?: string;
+            instruction?: string;
             materials?: components["schemas"]["MaterialDto"][];
             categories?: components["schemas"]["QuestionSetCategoryDto"][];
+            questionTypeCounts?: components["schemas"]["QuestionTypeCount"][];
             /** Format: date-time */
             updatedAt?: string;
             /**

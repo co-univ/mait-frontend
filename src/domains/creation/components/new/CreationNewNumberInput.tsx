@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 //
@@ -70,7 +71,15 @@ const CreationNewNumberInput = ({
 	};
 
 	return (
-		<div className="flex items-center gap-gap-3 h-[28px] pl-padding-2 border-b border-color-alpha-black100">
+		<div
+			className={clsx(
+				"flex items-center gap-gap-3 h-[28px] pl-padding-2 border-b",
+				{
+					"border-color-alpha-black100": checked,
+					"border-color-gray-30": !checked,
+				},
+			)}
+		>
 			<input
 				type="number"
 				disabled={!checked}

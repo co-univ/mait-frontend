@@ -3,6 +3,8 @@ import type {
 	MaterialDto,
 	QuestionCount,
 	QuestionSetCategoryApiResponse,
+	QuestionSetSolveMode,
+	QuestionSetVisibility,
 } from "@/libs/types";
 
 //
@@ -34,7 +36,9 @@ type CreationNewQuestionSetAction =
 			type: "REMOVE_CATEGORY";
 			payload: number;
 	  }
-	| { type: "SET_SUBJECT"; payload: string }
+	| { type: "SET_TITLE"; payload: string }
+	| { type: "SET_SOLVE_MODE"; payload: QuestionSetSolveMode }
+	| { type: "SET_VISIBILITY"; payload: QuestionSetVisibility }
 	| {
 			type: "SET_QUESTION_COUNT_CHECK";
 			payload: { checked: boolean; type: QuestionCount["type"] };
@@ -74,11 +78,14 @@ type CreationNewQuestionSetAction =
 
 export const creationNewQuestionSetInitialState = (
 	teamId: number,
+	teamType?: string,
 ): CreationNewQuestionSetState => ({
 	teamId,
 	creationType: "AI_GENERATED",
 	categories: [],
-	subject: "",
+	title: "",
+	solveMode: (teamType === "PERSONAL" ? "STUDY" : "LIVE_TIME") as QuestionSetSolveMode,
+	visibility: "PUBLIC" as QuestionSetVisibility,
 	counts: [],
 	difficulty: "",
 	materials: undefined,
@@ -111,10 +118,20 @@ export const creationNewQuestionSetReducer = (
 					(category) => category.id !== action.payload,
 				),
 			};
-		case "SET_SUBJECT":
+		case "SET_TITLE":
 			return {
 				...state,
-				subject: action.payload,
+				title: action.payload,
+			};
+		case "SET_SOLVE_MODE":
+			return {
+				...state,
+				solveMode: action.payload,
+			};
+		case "SET_VISIBILITY":
+			return {
+				...state,
+				visibility: action.payload,
 			};
 		case "SET_QUESTION_COUNT_CHECK": {
 			const newCounts = !action.payload.checked

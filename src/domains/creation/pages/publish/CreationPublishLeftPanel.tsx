@@ -10,7 +10,7 @@ import CreationPanelTextarea from "../../components/common/CreationPanelTextarea
 //
 
 type CreationPublishLeftPanelProps = {
-	title: string;
+	title?: string;
 	visibility: QuestionSetVisibility;
 	solveMode: QuestionSetSolveMode;
 	onChangeTitle: (title: string) => void;
