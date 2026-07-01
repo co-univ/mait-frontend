@@ -63,8 +63,9 @@ const ControlLiveSolving = () => {
 			return;
 		}
 
-		startOnboardingForCode("QUESTION_MANAGE_DETAIL", { questionSetId, questionId });
+		startOnboardingForCode("QUESTION_MANAGE_DETAIL");
 	}, [isUnviewedLoaded]);
+
 
 	const { questionSet, handleQuestionSetStart, handleQuestionSetEnd } =
 		useControlSolvingQuestionSet({ questionSetId });

@@ -1,37 +1,27 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
 	ONBOARDING_STEPS_BY_CODE,
 	type OnboardingCode,
 } from "@/components/onboarding/onboarding.config";
-import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
+import { HOME_ROUTE_PATH } from "@/domains/home/home.routes";
+import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
 import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
 import { apiClient, apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
-import { createPath } from "@/utils/create-path";
 import useUser from "./useUser";
 
 const getSessionKey = (code: OnboardingCode) =>
 	`onboarding-completed-session-${code}`;
 
-//
-//
-//
-
-const DUMMY_QUESTION_SET_ID = 0;
-const DUMMY_QUESTION_ID = 0;
-
-const getOnboardingPath = (code: OnboardingCode): string => {
-	if (
-		code === "HOME_GUIDE" ||
-		code === "QUESTION_SOLVE_SET_LIST" ||
-		code === "QUESTION_MANAGE_SET_LIST"
-	) {
-		return SOLVING_ROUTE_PATH.QUESTION_SETS;
-	}
-	return SOLVING_ROUTE_PATH.QUESTION_SETS;
+const ONBOARDING_CODE_PATH_PREFIX: Record<OnboardingCode, string> = {
+	HOME_GUIDE: HOME_ROUTE_PATH.ROOT,
+	QUESTION_SOLVE_SET_LIST: SOLVING_ROUTE_PATH.QUESTION_SETS,
+	QUESTION_MANAGE_SET_LIST: MANAGEMENT_ROUTE_PATH.ROOT,
+	QUESTION_MANAGE_DETAIL: "/control/live/solving/",
+	QUESTION_MANAGE_NEXT_ROUND: "/control/live/participant/",
 };
 
 //
@@ -39,9 +29,9 @@ const getOnboardingPath = (code: OnboardingCode): string => {
 //
 
 const useOnboarding = () => {
-	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { user } = useUser();
+	const location = useLocation();
 
 	const {
 		pendingCodes,
@@ -49,14 +39,12 @@ const useOnboarding = () => {
 		currentStepIndex,
 		isActive,
 		isFinishModalOpen,
-		questionManageIds,
 		setPendingCodes,
 		setPendingScreenIds,
 		setCurrentCodeIndex,
 		setCurrentStepIndex,
 		setIsActive,
 		setIsFinishModalOpen,
-		setQuestionManageIds,
 		reset,
 	} = useOnboardingStore();
 
@@ -133,7 +121,6 @@ const useOnboarding = () => {
 
 	const startOnboardingForCode = (
 		code: OnboardingCode,
-		ids?: { questionSetId: number; questionId: number },
 		{ force = false }: { force?: boolean } = {},
 	) => {
 		if (!force && !canStartCode(code)) {
@@ -155,14 +142,6 @@ const useOnboarding = () => {
 		setPendingScreenIds(screenId !== undefined ? [screenId] : []);
 		setCurrentCodeIndex(0);
 		setCurrentStepIndex(0);
-
-		if (
-			(code === "QUESTION_MANAGE_DETAIL" ||
-				code === "QUESTION_MANAGE_NEXT_ROUND") &&
-			ids
-		) {
-			setQuestionManageIds(ids);
-		}
 
 		const needsSidebarOpen = code === "HOME_GUIDE" && !isSidebarOpen;
 		if (needsSidebarOpen) {
@@ -213,6 +192,21 @@ const useOnboarding = () => {
 		reset();
 	};
 
+	const cancelOnboarding = () => {
+		if (isActive || isFinishModalOpen) {
+			reset();
+		}
+	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: cancel only on pathname change, not on isActive/currentCode changes
+	useEffect(() => {
+		if (!isActive || !currentCode) return;
+		const expectedPrefix = ONBOARDING_CODE_PATH_PREFIX[currentCode];
+		if (!location.pathname.startsWith(expectedPrefix)) {
+			cancelOnboarding();
+		}
+	}, [location.pathname]);
+
 	const neverShowOnboarding = () => {
 		const { pendingCodes: codes, pendingScreenIds: screenIds } =
 			useOnboardingStore.getState();
@@ -242,22 +236,6 @@ const useOnboarding = () => {
 		if (!code) return;
 		setCurrentCodeIndex(codeIndex);
 		setCurrentStepIndex(stepIndex);
-
-		if (code === "QUESTION_MANAGE_NEXT_ROUND") {
-			const ids = questionManageIds ?? {
-				questionSetId: DUMMY_QUESTION_SET_ID,
-				questionId: DUMMY_QUESTION_ID,
-			};
-			navigate(createPath(CONTROL_ROUTE_PATH.LIVE_PARTICIPANT, ids));
-		} else if (code === "QUESTION_MANAGE_DETAIL") {
-			const ids = questionManageIds ?? {
-				questionSetId: DUMMY_QUESTION_SET_ID,
-				questionId: DUMMY_QUESTION_ID,
-			};
-			navigate(createPath(CONTROL_ROUTE_PATH.LIVE_SOLVING, ids));
-		} else {
-			navigate(getOnboardingPath(code));
-		}
 	};
 
 	const markCompletedForSession = (code: OnboardingCode) => {
