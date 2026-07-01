@@ -4,10 +4,10 @@ import type {
 	QuestionCount,
 	QuestionSetCategoryApiResponse,
 } from "@/libs/types";
+import CreationCategoryField from "../../components/category/CreationCategoryField";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 import type { CreationNewQuestionSetState } from "../../reducers/new/CreationNewQuestionSetReducer";
-import CreationCategoryField from "../../components/category/CreationCategoryField";
 import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 
 //
@@ -17,14 +17,14 @@ import CreationNewLeftPanelCountsField from "./CreationNewLeftPanelCountsField";
 interface CreationNewLeftPanelProps {
 	creationType: CreationNewQuestionSetState["creationType"];
 	categories: QuestionSetCategoryApiResponse[];
-	subject: string;
+	title?: string;
 	counts?: QuestionCount[];
 	onCreationTypeChange: (
 		type: CreationNewQuestionSetState["creationType"],
 	) => void;
 	onCategoryAdd: (category: QuestionSetCategoryApiResponse) => void;
 	onCategoryRemove: (categoryId: number) => void;
-	onSubjectChange: (subject: string) => void;
+	onTitleChange: (title: string) => void;
 	onQuestionCountCheck: (
 		checked: boolean,
 		questionType: QuestionCount["type"],
@@ -42,12 +42,12 @@ interface CreationNewLeftPanelProps {
 const CreationNewLeftPanel = ({
 	creationType,
 	categories,
-	subject,
+	title,
 	counts,
 	onCreationTypeChange,
 	onCategoryAdd,
 	onCategoryRemove,
-	onSubjectChange,
+	onTitleChange,
 	onQuestionCountCheck,
 	onQuestionCountCountChange,
 }: CreationNewLeftPanelProps) => {
@@ -105,8 +105,8 @@ const CreationNewLeftPanel = ({
 				<CreationPanelTextarea
 					placeholder="ex. 네트워크"
 					minRows={1}
-					value={subject}
-					onChange={(e) => onSubjectChange(e.target.value)}
+					value={title}
+					onChange={(e) => onTitleChange(e.target.value)}
 				/>
 			</Field.Root>
 		);

@@ -1,7 +1,9 @@
 import { Award } from "lucide-react";
 import React from "react";
 import { useParams } from "react-router-dom";
+import Onboarding from "@/components/onboarding/Onboarding";
 import { Table } from "@/components/table";
+import useOnboarding from "@/hooks/useOnboarding";
 import type { UserApiResponse } from "@/libs/types";
 import ControlParticipantRankingUser from "../../../components/participant/ControlParticipantRankingUser";
 import { ControlParticipantRankingPanel } from "../../../components/participant/ranking-panel";
@@ -13,6 +15,8 @@ import useControlParticipantRanking from "../../../hooks/paticipant/useControlPa
 
 const ControlLiveParticipantCorrectRanking = () => {
 	const questionSetId = Number(useParams().questionSetId);
+
+	const { isActive, currentStepKey, nextStep } = useOnboarding();
 
 	const {
 		ranking,
@@ -76,16 +80,22 @@ const ControlLiveParticipantCorrectRanking = () => {
 
 	return (
 		<ControlParticipantRankingPanel.Root>
-			<ControlParticipantRankingPanel.Header
-				icon={<Award />}
-				title="정답수 기준 등수"
-			/>
-			<ControlParticipantRankingPanel.Selector
-				ranking="정답자"
-				selectedRank={selectedRank}
-				onRankChange={handleSelectRank}
-				onApplySelection={handleApplyRankSelection}
-			/>
+			<Onboarding
+				stepKey="correct-scorer"
+				show={isActive && currentStepKey === "correct-scorer"}
+				onNext={nextStep}
+			>
+				<ControlParticipantRankingPanel.Header
+					icon={<Award />}
+					title="정답수 기준 등수"
+				/>
+				<ControlParticipantRankingPanel.Selector
+					ranking="정답자"
+					selectedRank={selectedRank}
+					onRankChange={handleSelectRank}
+					onApplySelection={handleApplyRankSelection}
+				/>
+			</Onboarding>
 			<Table.Root>
 				<ControlParticipantRankingPanel.TableHeader
 					checked={eliminatedParticipants?.length === 0}

@@ -16,6 +16,8 @@ const DashboardQuestion = lazy(
 
 /**
  * @property {string} ROOT `/dashboard`
+ * @property {string} QUESTION_ROOT `/dashboard/questions/:questionSetId`
+ * @property {string} QUESTION `/dashboard/questions/:questionSetId/question/:questionId`
  */
 export const DASHBOARD_ROUTE_PATH = {
 	ROOT: "/dashboard",

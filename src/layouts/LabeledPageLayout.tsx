@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type React from "react";
 
 //
@@ -9,6 +10,7 @@ interface LabeledPageLayoutProps {
 	label: React.ReactNode;
 	rightContent?: React.ReactNode;
 	children: React.ReactNode;
+	className?: string;
 }
 
 //
@@ -20,19 +22,27 @@ const LabeledPageLayout = ({
 	label,
 	rightContent,
 	children,
+	className,
 }: LabeledPageLayoutProps) => {
 	return (
-		<div className="h-full w-full flex flex-col gap-gap-11 py-padding-12">
-			<div className="flex gap-gap-5 items-center">
-				<span className="[&>svg]:w-5 [&>svg]:h-5">{icon}</span>
-				<h1 className="typo-heading-medium">{label}</h1>
+		<div className="h-full w-full flex justify-center">
+			<div
+				className={clsx(
+					"h-full w-full flex flex-col gap-gap-11 py-padding-12",
+					className,
+				)}
+			>
+				<div className="flex gap-gap-5 items-center">
+					<span className="[&>svg]:w-5 [&>svg]:h-5">{icon}</span>
+					<h1 className="typo-heading-medium">{label}</h1>
 
-				<span className="flex-grow" />
+					<span className="flex-grow" />
 
-				{rightContent}
+					{rightContent}
+				</div>
+
+				<div className="h-full w-full">{children}</div>
 			</div>
-
-			<div className="h-full w-full">{children}</div>
 		</div>
 	);
 };

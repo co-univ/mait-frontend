@@ -30,7 +30,9 @@ const notifySubscribers = (token: string) => {
  * @returns 새 토큰으로 재시도한 요청의 Response
  */
 const retryWithToken = (request: Request, token: string) => {
-	const newRequest = new Request(request, { headers: new Headers(request.headers) });
+	const newRequest = new Request(request, {
+		headers: new Headers(request.headers),
+	});
 	newRequest.headers.set("Authorization", `Bearer ${token}`);
 	return fetch(newRequest);
 };
@@ -70,7 +72,9 @@ const authMiddleware: Middleware = {
 		// 이미 리이슈 진행 중이면 완료될 때까지 대기 후 새 토큰으로 재시도
 		if (isRefreshing) {
 			return new Promise<Response>((resolve) => {
-				refreshSubscribers.push((newToken) => resolve(retryWithToken(request, newToken)));
+				refreshSubscribers.push((newToken) =>
+					resolve(retryWithToken(request, newToken)),
+				);
 			});
 		}
 
@@ -90,7 +94,7 @@ const authMiddleware: Middleware = {
 			localStorage.setItem("token", newToken);
 
 			notifySubscribers(newToken);
-			
+
 			return retryWithToken(request, newToken);
 		} catch {
 			refreshSubscribers = [];
@@ -104,6 +108,20 @@ const authMiddleware: Middleware = {
 	},
 };
 
+const zeroPathParamMiddleware: Middleware = {
+	onRequest({ request }) {
+		const url = new URL(request.url);
+		const segments = url.pathname.split("/");
+
+		if (segments.some((seg) => seg === "0")) {
+			return new Response(JSON.stringify({ isSuccess: false, data: null }), {
+				status: 200,
+				headers: { "Content-Type": "application/json" },
+			});
+		}
+	},
+};
+
 //
 //
 //
@@ -113,6 +131,7 @@ const apiClient = createClient<paths>({
 	credentials: "include",
 });
 
+apiClient.use(zeroPathParamMiddleware);
 apiClient.use(authMiddleware);
 
 export default apiClient;

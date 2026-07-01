@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import { apiHooks } from "@/libs/api";
@@ -68,6 +67,7 @@ const useControlParticipants = ({
 				},
 			},
 		},
+		{},
 	);
 
 	const {

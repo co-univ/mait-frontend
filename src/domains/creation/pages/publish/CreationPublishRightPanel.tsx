@@ -14,10 +14,8 @@ import CreationPanelTextarea from "../../components/common/CreationPanelTextarea
 type CreationPublishRightPanelProps = {
 	creationType?: QuestionSetCreationType;
 	difficulty?: string;
-	subject?: string;
 	categories: QuestionSetCategoryApiResponse[];
 	onChangeDifficulty: (difficulty: string) => void;
-	onChangeSubject: (subject: string) => void;
 	onCategoryAdd: (category: QuestionSetCategoryApiResponse) => void;
 	onCategoryRemove: (categoryId: number) => void;
 };
@@ -29,10 +27,8 @@ type CreationPublishRightPanelProps = {
 const CreationPublishRightPanel = ({
 	creationType,
 	difficulty,
-	subject,
 	categories,
 	onChangeDifficulty,
-	onChangeSubject,
 	onCategoryAdd,
 	onCategoryRemove,
 }: CreationPublishRightPanelProps) => {
@@ -72,28 +68,10 @@ const CreationPublishRightPanel = ({
 		);
 	};
 
-	/**
-	 *
-	 */
-	const renderSubjectField = () => {
-		return (
-			<Field.Root>
-				<Field.Label className="typo-body-large">주제</Field.Label>
-				<CreationPanelTextarea
-					minRows={1}
-					placeholder="ex. 네트워크"
-					value={subject}
-					onChange={(e) => onChangeSubject(e.target.value)}
-				/>
-			</Field.Root>
-		);
-	};
-
 	return (
 		<CreationPanel>
 			{renderDifficultyField()}
 			{renderCategoryField()}
-			{renderSubjectField()}
 		</CreationPanel>
 	);
 };
