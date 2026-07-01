@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import type { OnboardingCode } from "@/components/onboarding/onboarding.config";
 
 //
@@ -60,6 +60,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 		}),
 		{
 			name: "onboarding-storage",
+			storage: createJSONStorage(() => sessionStorage),
 			partialize: (state) => ({
 				pendingCodes: state.pendingCodes,
 				pendingScreenIds: state.pendingScreenIds,
