@@ -150,7 +150,7 @@ const useOnboarding = () => {
 
 		// Wait for sidebar/layout transition (300ms) to finish before activating
 		// onboarding so that tooltip target positions are stable.
-		const delay = needsSidebarOpen || isSidebarOpen ? 350 : 0;
+		const delay = 350;
 		setTimeout(() => {
 			setIsActive(true);
 		}, delay);
