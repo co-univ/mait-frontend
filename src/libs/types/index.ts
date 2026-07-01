@@ -160,6 +160,7 @@ export type QuestionSetsApiResponse = components["schemas"]["QuestionSetsApiResp
 export type QuestionSolveResultApiResponse = components["schemas"]["QuestionSolveResultApiResponse"];
 export type QuestionStatisticApiResponse = components["schemas"]["QuestionStatisticApiResponse"];
 export type QuestionType = components["schemas"]["QuestionType"];
+export type QuestionTypeCount = components["schemas"]["QuestionTypeCount"];
 export type QuestionValidationApiResponse = components["schemas"]["QuestionValidationApiResponse"];
 export type RandomNicknameResponse = components["schemas"]["RandomNicknameResponse"];
 export type RankDto = components["schemas"]["RankDto"];

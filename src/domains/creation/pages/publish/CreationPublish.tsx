@@ -110,6 +110,14 @@ const CreationPublish = () => {
 			return null;
 		}
 
+		const counts = Object.fromEntries(
+			QUESTION_COUNT_CONFIG.map(({ type }) => [
+				type,
+				questionSetData?.questionTypeCounts.find((c) => c.type === type)
+					?.count ?? 0,
+			]),
+		) as Record<QuestionCount["type"], number>;
+
 		return (
 			<Field.Root disabled>
 				<Field.Label className="typo-body-large">문제 유형</Field.Label>
@@ -120,12 +128,16 @@ const CreationPublish = () => {
 								key={type}
 								className="flex flex-1 items-center gap-gap-5 min-w-[140px]"
 							>
-								<CheckBox checked={false} onChange={() => {}} disabled />
+								<CheckBox
+									checked={counts[type] > 0}
+									onChange={() => {}}
+									disabled
+								/>
 								<span className="flex items-center gap-gap-3">
 									{label}{" "}
 									<CreationNewNumberInput
-										checked={false}
-										value={undefined}
+										checked={counts[type] > 0}
+										value={counts[type] > 0 ? counts[type] : undefined}
 										onChange={() => {}}
 									/>
 									개
@@ -139,12 +151,16 @@ const CreationPublish = () => {
 								key={type}
 								className="flex flex-1 items-center gap-gap-5 min-w-[140px]"
 							>
-								<CheckBox checked={false} onChange={() => {}} disabled />
+								<CheckBox
+									checked={counts[type] > 0}
+									onChange={() => {}}
+									disabled
+								/>
 								<span className="flex items-center gap-gap-3">
 									{label}{" "}
 									<CreationNewNumberInput
-										checked={false}
-										value={undefined}
+										checked={counts[type] === 0}
+										value={counts[type] > 0 ? counts[type] : undefined}
 										onChange={() => {}}
 									/>
 									개
@@ -171,7 +187,7 @@ const CreationPublish = () => {
 				<CreationPanelTextarea
 					disabled
 					placeholder="AI에게 문제 생성 시 원하는 요구사항이 있다면 적어주세요."
-					value=""
+					value={questionSetData?.instruction ?? ""}
 					onChange={() => {}}
 				/>
 			</Field.Root>
