@@ -33,7 +33,6 @@ const Management = () => {
 		currentStepKey,
 		nextStep,
 		startOnboardingForCode,
-		cancelOnboarding,
 		reset,
 		markCompletedForSession,
 	} = useOnboarding();
@@ -71,13 +70,6 @@ const Management = () => {
 
 		startOnboardingForCode("QUESTION_MANAGE_SET_LIST");
 	}, [isUnviewedLoaded]);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: cancel onboarding on SPA navigation away (not on refresh)
-	useEffect(() => {
-		return () => {
-			cancelOnboarding();
-		};
-	}, []);
 
 	const validModes = (
 		activeTeam?.teamType === "PERSONAL"

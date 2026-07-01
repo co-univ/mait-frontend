@@ -28,7 +28,6 @@ const SolvingQuestionSets = () => {
 		isFinishModalOpen,
 		isUnviewedLoaded,
 		startOnboardingForCode,
-		cancelOnboarding,
 		reset,
 		markCompletedForSession,
 	} = useOnboarding();
@@ -66,13 +65,6 @@ const SolvingQuestionSets = () => {
 
 		startOnboardingForCode("QUESTION_SOLVE_SET_LIST");
 	}, [isUnviewedLoaded]);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: cancel onboarding on SPA navigation away (not on refresh)
-	useEffect(() => {
-		return () => {
-			cancelOnboarding();
-		};
-	}, []);
 
 	const validModes = (
 		activeTeam?.teamType === "PERSONAL"

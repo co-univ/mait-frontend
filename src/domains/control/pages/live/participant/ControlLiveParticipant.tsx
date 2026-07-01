@@ -19,7 +19,6 @@ import ControlLiveParticipantScorerRanking from "./ControlLiveParticipantScorerR
 
 const ControlLiveParticipant = () => {
 	const questionSetId = Number(useParams().questionSetId);
-	const questionId = Number(useParams().questionId);
 
 	const {
 		isActive,
@@ -28,7 +27,6 @@ const ControlLiveParticipant = () => {
 		currentStepKey,
 		nextStep,
 		startOnboardingForCode,
-		cancelOnboarding,
 		reset,
 		markCompletedForSession,
 	} = useOnboarding();
@@ -66,15 +64,8 @@ const ControlLiveParticipant = () => {
 
 		// QUESTION_MANAGE_DETAIL may still be active when arriving from the control
 		// page. Force-start NEXT_ROUND to bypass the isActive guard.
-		startOnboardingForCode("QUESTION_MANAGE_NEXT_ROUND", { questionSetId, questionId }, { force: true });
+		startOnboardingForCode("QUESTION_MANAGE_NEXT_ROUND", { force: true });
 	}, [isUnviewedLoaded]);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: cancel onboarding on SPA navigation away (not on refresh)
-	useEffect(() => {
-		return () => {
-			cancelOnboarding();
-		};
-	}, []);
 
 	const { refreshParticipants, handleSumbitParticipants, handleSubmitWinner } =
 		useControlParticipants({
