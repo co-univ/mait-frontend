@@ -663,6 +663,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/analytics/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 분석 이벤트 수집
+         * @description 제품 분석 이벤트 1건을 저장합니다. (feature_key, event_name, user_id, session_id) 조합이 이미 존재하면 중복으로 간주해 무시합니다.
+         */
+        post: operations["collect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/onboarding/screens": {
         parameters: {
             query?: never;
@@ -2541,6 +2561,34 @@ export interface components {
         LoginApiRequest: {
             email: string;
             password: string;
+        };
+        AnalyticsEventCollectApiRequest: {
+            /**
+             * @description 기능 그룹
+             * @example onboarding
+             */
+            featureKey: string;
+            /**
+             * @description 이벤트명
+             * @example player_set_list_view
+             */
+            eventName: string;
+            /**
+             * @description FE에서 생성한 세션 UUID
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            sessionId: string;
+            /**
+             * Format: int32
+             * @description 단계. 없으면 0
+             * @example 2
+             */
+            step?: number;
+            /**
+             * @description 추가 컨텍스트 JSON 문자열
+             * @example {"screen":"solve-question-list"}
+             */
+            metadata?: string;
         };
         OnboardingScreenUploadApiRequest: {
             /**
@@ -4627,6 +4675,30 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["LoginApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    collect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalyticsEventCollectApiRequest"];
             };
         };
         responses: {

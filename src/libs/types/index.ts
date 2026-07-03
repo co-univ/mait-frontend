@@ -10,6 +10,7 @@ export type AdminQuestionSetApiResponse = components["schemas"]["AdminQuestionSe
 export type AdminTeamApiResponse = components["schemas"]["AdminTeamApiResponse"];
 export type AiRequestStatus = components["schemas"]["AiRequestStatus"];
 export type AiRequestStatusApiResponse = components["schemas"]["AiRequestStatusApiResponse"];
+export type AnalyticsEventCollectApiRequest = components["schemas"]["AnalyticsEventCollectApiRequest"];
 export type AnswerRankApiResponse = components["schemas"]["AnswerRankApiResponse"];
 export type ApiResponseAiRequestStatusApiResponse = components["schemas"]["ApiResponseAiRequestStatusApiResponse"];
 export type ApiResponseCategoryCorrectRateApiResponse = components["schemas"]["ApiResponseCategoryCorrectRateApiResponse"];
