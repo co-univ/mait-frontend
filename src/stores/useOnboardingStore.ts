@@ -16,6 +16,7 @@ interface OnboardingState {
 	isFinishModalOpen: boolean;
 	questionManageIds: { questionSetId: number; questionId: number } | null;
 	isDismissed: boolean;
+	analyticsSessionId: string | null;
 }
 
 interface OnboardingStoreActions {
@@ -28,6 +29,7 @@ interface OnboardingStoreActions {
 	setIsFinishModalOpen: (v: boolean) => void;
 	setQuestionManageIds: (ids: { questionSetId: number; questionId: number } | null) => void;
 	setIsDismissed: (v: boolean) => void;
+	setAnalyticsSessionId: (id: string | null) => void;
 	reset: () => void;
 }
 
@@ -45,6 +47,7 @@ const INITIAL_STATE: OnboardingState = {
 	isFinishModalOpen: false,
 	questionManageIds: null,
 	isDismissed: false,
+	analyticsSessionId: null,
 };
 
 //
@@ -64,6 +67,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 			setIsFinishModalOpen: (v) => set({ isFinishModalOpen: v }),
 			setQuestionManageIds: (ids) => set({ questionManageIds: ids }),
 			setIsDismissed: (v) => set({ isDismissed: v }),
+			setAnalyticsSessionId: (id) => set({ analyticsSessionId: id }),
 			reset: () => set(INITIAL_STATE),
 		}),
 		{
@@ -79,6 +83,7 @@ const useOnboardingStore = create<OnboardingState & OnboardingStoreActions>()(
 				isFinishModalOpen: state.isFinishModalOpen,
 				questionManageIds: state.questionManageIds,
 				isDismissed: state.isDismissed,
+				analyticsSessionId: state.analyticsSessionId,
 			}),
 		},
 	),

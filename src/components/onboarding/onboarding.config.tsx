@@ -153,3 +153,23 @@ export const ONBOARDING_STEPS: Record<string, OnboardingStep> = {
 		placement: "bottom",
 	},
 };
+
+//
+//
+//
+
+/**
+ * OnboardingCode → 애널리틱스 이벤트명 접두어 매핑.
+ * HOME_GUIDE는 백엔드 스펙에 대응 이벤트가 없어 매핑 대상에서 제외(null).
+ * 실제 전송 시 `${prefix}_view` / `${prefix}_exit` 형태로 사용.
+ */
+export const ONBOARDING_ANALYTICS_EVENT_PREFIX: Record<
+	OnboardingCode,
+	string | null
+> = {
+	HOME_GUIDE: null,
+	QUESTION_SOLVE_SET_LIST: "player_set_list",
+	QUESTION_MANAGE_SET_LIST: "maker_set_list",
+	QUESTION_MANAGE_DETAIL: "maker_solve_manage",
+	QUESTION_MANAGE_NEXT_ROUND: "maker_scorer_manage",
+};

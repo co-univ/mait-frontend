@@ -201,15 +201,19 @@ const Onboarding = ({ stepKey, show, onNext, children }: OnboardingProps) => {
 							/>
 
 							{/* spacer to push content past the dashed line */}
-							{isVertical ? <div className="h-5" /> : <div className="w-13" />}
+							{isVertical ? (
+								<div className="h-4 md:h-5" />
+							) : (
+								<div className="w-9 md:w-13" />
+							)}
 
 							<div className={clsx("flex items-center")}>
 								{step.icon && (
-									<div className="shrink-0 size-[96px] flex items-center justify-center">
+									<div className="shrink-0 size-[64px] md:size-[96px] flex items-center justify-center">
 										{step.icon}
 									</div>
 								)}
-								<p className="typo-heading-medium text-color-alpha-white100">
+								<p className="typo-heading-small md:typo-heading-medium text-color-alpha-white100">
 									{step.description}
 								</p>
 							</div>

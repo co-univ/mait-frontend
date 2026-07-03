@@ -75,7 +75,7 @@ const OnboardingFinishModal = ({ onConfirm }: OnboardingFinishModalProps) => {
 		<div className="fixed inset-0 z-50 bg-color-alpha-black25">
 			<div
 				ref={dialogRef}
-				className="absolute left-1/2 -translate-x-1/2 top-5 bg-color-alpha-white100 flex flex-col gap-gap-11 items-start p-padding-11 rounded-radius-medium1 shadow-m min-w-[512px]"
+				className="absolute left-1/2 -translate-x-1/2 top-5 bg-color-alpha-white100 flex flex-col gap-gap-11 items-start p-padding-11 rounded-radius-medium1 shadow-m w-[calc(100vw-32px)] max-w-[calc(100vw-32px)] sm:w-auto sm:max-w-none sm:min-w-[512px]"
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby={titleId}
@@ -90,7 +90,7 @@ const OnboardingFinishModal = ({ onConfirm }: OnboardingFinishModalProps) => {
 					</p>
 				</div>
 
-				<div className="flex items-center justify-between w-full">
+				<div className="flex flex-col items-stretch gap-gap-5 w-full sm:flex-row sm:items-center sm:justify-between">
 					<button
 						type="button"
 						className="flex items-center gap-gap-5 cursor-pointer select-none typo-body-xsmall text-color-gray-60"
@@ -99,7 +99,8 @@ const OnboardingFinishModal = ({ onConfirm }: OnboardingFinishModalProps) => {
 						<CheckBox
 							checked={isDismissed}
 							size={20}
-							onChange={setIsDismissed}
+							onChange={() => {}}
+							className="pointer-events-none"
 						/>
 						다시 보지 않기
 					</button>
@@ -109,7 +110,7 @@ const OnboardingFinishModal = ({ onConfirm }: OnboardingFinishModalProps) => {
 						variant="primary"
 						item="시작하기"
 						onClick={() => onConfirm(isDismissed)}
-						className="bg-color-primary-50 border-color-primary-50 text-color-alpha-white100 px-padding-8 py-padding-4 typo-body-xsmall"
+						className="bg-color-primary-50 border-color-primary-50 text-color-alpha-white100 px-padding-8 py-padding-4 typo-body-xsmall w-full sm:w-auto"
 					/>
 				</div>
 			</div>
