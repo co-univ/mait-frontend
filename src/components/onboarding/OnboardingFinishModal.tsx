@@ -99,7 +99,8 @@ const OnboardingFinishModal = ({ onConfirm }: OnboardingFinishModalProps) => {
 						<CheckBox
 							checked={isDismissed}
 							size={20}
-							onChange={setIsDismissed}
+							onChange={() => {}}
+							className="pointer-events-none"
 						/>
 						다시 보지 않기
 					</button>
