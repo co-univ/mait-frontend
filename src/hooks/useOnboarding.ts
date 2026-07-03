@@ -11,6 +11,7 @@ import { SOLVING_ROUTE_PATH } from "@/domains/solving/solving.routes";
 import { apiClient, apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
+import useBreakpoint from "./useBreakpoint";
 import useUser from "./useUser";
 
 const getSessionKey = (code: OnboardingCode) =>
@@ -50,7 +51,12 @@ const useOnboarding = () => {
 		reset,
 	} = useOnboardingStore();
 
-	const { isSidebarOpen, toggleSidebarOpen } = useSidebarOpenStore();
+	const { isSidebarOpen, toggleSidebarOpen, closeSidebar } =
+		useSidebarOpenStore();
+	// MobileSidebar renders below the `md` breakpoint (see MobileSidebar.tsx / SideBar.tsx),
+	// so use isMd here rather than useBreakpoint's isMobile (which is keyed off `sm`).
+	const { isMd } = useBreakpoint();
+	const usesMobileSidebar = !isMd;
 
 	const { data: unviewedScreensData, isSuccess: isUnviewedLoaded } =
 		apiHooks.useQuery(
@@ -146,9 +152,15 @@ const useOnboarding = () => {
 		setCurrentStepIndex(initialStepIndex);
 		setStartStepIndex(initialStepIndex);
 
-		const needsSidebarOpen = code === "HOME_GUIDE" && !isSidebarOpen;
-		if (needsSidebarOpen) {
-			toggleSidebarOpen();
+		if (usesMobileSidebar) {
+			if (isSidebarOpen) {
+				closeSidebar();
+			}
+		} else {
+			const needsSidebarOpen = code === "HOME_GUIDE" && !isSidebarOpen;
+			if (needsSidebarOpen) {
+				toggleSidebarOpen();
+			}
 		}
 
 		// Wait for sidebar/layout transition (300ms) to finish before activating
