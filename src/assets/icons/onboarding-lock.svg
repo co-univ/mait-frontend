@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none">
   <g clip-path="url(#clip0_9854_15550)">
     <path d="M48 26.1817C48 14.1319 57.7683 4.36353 69.8182 4.36353C81.868 4.36353 91.6364 14.1319 91.6364 26.1817V34.909H82.9091V26.1817C82.9091 18.9518 77.0481 13.0908 69.8182 13.0908C62.5883 13.0908 56.7273 18.9518 56.7273 26.1817V34.909H48V26.1817Z" fill="#256EF4"/>
-    <foreignObject x="-13.0909" y="8.72723" width="122.182" height="104.727"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(10.91px);clip-path:url(#bgblur_1_9854_15550_clip_path);height:100%;width:100%"></div></foreignObject><g filter="url(#filter0_din_9854_15550)" data-figma-bg-blur-radius="21.8182">
+    <g filter="url(#filter0_din_9854_15550)">
       <path d="M8.72725 48C8.72725 38.3601 16.5419 30.5454 26.1818 30.5454H69.8182C79.458 30.5454 87.2727 38.3601 87.2727 48V74.1818C87.2727 83.8217 79.458 91.6363 69.8182 91.6363H26.1818C16.5419 91.6363 8.72725 83.8217 8.72725 74.1818V48Z" fill="url(#paint0_linear_9854_15550)" shape-rendering="crispEdges"/>
       <path d="M8.72725 48C8.72725 38.3601 16.5419 30.5454 26.1818 30.5454H69.8182C79.458 30.5454 87.2727 38.3601 87.2727 48V74.1818C87.2727 83.8217 79.458 91.6363 69.8182 91.6363H26.1818C16.5419 91.6363 8.72725 83.8217 8.72725 74.1818V48Z" fill="#256EF4" fill-opacity="0.25" shape-rendering="crispEdges"/>
       <path d="M26.1814 30.7632H69.8181C79.3373 30.7632 87.0542 38.4803 87.0544 47.9995V74.1821C87.0542 83.7013 79.3373 91.4185 69.8181 91.4185H26.1814C16.6623 91.4182 8.94521 83.7012 8.94502 74.1821V47.9995C8.94526 38.4805 16.6623 30.7634 26.1814 30.7632Z" stroke="url(#paint1_linear_9854_15550)" stroke-width="0.436364" shape-rendering="crispEdges"/>
@@ -38,8 +38,7 @@
       </feMerge>
       <feBlend mode="normal" in="effect3_noise_9854_15550" in2="effect1_dropShadow_9854_15550" result="effect3_noise_9854_15550"/>
     </filter>
-    <clipPath id="bgblur_1_9854_15550_clip_path" transform="translate(13.0909 -8.72723)"><path d="M8.72725 48C8.72725 38.3601 16.5419 30.5454 26.1818 30.5454H69.8182C79.458 30.5454 87.2727 38.3601 87.2727 48V74.1818C87.2727 83.8217 79.458 91.6363 69.8182 91.6363H26.1818C16.5419 91.6363 8.72725 83.8217 8.72725 74.1818V48Z"/>
-  </clipPath><linearGradient id="paint0_linear_9854_15550" x1="48" y1="28" x2="48" y2="91.6363" gradientUnits="userSpaceOnUse">
+    <linearGradient id="paint0_linear_9854_15550" x1="48" y1="28" x2="48" y2="91.6363" gradientUnits="userSpaceOnUse">
   <stop stop-color="white" stop-opacity="0.1"/>
   <stop offset="1" stop-color="white" stop-opacity="0"/>
 </linearGradient>
