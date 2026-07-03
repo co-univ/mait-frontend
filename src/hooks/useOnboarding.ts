@@ -12,6 +12,7 @@ import { apiClient, apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useSidebarOpenStore from "@/stores/useSidebarOpenStore";
 import useBreakpoint from "./useBreakpoint";
+import useOnboardingAnalytics from "./useOnboardingAnalytics";
 import useUser from "./useUser";
 
 const getSessionKey = (code: OnboardingCode) =>
@@ -50,6 +51,9 @@ const useOnboarding = () => {
 		setIsFinishModalOpen,
 		reset,
 	} = useOnboardingStore();
+
+	const { startSession, endSession, endSessionOnFinish } =
+		useOnboardingAnalytics();
 
 	const { isSidebarOpen, toggleSidebarOpen, closeSidebar } =
 		useSidebarOpenStore();
@@ -167,11 +171,16 @@ const useOnboarding = () => {
 		// onboarding so that tooltip target positions are stable.
 		const delay = 350;
 		setTimeout(() => {
+			// StrictMode의 effect 이중 실행 등으로 이 타이머가 중복 예약된 경우,
+			// 먼저 실행된 타이머가 이미 활성화했다면 재전송하지 않는다.
+			if (useOnboardingStore.getState().isActive) return;
 			setIsActive(true);
+			startSession(code);
 		}, delay);
 	};
 
 	const finishOnboarding = () => {
+		endSessionOnFinish();
 		setIsActive(false);
 		setIsFinishModalOpen(true);
 	};
@@ -200,6 +209,7 @@ const useOnboarding = () => {
 
 	const closeOnboarding = () => {
 		const code = currentCode;
+		endSession(currentStepIndex + 1);
 		setIsActive(false);
 		if (code) {
 			sessionStorage.setItem(getSessionKey(code), "true");
@@ -209,6 +219,7 @@ const useOnboarding = () => {
 
 	const cancelOnboarding = () => {
 		if (isActive || isFinishModalOpen) {
+			endSession(currentStepIndex + 1);
 			reset();
 		}
 	};
@@ -229,6 +240,7 @@ const useOnboarding = () => {
 		for (const code of codes) {
 			sessionStorage.setItem(getSessionKey(code), "true");
 		}
+		endSession(currentStepIndex + 1);
 		reset();
 		for (const screenId of screenIds) {
 			apiClient.POST("/api/v1/onboarding/screens/view", {
