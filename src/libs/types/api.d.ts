@@ -1632,6 +1632,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/analytics/features": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 분석 feature 목록 조회
+         * @description 이벤트가 수집되는 분석 feature 마스터 전체를 조회한다.
+         */
+        get: operations["getFeatures"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/analytics/features/{featureId}/event-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * feature별 이벤트 통계 조회
+         * @description feature 1건에 대해 (event_name, step) 단위로 발생 수를 집계한다. event_name별로 묶어 총 발생 수와 step 분포를 함께 반환한다.
+         */
+        get: operations["getEventStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teams/{teamId}": {
         parameters: {
             query?: never;
@@ -3607,6 +3647,69 @@ export interface components {
             /** @description 정/오답 여부 */
             isCorrect: boolean;
             submittedAnswer: components["schemas"]["SubmitAnswerDtoObject"];
+        };
+        AnalyticsFeatureApiResponse: {
+            /**
+             * Format: int64
+             * @description feature PK
+             */
+            id: number;
+            /**
+             * @description feature 식별 키
+             * @example onboarding
+             */
+            featureKey: string;
+        };
+        ApiResponseListAnalyticsFeatureApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["AnalyticsFeatureApiResponse"][];
+        };
+        /** @description feature별 이벤트 통계 응답. event_name별 발생 수와 step 분포를 담는다. */
+        AnalyticsEventStatsApiResponse: {
+            /**
+             * @description feature 식별 키
+             * @example onboarding
+             */
+            featureKey: string;
+            /**
+             * Format: int64
+             * @description 전체 이벤트 발생 수
+             */
+            totalCount: number;
+            /** @description event_name별 통계 목록 (event_name 오름차순) */
+            events: components["schemas"]["EventStat"][];
+        };
+        ApiResponseAnalyticsEventStatsApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["AnalyticsEventStatsApiResponse"];
+        };
+        /** @description 단일 event_name에 대한 통계 */
+        EventStat: {
+            /**
+             * @description 이벤트 이름
+             * @example player_set_list_exit
+             */
+            eventName: string;
+            /**
+             * Format: int64
+             * @description 해당 이벤트 총 발생 수
+             */
+            count: number;
+            /** @description step별 발생 수 분포 (step 오름차순) */
+            steps: components["schemas"]["StepCount"][];
+        };
+        /** @description 특정 step의 발생 수 */
+        StepCount: {
+            /**
+             * Format: int32
+             * @description step 값
+             */
+            step: number;
+            /**
+             * Format: int64
+             * @description 해당 step 발생 수
+             */
+            count: number;
         };
     };
     responses: never;
@@ -5904,6 +6007,48 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionAnswerDistributionApiResponse"];
+                };
+            };
+        };
+    };
+    getFeatures: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListAnalyticsFeatureApiResponse"];
+                };
+            };
+        };
+    };
+    getEventStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                featureId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAnalyticsEventStatsApiResponse"];
                 };
             };
         };
