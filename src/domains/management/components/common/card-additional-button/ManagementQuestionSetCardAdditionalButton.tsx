@@ -12,6 +12,7 @@ interface ManagementQuestionSetCardAdditionalButtonProps {
 	status: QuestionSetStatus;
 	onEdit?: () => void;
 	onRestart?: () => void;
+	onReviewStatus?: () => void;
 	onDelete?: () => void;
 }
 
@@ -23,6 +24,7 @@ const ManagementQuestionSetCardAdditionalButton = ({
 	status,
 	onEdit,
 	onRestart,
+	onReviewStatus,
 	onDelete,
 }: ManagementQuestionSetCardAdditionalButtonProps) => {
 	const [open, setOpen] = useState(false);
@@ -77,6 +79,19 @@ const ManagementQuestionSetCardAdditionalButton = ({
 				}}
 			>
 				재시작하기
+			</Dropdown.Item>
+		),
+		onReviewStatus && (
+			<Dropdown.Item
+				key="review-status"
+				value="review-status"
+				onClick={onReviewStatus}
+				classNames={{
+					label: "font-pretendard text-color-alpha-black100",
+					button: "hover:!bg-color-alpha-white100",
+				}}
+			>
+				복습 전환
 			</Dropdown.Item>
 		),
 		onDelete && (
