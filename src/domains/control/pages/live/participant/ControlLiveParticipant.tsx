@@ -9,6 +9,7 @@ import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useControlParticipants from "../../../hooks/paticipant/useControlParticipants";
+import useControlParticipantsInit from "../../../hooks/paticipant/useControlParticipantsInit";
 import ControlLiveParticipantActiveMembers from "./ControlLiveParticipantActiveMembers";
 import ControlLiveParticipantCorrectRanking from "./ControlLiveParticipantCorrectRanking";
 import ControlLiveParticipantScorerRanking from "./ControlLiveParticipantScorerRanking";
@@ -19,6 +20,8 @@ import ControlLiveParticipantScorerRanking from "./ControlLiveParticipantScorerR
 
 const ControlLiveParticipant = () => {
 	const questionSetId = Number(useParams().questionSetId);
+
+	useControlParticipantsInit({ questionSetId });
 
 	const {
 		isActive,

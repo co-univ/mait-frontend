@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import { apiHooks } from "@/libs/api";
@@ -54,11 +54,7 @@ const useControlParticipants = ({
 		setEliminatedParticipants,
 	} = useControlParticipantStore();
 
-	const {
-		data,
-		isPending: isFetchPending,
-		refetch,
-	} = apiHooks.useQuery(
+	const { isPending: isFetchPending, refetch } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/live-status/participants",
 		{
@@ -291,26 +287,6 @@ const useControlParticipants = ({
 
 		handleQuestionSetEnd({ skipConfirm: true });
 	};
-
-	//
-	// Reset store when switching to a different question set, so stale
-	// participants aren't shown until the new query resolves
-	// biome-ignore lint/correctness/useExhaustiveDependencies: run only when questionSetId changes
-	useEffect(() => {
-		initParticipants(undefined, undefined);
-	}, [questionSetId]);
-
-	//
-	// Initialize store with fetched data once, on mount
-	// biome-ignore lint/correctness/useExhaustiveDependencies: run only when the initial fetch resolves
-	useEffect(() => {
-		if (data && !isFetchPending) {
-			initParticipants(
-				data.data?.activeParticipants,
-				data.data?.eliminatedParticipants,
-			);
-		}
-	}, [isFetchPending]);
 
 	return {
 		activeParticipants,
