@@ -271,7 +271,7 @@ const useControlParticipants = ({
 			},
 		});
 
-		handleQuestionSetEnd();
+		handleQuestionSetEnd({ skipConfirm: true });
 	};
 
 	//

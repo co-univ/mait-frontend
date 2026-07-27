@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { notify } from "@/components/Toast";
 import { DASHBOARD_ROUTE_PATH } from "@/domains/dashboard/dashboard.routes";
 import useQuestionSets from "@/hooks/useQuestionSets";
@@ -19,7 +20,7 @@ interface UseControlSolvingQuestionSetProps {
 interface UseControlSolvingQuestionSetReturn {
 	questionSet?: QuestionSetApiResponse;
 	handleQuestionSetStart: () => void;
-	handleQuestionSetEnd: () => void;
+	handleQuestionSetEnd: (options?: { skipConfirm?: boolean }) => Promise<void>;
 }
 
 //
@@ -30,6 +31,7 @@ const useControlSolvingQuestionSet = ({
 	questionSetId,
 }: UseControlSolvingQuestionSetProps): UseControlSolvingQuestionSetReturn => {
 	const navigate = useNavigate();
+	const { confirm } = useConfirm();
 
 	const { activeTeam } = useTeams();
 
@@ -106,7 +108,18 @@ const useControlSolvingQuestionSet = ({
 	/**
 	 *
 	 */
-	const handleQuestionSetEnd = () => {
+	const handleQuestionSetEnd = async (options?: { skipConfirm?: boolean }) => {
+		if (!options?.skipConfirm) {
+			const confirmed = await confirm({
+				title: "문제 셋 종료",
+				description: "문제 셋을 종료하시겠습니까?",
+			});
+
+			if (!confirmed) {
+				return;
+			}
+		}
+
 		patchQuestionSetEnd({
 			params: {
 				path: {
