@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import { notify } from "@/components/Toast";
+import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import useTeams from "@/hooks/useTeams";
 import { apiClient, apiHooks } from "@/libs/api";
@@ -108,7 +109,7 @@ const ManagementStudyCard = ({
 	/**
 	 *
 	 */
-	const handleControlButtonClick = () => {
+	const handleEndStudyButtonClick = () => {
 		endStudyQuestionSet({
 			params: {
 				path: {
@@ -116,6 +117,17 @@ const ManagementStudyCard = ({
 				},
 			},
 		});
+	};
+
+	/**
+	 *
+	 */
+	const handleControlButtonClick = () => {
+		navigate(
+			createPath(CONTROL_ROUTE_PATH.STUDY_ROOT, {
+				questionSetId: questionSet.id ?? 0,
+			}),
+		);
 	};
 
 	/**
@@ -171,7 +183,7 @@ const ManagementStudyCard = ({
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
 					item="종료하기"
-					onClick={handleControlButtonClick}
+					onClick={handleEndStudyButtonClick}
 				/>
 			);
 		}
@@ -190,8 +202,8 @@ const ManagementStudyCard = ({
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
-					item="복습 전환"
-					onClick={handleReviewStatusButtonClick}
+					item="풀이 관리"
+					onClick={handleControlButtonClick}
 				/>
 			);
 		}
@@ -214,6 +226,7 @@ const ManagementStudyCard = ({
 					<ManagementQuestionSetCardAdditionalButton
 						status={questionSetStatus}
 						onRestart={handleRestartButtonClick}
+						onReviewStatus={handleReviewStatusButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
 				)}

@@ -21,6 +21,7 @@ const ControlLiveParticipantActiveMembers = () => {
 		eliminatedParticipants,
 		handleAddActiveParticipant,
 		handleDeleteActiveParticipant,
+		isOngoing,
 	} = useControlParticipants({
 		questionSetId,
 	});
@@ -77,6 +78,7 @@ const ControlLiveParticipantActiveMembers = () => {
 					key={member.participantId}
 					member={member}
 					onMemeberDelete={handleDeleteMember}
+					isDeletable={isOngoing}
 				/>
 			))}
 			{isAddingParticipant && (

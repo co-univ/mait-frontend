@@ -9,6 +9,7 @@ import LabeledPageLayout from "@/layouts/LabeledPageLayout";
 import { apiHooks } from "@/libs/api";
 import useOnboardingStore from "@/stores/useOnboardingStore";
 import useControlParticipants from "../../../hooks/paticipant/useControlParticipants";
+import useControlParticipantsInit from "../../../hooks/paticipant/useControlParticipantsInit";
 import ControlLiveParticipantActiveMembers from "./ControlLiveParticipantActiveMembers";
 import ControlLiveParticipantCorrectRanking from "./ControlLiveParticipantCorrectRanking";
 import ControlLiveParticipantScorerRanking from "./ControlLiveParticipantScorerRanking";
@@ -19,6 +20,8 @@ import ControlLiveParticipantScorerRanking from "./ControlLiveParticipantScorerR
 
 const ControlLiveParticipant = () => {
 	const questionSetId = Number(useParams().questionSetId);
+
+	useControlParticipantsInit({ questionSetId });
 
 	const {
 		isActive,
@@ -67,10 +70,14 @@ const ControlLiveParticipant = () => {
 		startOnboardingForCode("QUESTION_MANAGE_NEXT_ROUND", { force: true });
 	}, [isUnviewedLoaded]);
 
-	const { refreshParticipants, handleSumbitParticipants, handleSubmitWinner } =
-		useControlParticipants({
-			questionSetId,
-		});
+	const {
+		refreshParticipants,
+		handleSumbitParticipants,
+		handleSubmitWinner,
+		isOngoing,
+	} = useControlParticipants({
+		questionSetId,
+	});
 
 	/**
 	 *
@@ -79,6 +86,7 @@ const ControlLiveParticipant = () => {
 		return (
 			<div className="flex gap-gap-5">
 				<Button
+					disabled={!isOngoing}
 					icon={<RefreshCw />}
 					onClick={refreshParticipants}
 					className="border-none text-color-gray-50"
@@ -89,6 +97,7 @@ const ControlLiveParticipant = () => {
 					onNext={nextStep}
 				>
 					<Button
+						disabled={!isOngoing}
 						item="진출자 선정"
 						onClick={handleSumbitParticipants}
 						className="border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50 disabled:bg-color-gray-5 disabled:text-color-gray-20"
@@ -100,6 +109,7 @@ const ControlLiveParticipant = () => {
 					onNext={nextStep}
 				>
 					<Button
+						disabled={!isOngoing}
 						item="우승자 선정"
 						onClick={handleSubmitWinner}
 						className="border-none bg-color-primary-5 !typo-heading-xsmall text-color-primary-50 disabled:bg-color-gray-5 disabled:text-color-gray-20"

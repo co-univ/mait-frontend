@@ -151,8 +151,8 @@ const ManagementLiveTimeCard = ({
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
-					item="복습 전환"
-					onClick={handleReviewStatusButtonClick}
+					item="풀이 관리"
+					onClick={handleControlButtonClick}
 				/>
 			);
 		}
@@ -175,6 +175,7 @@ const ManagementLiveTimeCard = ({
 					<ManagementQuestionSetCardAdditionalButton
 						status={questionSetStatus}
 						onRestart={handleRestartButtonClick}
+						onReviewStatus={handleReviewStatusButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
 				)}
