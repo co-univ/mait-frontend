@@ -4,6 +4,7 @@ import Onboarding from "@/components/onboarding/Onboarding";
 import { Switch } from "@/components/switch/Switch";
 import Tooltip from "@/components/Tooltip";
 import useControlLiveSolvingQuestion from "@/domains/control/hooks/solving/question/useControlLiveSolvingQuestion";
+import useControlSolvingQuestionSet from "@/domains/control/hooks/solving/useControlSolvingQuestionSet";
 import ControlSolvingQuestionPanel from "@/domains/control/pages/common/solving/question/ControlSolvingQuestionPanel";
 import useOnboarding from "@/hooks/useOnboarding";
 import type { QuestionApiResponse } from "@/libs/types";
@@ -22,6 +23,8 @@ const ControlLiveSolvingQuestion = () => {
 
 	const { isActive, currentStepKey, nextStep } = useOnboarding();
 
+	const { questionSet } = useControlSolvingQuestionSet({ questionSetId });
+
 	const {
 		isStatusUpdating,
 		question,
@@ -33,6 +36,8 @@ const ControlLiveSolvingQuestion = () => {
 		questionSetId,
 		questionId,
 	});
+
+	const isOngoing = questionSet?.status === "ONGOING";
 
 	/**
 	 *
@@ -91,6 +96,7 @@ const ControlLiveSolvingQuestion = () => {
 			>
 				<Switch.Root
 					checked={allowedAccessTypes.includes(question?.questionStatusType)}
+					disabled={!isOngoing}
 					onChange={handleAccessSwitchChange}
 				>
 					<Switch.Label>문제 공개</Switch.Label>
@@ -104,6 +110,7 @@ const ControlLiveSolvingQuestion = () => {
 			>
 				<Switch.Root
 					checked={allowedSolveType.includes(question?.questionStatusType)}
+					disabled={!isOngoing}
 					loading={isSolveSwitchLoading}
 					onChange={handleSolveSwitchChange}
 				>
@@ -121,7 +128,12 @@ const ControlLiveSolvingQuestion = () => {
 		</div>
 	);
 
-	return <ControlSolvingQuestionPanel topControls={liveControls} />;
+	return (
+		<ControlSolvingQuestionPanel
+			topControls={liveControls}
+			isEditable={isOngoing}
+		/>
+	);
 };
 
 export default ControlLiveSolvingQuestion;

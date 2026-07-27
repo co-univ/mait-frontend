@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { Check, Pencil, X } from "lucide-react";
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { ReactNode } from "react";
 import Button from "@/components/Button";
 import Tooltip from "@/components/Tooltip";
 import ControlSolvingQuestionContent from "@/domains/control/components/solving/question/ControlSolvingQuestionContent";
@@ -19,6 +19,7 @@ import ControlSolvingQuestionShort from "./ControlSolvingQuestionShort";
 
 interface ControlSolvingQuestionPanelProps {
 	topControls?: ReactNode;
+	isEditable?: boolean;
 }
 
 //
@@ -27,6 +28,7 @@ interface ControlSolvingQuestionPanelProps {
 
 const ControlSolvingQuestionPanel = ({
 	topControls,
+	isEditable = true,
 }: ControlSolvingQuestionPanelProps) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [isMouseOverOnEditButton, setIsMouseOverOnEditButton] = useState(false);
@@ -34,15 +36,11 @@ const ControlSolvingQuestionPanel = ({
 	const questionSetId = Number(useParams().questionSetId);
 	const questionId = Number(useParams().questionId);
 
-	const {
-		hasSubmitAnswerPayload,
-		question,
-		refetchQuestion,
-		submitAnswer,
-	} = useControlSolvingQuestion({
-		questionSetId,
-		questionId,
-	});
+	const { hasSubmitAnswerPayload, question, refetchQuestion, submitAnswer } =
+		useControlSolvingQuestion({
+			questionSetId,
+			questionId,
+		});
 
 	/**
 	 *
@@ -94,7 +92,7 @@ const ControlSolvingQuestionPanel = ({
 		if (isEditing) {
 			return (
 				<Button
-					disabled={!hasSubmitAnswerPayload}
+					disabled={!isEditable || !hasSubmitAnswerPayload}
 					icon={<Check />}
 					item="수정 완료"
 					onClick={handleCompleteButtonClick}
@@ -106,13 +104,14 @@ const ControlSolvingQuestionPanel = ({
 			);
 		}
 
-		const isQuestionEditable = ["SHORT", "FILL_BLANK"].includes(
+		const isQuestionTypeEditable = ["SHORT", "FILL_BLANK"].includes(
 			question?.type as QuestionType,
 		);
+		const isQuestionEditable = isEditable && isQuestionTypeEditable;
 
 		return (
 			<Tooltip
-				open={!isQuestionEditable && isMouseOverOnEditButton}
+				open={isEditable && !isQuestionTypeEditable && isMouseOverOnEditButton}
 				message="객관식과 순서 유형은 답안 수정이 불가합니다."
 			>
 				<Button

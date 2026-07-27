@@ -7,6 +7,7 @@ import { Table } from "@/components/table";
 
 interface ControlParticipantRankingPanelTableRowProps {
 	checked: boolean;
+	disabled?: boolean;
 	rankCell: React.ReactNode;
 	nameCell: React.ReactNode;
 	onChange: (checked: boolean) => void;
@@ -18,6 +19,7 @@ interface ControlParticipantRankingPanelTableRowProps {
 
 const ControlParticipantRankingPanelTableRow = ({
 	checked,
+	disabled,
 	rankCell,
 	nameCell,
 	onChange,
@@ -25,7 +27,12 @@ const ControlParticipantRankingPanelTableRow = ({
 	return (
 		<Table.Row>
 			<Table.Cell width="32px" className="flex items-center">
-				<CheckBox checked={checked} size={20} onChange={onChange} />
+				<CheckBox
+					checked={checked}
+					disabled={disabled}
+					size={20}
+					onChange={onChange}
+				/>
 			</Table.Cell>
 			<Table.Cell width="100px">{rankCell}</Table.Cell>
 			<Table.Cell grow>{nameCell}</Table.Cell>

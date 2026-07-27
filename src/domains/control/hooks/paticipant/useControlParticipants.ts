@@ -35,6 +35,7 @@ interface UseControlParticipantsReturn {
 	isEditing: boolean;
 	isLoading: boolean;
 	isMutating: boolean;
+	isOngoing: boolean;
 }
 
 //
@@ -101,9 +102,11 @@ const useControlParticipants = ({
 		},
 	);
 
-	const { handleQuestionSetEnd } = useControlSolvingQuestionSet({
+	const { questionSet, handleQuestionSetEnd } = useControlSolvingQuestionSet({
 		questionSetId,
 	});
+
+	const isOngoing = questionSet?.status === "ONGOING";
 
 	const { confirm } = useConfirm();
 
@@ -122,20 +125,19 @@ const useControlParticipants = ({
 	 *
 	 */
 	const refreshParticipants = useCallback(async () => {
-		const existActiveParticipants = data?.data?.activeParticipants;
-		const existEliminatedParticipants = data?.data?.eliminatedParticipants;
+		if (questionSet && questionSet.status !== "ONGOING") {
+			return;
+		}
 
-		// Update store state immediately
-		initParticipants(existActiveParticipants, existEliminatedParticipants);
+		const { data: refetchedData } = await refetch();
 
-		await refetch();
-
-		const fetchedActiveParticipants = data?.data?.activeParticipants;
-		const fetchedEliminatedParticipants = data?.data?.eliminatedParticipants;
+		const fetchedActiveParticipants = refetchedData?.data?.activeParticipants;
+		const fetchedEliminatedParticipants =
+			refetchedData?.data?.eliminatedParticipants;
 
 		// Update store state with fetched data
 		initParticipants(fetchedActiveParticipants, fetchedEliminatedParticipants);
-	}, [refetch, data, initParticipants]);
+	}, [refetch, initParticipants, questionSet]);
 
 	/**
 	 *
@@ -143,6 +145,10 @@ const useControlParticipants = ({
 	const handleAddActiveParticipant = (
 		participant: ParticipantInfoApiResponse[],
 	) => {
+		if (!isOngoing) {
+			return;
+		}
+
 		const updatedActiveParticipants = [
 			...(activeParticipants ?? []),
 			...participant,
@@ -163,6 +169,10 @@ const useControlParticipants = ({
 	const handleDeleteActiveParticipant = (
 		participant: ParticipantInfoApiResponse[],
 	) => {
+		if (!isOngoing) {
+			return;
+		}
+
 		const updatedEliminatedParticipants = [
 			...(eliminatedParticipants ?? []),
 			...participant,
@@ -183,6 +193,10 @@ const useControlParticipants = ({
 	 *
 	 */
 	const handleSumbitParticipants = async () => {
+		if (!isOngoing) {
+			return;
+		}
+
 		const submitPromise = submitParticipants({
 			params: {
 				path: {
@@ -229,6 +243,10 @@ const useControlParticipants = ({
 	 *
 	 */
 	const handleSubmitWinner = async () => {
+		if (!isOngoing) {
+			return;
+		}
+
 		const submitPromise = submitWinner({
 			params: {
 				path: {
@@ -275,13 +293,24 @@ const useControlParticipants = ({
 	};
 
 	//
+	// Reset store when switching to a different question set, so stale
+	// participants aren't shown until the new query resolves
+	// biome-ignore lint/correctness/useExhaustiveDependencies: run only when questionSetId changes
+	useEffect(() => {
+		initParticipants(undefined, undefined);
+	}, [questionSetId]);
+
 	//
-	//
+	// Initialize store with fetched data once, on mount
+	// biome-ignore lint/correctness/useExhaustiveDependencies: run only when the initial fetch resolves
 	useEffect(() => {
 		if (data && !isFetchPending) {
-			refreshParticipants();
+			initParticipants(
+				data.data?.activeParticipants,
+				data.data?.eliminatedParticipants,
+			);
 		}
-	}, [data, isFetchPending, refreshParticipants]);
+	}, [isFetchPending]);
 
 	return {
 		activeParticipants,
@@ -295,6 +324,7 @@ const useControlParticipants = ({
 		isEditing,
 		isLoading: isFetchPending,
 		isMutating: isParticipantSubmitPending || isWinnerSubmitPending,
+		isOngoing,
 	};
 };
 
