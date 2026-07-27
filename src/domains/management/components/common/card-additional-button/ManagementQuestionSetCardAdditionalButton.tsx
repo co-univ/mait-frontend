@@ -13,6 +13,7 @@ interface ManagementQuestionSetCardAdditionalButtonProps {
 	onEdit?: () => void;
 	onRestart?: () => void;
 	onReviewStatus?: () => void;
+	onControl?: () => void;
 	onDelete?: () => void;
 }
 
@@ -25,6 +26,7 @@ const ManagementQuestionSetCardAdditionalButton = ({
 	onEdit,
 	onRestart,
 	onReviewStatus,
+	onControl,
 	onDelete,
 }: ManagementQuestionSetCardAdditionalButtonProps) => {
 	const [open, setOpen] = useState(false);
@@ -92,6 +94,19 @@ const ManagementQuestionSetCardAdditionalButton = ({
 				}}
 			>
 				복습 전환
+			</Dropdown.Item>
+		),
+		onControl && (
+			<Dropdown.Item
+				key="control"
+				value="control"
+				onClick={onControl}
+				classNames={{
+					label: "font-pretendard text-color-alpha-black100",
+					button: "hover:!bg-color-alpha-white100",
+				}}
+			>
+				풀이 관리
 			</Dropdown.Item>
 		),
 		onDelete && (

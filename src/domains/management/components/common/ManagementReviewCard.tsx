@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import { notify } from "@/components/Toast";
+import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import ManagementReviewCardVisibilityDropdown from "@/domains/management/components/common/ManagementReviewCardVisibilityDropdown";
 import apiHooks from "@/libs/api/hooks";
 import type {
@@ -7,6 +9,7 @@ import type {
 	QuestionSetDto,
 	QuestionSetVisibility,
 } from "@/libs/types";
+import { createPath } from "@/utils/create-path";
 import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
 import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
@@ -30,6 +33,8 @@ const ManagementReviewCard = ({
 	questionSet,
 	invalidateQuestionSetsQuery,
 }: ManagementReviewCardProps) => {
+	const navigate = useNavigate();
+
 	const currentVisibility = questionSet.visibility ?? "PUBLIC";
 
 	const { mutate } = apiHooks.useMutation(
@@ -47,6 +52,22 @@ const ManagementReviewCard = ({
 		questionSetId: questionSet.id ?? 0,
 		invalidateQuestionSetsQuery,
 	});
+
+	/**
+	 *
+	 */
+	const handleControlButtonClick = () => {
+		const controlRoutePath =
+			questionSet.solveMode === "STUDY"
+				? CONTROL_ROUTE_PATH.STUDY_ROOT
+				: CONTROL_ROUTE_PATH.LIVE_ROOT;
+
+		navigate(
+			createPath(controlRoutePath, {
+				questionSetId: questionSet.id ?? 0,
+			}),
+		);
+	};
 
 	/**
 	 *
@@ -70,6 +91,7 @@ const ManagementReviewCard = ({
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
 				<ManagementQuestionSetCardAdditionalButton
 					status="REVIEW"
+					onControl={handleControlButtonClick}
 					onDelete={handleDeleteButtonClick}
 				/>
 			</QuestionSetsCard.Header>
