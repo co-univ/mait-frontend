@@ -89,18 +89,21 @@ const ManagementReviewStatusModal = ({
 						onChange={handleVisibilityChange}
 						className="flex justify-between py-padding-10 px-padding-11 bg-color-gray-5 rounded-radius-medium1"
 					>
-						<Radio.Item value="PUBLIC">
+						<Radio.Item value="PUBLIC" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>전체공개</Radio.Label>
 						</Radio.Item>
-						<Radio.Item value="GROUP">
+						<Radio.Item value="GROUP" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>그룹공개</Radio.Label>
 						</Radio.Item>
-						<Radio.Item value="PRIVATE">
+						{/* TEMP: block private question set */}
+						{/*
+						<Radio.Item value="PRIVATE" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>비공개</Radio.Label>
 						</Radio.Item>
+						*/}
 					</Radio.Group>
 				</Field.Root>
 				<Button

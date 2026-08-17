@@ -74,10 +74,13 @@ const CreationPublishLeftPanel = ({
 								<Radio.Label>그룹공개</Radio.Label>
 							</Radio.Item>
 						)}
+						{/* TEMP: block private question set */}
+						{/*
 						<Radio.Item value="PRIVATE" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>비공개</Radio.Label>
 						</Radio.Item>
+						*/}
 					</Radio.Group>
 				</div>
 			</Field.Root>
