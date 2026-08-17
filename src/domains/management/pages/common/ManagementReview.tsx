@@ -30,13 +30,16 @@ const ManagementReview = ({
 
 	return (
 		<div className="h-full flex flex-col gap-gap-11">
-			<QuestionSetsFilter />
+			{/* TEMP: block private question set */}
+			<QuestionSetsFilter visibilities={["PUBLIC", "GROUP"]} />
 
 			<QuestionSetsCardsLayout isLoading={isLoading}>
 				{questionSets
 					.filter((questionSet) =>
 						questionSet.visibility
-							? getIsVisibilityFiltered(questionSet.visibility)
+							? // TEMP: block private question set
+								questionSet.visibility !== "PRIVATE" &&
+								getIsVisibilityFiltered(questionSet.visibility)
 							: false,
 					)
 					.map((questionSet) => (
