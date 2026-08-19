@@ -40,7 +40,13 @@ const ControlSolvingSubmissionTableBody = ({
 	/**
 	 *
 	 */
-	const renderSubmittedAnswer = (submittedAnswer: SubmitAnswerDtoObject) => {
+	const renderSubmittedAnswer = (
+		submittedAnswer: SubmitAnswerDtoObject | undefined,
+	) => {
+		if (!submittedAnswer) {
+			return "-";
+		}
+
 		switch (submittedAnswer.type) {
 			case "MULTIPLE": {
 				return submittedAnswer.submitAnswers?.join(", ");

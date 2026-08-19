@@ -3,8 +3,8 @@ import { Dropdown } from "@/components/dropdown";
 import {
 	DEFAULT_VISIBILITY_ICON_SIZE,
 	QUESTION_SET_VISIBILITY_CONFIG,
+	type QuestionSetVisibility,
 } from "@/components/question-sets/question-sets.constants";
-import type { QuestionSetVisibility } from "@/libs/types";
 
 //
 //

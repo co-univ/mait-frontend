@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { QuestionSetsCard } from "@/components/question-sets/card";
 import { notify } from "@/components/Toast";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
@@ -17,7 +18,6 @@ import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/
 
 interface ManagementStudyCardProps {
 	questionSet: QuestionSetDto;
-	onReviewStatusModalOpen?: (questionSetId: number) => void;
 	invalidateQuestionSetsQuery?: (params?: {
 		teamId?: number;
 		mode?: DeliveryMode;
@@ -30,13 +30,14 @@ interface ManagementStudyCardProps {
 
 const ManagementStudyCard = ({
 	questionSet,
-	onReviewStatusModalOpen,
 	invalidateQuestionSetsQuery,
 }: ManagementStudyCardProps) => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const { activeTeam } = useTeams();
+
+	const { confirm } = useConfirm();
 
 	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
 		questionSetId: questionSet.id ?? 0,
@@ -133,8 +134,43 @@ const ManagementStudyCard = ({
 	/**
 	 *
 	 */
-	const handleReviewStatusButtonClick = () => {
-		onReviewStatusModalOpen?.(questionSet.id ?? 0);
+	const handleReviewStatusButtonClick = async () => {
+		const confirmed = await confirm({
+			title: "문제셋을 복습상태로 이동합니다.",
+			description: "이동 후에는 복습 목록에서 확인하실 수 있습니다.",
+		});
+
+		if (!confirmed) {
+			return;
+		}
+
+		try {
+			const res = await apiClient.PATCH(
+				"/api/v1/question-sets/{questionSetId}/review",
+				{
+					params: {
+						path: {
+							questionSetId: questionSet.id ?? 0,
+						},
+					},
+				},
+			);
+
+			if (!res.data?.isSuccess) {
+				throw new Error("Failed to change review status");
+			}
+
+			invalidateQuestionSetsQuery?.({
+				mode: "STUDY",
+			});
+			invalidateQuestionSetsQuery?.({
+				mode: "REVIEW",
+			});
+
+			notify.success("문제셋이 복습상태로 변경되었습니다.");
+		} catch {
+			notify.error("복습상태로 변경하는 도중 오류가 발생했습니다.");
+		}
 	};
 
 	/**

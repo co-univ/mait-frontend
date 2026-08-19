@@ -6,14 +6,12 @@ import Button from "@/components/Button";
 import CheckBox from "@/components/CheckBox";
 import FileInput from "@/components/FileInput";
 import { Field } from "@/components/field";
+// TEMP: backend removed the question-set visibility API; import disabled, kept for when it returns.
+// import type { QuestionSetVisibility } from "@/components/question-sets/question-sets.constants";
 import { Radio } from "@/components/radio";
 import useTeams from "@/hooks/useTeams";
 import LabeledPageLayout from "@/layouts/LabeledPageLayout";
-import type {
-	QuestionCount,
-	QuestionSetSolveMode,
-	QuestionSetVisibility,
-} from "@/libs/types";
+import type { QuestionCount, QuestionSetSolveMode } from "@/libs/types";
 import CreationCategoryField from "../../components/category/CreationCategoryField";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
@@ -54,7 +52,8 @@ const CreationNew = () => {
 		handleMaterialsDelete,
 		handleInstructionChange,
 		handleSolveModeChange,
-		handleVisibilityChange,
+		// TEMP: backend removed the question-set visibility API; handler disabled, kept for when it returns.
+		// handleVisibilityChange,
 		handleCreateButtonClick,
 		isManualType,
 		isQuestionTypeChecked,
@@ -257,41 +256,36 @@ const CreationNew = () => {
 		</Field.Root>
 	);
 
-	/**
-	 *
-	 */
-	const renderVisibilityField = () => (
-		<Field.Root className="gap-gap-9">
-			<Field.Label className="typo-body-large">공개 대상</Field.Label>
-			<div className="flex justify-between py-padding-10 px-padding-11 bg-color-gray-5 rounded-radius-medium1">
-				<Radio.Group
-					value={questionSet.visibility}
-					onChange={(value) =>
-						handleVisibilityChange(value as QuestionSetVisibility)
-					}
-					className="flex flex-1 flex-wrap gap-gap-8 justify-between"
-				>
-					<Radio.Item value="PUBLIC" className="flex-1 min-w-[100px]">
-						<Radio.Input />
-						<Radio.Label>전체공개</Radio.Label>
-					</Radio.Item>
-					{activeTeam?.teamType === "GROUP" && (
-						<Radio.Item value="GROUP" className="flex-1 min-w-[100px]">
-							<Radio.Input />
-							<Radio.Label>그룹공개</Radio.Label>
-						</Radio.Item>
-					)}
-					{/* TEMP: block private question set */}
-					{/*
-					<Radio.Item value="PRIVATE" className="flex-1 min-w-[100px]">
-						<Radio.Input />
-						<Radio.Label>비공개</Radio.Label>
-					</Radio.Item>
-					*/}
-				</Radio.Group>
-			</div>
-		</Field.Root>
-	);
+	// TEMP: backend removed the question-set visibility API; field disabled, kept for when it returns.
+	// const renderVisibilityField = () => (
+	// 	<Field.Root className="gap-gap-9">
+	// 		<Field.Label className="typo-body-large">공개 대상</Field.Label>
+	// 		<div className="flex justify-between py-padding-10 px-padding-11 bg-color-gray-5 rounded-radius-medium1">
+	// 			<Radio.Group
+	// 				value={questionSet.visibility}
+	// 				onChange={(value) =>
+	// 					handleVisibilityChange(value as QuestionSetVisibility)
+	// 				}
+	// 				className="flex flex-1 flex-wrap gap-gap-8 justify-between"
+	// 			>
+	// 				<Radio.Item value="PUBLIC" className="flex-1 min-w-[100px]">
+	// 					<Radio.Input />
+	// 					<Radio.Label>전체공개</Radio.Label>
+	// 				</Radio.Item>
+	// 				{activeTeam?.teamType === "GROUP" && (
+	// 					<Radio.Item value="GROUP" className="flex-1 min-w-[100px]">
+	// 						<Radio.Input />
+	// 						<Radio.Label>그룹공개</Radio.Label>
+	// 					</Radio.Item>
+	// 				)}
+	// 				<Radio.Item value="PRIVATE" className="flex-1 min-w-[100px]">
+	// 					<Radio.Input />
+	// 					<Radio.Label>비공개</Radio.Label>
+	// 				</Radio.Item>
+	// 			</Radio.Group>
+	// 		</div>
+	// 	</Field.Root>
+	// );
 
 	/**
 	 *
@@ -336,7 +330,9 @@ const CreationNew = () => {
 					{renderCountsField()}
 					{renderMaterialField()}
 					{renderInstructionField()}
+					{/* TEMP: backend removed the question-set visibility API; field disabled, kept for when it returns.
 					{renderVisibilityField()}
+					*/}
 					{renderSolveModeField()}
 				</CreationPanel>
 				<div className="flex justify-end">

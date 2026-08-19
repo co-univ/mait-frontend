@@ -1,10 +1,10 @@
 import clsx from "clsx";
 import { useMemo } from "react";
-import type { QuestionSetVisibility } from "@/libs/types";
 import Button from "../Button";
 import {
 	DEFAULT_VISIBILITY_ICON_SIZE,
 	QUESTION_SET_VISIBILITY_CONFIG,
+	type QuestionSetVisibility,
 } from "./question-sets.constants";
 import useQuestionSetsFilter from "./useQuestionSetsFilter";
 

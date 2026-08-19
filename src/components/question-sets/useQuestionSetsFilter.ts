@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import type { QuestionSetVisibility } from "@/libs/types";
+import type { QuestionSetVisibility } from "./question-sets.constants";
 
 //
 //

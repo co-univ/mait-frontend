@@ -1,8 +1,6 @@
-import { useState } from "react";
 import QuestionSetsLable from "@/components/question-sets/QuestionSetsLable";
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
 import type { DeliveryMode, QuestionSetGroup } from "@/libs/types";
-import ManagementReviewStatusModal from "../../components/common/ManagementReviewStatusModal";
 import ManagementStudyCard from "../../components/common/ManagementStudyCard";
 
 //
@@ -27,11 +25,6 @@ const ManagementStudy = ({
 	invalidateQuestionSetsQuery,
 	isLoading,
 }: ManagementStudyProps) => {
-	const [reviewStatusModalOpen, setReviewStatusModalOpen] = useState(false);
-	const [selectedQuestionSetId, setSelectedQuestionSetId] = useState<
-		number | null
-	>(null);
-
 	const ongoingQuestionSets = questionSetGroup?.ONGOING ?? [];
 	const beforeQuestionSets = questionSetGroup?.BEFORE ?? [];
 	const afterQuestionSets = questionSetGroup?.AFTER ?? [];
@@ -42,22 +35,6 @@ const ManagementStudy = ({
 	const hasAnyQuestionSets =
 		hasOngoingQuestionSets || hasBeforeQuestionSets || hasAfterQuestionSets;
 
-	/**
-	 *
-	 */
-	const handleReviewStatusModalOpen = (questionSetId: number) => {
-		setReviewStatusModalOpen(true);
-		setSelectedQuestionSetId(questionSetId);
-	};
-
-	/**
-	 *
-	 */
-	const handleReviewStatusModalClose = () => {
-		setReviewStatusModalOpen(false);
-		setSelectedQuestionSetId(null);
-	};
-
 	if (isLoading) {
 		return null;
 	}
@@ -67,64 +44,55 @@ const ManagementStudy = ({
 	}
 
 	return (
-		<>
-			<div className="h-full flex flex-col gap-gap-11">
-				{hasOngoingQuestionSets && (
-					<div className="flex flex-col gap-gap-11">
-						<QuestionSetsLable label="풀이 중" variant="secondary" />
+		<div className="h-full flex flex-col gap-gap-11">
+			{hasOngoingQuestionSets && (
+				<div className="flex flex-col gap-gap-11">
+					<QuestionSetsLable label="풀이 중" variant="secondary" />
 
-						<QuestionSetsCardsLayout isLoading={false}>
-							{ongoingQuestionSets.map((questionSet) => (
-								<ManagementStudyCard
-									key={questionSet.id}
-									questionSet={questionSet}
-									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-								/>
-							))}
-						</QuestionSetsCardsLayout>
-					</div>
-				)}
+					<QuestionSetsCardsLayout isLoading={false}>
+						{ongoingQuestionSets.map((questionSet) => (
+							<ManagementStudyCard
+								key={questionSet.id}
+								questionSet={questionSet}
+								invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+							/>
+						))}
+					</QuestionSetsCardsLayout>
+				</div>
+			)}
 
-				{hasBeforeQuestionSets && (
-					<div className="flex flex-col gap-gap-11">
-						<QuestionSetsLable label="풀이 전" variant="secondary" />
+			{hasBeforeQuestionSets && (
+				<div className="flex flex-col gap-gap-11">
+					<QuestionSetsLable label="풀이 전" variant="secondary" />
 
-						<QuestionSetsCardsLayout isLoading={false}>
-							{beforeQuestionSets.map((questionSet) => (
-								<ManagementStudyCard
-									key={questionSet.id}
-									questionSet={questionSet}
-									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-								/>
-							))}
-						</QuestionSetsCardsLayout>
-					</div>
-				)}
+					<QuestionSetsCardsLayout isLoading={false}>
+						{beforeQuestionSets.map((questionSet) => (
+							<ManagementStudyCard
+								key={questionSet.id}
+								questionSet={questionSet}
+								invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+							/>
+						))}
+					</QuestionSetsCardsLayout>
+				</div>
+			)}
 
-				{hasAfterQuestionSets && (
-					<div className="flex flex-col gap-gap-11">
-						<QuestionSetsLable label="풀이 완료" variant="secondary" />
+			{hasAfterQuestionSets && (
+				<div className="flex flex-col gap-gap-11">
+					<QuestionSetsLable label="풀이 완료" variant="secondary" />
 
-						<QuestionSetsCardsLayout isLoading={false}>
-							{afterQuestionSets.map((questionSet) => (
-								<ManagementStudyCard
-									key={questionSet.id}
-									questionSet={questionSet}
-									onReviewStatusModalOpen={handleReviewStatusModalOpen}
-									invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-								/>
-							))}
-						</QuestionSetsCardsLayout>
-					</div>
-				)}
-			</div>
-			<ManagementReviewStatusModal
-				open={reviewStatusModalOpen}
-				questionSetId={selectedQuestionSetId}
-				onClose={handleReviewStatusModalClose}
-				invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
-			/>
-		</>
+					<QuestionSetsCardsLayout isLoading={false}>
+						{afterQuestionSets.map((questionSet) => (
+							<ManagementStudyCard
+								key={questionSet.id}
+								questionSet={questionSet}
+								invalidateQuestionSetsQuery={invalidateQuestionSetsQuery}
+							/>
+						))}
+					</QuestionSetsCardsLayout>
+				</div>
+			)}
+		</div>
 	);
 };
 

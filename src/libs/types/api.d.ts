@@ -1769,11 +1769,6 @@ export interface components {
          * @enum {string}
          */
         QuestionSetSolveMode: "LIVE_TIME" | "STUDY";
-        /**
-         * @description 문제 셋 공개 단위
-         * @enum {string}
-         */
-        QuestionSetVisibility: "PUBLIC" | "GROUP" | "PRIVATE";
         UpdateQuestionSetApiRequest: {
             /** @description 문제 셋 제목 */
             title?: string;
@@ -1785,7 +1780,6 @@ export interface components {
             solveMode: components["schemas"]["QuestionSetSolveMode"];
             /** @description 문제 셋 난이도 설명 */
             difficulty?: string;
-            visibility?: components["schemas"]["QuestionSetVisibility"];
             /** @description 문제 셋에 매핑할 카테고리 ID 목록. null 또는 빈 목록이면 기존 매핑을 모두 제거한다. */
             categoryIds?: number[];
         };
@@ -1809,7 +1803,6 @@ export interface components {
              */
             subject?: string;
             creationType: components["schemas"]["QuestionSetCreationType"];
-            visibility: components["schemas"]["QuestionSetVisibility"];
             deliveryMode: components["schemas"]["DeliveryMode"];
             solveMode?: components["schemas"]["QuestionSetSolveMode"];
             /** Format: int64 */
@@ -2168,7 +2161,6 @@ export interface components {
             /** @enum {string} */
             creationType: "AI_GENERATED" | "MANUAL";
             solveMode: components["schemas"]["QuestionSetSolveMode"];
-            visibility: components["schemas"]["QuestionSetVisibility"];
             /** @description 업로드한 해당 문제 셋의 파일 목록 */
             materials?: components["schemas"]["MaterialDto"][];
             /** @description 제작 요청할 문제 개수 */
@@ -2725,10 +2717,6 @@ export interface components {
             /** @description 제출 여부 */
             submitted: boolean;
         };
-        UpdateQuestionSetReviewApiRequest: {
-            /** @enum {string} */
-            visibility: "PUBLIC" | "GROUP" | "PRIVATE";
-        };
         UpdateQuestionStatusApiRequest: {
             /** @enum {string} */
             statusType?: "NOT_OPEN" | "ACCESS_PERMISSION" | "SOLVE_PERMISSION";
@@ -2998,8 +2986,6 @@ export interface components {
             title?: string;
             /** @enum {string} */
             creationType?: "AI_GENERATED" | "MANUAL";
-            /** @enum {string} */
-            visibility?: "PUBLIC" | "GROUP" | "PRIVATE";
             /** @enum {string} */
             solveMode?: "LIVE_TIME" | "STUDY";
             /** @enum {string} */
@@ -4996,11 +4982,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateQuestionSetReviewApiRequest"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
