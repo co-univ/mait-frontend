@@ -1,5 +1,7 @@
 import { useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
+// TEMP: backend removed QuestionSetVisibility from the API spec; kept locally in case the feature returns.
+import type { QuestionSetVisibility } from "@/components/question-sets/question-sets.constants";
 import { notify } from "@/components/Toast";
 import useQuestionSets from "@/hooks/useQuestionSets";
 import useTeams from "@/hooks/useTeams";
@@ -9,7 +11,6 @@ import type {
 	QuestionCount,
 	QuestionSetCategoryApiResponse,
 	QuestionSetSolveMode,
-	QuestionSetVisibility,
 } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import { CREATION_ROUTE_PATH } from "../../creation.routes";
@@ -238,8 +239,12 @@ const useCreationNewQuestionSet = (): UseCreationQuestionSetReturn => {
 	 *
 	 */
 	const handleCreateButtonClick = async () => {
+		// TEMP: backend removed visibility from CreateQuestionSetApiRequest; excluded from the request body, kept locally in case the feature returns.
+		const { visibility: _visibility, ...questionSetWithoutVisibility } =
+			questionSet;
+
 		const questionSetRequestBody = {
-			...questionSet,
+			...questionSetWithoutVisibility,
 			categoryIds: questionSet.categories?.map((category) => category.id) ?? [],
 			counts:
 				questionSet.creationType === "AI_GENERATED"

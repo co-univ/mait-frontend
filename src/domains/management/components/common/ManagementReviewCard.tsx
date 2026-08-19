@@ -1,14 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
-import { notify } from "@/components/Toast";
+// TEMP: backend removed the question-set visibility API; dropdown disabled, kept for when it returns.
+// import { notify } from "@/components/Toast";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
-import ManagementReviewCardVisibilityDropdown from "@/domains/management/components/common/ManagementReviewCardVisibilityDropdown";
-import apiHooks from "@/libs/api/hooks";
-import type {
-	DeliveryMode,
-	QuestionSetDto,
-	QuestionSetVisibility,
-} from "@/libs/types";
+// import ManagementReviewCardVisibilityDropdown from "@/domains/management/components/common/ManagementReviewCardVisibilityDropdown";
+// import apiHooks from "@/libs/api/hooks";
+import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
 import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
@@ -35,18 +32,19 @@ const ManagementReviewCard = ({
 }: ManagementReviewCardProps) => {
 	const navigate = useNavigate();
 
-	const currentVisibility = questionSet.visibility ?? "PUBLIC";
-
-	const { mutate } = apiHooks.useMutation(
-		"patch",
-		"/api/v1/question-sets/{questionSetId}/review",
-		{
-			onSuccess: () => {
-				notify.success("문제 셋 공개 범위가 변경되었습니다.");
-				invalidateQuestionSetsQuery();
-			},
-		},
-	);
+	// TEMP: backend removed the question-set visibility API; mutation disabled, kept for when it returns.
+	// const currentVisibility = questionSet.visibility ?? "PUBLIC";
+	//
+	// const { mutate } = apiHooks.useMutation(
+	// 	"patch",
+	// 	"/api/v1/question-sets/{questionSetId}/review",
+	// 	{
+	// 		onSuccess: () => {
+	// 			notify.success("문제 셋 공개 범위가 변경되었습니다.");
+	// 			invalidateQuestionSetsQuery();
+	// 		},
+	// 	},
+	// );
 
 	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
 		questionSetId: questionSet.id ?? 0,
@@ -69,21 +67,19 @@ const ManagementReviewCard = ({
 		);
 	};
 
-	/**
-	 *
-	 */
-	const handleVisibilityChange = (value: QuestionSetVisibility) => {
-		mutate({
-			params: {
-				path: {
-					questionSetId: questionSet.id ?? 0,
-				},
-			},
-			body: {
-				visibility: value,
-			},
-		});
-	};
+	// TEMP: backend removed the question-set visibility API; handler disabled, kept for when it returns.
+	// const handleVisibilityChange = (value: QuestionSetVisibility) => {
+	// 	mutate({
+	// 		params: {
+	// 			path: {
+	// 				questionSetId: questionSet.id ?? 0,
+	// 			},
+	// 		},
+	// 		body: {
+	// 			visibility: value,
+	// 		},
+	// 	});
+	// };
 
 	return (
 		<QuestionSetsCard.Root>
@@ -98,10 +94,12 @@ const ManagementReviewCard = ({
 
 			<QuestionSetsCard.Footer>
 				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />
+				{/* TEMP: backend removed the question-set visibility API; dropdown disabled, kept for when it returns.
 				<ManagementReviewCardVisibilityDropdown
 					currentVisibility={currentVisibility}
 					onVisibilityChange={handleVisibilityChange}
 				/>
+				*/}
 			</QuestionSetsCard.Footer>
 		</QuestionSetsCard.Root>
 	);

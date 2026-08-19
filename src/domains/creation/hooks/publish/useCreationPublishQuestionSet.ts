@@ -1,6 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
+// TEMP: backend removed QuestionSetVisibility from the API spec; kept locally in case the feature returns.
+import type { QuestionSetVisibility } from "@/components/question-sets/question-sets.constants";
 import { notify } from "@/components/Toast";
 import { MANAGEMENT_ROUTE_PATH } from "@/domains/management/management.routes";
 import useQuestionSets from "@/hooks/useQuestionSets";
@@ -10,7 +12,6 @@ import type {
 	QuestionSetApiResponse,
 	QuestionSetCategoryApiResponse,
 	QuestionSetSolveMode,
-	QuestionSetVisibility,
 } from "@/libs/types";
 import {
 	type CreationPublishQuestionSetState,
@@ -147,7 +148,7 @@ const useCreationPublishQuestionSet = ({
 				body: {
 					title: questionSet.title,
 					difficulty: questionSet.difficulty,
-					visibility: questionSet.visibility,
+					// TEMP: backend removed visibility from UpdateQuestionSetApiRequest; excluded from the request body, kept locally in case the feature returns.
 					solveMode: questionSet.solveMode,
 					categoryIds: questionSet.categories.map((category) => category.id),
 				},

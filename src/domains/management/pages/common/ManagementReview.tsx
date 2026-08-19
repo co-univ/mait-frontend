@@ -1,5 +1,6 @@
-import QuestionSetsFilter from "@/components/question-sets/QuestionSetsFilter";
-import useQuestionSetsFilter from "@/components/question-sets/useQuestionSetsFilter";
+// TEMP: backend removed QuestionSet.visibility from the API response; filter disabled, kept for when it returns.
+// import QuestionSetsFilter from "@/components/question-sets/QuestionSetsFilter";
+// import useQuestionSetsFilter from "@/components/question-sets/useQuestionSetsFilter";
 import QuestionSetsCardsLayout from "@/layouts/question-sets/QuestionSetsCardsLayout";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import ManagementReviewCard from "../../components/common/ManagementReviewCard";
@@ -26,22 +27,24 @@ const ManagementReview = ({
 	invalidateQuestionSetsQuery,
 	isLoading,
 }: ManagementReviewProps) => {
-	const { getIsVisibilityFiltered } = useQuestionSetsFilter();
+	// TEMP: backend removed QuestionSet.visibility from the API response; filter disabled, kept for when it returns.
+	// const { getIsVisibilityFiltered } = useQuestionSetsFilter();
 
 	return (
 		<div className="h-full flex flex-col gap-gap-11">
-			{/* TEMP: block private question set */}
+			{/* TEMP: backend removed QuestionSet.visibility from the API response; filter disabled, kept for when it returns.
 			<QuestionSetsFilter visibilities={["PUBLIC", "GROUP"]} />
+			*/}
 
 			<QuestionSetsCardsLayout isLoading={isLoading}>
 				{questionSets
-					.filter((questionSet) =>
-						questionSet.visibility
-							? // TEMP: block private question set
-								questionSet.visibility !== "PRIVATE" &&
-								getIsVisibilityFiltered(questionSet.visibility)
-							: false,
-					)
+					// TEMP: backend removed QuestionSet.visibility from the API response; filter disabled, kept for when it returns.
+					// .filter((questionSet) =>
+					// 	questionSet.visibility
+					// 		? questionSet.visibility !== "PRIVATE" &&
+					// 			getIsVisibilityFiltered(questionSet.visibility)
+					// 		: false,
+					// )
 					.map((questionSet) => (
 						<ManagementReviewCard
 							key={questionSet.id}

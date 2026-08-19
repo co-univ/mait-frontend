@@ -1,7 +1,9 @@
 import { Field } from "@/components/field";
+// TEMP: backend removed QuestionSetVisibility from the API spec; kept locally in case the feature returns.
+import type { QuestionSetVisibility } from "@/components/question-sets/question-sets.constants";
 import { Radio } from "@/components/radio";
 import useTeams from "@/hooks/useTeams";
-import type { QuestionSetSolveMode, QuestionSetVisibility } from "@/libs/types";
+import type { QuestionSetSolveMode } from "@/libs/types";
 import CreationPanel from "../../components/common/CreationPanel";
 import CreationPanelTextarea from "../../components/common/CreationPanelTextarea";
 
@@ -24,10 +26,8 @@ type CreationPublishLeftPanelProps = {
 
 const CreationPublishLeftPanel = ({
 	title,
-	visibility,
 	solveMode,
 	onChangeTitle,
-	onChangeVisibility,
 	onChangeSolveMode,
 }: CreationPublishLeftPanelProps) => {
 	const { activeTeam } = useTeams();
@@ -49,43 +49,38 @@ const CreationPublishLeftPanel = ({
 		);
 	};
 
-	/**
-	 *
-	 */
-	const renderVisibilityField = () => {
-		return (
-			<Field.Root className="gap-gap-9">
-				<Field.Label className="typo-body-large">공개 대상</Field.Label>
-				<div className="flex justify-between py-padding-10 px-padding-11 bg-color-gray-5 rounded-radius-medium1">
-					<Radio.Group
-						value={visibility}
-						onChange={(value) =>
-							onChangeVisibility(value as QuestionSetVisibility)
-						}
-						className="flex flex-1 flex-wrap gap-gap-8 justify-between"
-					>
-						<Radio.Item value="PUBLIC" className="flex-1 min-w-[100px]">
-							<Radio.Input />
-							<Radio.Label>전체공개</Radio.Label>
-						</Radio.Item>
-						{activeTeam?.teamType === "GROUP" && (
-							<Radio.Item value="GROUP" className="flex-1 min-w-[100px]">
-								<Radio.Input />
-								<Radio.Label>그룹공개</Radio.Label>
-							</Radio.Item>
-						)}
-						{/* TEMP: block private question set */}
-						{/*
-						<Radio.Item value="PRIVATE" className="flex-1 min-w-[100px]">
-							<Radio.Input />
-							<Radio.Label>비공개</Radio.Label>
-						</Radio.Item>
-						*/}
-					</Radio.Group>
-				</div>
-			</Field.Root>
-		);
-	};
+	// TEMP: backend removed the question-set visibility API; field disabled, kept for when it returns.
+	// const renderVisibilityField = () => {
+	// 	return (
+	// 		<Field.Root className="gap-gap-9">
+	// 			<Field.Label className="typo-body-large">공개 대상</Field.Label>
+	// 			<div className="flex justify-between py-padding-10 px-padding-11 bg-color-gray-5 rounded-radius-medium1">
+	// 				<Radio.Group
+	// 					value={visibility}
+	// 					onChange={(value) =>
+	// 						onChangeVisibility(value as QuestionSetVisibility)
+	// 					}
+	// 					className="flex flex-1 flex-wrap gap-gap-8 justify-between"
+	// 				>
+	// 					<Radio.Item value="PUBLIC" className="flex-1 min-w-[100px]">
+	// 						<Radio.Input />
+	// 						<Radio.Label>전체공개</Radio.Label>
+	// 					</Radio.Item>
+	// 					{activeTeam?.teamType === "GROUP" && (
+	// 						<Radio.Item value="GROUP" className="flex-1 min-w-[100px]">
+	// 							<Radio.Input />
+	// 							<Radio.Label>그룹공개</Radio.Label>
+	// 						</Radio.Item>
+	// 					)}
+	// 					<Radio.Item value="PRIVATE" className="flex-1 min-w-[100px]">
+	// 						<Radio.Input />
+	// 						<Radio.Label>비공개</Radio.Label>
+	// 					</Radio.Item>
+	// 				</Radio.Group>
+	// 			</div>
+	// 		</Field.Root>
+	// 	);
+	// };
 
 	/**
 	 *
@@ -121,7 +116,9 @@ const CreationPublishLeftPanel = ({
 	return (
 		<CreationPanel>
 			{renderTitleField()}
+			{/* TEMP: backend removed the question-set visibility API; field disabled, kept for when it returns.
 			{renderVisibilityField()}
+			*/}
 			{renderModeField()}
 		</CreationPanel>
 	);

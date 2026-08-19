@@ -1,7 +1,8 @@
+// TEMP: backend removed QuestionSetVisibility from the API spec; kept locally in case the feature returns.
+import type { QuestionSetVisibility } from "@/components/question-sets/question-sets.constants";
 import type {
 	QuestionSetCategoryApiResponse,
 	QuestionSetSolveMode,
-	QuestionSetVisibility,
 	UpdateQuestionSetApiRequest,
 } from "@/libs/types";
 
@@ -11,6 +12,8 @@ import type {
 
 export type CreationPublishQuestionSetState = UpdateQuestionSetApiRequest & {
 	categories: QuestionSetCategoryApiResponse[];
+	// TEMP: backend removed visibility from UpdateQuestionSetApiRequest; kept locally in case the feature returns.
+	visibility?: QuestionSetVisibility;
 };
 
 type CreationPublishQuestionSetAction =
@@ -26,7 +29,9 @@ export const getCreationPublishQuestionInitialState = (
 	teamType?: string,
 ): CreationPublishQuestionSetState => ({
 	title: "",
-	solveMode: (teamType === "PERSONAL" ? "STUDY" : "LIVE_TIME") as QuestionSetSolveMode,
+	solveMode: (teamType === "PERSONAL"
+		? "STUDY"
+		: "LIVE_TIME") as QuestionSetSolveMode,
 	difficulty: "",
 	visibility: "PUBLIC" as QuestionSetVisibility,
 	categories: [],

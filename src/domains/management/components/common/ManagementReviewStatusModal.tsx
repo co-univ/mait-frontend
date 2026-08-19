@@ -1,11 +1,14 @@
-import { useState } from "react";
 import Button from "@/components/Button";
-import { Field } from "@/components/field";
 import Modal from "@/components/modal/Modal";
-import { Radio } from "@/components/radio";
 import { notify } from "@/components/Toast";
 import { apiClient } from "@/libs/api";
-import type { DeliveryMode, QuestionSetVisibility } from "@/libs/types";
+import type { DeliveryMode } from "@/libs/types";
+
+// TEMP: backend removed the question-set visibility API; setter UI disabled, kept for when it returns.
+// import { useState } from "react";
+// import { Field } from "@/components/field";
+// import { Radio } from "@/components/radio";
+// import type { QuestionSetVisibility } from "@/components/question-sets/question-sets.constants";
 
 //
 //
@@ -31,14 +34,12 @@ const ManagementReviewStatusModal = ({
 	invalidateQuestionSetsQuery,
 	onClose,
 }: ManagementReviewStatusModalProps) => {
-	const [visibility, setVisibility] = useState<QuestionSetVisibility>("PUBLIC");
-
-	/**
-	 *
-	 */
-	const handleVisibilityChange = (value: QuestionSetVisibility) => {
-		setVisibility(value);
-	};
+	// TEMP: backend removed the question-set visibility API; state disabled, kept for when it returns.
+	// const [visibility, setVisibility] = useState<QuestionSetVisibility>("PUBLIC");
+	//
+	// const handleVisibilityChange = (value: QuestionSetVisibility) => {
+	// 	setVisibility(value);
+	// };
 
 	/**
 	 *
@@ -52,9 +53,6 @@ const ManagementReviewStatusModal = ({
 						path: {
 							questionSetId: questionSetId ?? 0,
 						},
-					},
-					body: {
-						visibility,
 					},
 				},
 			);
@@ -82,6 +80,7 @@ const ManagementReviewStatusModal = ({
 		<Modal open={open} onClose={onClose}>
 			<div className="w-[512px] flex flex-col gap-gap-8">
 				<h2 className="typo-heading-medium">문제셋을 복습상태로 이동합니다.</h2>
+				{/* TEMP: backend removed the question-set visibility API; setter disabled, kept for when it returns.
 				<Field.Root className="gap-gap-9">
 					<Field.Label className="typo-body-large">공개범위설정</Field.Label>
 					<Radio.Group
@@ -97,15 +96,13 @@ const ManagementReviewStatusModal = ({
 							<Radio.Input />
 							<Radio.Label>그룹공개</Radio.Label>
 						</Radio.Item>
-						{/* TEMP: block private question set */}
-						{/*
 						<Radio.Item value="PRIVATE" className="flex-1 min-w-[100px]">
 							<Radio.Input />
 							<Radio.Label>비공개</Radio.Label>
 						</Radio.Item>
-						*/}
 					</Radio.Group>
 				</Field.Root>
+				*/}
 				<Button
 					item="저장하기"
 					onClick={handleSaveButtonClick}

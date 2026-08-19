@@ -1,10 +1,11 @@
+// TEMP: backend removed QuestionSetVisibility from the API spec; kept locally in case the feature returns.
+import type { QuestionSetVisibility } from "@/components/question-sets/question-sets.constants";
 import type {
 	CreateQuestionSetApiRequest,
 	MaterialDto,
 	QuestionCount,
 	QuestionSetCategoryApiResponse,
 	QuestionSetSolveMode,
-	QuestionSetVisibility,
 } from "@/libs/types";
 
 //
@@ -21,6 +22,8 @@ export type CreationNewQuestionSetState = Omit<
 				file: File;
 		  } & MaterialDto)[]
 		| undefined;
+	// TEMP: backend removed visibility from CreateQuestionSetApiRequest; kept locally in case the feature returns.
+	visibility?: QuestionSetVisibility;
 };
 
 type CreationNewQuestionSetAction =
@@ -84,7 +87,9 @@ export const creationNewQuestionSetInitialState = (
 	creationType: "AI_GENERATED",
 	categories: [],
 	title: "",
-	solveMode: (teamType === "PERSONAL" ? "STUDY" : "LIVE_TIME") as QuestionSetSolveMode,
+	solveMode: (teamType === "PERSONAL"
+		? "STUDY"
+		: "LIVE_TIME") as QuestionSetSolveMode,
 	visibility: "PUBLIC" as QuestionSetVisibility,
 	counts: [],
 	difficulty: "",
