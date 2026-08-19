@@ -3218,10 +3218,10 @@ export interface components {
             isCorrect: boolean;
             /**
              * Format: int64
-             * @description 제출 순서
+             * @description 제출 순서 (학습 모드는 null)
              */
-            submitOrder: number;
-            submittedAnswer: components["schemas"]["SubmitAnswerDtoObject"];
+            submitOrder?: number;
+            submittedAnswer?: components["schemas"]["SubmitAnswerDtoObject"];
         };
         QuestionAnswerSubmitRecordsApiResponse: {
             /**
