@@ -8,6 +8,7 @@ import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
+import useManagementMoveQuestionSet from "../../hooks/useManagementMoveQuestionSet";
 import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
@@ -52,6 +53,12 @@ const ManagementLiveTimeCard = ({
 	});
 
 	const navigate = useNavigate();
+
+	const { availableMoveModes, isMoving, handleMoveButtonClick } =
+		useManagementMoveQuestionSet({
+			questionSet,
+			mode: "LIVE_TIME",
+		});
 
 	const questionSetStatus = questionSet.status;
 
@@ -203,6 +210,9 @@ const ManagementLiveTimeCard = ({
 				{questionSetStatus === "BEFORE" && (
 					<ManagementQuestionSetCardAdditionalButton
 						status={questionSetStatus}
+						availableMoveModes={availableMoveModes}
+						isMoving={isMoving}
+						onMove={handleMoveButtonClick}
 						onEdit={handleCreationButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
