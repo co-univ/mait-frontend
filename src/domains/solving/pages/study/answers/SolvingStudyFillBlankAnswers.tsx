@@ -1,11 +1,12 @@
 import { useEffect } from "react";
+import SolvingAnswerCaseInsensitiveNotice from "@/domains/solving/components/common/answer/SolvingAnswerCaseInsensitiveNotice";
+import SolvingAnswerFillBlank from "@/domains/solving/components/common/answer/SolvingAnswerFillBlank";
+import useSolvingQuestion from "@/domains/solving/hooks/common/useSolvingQuestion";
+import useSolvingStudyAnswerStore from "@/domains/solving/stores/study/useSolvingStudyAnswerStore";
 import type {
 	FillBlankQuestionApiResponse,
 	FillBlankSubmitAnswer,
 } from "@/libs/types";
-import SolvingAnswerFillBlank from "@/domains/solving/components/common/answer/SolvingAnswerFillBlank";
-import useSolvingQuestion from "@/domains/solving/hooks/common/useSolvingQuestion";
-import useSolvingStudyAnswerStore from "@/domains/solving/stores/study/useSolvingStudyAnswerStore";
 
 //
 //
@@ -75,8 +76,13 @@ const SolvingStudyFillBlankAnswers = ({
 
 	useEffect(() => {
 		if (blankCount > 0 && userAnswers.length < blankCount) {
-			const existingNumbers = new Set(userAnswers.map((answer) => answer.number));
-			const missingAnswers = Array.from({ length: blankCount }, (_, index) => index + 1)
+			const existingNumbers = new Set(
+				userAnswers.map((answer) => answer.number),
+			);
+			const missingAnswers = Array.from(
+				{ length: blankCount },
+				(_, index) => index + 1,
+			)
 				.filter((number) => !existingNumbers.has(number))
 				.map((number) => ({
 					number,
@@ -88,16 +94,19 @@ const SolvingStudyFillBlankAnswers = ({
 	}, [blankCount, userAnswers, questionId, setUserAnswers]);
 
 	return (
-		<div className="w-full flex flex-col gap-gap-11">
-			{userAnswers.map((answer) => (
-				<SolvingAnswerFillBlank
-					key={answer.number}
-					readOnly={readOnly}
-					answer={answer}
-					variation={getVariation(answer.number)}
-					onAnswerChange={handleAnswerChange}
-				/>
-			))}
+		<div className="w-full flex flex-col">
+			<SolvingAnswerCaseInsensitiveNotice />
+			<div className="w-full flex flex-col gap-gap-11">
+				{userAnswers.map((answer) => (
+					<SolvingAnswerFillBlank
+						key={answer.number}
+						readOnly={readOnly}
+						answer={answer}
+						variation={getVariation(answer.number)}
+						onAnswerChange={handleAnswerChange}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };

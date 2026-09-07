@@ -4,9 +4,10 @@ import type {
 	FillBlankSubmitAnswer,
 	GradedAnswerFillBlankResult,
 } from "@/libs/types";
+import SolvingAnswerCaseInsensitiveNotice from "../../../components/common/answer/SolvingAnswerCaseInsensitiveNotice";
 import SolvingAnswerFillBlank from "../../../components/common/answer/SolvingAnswerFillBlank";
-import useSolvingReviewAnswerResultStore from "../../../stores/review/useSolvingReviewAnswerResultStore";
 import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
+import useSolvingReviewAnswerResultStore from "../../../stores/review/useSolvingReviewAnswerResultStore";
 
 //
 //
@@ -90,16 +91,19 @@ const SolvingReviewFillBlankAnswers = ({
 	}, [blankCount, userAnswers.length, questionId, setUserAnswers]);
 
 	return (
-		<div className="w-full flex flex-col gap-gap-11">
-			{userAnswers.map((answer) => (
-				<SolvingAnswerFillBlank
-					key={answer.number}
-					readOnly={isSubmitted}
-					answer={answer}
-					variation={getVariation(answer.number)}
-					onAnswerChange={handleAnswerChange}
-				/>
-			))}
+		<div className="w-full flex flex-col">
+			<SolvingAnswerCaseInsensitiveNotice />
+			<div className="w-full flex flex-col gap-gap-11">
+				{userAnswers.map((answer) => (
+					<SolvingAnswerFillBlank
+						key={answer.number}
+						readOnly={isSubmitted}
+						answer={answer}
+						variation={getVariation(answer.number)}
+						onAnswerChange={handleAnswerChange}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };
