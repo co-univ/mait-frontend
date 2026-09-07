@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { Dropdown } from "@/components/dropdown";
-import type { QuestionSetStatus } from "@/libs/types";
+import type { QuestionSetSolveMode, QuestionSetStatus } from "@/libs/types";
 import AdditionalButtonTrigger from "./AdditionalButtonTrigger";
 
 //
@@ -10,6 +10,9 @@ import AdditionalButtonTrigger from "./AdditionalButtonTrigger";
 
 interface ManagementQuestionSetCardAdditionalButtonProps {
 	status: QuestionSetStatus;
+	availableMoveModes?: QuestionSetSolveMode[];
+	isMoving?: boolean;
+	onMove?: (mode: QuestionSetSolveMode) => void;
 	onEdit?: () => void;
 	onRestart?: () => void;
 	onReviewStatus?: () => void;
@@ -23,6 +26,9 @@ interface ManagementQuestionSetCardAdditionalButtonProps {
 
 const ManagementQuestionSetCardAdditionalButton = ({
 	status,
+	availableMoveModes = [],
+	isMoving = false,
+	onMove,
 	onEdit,
 	onRestart,
 	onReviewStatus,
@@ -31,12 +37,17 @@ const ManagementQuestionSetCardAdditionalButton = ({
 }: ManagementQuestionSetCardAdditionalButtonProps) => {
 	const [open, setOpen] = useState(false);
 	const { confirm } = useConfirm();
+	const modeLabels: Record<QuestionSetSolveMode, string> = {
+		LIVE_TIME: "실시간모드",
+		STUDY: "학습모드",
+	};
 
 	/**
 	 *
 	 */
 	const handleDeleteClick = async () => {
 		const confirmDescriptions: Record<QuestionSetStatus, string> = {
+			MAKING: "생성한 문제셋 전체가 삭제됩니다.",
 			BEFORE: "생성한 문제셋 전체가 삭제됩니다.",
 			ONGOING:
 				"생성한 문제셋과 해당 셋의 풀이 기록 데이터가 모두 삭제됩니다.\n삭제된 데이터는 복구가 어렵습니다.",
@@ -82,6 +93,23 @@ const ManagementQuestionSetCardAdditionalButton = ({
 			>
 				재시작하기
 			</Dropdown.Item>
+		),
+		...availableMoveModes.map(
+			(mode) =>
+				onMove && (
+					<Dropdown.Item
+						key={`move-${mode}`}
+						value={`move-${mode}`}
+						disabled={isMoving}
+						onClick={() => onMove(mode)}
+						classNames={{
+							label: "font-pretendard text-color-alpha-black100",
+							button: "hover:!bg-color-alpha-white100",
+						}}
+					>
+						{modeLabels[mode]}로 이동
+					</Dropdown.Item>
+				),
 		),
 		onReviewStatus && (
 			<Dropdown.Item
@@ -129,14 +157,14 @@ const ManagementQuestionSetCardAdditionalButton = ({
 			<AdditionalButtonTrigger />
 			<Dropdown.Content autoWidth className="min-w-[180px] !z-10">
 				{items.map((item, index) => (
-					<>
+					<Fragment key={(item as { key: string }).key}>
 						{index > 0 && (
 							<Dropdown.Divider
 								key={`divider-${(item as { key: string }).key}`}
 							/>
 						)}
 						{item}
-					</>
+					</Fragment>
 				))}
 			</Dropdown.Content>
 		</Dropdown.Root>

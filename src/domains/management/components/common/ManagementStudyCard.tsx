@@ -10,6 +10,7 @@ import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
+import useManagementMoveQuestionSet from "../../hooks/useManagementMoveQuestionSet";
 import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
@@ -43,6 +44,12 @@ const ManagementStudyCard = ({
 		questionSetId: questionSet.id ?? 0,
 		invalidateQuestionSetsQuery,
 	});
+
+	const { availableMoveModes, isMoving, handleMoveButtonClick } =
+		useManagementMoveQuestionSet({
+			questionSet,
+			mode: "STUDY",
+		});
 
 	const questionSetStatus = questionSet.status;
 
@@ -254,6 +261,9 @@ const ManagementStudyCard = ({
 				{questionSetStatus === "BEFORE" && (
 					<ManagementQuestionSetCardAdditionalButton
 						status={questionSetStatus}
+						availableMoveModes={availableMoveModes}
+						isMoving={isMoving}
+						onMove={handleMoveButtonClick}
 						onEdit={handleCreationButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
