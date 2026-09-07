@@ -50,8 +50,8 @@ const useControlLiveSolvingQuestion = <
 			"patch",
 			"/api/v1/question-sets/{questionSetId}/questions/{questionId}/status",
 			{
-				onSuccess: () => {
-					base.refetchQuestion();
+				onSuccess: async () => {
+					await base.refetchQuestion();
 				},
 			},
 		);
