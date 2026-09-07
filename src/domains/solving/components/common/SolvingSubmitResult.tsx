@@ -42,7 +42,7 @@ const SolvingSubmitResult = ({
 			return <span>가장 먼저 제출했어요 🚀</span>;
 		}
 
-		return <span>{formatTimeGap(timeGap)}초 늦었어요 😆</span>;
+		return <span>1등 제출자보다 {formatTimeGap(timeGap)}초 늦었어요 😆</span>;
 	};
 
 	return (
@@ -102,7 +102,7 @@ const SolvingSubmitResult = ({
 								isMobile ? "typo-heading-xxsmall" : "typo-heading-medium",
 							)}
 						>
-							{timeGap && renderTimeGap(timeGap)}
+							{typeof timeGap === "number" && renderTimeGap(timeGap)}
 						</span>
 					</motion.span>
 				</motion.div>
