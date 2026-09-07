@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
+import { QuestionSetCardAdditionalButton } from "@/components/question-sets/card-additional-button";
+import useQuestionSetCopyModal from "@/components/question-sets/useQuestionSetCopyModal";
 // TEMP: backend removed QuestionSet.visibility from the API response; badge disabled, kept for when it returns.
 // import {
 // 	DEFAULT_VISIBILITY_ICON_SIZE,
@@ -26,6 +28,11 @@ const SolvingQuestionSetsReviewCard = ({
 	questionSet,
 }: SolvingQuestionSetsReviewCardProps) => {
 	const navigate = useNavigate();
+
+	const { copyModal, handleCopyButtonClick } = useQuestionSetCopyModal({
+		questionSetId: questionSet.id ?? 0,
+		questionSetTitle: questionSet.title,
+	});
 
 	// TEMP: backend removed QuestionSet.visibility from the API response; badge disabled, kept for when it returns.
 	// const { Icon, label } =
@@ -57,6 +64,7 @@ const SolvingQuestionSetsReviewCard = ({
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
+				<QuestionSetCardAdditionalButton onCopy={handleCopyButtonClick} />
 				{/* TEMP: backend removed QuestionSet.visibility from the API response; badge disabled, kept for when it returns.
 				<div className="flex gap-gap-5 items-center">
 					<Icon size={DEFAULT_VISIBILITY_ICON_SIZE} />
@@ -75,6 +83,8 @@ const SolvingQuestionSetsReviewCard = ({
 					/>
 				</div>
 			</QuestionSetsCard.Footer>
+
+			{copyModal}
 		</QuestionSetsCard.Root>
 	);
 };
