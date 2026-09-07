@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import SolvingAnswerCaseInsensitiveNotice from "@/domains/solving/components/common/answer/SolvingAnswerCaseInsensitiveNotice";
 import SolvingAnswerShort from "@/domains/solving/components/common/answer/SolvingAnswerShort";
 import useSolvingQuestion from "@/domains/solving/hooks/common/useSolvingQuestion";
 import useSolvingReviewAnswerResultStore from "@/domains/solving/stores/review/useSolvingReviewAnswerResultStore";
@@ -79,17 +80,20 @@ const SolvingReviewShortAnswers = ({
 	}, [answerCount, userAnswers.length, questionId, setUserAnswers]);
 
 	return (
-		<div className="flex flex-col w-full gap-gap-11">
-			{userAnswers.map((answer, index) => (
-				<SolvingAnswerShort
-					// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
-					key={index}
-					readOnly={isSubmitted}
-					variation={getVariation(index)}
-					answer={answer}
-					onChange={(value) => handleAnswerChange(index, value)}
-				/>
-			))}
+		<div className="flex flex-col w-full">
+			<SolvingAnswerCaseInsensitiveNotice />
+			<div className="flex flex-col w-full gap-gap-11">
+				{userAnswers.map((answer, index) => (
+					<SolvingAnswerShort
+						// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
+						key={index}
+						readOnly={isSubmitted}
+						variation={getVariation(index)}
+						answer={answer}
+						onChange={(value) => handleAnswerChange(index, value)}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };

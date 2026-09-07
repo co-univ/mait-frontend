@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { ShortQuestionApiResponse } from "@/libs/types";
+import SolvingAnswerCaseInsensitiveNotice from "../../../components/common/answer/SolvingAnswerCaseInsensitiveNotice";
 import SolvingAnswerShort from "../../../components/common/answer/SolvingAnswerShort";
 import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
 import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
@@ -67,7 +68,7 @@ const SolvingLiveShortAnswers = ({
 		if (!isSubmitted) {
 			return "focused";
 		}
-		
+
 		return isCorrect ? "correct" : "incorrect";
 	};
 
@@ -83,17 +84,20 @@ const SolvingLiveShortAnswers = ({
 	}, [answerCount, userAnswers.length, setUserAnswers]);
 
 	return (
-		<div className="flex flex-col w-full gap-gap-11">
-			{Array.from({ length: answerCount }).map((_, index) => (
-				<SolvingAnswerShort
-					// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
-					key={index}
-					readOnly={isDisabled}
-					variation={getAnswerVariation(index)}
-					answer={userAnswers[index] ?? ""}
-					onChange={(value) => handleAnswerChange(index, value)}
-				/>
-			))}
+		<div className="flex flex-col w-full">
+			<SolvingAnswerCaseInsensitiveNotice />
+			<div className="flex flex-col w-full gap-gap-11">
+				{Array.from({ length: answerCount }).map((_, index) => (
+					<SolvingAnswerShort
+						// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
+						key={index}
+						readOnly={isDisabled}
+						variation={getAnswerVariation(index)}
+						answer={userAnswers[index] ?? ""}
+						onChange={(value) => handleAnswerChange(index, value)}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };

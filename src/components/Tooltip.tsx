@@ -1,4 +1,11 @@
-import { arrow, offset, useFloating } from "@floating-ui/react-dom";
+import type { Placement } from "@floating-ui/react-dom";
+import {
+	arrow,
+	flip,
+	offset,
+	shift,
+	useFloating,
+} from "@floating-ui/react-dom";
 import { clsx } from "clsx";
 import { useRef } from "react";
 
@@ -9,6 +16,7 @@ import { useRef } from "react";
 interface TooltipProps {
 	open: boolean;
 	offset?: number;
+	placement?: Placement;
 	message: string;
 	variant?: "default" | "primary" | "secondary";
 	children: React.ReactNode;
@@ -32,16 +40,24 @@ interface TooltipProps {
 const Tooltip = ({
 	open,
 	offset: offsetSize = 12,
+	placement = "top",
 	message,
 	variant = "default",
 	children,
 }: TooltipProps) => {
 	const arrowRef = useRef(null);
 
-	const { refs, floatingStyles, middlewareData } = useFloating({
-		placement: "top",
+	const {
+		refs,
+		floatingStyles,
+		middlewareData,
+		placement: resolvedPlacement,
+	} = useFloating({
+		placement,
 		middleware: [
 			offset(offsetSize),
+			flip(),
+			shift({ padding: 8 }),
 			arrow({
 				element: arrowRef,
 			}),
@@ -50,10 +66,12 @@ const Tooltip = ({
 
 	return (
 		<>
-			<div ref={refs.setReference}>{children}</div>
+			<div ref={refs.setReference} className="w-fit">
+				{children}
+			</div>
 
 			{open && (
-				<div ref={refs.setFloating} style={floatingStyles}>
+				<div ref={refs.setFloating} style={floatingStyles} className="z-30">
 					<div
 						className={clsx(
 							"py-padding-2 px-padding-3 typo-body-small rounded-radius-medium1 select-none",
@@ -71,10 +89,22 @@ const Tooltip = ({
 						<div
 							ref={arrowRef}
 							className="absolute size-2 bg-inherit rotate-45"
-							style={{
-								left: middlewareData.arrow?.x,
-								bottom: -8,
-							}}
+							style={
+								resolvedPlacement.startsWith("left") ||
+								resolvedPlacement.startsWith("right")
+									? {
+											top: middlewareData.arrow?.y,
+											...(resolvedPlacement.startsWith("left")
+												? { right: -8 }
+												: { left: -8 }),
+										}
+									: {
+											left: middlewareData.arrow?.x,
+											...(resolvedPlacement.startsWith("top")
+												? { bottom: -8 }
+												: { top: -8 }),
+										}
+							}
 						/>
 					</div>
 				</div>
