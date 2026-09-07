@@ -475,6 +475,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/copy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 문제 셋 복제 API
+         * @description 원본 문제 셋을 지정한 팀으로 복제한다. 원본 팀의 멤버이면서 대상 팀에 문제 셋 생성 권한이 있어야 한다.
+         */
+        post: operations["copyQuestionSet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/categories/{categoryId}": {
         parameters: {
             query?: never;
@@ -2519,6 +2539,31 @@ export interface components {
         SendWinnerRequest: {
             winnerUserIds?: number[];
         };
+        CopyQuestionSetApiRequest: {
+            /**
+             * Format: int64
+             * @description 복제본을 생성할 팀 ID
+             */
+            targetTeamId: number;
+        };
+        ApiResponseCopyQuestionSetApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["CopyQuestionSetApiResponse"];
+        };
+        CopyQuestionSetApiResponse: {
+            /**
+             * Format: int64
+             * @description 생성된 복제본 문제 셋의 ID
+             */
+            questionSetId: number;
+            /** @description 복제본 문제 셋 제목 */
+            title: string;
+            /**
+             * Format: int64
+             * @description 복제본이 생성된 팀 ID
+             */
+            teamId: number;
+        };
         ApiResponseQuestionSetMaterialApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetMaterialApiResponse"];
@@ -4523,6 +4568,32 @@ export interface operations {
             };
         };
     };
+    copyQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CopyQuestionSetApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCopyQuestionSetApiResponse"];
+                };
+            };
+        };
+    };
     attachCategory: {
         parameters: {
             query?: never;
@@ -5390,7 +5461,9 @@ export interface operations {
     };
     getJoinedTeams: {
         parameters: {
-            query?: never;
+            query?: {
+                role?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
