@@ -102,7 +102,7 @@ const SolvingSubmitResult = ({
 								isMobile ? "typo-heading-xxsmall" : "typo-heading-medium",
 							)}
 						>
-							{timeGap && renderTimeGap(timeGap)}
+							{typeof timeGap === "number" && renderTimeGap(timeGap)}
 						</span>
 					</motion.span>
 				</motion.div>
