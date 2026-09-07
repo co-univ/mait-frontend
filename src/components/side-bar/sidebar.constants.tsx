@@ -38,8 +38,9 @@ const BASE_NAVIGATION_ITEMS: NavItem[] = [
 ];
 
 /**
- * Returns sidebar navigation items based on the active team type.
- * PERSONAL teams have no members, so a single "Category Management" item is shown instead of "Team Management" with subItems.
+ * Returns sidebar navigation items based on the active team type and role.
+ * PERSONAL teams show a single "Category Management" item, and PLAYERs in a team
+ * see "Member Management" as a single-level item.
  * @param activeTeam The currently selected team
  */
 export const getNavigationItems = (activeTeam?: TeamApiResponse): NavItem[] => {
@@ -53,6 +54,20 @@ export const getNavigationItems = (activeTeam?: TeamApiResponse): NavItem[] => {
 				activePaths: ["/team-management/categories"],
 				onboardingStep: "management",
 				isMakerOnly: true,
+			},
+		];
+	}
+
+	if (activeTeam?.role === "PLAYER") {
+		return [
+			...BASE_NAVIGATION_ITEMS,
+			{
+				icon: <Users />,
+				label: "멤버 관리",
+				path: TEAM_MANAGEMENT_ROUTE_PATH.USERS,
+				activePaths: ["/team-management/users"],
+				onboardingStep: "management",
+				isMakerOnly: false,
 			},
 		];
 	}
