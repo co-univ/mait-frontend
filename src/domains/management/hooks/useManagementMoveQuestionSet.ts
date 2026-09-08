@@ -23,14 +23,14 @@ const useManagementMoveQuestionSet = ({
 	mode,
 }: UseManagementMoveQuestionSetParams) => {
 	const queryClient = useQueryClient();
-	const { activeTeam } = useTeams();
+	const { activeTeam, isMakerOrAbove } = useTeams();
 	const { confirm } = useConfirm();
 
 	const canMoveQuestionSet =
 		!!questionSet.id &&
 		!!activeTeam &&
 		(questionSet.teamId == null || questionSet.teamId === activeTeam.teamId) &&
-		(activeTeam.teamType === "PERSONAL" || activeTeam.role === "MAKER");
+		(activeTeam.teamType === "PERSONAL" || isMakerOrAbove);
 
 	const modeLabels: Record<QuestionSetSolveMode, string> = {
 		LIVE_TIME: "실시간모드",
