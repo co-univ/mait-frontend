@@ -834,6 +834,26 @@ export interface paths {
         patch: operations["updateStudyDraft"];
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/solve-mode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 문제 셋 풀이 방식 변경
+         * @description 팀의 MAKER/OWNER가 BEFORE 상태에서만 실시간↔학습 모드를 변경한다. 제목, 카테고리, 진행 상태와 풀이 기록은 유지된다. 개인 팀은 실시간 모드로 변경할 수 없다.
+         */
+        patch: operations["changeSolveMode"];
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/review": {
         parameters: {
             query?: never;
@@ -849,7 +869,7 @@ export interface paths {
         head?: never;
         /**
          * 종료된 문제를 복습 상태로 전환
-         * @description 종료된 학습/실시간 모드의 문제를 복습 상태로 전환한다.
+         * @description 팀의 MAKER/OWNER가 AFTER 상태의 학습/실시간 문제 셋을 REVIEW로 전환한다. 원래 solveMode는 유지한다.
          */
         patch: operations["updateToReviewMode"];
         trace?: never;
@@ -2769,6 +2789,9 @@ export interface components {
             submittedAnswer?: string;
             /** @description 제출 여부 */
             submitted: boolean;
+        };
+        UpdateQuestionSetSolveModeApiRequest: {
+            solveMode: components["schemas"]["QuestionSetSolveMode"];
         };
         UpdateQuestionStatusApiRequest: {
             /** @enum {string} */
@@ -5048,6 +5071,32 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseStudyAnswerDraftApiResponse"];
+                };
+            };
+        };
+    };
+    changeSolveMode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateQuestionSetSolveModeApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetApiResponse"];
                 };
             };
         };
