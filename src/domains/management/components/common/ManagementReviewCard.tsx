@@ -50,6 +50,7 @@ const ManagementReviewCard = ({
 	const { copyModal, handleCopyButtonClick } = useQuestionSetCopyModal({
 		questionSetId: questionSet.id ?? 0,
 		questionSetTitle: questionSet.title,
+		solveMode: questionSet.solveMode,
 	});
 
 	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({

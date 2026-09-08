@@ -84,6 +84,10 @@ const QuestionSetCopyModal = ({
 		(team) => team.teamId === targetTeamId,
 	);
 
+	/** A personal workspace has no live mode, so the copy is pinned to STUDY. */
+	const isPersonalTeam = selectedTeam?.teamType === "PERSONAL";
+	const targetSolveMode: QuestionSetSolveMode = isPersonalTeam ? "STUDY" : mode;
+
 	/**
 	 *
 	 */
@@ -102,7 +106,7 @@ const QuestionSetCopyModal = ({
 			questionSetId,
 			targetTeamId,
 			title,
-			solveMode: mode,
+			solveMode: targetSolveMode,
 		});
 
 		onClose();
@@ -161,15 +165,12 @@ const QuestionSetCopyModal = ({
 	 *
 	 */
 	const renderModeField = () => {
-		if (selectedTeam?.teamType === "PERSONAL") {
-			return null;
-		}
-
 		return (
-			<Field.Root>
+			<Field.Root disabled={isPersonalTeam}>
 				<Field.Label className="typo-body-large">모드</Field.Label>
 				<Radio.Group
-					value={mode}
+					disabled={isPersonalTeam}
+					value={targetSolveMode}
 					onChange={(value) => setMode(value as QuestionSetSolveMode)}
 					className="bg-color-gray-5 flex items-center py-padding-10 px-padding-11 rounded-radius-medium1"
 				>
@@ -204,14 +205,13 @@ const QuestionSetCopyModal = ({
 					<Button
 						item="취소"
 						onClick={onClose}
-						className="py-padding-4 px-padding-8 typo-body-small"
+						className="py-padding-4 px-padding-8 bg-color-alpha-white100 border border-color-gray-10 typo-body-small"
 					/>
 					<Button
-						variant="primary"
 						disabled={isCopying}
 						item={isCopying ? "복제 중..." : "복제하기"}
 						onClick={handleCopyClick}
-						className="py-padding-4 px-padding-8 typo-body-small"
+						className="py-padding-4 px-padding-8 bg-color-primary-50 border-color-primary-50 text-color-alpha-white100 typo-body-small"
 					/>
 				</div>
 			</div>

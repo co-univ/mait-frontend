@@ -25,12 +25,6 @@ interface CopyQuestionSetParams {
 /**
  * Copies a question set into the target team and moves the user to that team's
  * 문제 생성(제작 중) tab.
- *
- * The copy API only accepts `targetTeamId`, so the chosen title is applied with a
- * follow-up PATCH. The chosen solve mode is carried over in navigation state: the
- * only endpoint that persists `solveMode` is the PUT that also completes the set,
- * which would push the copy out of 제작 중 — so the mode is applied in the creation
- * publish step instead.
  */
 const useCopyQuestionSet = () => {
 	const navigate = useNavigate();
@@ -41,11 +35,6 @@ const useCopyQuestionSet = () => {
 
 	const { mutateAsync: copyQuestionSetMutateAsync, isPending: isCopying } =
 		apiHooks.useMutation("post", "/api/v1/question-sets/{questionSetId}/copy");
-
-	const { mutateAsync: patchQuestionSetTitle } = apiHooks.useMutation(
-		"patch",
-		"/api/v1/question-sets/{questionSetId}",
-	);
 
 	/**
 	 *
@@ -60,33 +49,6 @@ const useCopyQuestionSet = () => {
 					"/api/v1/question-sets/study/progress",
 				].some((path) => query.queryKey.includes(path)),
 		});
-	};
-
-	/**
-	 * Applies the chosen title to the copy. The copy itself already succeeded at
-	 * this point, so a failure here only warns instead of failing the whole flow.
-	 */
-	const applyTitle = async (questionSetId: number, title: string) => {
-		try {
-			const res = await patchQuestionSetTitle({
-				params: {
-					path: {
-						questionSetId,
-					},
-				},
-				body: {
-					title,
-				},
-			});
-
-			if (!res.isSuccess) {
-				throw new Error("Failed to update copied question set title");
-			}
-		} catch {
-			notify.warn(
-				"문제 셋은 복제되었지만 제목 변경에 실패했습니다. 문제 생성에서 수정해주세요.",
-			);
-		}
 	};
 
 	/**
@@ -111,6 +73,8 @@ const useCopyQuestionSet = () => {
 				},
 				body: {
 					targetTeamId,
+					title: title.trim(),
+					solveMode,
 				},
 			});
 
@@ -119,11 +83,6 @@ const useCopyQuestionSet = () => {
 			}
 
 			const copied = res.data;
-			const trimmedTitle = title.trim();
-
-			if (trimmedTitle && trimmedTitle !== copied.title) {
-				await applyTitle(copied.questionSetId, trimmedTitle);
-			}
 
 			invalidateQuestionSetsQuery();
 
@@ -135,7 +94,6 @@ const useCopyQuestionSet = () => {
 			navigate(`${MANAGEMENT_ROUTE_PATH.ROOT}?mode=making`, {
 				state: {
 					copiedQuestionSetId: copied.questionSetId,
-					solveMode,
 				},
 			});
 		} catch {

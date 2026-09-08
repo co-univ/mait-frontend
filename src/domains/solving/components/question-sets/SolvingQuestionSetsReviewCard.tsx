@@ -32,6 +32,7 @@ const SolvingQuestionSetsReviewCard = ({
 	const { copyModal, handleCopyButtonClick } = useQuestionSetCopyModal({
 		questionSetId: questionSet.id ?? 0,
 		questionSetTitle: questionSet.title,
+		solveMode: questionSet.solveMode,
 	});
 
 	// TEMP: backend removed QuestionSet.visibility from the API response; badge disabled, kept for when it returns.
