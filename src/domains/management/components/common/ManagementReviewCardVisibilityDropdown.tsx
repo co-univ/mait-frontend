@@ -3,8 +3,8 @@ import { Dropdown } from "@/components/dropdown";
 import {
 	DEFAULT_VISIBILITY_ICON_SIZE,
 	QUESTION_SET_VISIBILITY_CONFIG,
+	type QuestionSetVisibility,
 } from "@/components/question-sets/question-sets.constants";
-import type { QuestionSetVisibility } from "@/libs/types";
 
 //
 //
@@ -34,16 +34,19 @@ const ManagementReviewCardVisibilityDropdown = ({
 				</div>
 			</Dropdown.Trigger>
 			<Dropdown.Content autoWidth>
-				{Object.entries(QUESTION_SET_VISIBILITY_CONFIG).map(([key, config]) => (
-					<Dropdown.Item
-						key={key}
-						value={key}
-						icon={<config.Icon size={DEFAULT_VISIBILITY_ICON_SIZE} />}
-						checkIcon={<Check size={16} />}
-					>
-						{config.label}
-					</Dropdown.Item>
-				))}
+				{/* TEMP: block private question set */}
+				{Object.entries(QUESTION_SET_VISIBILITY_CONFIG)
+					.filter(([key]) => key !== "PRIVATE")
+					.map(([key, config]) => (
+						<Dropdown.Item
+							key={key}
+							value={key}
+							icon={<config.Icon size={DEFAULT_VISIBILITY_ICON_SIZE} />}
+							checkIcon={<Check size={16} />}
+						>
+							{config.label}
+						</Dropdown.Item>
+					))}
 			</Dropdown.Content>
 		</Dropdown.Root>
 	);

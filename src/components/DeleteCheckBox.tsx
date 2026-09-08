@@ -2,12 +2,20 @@ import clsx from "clsx";
 import { SquareMinus } from "lucide-react";
 import type React from "react";
 
+//
+//
+//
+
 interface DeleteCheckBoxProps {
 	disabled?: boolean;
 	size?: number;
 	className?: string;
 	onClick?: () => void;
 }
+
+//
+//
+//
 
 const DeleteCheckBox = ({
 	disabled = false,
@@ -37,26 +45,25 @@ const DeleteCheckBox = ({
 	return (
 		<div
 			className={clsx(
-				"inline-flex cursor-pointer",
-				{
-					"opacity-50 cursor-not-allowed": disabled,
-				},
+				"inline-flex",
+				disabled ? "cursor-not-allowed" : "cursor-pointer",
 				className,
 			)}
 			onClick={handleClick}
 			onKeyDown={handleKeyDown}
 			// biome-ignore lint/a11y/useSemanticElements: DeleteCheckBox button can provide keyboard accessibility
 			role="button"
+			aria-disabled={disabled}
 			tabIndex={disabled ? -1 : 0}
 		>
 			<SquareMinus
 				size={size}
-				className={clsx(
-					"fill-color-point-5 text-color-point-5 [&>path]:text-color-point-50 hover:fill-color-point-10 hover:text-color-point-10",
-					{
-						"fill-color-gray-10 text-color-gray-10": disabled,
-					},
-				)}
+				className={clsx({
+					"fill-color-point-5 text-color-point-5 [&>path]:text-color-point-50 hover:fill-color-point-10 hover:text-color-point-10":
+						!disabled,
+					"fill-color-gray-5 text-color-gray-5 [&>path]:text-color-gray-20":
+						disabled,
+				})}
 			/>
 		</div>
 	);

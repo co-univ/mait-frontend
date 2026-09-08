@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { time } from "console";
 import { AnimatePresence, motion } from "framer-motion";
 import quizCorrect from "src/assets/images/quiz-correct.png";
 import quizIncorrect from "src/assets/images/quiz-incorrect.png";
@@ -13,7 +12,7 @@ interface SolvingSubmitResultProps {
 	correct: boolean;
 	show?: boolean;
 	onAnimationComplete?: () => void;
-	timeGap: number;
+	timeGap?: number;
 }
 
 //
@@ -43,7 +42,7 @@ const SolvingSubmitResult = ({
 			return <span>가장 먼저 제출했어요 🚀</span>;
 		}
 
-		return <span>{formatTimeGap(timeGap)}초 늦었어요 😆</span>;
+		return <span>1등 제출자보다 {formatTimeGap(timeGap)}초 늦었어요 😆</span>;
 	};
 
 	return (
@@ -103,7 +102,7 @@ const SolvingSubmitResult = ({
 								isMobile ? "typo-heading-xxsmall" : "typo-heading-medium",
 							)}
 						>
-							{renderTimeGap(timeGap)}
+							{typeof timeGap === "number" && renderTimeGap(timeGap)}
 						</span>
 					</motion.span>
 				</motion.div>

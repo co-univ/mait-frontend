@@ -3,6 +3,7 @@ import type {
 	FillBlankQuestionApiResponse,
 	FillBlankSubmitAnswer,
 } from "@/libs/types";
+import SolvingAnswerCaseInsensitiveNotice from "../../../components/common/answer/SolvingAnswerCaseInsensitiveNotice";
 import SolvingAnswerFillBlank from "../../../components/common/answer/SolvingAnswerFillBlank";
 import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
 import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
@@ -96,16 +97,19 @@ const SolvingLiveFillBlankAnswers = ({
 	}, [blankCount, userAnswers.length, setUserAnswers]);
 
 	return (
-		<div className="w-full flex flex-col gap-gap-11">
-			{userAnswers.map((answer) => (
-				<SolvingAnswerFillBlank
-					key={answer.number}
-					readOnly={isDisabled}
-					answer={answer}
-					variation={getAnswerVariation(answer.number)}
-					onAnswerChange={handleAnswerChange}
-				/>
-			))}
+		<div className="w-full flex flex-col">
+			<SolvingAnswerCaseInsensitiveNotice />
+			<div className="w-full flex flex-col gap-gap-11">
+				{userAnswers.map((answer) => (
+					<SolvingAnswerFillBlank
+						key={answer.number}
+						readOnly={isDisabled}
+						answer={answer}
+						variation={getAnswerVariation(answer.number)}
+						onAnswerChange={handleAnswerChange}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };

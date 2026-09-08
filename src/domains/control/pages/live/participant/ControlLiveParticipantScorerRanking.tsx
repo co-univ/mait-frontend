@@ -28,6 +28,7 @@ const ControlLiveParticipantScorerRanking = () => {
 		handleApplyRankSelection,
 		handleActivateAllParticipants,
 		handleEliminateAllParticipants,
+		isOngoing,
 	} = useControlParticipantRanking({
 		questionSetId,
 		type: "SCORER" as const,
@@ -94,6 +95,7 @@ const ControlLiveParticipantScorerRanking = () => {
 						<React.Fragment key={index}>
 							<ControlParticipantRankingPanel.TableRow
 								checked={checkIsAllUsersActive(users)}
+								disabled={!isOngoing}
 								rankCell={`${index + 1}등`}
 								nameCell={renderNameCell(users)}
 								onChange={(checked) =>

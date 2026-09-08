@@ -1,6 +1,8 @@
 import type { LucideIcon } from "lucide-react";
 import { LockKeyhole, LockKeyholeOpen, UsersRound } from "lucide-react";
-import type { QuestionSetVisibility } from "@/libs/types";
+
+// TEMP: backend removed QuestionSetVisibility from the API spec; kept locally in case the feature returns.
+export type QuestionSetVisibility = "PUBLIC" | "GROUP" | "PRIVATE";
 
 export interface VisibilityConfig {
 	Icon: LucideIcon;

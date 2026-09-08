@@ -475,6 +475,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/copy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 문제 셋 복제 API
+         * @description 원본 문제 셋을 요청한 제목과 풀이 방식으로 지정한 팀에 복제한다. 원본 팀의 멤버이면서 대상 팀에 문제 셋 생성 권한이 있어야 한다.
+         */
+        post: operations["copyQuestionSet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/categories/{categoryId}": {
         parameters: {
             query?: never;
@@ -814,6 +834,26 @@ export interface paths {
         patch: operations["updateStudyDraft"];
         trace?: never;
     };
+    "/api/v1/question-sets/{questionSetId}/solve-mode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 문제 셋 풀이 방식 변경
+         * @description 팀의 MAKER/OWNER가 BEFORE 상태에서만 실시간↔학습 모드를 변경한다. 제목, 카테고리, 진행 상태와 풀이 기록은 유지된다. 개인 팀은 실시간 모드로 변경할 수 없다.
+         */
+        patch: operations["changeSolveMode"];
+        trace?: never;
+    };
     "/api/v1/question-sets/{questionSetId}/review": {
         parameters: {
             query?: never;
@@ -829,7 +869,7 @@ export interface paths {
         head?: never;
         /**
          * 종료된 문제를 복습 상태로 전환
-         * @description 종료된 학습/실시간 모드의 문제를 복습 상태로 전환한다.
+         * @description 팀의 MAKER/OWNER가 AFTER 상태의 학습/실시간 문제 셋을 REVIEW로 전환한다. 원래 solveMode는 유지한다.
          */
         patch: operations["updateToReviewMode"];
         trace?: never;
@@ -1632,6 +1672,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/analytics/features": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 분석 feature 목록 조회
+         * @description 이벤트가 수집되는 분석 feature 마스터 전체를 조회한다.
+         */
+        get: operations["getFeatures"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/analytics/features/{featureId}/event-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * feature별 이벤트 통계 조회
+         * @description feature 1건에 대해 (event_name, step) 단위로 발생 수를 집계한다. event_name별로 묶어 총 발생 수와 step 분포를 함께 반환한다.
+         */
+        get: operations["getEventStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teams/{teamId}": {
         parameters: {
             query?: never;
@@ -1729,11 +1809,6 @@ export interface components {
          * @enum {string}
          */
         QuestionSetSolveMode: "LIVE_TIME" | "STUDY";
-        /**
-         * @description 문제 셋 공개 단위
-         * @enum {string}
-         */
-        QuestionSetVisibility: "PUBLIC" | "GROUP" | "PRIVATE";
         UpdateQuestionSetApiRequest: {
             /** @description 문제 셋 제목 */
             title?: string;
@@ -1745,7 +1820,6 @@ export interface components {
             solveMode: components["schemas"]["QuestionSetSolveMode"];
             /** @description 문제 셋 난이도 설명 */
             difficulty?: string;
-            visibility?: components["schemas"]["QuestionSetVisibility"];
             /** @description 문제 셋에 매핑할 카테고리 ID 목록. null 또는 빈 목록이면 기존 매핑을 모두 제거한다. */
             categoryIds?: number[];
         };
@@ -1769,7 +1843,6 @@ export interface components {
              */
             subject?: string;
             creationType: components["schemas"]["QuestionSetCreationType"];
-            visibility: components["schemas"]["QuestionSetVisibility"];
             deliveryMode: components["schemas"]["DeliveryMode"];
             solveMode?: components["schemas"]["QuestionSetSolveMode"];
             /** Format: int64 */
@@ -1940,6 +2013,11 @@ export interface components {
         } & (Omit<WithRequired<components["schemas"]["QuestionApiResponse"], "id" | "type">, "type"> & {
             /** @description 객관식 문제의 선택지 목록 */
             choices: components["schemas"]["MultipleChoiceApiResponse"][];
+            /**
+             * Format: int32
+             * @description 객관식 문제의 정답 선택지 개수 (정답 비노출 모드에서도 제공)
+             */
+            answerCount: number;
         });
         /** @description 순서 문제의 보기 목록 */
         OrderingOptionApiResponse: {
@@ -2128,7 +2206,6 @@ export interface components {
             /** @enum {string} */
             creationType: "AI_GENERATED" | "MANUAL";
             solveMode: components["schemas"]["QuestionSetSolveMode"];
-            visibility: components["schemas"]["QuestionSetVisibility"];
             /** @description 업로드한 해당 문제 셋의 파일 목록 */
             materials?: components["schemas"]["MaterialDto"][];
             /** @description 제작 요청할 문제 개수 */
@@ -2487,6 +2564,34 @@ export interface components {
         SendWinnerRequest: {
             winnerUserIds?: number[];
         };
+        CopyQuestionSetApiRequest: {
+            /**
+             * Format: int64
+             * @description 복제본을 생성할 팀 ID
+             */
+            targetTeamId: number;
+            /** @description 복제본 문제 셋 제목 */
+            title: string;
+            solveMode: components["schemas"]["QuestionSetSolveMode"];
+        };
+        ApiResponseCopyQuestionSetApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["CopyQuestionSetApiResponse"];
+        };
+        CopyQuestionSetApiResponse: {
+            /**
+             * Format: int64
+             * @description 생성된 복제본 문제 셋의 ID
+             */
+            questionSetId: number;
+            /** @description 복제본 문제 셋 제목 */
+            title: string;
+            /**
+             * Format: int64
+             * @description 복제본이 생성된 팀 ID
+             */
+            teamId: number;
+        };
         ApiResponseQuestionSetMaterialApiResponse: {
             isSuccess?: boolean;
             data?: components["schemas"]["QuestionSetMaterialApiResponse"];
@@ -2685,9 +2790,8 @@ export interface components {
             /** @description 제출 여부 */
             submitted: boolean;
         };
-        UpdateQuestionSetReviewApiRequest: {
-            /** @enum {string} */
-            visibility: "PUBLIC" | "GROUP" | "PRIVATE";
+        UpdateQuestionSetSolveModeApiRequest: {
+            solveMode: components["schemas"]["QuestionSetSolveMode"];
         };
         UpdateQuestionStatusApiRequest: {
             /** @enum {string} */
@@ -2959,8 +3063,6 @@ export interface components {
             /** @enum {string} */
             creationType?: "AI_GENERATED" | "MANUAL";
             /** @enum {string} */
-            visibility?: "PUBLIC" | "GROUP" | "PRIVATE";
-            /** @enum {string} */
             solveMode?: "LIVE_TIME" | "STUDY";
             /** @enum {string} */
             status?: "MAKING" | "BEFORE" | "ONGOING" | "AFTER" | "REVIEW";
@@ -3178,10 +3280,10 @@ export interface components {
             isCorrect: boolean;
             /**
              * Format: int64
-             * @description 제출 순서
+             * @description 제출 순서 (학습 모드는 null)
              */
-            submitOrder: number;
-            submittedAnswer: components["schemas"]["SubmitAnswerDtoObject"];
+            submitOrder?: number;
+            submittedAnswer?: components["schemas"]["SubmitAnswerDtoObject"];
         };
         QuestionAnswerSubmitRecordsApiResponse: {
             /**
@@ -3607,6 +3709,69 @@ export interface components {
             /** @description 정/오답 여부 */
             isCorrect: boolean;
             submittedAnswer: components["schemas"]["SubmitAnswerDtoObject"];
+        };
+        AnalyticsFeatureApiResponse: {
+            /**
+             * Format: int64
+             * @description feature PK
+             */
+            id: number;
+            /**
+             * @description feature 식별 키
+             * @example onboarding
+             */
+            featureKey: string;
+        };
+        ApiResponseListAnalyticsFeatureApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["AnalyticsFeatureApiResponse"][];
+        };
+        /** @description feature별 이벤트 통계 응답. event_name별 발생 수와 step 분포를 담는다. */
+        AnalyticsEventStatsApiResponse: {
+            /**
+             * @description feature 식별 키
+             * @example onboarding
+             */
+            featureKey: string;
+            /**
+             * Format: int64
+             * @description 전체 이벤트 발생 수
+             */
+            totalCount: number;
+            /** @description event_name별 통계 목록 (event_name 오름차순) */
+            events: components["schemas"]["EventStat"][];
+        };
+        ApiResponseAnalyticsEventStatsApiResponse: {
+            isSuccess?: boolean;
+            data?: components["schemas"]["AnalyticsEventStatsApiResponse"];
+        };
+        /** @description 단일 event_name에 대한 통계 */
+        EventStat: {
+            /**
+             * @description 이벤트 이름
+             * @example player_set_list_exit
+             */
+            eventName: string;
+            /**
+             * Format: int64
+             * @description 해당 이벤트 총 발생 수
+             */
+            count: number;
+            /** @description step별 발생 수 분포 (step 오름차순) */
+            steps: components["schemas"]["StepCount"][];
+        };
+        /** @description 특정 step의 발생 수 */
+        StepCount: {
+            /**
+             * Format: int32
+             * @description step 값
+             */
+            step: number;
+            /**
+             * Format: int64
+             * @description 해당 step 발생 수
+             */
+            count: number;
         };
     };
     responses: never;
@@ -4434,6 +4599,32 @@ export interface operations {
             };
         };
     };
+    copyQuestionSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CopyQuestionSetApiRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCopyQuestionSetApiResponse"];
+                };
+            };
+        };
+    };
     attachCategory: {
         parameters: {
             query?: never;
@@ -4884,7 +5075,7 @@ export interface operations {
             };
         };
     };
-    updateToReviewMode: {
+    changeSolveMode: {
         parameters: {
             query?: never;
             header?: never;
@@ -4895,9 +5086,31 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateQuestionSetReviewApiRequest"];
+                "application/json": components["schemas"]["UpdateQuestionSetSolveModeApiRequest"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseQuestionSetApiResponse"];
+                };
+            };
+        };
+    };
+    updateToReviewMode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                questionSetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -5305,7 +5518,9 @@ export interface operations {
     };
     getJoinedTeams: {
         parameters: {
-            query?: never;
+            query?: {
+                role?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -5904,6 +6119,48 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseQuestionAnswerDistributionApiResponse"];
+                };
+            };
+        };
+    };
+    getFeatures: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListAnalyticsFeatureApiResponse"];
+                };
+            };
+        };
+    };
+    getEventStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                featureId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAnalyticsEventStatsApiResponse"];
                 };
             };
         };

@@ -3,6 +3,8 @@ import { PencilLine } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
+import { QuestionSetCardAdditionalButton } from "@/components/question-sets/card-additional-button";
+import useQuestionSetCopyModal from "@/components/question-sets/useQuestionSetCopyModal";
 import { notify } from "@/components/Toast";
 import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
 import useTeams from "@/hooks/useTeams";
@@ -15,7 +17,6 @@ import type {
 } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
-import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -46,6 +47,11 @@ const ManagementMakingCard = ({
 	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
 		questionSetId: questionSet.id ?? 0,
 		invalidateQuestionSetsQuery,
+	});
+
+	const { copyModal, handleCopyButtonClick } = useQuestionSetCopyModal({
+		questionSetId: questionSet.id ?? 0,
+		questionSetTitle: questionSet.title,
 	});
 
 	const navigate = useNavigate();
@@ -209,8 +215,9 @@ const ManagementMakingCard = ({
 						</button>
 					}
 				/>
-				<ManagementQuestionSetCardAdditionalButton
+				<QuestionSetCardAdditionalButton
 					status="BEFORE"
+					onCopy={handleCopyButtonClick}
 					onDelete={handleDeleteButtonClick}
 				/>
 			</>
@@ -283,6 +290,8 @@ const ManagementMakingCard = ({
 				{!isTitleEditing && renderDefaultFooterButton()}
 				{isTitleEditing && renderTitleEditFooterButton()}
 			</QuestionSetsCard.Footer>
+
+			{copyModal}
 		</QuestionSetsCard.Root>
 	);
 };

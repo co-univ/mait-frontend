@@ -36,6 +36,7 @@ interface UseControlParticipantRankingReture<T extends "SCORER" | "CORRECT"> {
 		users?: UserApiResponse[],
 	) => void;
 	isLoading: boolean;
+	isOngoing: boolean;
 }
 
 //
@@ -53,6 +54,7 @@ const useControlParticipantRanking = <T extends "SCORER" | "CORRECT">({
 		eliminatedParticipants,
 		handleAddActiveParticipant,
 		handleDeleteActiveParticipant,
+		isOngoing,
 	} = useControlParticipants({ questionSetId });
 
 	const { data, isPending } = apiHooks.useQuery(
@@ -213,6 +215,7 @@ const useControlParticipantRanking = <T extends "SCORER" | "CORRECT">({
 		checkIsAllUsersActive,
 		handleRankingRowParticipantsChange,
 		isLoading: isPending,
+		isOngoing,
 	};
 };
 

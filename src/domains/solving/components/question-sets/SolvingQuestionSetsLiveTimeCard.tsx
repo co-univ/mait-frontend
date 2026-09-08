@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
+import { QuestionSetCardAdditionalButton } from "@/components/question-sets/card-additional-button";
+import useQuestionSetCopyModal from "@/components/question-sets/useQuestionSetCopyModal";
 import { DASHBOARD_ROUTE_PATH } from "@/domains/dashboard/dashboard.routes";
 import type { QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
@@ -23,6 +25,12 @@ const SolvingQuestionSetsLiveTimeCard = ({
 	questionSet,
 }: SolvingQuestionSetsLiveTimeCardProps) => {
 	const navigate = useNavigate();
+
+	const { copyModal, handleCopyButtonClick } = useQuestionSetCopyModal({
+		questionSetId: questionSet.id ?? 0,
+		questionSetTitle: questionSet.title,
+		solveMode: "LIVE_TIME",
+	});
 
 	const questionSetStatus = questionSet.status;
 
@@ -64,6 +72,7 @@ const SolvingQuestionSetsLiveTimeCard = ({
 		>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
+				<QuestionSetCardAdditionalButton onCopy={handleCopyButtonClick} />
 			</QuestionSetsCard.Header>
 
 			<QuestionSetsCard.Footer>
@@ -92,6 +101,8 @@ const SolvingQuestionSetsLiveTimeCard = ({
 					)}
 				</div>
 			</QuestionSetsCard.Footer>
+
+			{copyModal}
 		</QuestionSetsCard.Root>
 	);
 };

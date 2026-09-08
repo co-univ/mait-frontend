@@ -19,7 +19,7 @@ export interface UseControlSolvingQuestionProps {
 export interface UseControlSolvingQuestionReturn<TData> {
 	hasSubmitAnswerPayload: boolean;
 	question?: TData;
-	refetchQuestion: () => void;
+	refetchQuestion: () => Promise<unknown>;
 	submitAnswer: () => Promise<boolean>;
 	isLoading: boolean;
 }
@@ -156,7 +156,7 @@ const useControlSolvingQuestion = <
 	return {
 		hasSubmitAnswerPayload,
 		question: question as TData | undefined,
-		refetchQuestion: () => refetch(),
+		refetchQuestion: refetch,
 		submitAnswer,
 		isLoading: isQuestionLoading || isQuestionSetLoading,
 	};

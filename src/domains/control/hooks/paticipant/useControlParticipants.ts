@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useConfirm } from "@/components/confirm";
 import { notify } from "@/components/Toast";
 import { apiHooks } from "@/libs/api";
@@ -35,6 +35,7 @@ interface UseControlParticipantsReturn {
 	isEditing: boolean;
 	isLoading: boolean;
 	isMutating: boolean;
+	isOngoing: boolean;
 }
 
 //
@@ -53,11 +54,7 @@ const useControlParticipants = ({
 		setEliminatedParticipants,
 	} = useControlParticipantStore();
 
-	const {
-		data,
-		isPending: isFetchPending,
-		refetch,
-	} = apiHooks.useQuery(
+	const { isPending: isFetchPending, refetch } = apiHooks.useQuery(
 		"get",
 		"/api/v1/question-sets/{questionSetId}/live-status/participants",
 		{
@@ -101,9 +98,11 @@ const useControlParticipants = ({
 		},
 	);
 
-	const { handleQuestionSetEnd } = useControlSolvingQuestionSet({
+	const { questionSet, handleQuestionSetEnd } = useControlSolvingQuestionSet({
 		questionSetId,
 	});
+
+	const isOngoing = questionSet?.status === "ONGOING";
 
 	const { confirm } = useConfirm();
 
@@ -122,20 +121,19 @@ const useControlParticipants = ({
 	 *
 	 */
 	const refreshParticipants = useCallback(async () => {
-		const existActiveParticipants = data?.data?.activeParticipants;
-		const existEliminatedParticipants = data?.data?.eliminatedParticipants;
+		if (questionSet && questionSet.status !== "ONGOING") {
+			return;
+		}
 
-		// Update store state immediately
-		initParticipants(existActiveParticipants, existEliminatedParticipants);
+		const { data: refetchedData } = await refetch();
 
-		await refetch();
-
-		const fetchedActiveParticipants = data?.data?.activeParticipants;
-		const fetchedEliminatedParticipants = data?.data?.eliminatedParticipants;
+		const fetchedActiveParticipants = refetchedData?.data?.activeParticipants;
+		const fetchedEliminatedParticipants =
+			refetchedData?.data?.eliminatedParticipants;
 
 		// Update store state with fetched data
 		initParticipants(fetchedActiveParticipants, fetchedEliminatedParticipants);
-	}, [refetch, data, initParticipants]);
+	}, [refetch, initParticipants, questionSet]);
 
 	/**
 	 *
@@ -143,6 +141,10 @@ const useControlParticipants = ({
 	const handleAddActiveParticipant = (
 		participant: ParticipantInfoApiResponse[],
 	) => {
+		if (!isOngoing) {
+			return;
+		}
+
 		const updatedActiveParticipants = [
 			...(activeParticipants ?? []),
 			...participant,
@@ -163,6 +165,10 @@ const useControlParticipants = ({
 	const handleDeleteActiveParticipant = (
 		participant: ParticipantInfoApiResponse[],
 	) => {
+		if (!isOngoing) {
+			return;
+		}
+
 		const updatedEliminatedParticipants = [
 			...(eliminatedParticipants ?? []),
 			...participant,
@@ -183,6 +189,10 @@ const useControlParticipants = ({
 	 *
 	 */
 	const handleSumbitParticipants = async () => {
+		if (!isOngoing) {
+			return;
+		}
+
 		const submitPromise = submitParticipants({
 			params: {
 				path: {
@@ -229,6 +239,10 @@ const useControlParticipants = ({
 	 *
 	 */
 	const handleSubmitWinner = async () => {
+		if (!isOngoing) {
+			return;
+		}
+
 		const submitPromise = submitWinner({
 			params: {
 				path: {
@@ -271,17 +285,8 @@ const useControlParticipants = ({
 			},
 		});
 
-		handleQuestionSetEnd();
+		handleQuestionSetEnd({ skipConfirm: true });
 	};
-
-	//
-	//
-	//
-	useEffect(() => {
-		if (data && !isFetchPending) {
-			refreshParticipants();
-		}
-	}, [data, isFetchPending, refreshParticipants]);
 
 	return {
 		activeParticipants,
@@ -295,6 +300,7 @@ const useControlParticipants = ({
 		isEditing,
 		isLoading: isFetchPending,
 		isMutating: isParticipantSubmitPending || isWinnerSubmitPending,
+		isOngoing,
 	};
 };
 

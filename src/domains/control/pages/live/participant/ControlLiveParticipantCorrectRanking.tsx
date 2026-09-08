@@ -28,6 +28,7 @@ const ControlLiveParticipantCorrectRanking = () => {
 		handleApplyRankSelection,
 		handleActivateAllParticipants,
 		handleEliminateAllParticipants,
+		isOngoing,
 	} = useControlParticipantRanking({
 		questionSetId,
 		type: "CORRECT" as const,
@@ -108,6 +109,7 @@ const ControlLiveParticipantCorrectRanking = () => {
 						<React.Fragment key={index}>
 							<ControlParticipantRankingPanel.TableRow
 								checked={checkIsAllUsersActive(users)}
+								disabled={!isOngoing}
 								rankCell={renderRankCell(index + 1, users?.length ?? 0)}
 								nameCell={renderNameCell(users)}
 								onChange={(checked) =>

@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import type { ShortQuestionApiResponse } from "@/libs/types";
+import SolvingAnswerCaseInsensitiveNotice from "@/domains/solving/components/common/answer/SolvingAnswerCaseInsensitiveNotice";
 import SolvingAnswerShort from "@/domains/solving/components/common/answer/SolvingAnswerShort";
 import useSolvingQuestion from "@/domains/solving/hooks/common/useSolvingQuestion";
 import useSolvingStudyAnswerStore from "@/domains/solving/stores/study/useSolvingStudyAnswerStore";
+import type { ShortQuestionApiResponse } from "@/libs/types";
 
 //
 //
@@ -73,17 +74,20 @@ const SolvingStudyShortAnswers = ({
 	}, [answerCount, userAnswers, questionId, setUserAnswers]);
 
 	return (
-		<div className="flex flex-col w-full gap-gap-11">
-			{userAnswers.map((answer, index) => (
-				<SolvingAnswerShort
-					// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
-					key={index}
-					readOnly={readOnly}
-					variation={getVariation(index)}
-					answer={answer}
-					onChange={(value) => handleAnswerChange(index, value)}
-				/>
-			))}
+		<div className="flex flex-col w-full">
+			<SolvingAnswerCaseInsensitiveNotice />
+			<div className="flex flex-col w-full gap-gap-11">
+				{userAnswers.map((answer, index) => (
+					<SolvingAnswerShort
+						// biome-ignore lint/suspicious/noArrayIndexKey: order of short answers is fixed
+						key={index}
+						readOnly={readOnly}
+						variation={getVariation(index)}
+						answer={answer}
+						onChange={(value) => handleAnswerChange(index, value)}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };

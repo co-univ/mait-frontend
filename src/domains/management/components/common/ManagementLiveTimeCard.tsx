@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { QuestionSetsCard } from "@/components/question-sets/card";
+import { QuestionSetCardAdditionalButton } from "@/components/question-sets/card-additional-button";
+import useQuestionSetCopyModal from "@/components/question-sets/useQuestionSetCopyModal";
 import { notify } from "@/components/Toast";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
@@ -7,7 +10,7 @@ import { apiClient, apiHooks } from "@/libs/api";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
-import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
+import useManagementMoveQuestionSet from "../../hooks/useManagementMoveQuestionSet";
 
 //
 //
@@ -15,7 +18,6 @@ import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/
 
 interface ManagementLiveTimeCardProps {
 	questionSet: QuestionSetDto;
-	onReviewStatusModalOpen?: (questionSetId: number) => void;
 	invalidateQuestionSetsQuery?: (params?: {
 		teamId?: number;
 		mode?: DeliveryMode;
@@ -28,9 +30,10 @@ interface ManagementLiveTimeCardProps {
 
 const ManagementLiveTimeCard = ({
 	questionSet,
-	onReviewStatusModalOpen,
 	invalidateQuestionSetsQuery,
 }: ManagementLiveTimeCardProps) => {
+	const { confirm } = useConfirm();
+
 	const { mutate: startLiveTime } = apiHooks.useMutation(
 		"patch",
 		"/api/v1/question-sets/{questionSetId}/live-status/start",
@@ -50,7 +53,19 @@ const ManagementLiveTimeCard = ({
 		invalidateQuestionSetsQuery,
 	});
 
+	const { copyModal, handleCopyButtonClick } = useQuestionSetCopyModal({
+		questionSetId: questionSet.id ?? 0,
+		questionSetTitle: questionSet.title,
+		solveMode: "LIVE_TIME",
+	});
+
 	const navigate = useNavigate();
+
+	const { availableMoveModes, isMoving, handleMoveButtonClick } =
+		useManagementMoveQuestionSet({
+			questionSet,
+			mode: "LIVE_TIME",
+		});
 
 	const questionSetStatus = questionSet.status;
 
@@ -92,8 +107,43 @@ const ManagementLiveTimeCard = ({
 	/**
 	 *
 	 */
-	const handleReviewStatusButtonClick = () => {
-		onReviewStatusModalOpen?.(questionSet.id ?? 0);
+	const handleReviewStatusButtonClick = async () => {
+		const confirmed = await confirm({
+			title: "문제셋을 복습상태로 이동합니다.",
+			description: "이동 후에는 복습 목록에서 확인하실 수 있습니다.",
+		});
+
+		if (!confirmed) {
+			return;
+		}
+
+		try {
+			const res = await apiClient.PATCH(
+				"/api/v1/question-sets/{questionSetId}/review",
+				{
+					params: {
+						path: {
+							questionSetId: questionSet.id ?? 0,
+						},
+					},
+				},
+			);
+
+			if (!res.data?.isSuccess) {
+				throw new Error("Failed to change review status");
+			}
+
+			invalidateQuestionSetsQuery?.({
+				mode: "LIVE_TIME",
+			});
+			invalidateQuestionSetsQuery?.({
+				mode: "REVIEW",
+			});
+
+			notify.success("문제셋이 복습상태로 변경되었습니다.");
+		} catch {
+			notify.error("복습상태로 변경하는 도중 오류가 발생했습니다.");
+		}
 	};
 
 	/**
@@ -151,8 +201,8 @@ const ManagementLiveTimeCard = ({
 			return (
 				<QuestionSetsCard.Footer.Button
 					variant="secondary"
-					item="복습 전환"
-					onClick={handleReviewStatusButtonClick}
+					item="풀이 관리"
+					onClick={handleControlButtonClick}
 				/>
 			);
 		}
@@ -165,16 +215,22 @@ const ManagementLiveTimeCard = ({
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
 				{questionSetStatus === "BEFORE" && (
-					<ManagementQuestionSetCardAdditionalButton
+					<QuestionSetCardAdditionalButton
 						status={questionSetStatus}
+						availableMoveModes={availableMoveModes}
+						isMoving={isMoving}
+						onMove={handleMoveButtonClick}
 						onEdit={handleCreationButtonClick}
+						onCopy={handleCopyButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
 				)}
 				{questionSetStatus === "AFTER" && (
-					<ManagementQuestionSetCardAdditionalButton
+					<QuestionSetCardAdditionalButton
 						status={questionSetStatus}
 						onRestart={handleRestartButtonClick}
+						onReviewStatus={handleReviewStatusButtonClick}
+						onCopy={handleCopyButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
 				)}
@@ -184,6 +240,8 @@ const ManagementLiveTimeCard = ({
 				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />
 				{renderFooterButton()}
 			</QuestionSetsCard.Footer>
+
+			{copyModal}
 		</QuestionSetsCard.Root>
 	);
 };
