@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { QuestionSetsCard } from "@/components/question-sets/card";
+import { QuestionSetCardAdditionalButton } from "@/components/question-sets/card-additional-button";
+import useQuestionSetCopyModal from "@/components/question-sets/useQuestionSetCopyModal";
 import { notify } from "@/components/Toast";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import { CREATION_ROUTE_PATH } from "@/domains/creation/creation.routes";
@@ -9,7 +11,6 @@ import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
 import useManagementMoveQuestionSet from "../../hooks/useManagementMoveQuestionSet";
-import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -50,6 +51,12 @@ const ManagementLiveTimeCard = ({
 	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
 		questionSetId: questionSet.id ?? 0,
 		invalidateQuestionSetsQuery,
+	});
+
+	const { copyModal, handleCopyButtonClick } = useQuestionSetCopyModal({
+		questionSetId: questionSet.id ?? 0,
+		questionSetTitle: questionSet.title,
+		solveMode: "LIVE_TIME",
 	});
 
 	const navigate = useNavigate();
@@ -208,20 +215,22 @@ const ManagementLiveTimeCard = ({
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
 				{questionSetStatus === "BEFORE" && (
-					<ManagementQuestionSetCardAdditionalButton
+					<QuestionSetCardAdditionalButton
 						status={questionSetStatus}
 						availableMoveModes={availableMoveModes}
 						isMoving={isMoving}
 						onMove={handleMoveButtonClick}
 						onEdit={handleCreationButtonClick}
+						onCopy={handleCopyButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
 				)}
 				{questionSetStatus === "AFTER" && (
-					<ManagementQuestionSetCardAdditionalButton
+					<QuestionSetCardAdditionalButton
 						status={questionSetStatus}
 						onRestart={handleRestartButtonClick}
 						onReviewStatus={handleReviewStatusButtonClick}
+						onCopy={handleCopyButtonClick}
 						onDelete={handleDeleteButtonClick}
 					/>
 				)}
@@ -231,6 +240,8 @@ const ManagementLiveTimeCard = ({
 				<QuestionSetsCard.Footer.Date date={questionSet.updatedAt} />
 				{renderFooterButton()}
 			</QuestionSetsCard.Footer>
+
+			{copyModal}
 		</QuestionSetsCard.Root>
 	);
 };

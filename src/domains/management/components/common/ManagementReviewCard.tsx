@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { QuestionSetsCard } from "@/components/question-sets/card";
+import { QuestionSetCardAdditionalButton } from "@/components/question-sets/card-additional-button";
+import useQuestionSetCopyModal from "@/components/question-sets/useQuestionSetCopyModal";
 // TEMP: backend removed the question-set visibility API; dropdown disabled, kept for when it returns.
 // import { notify } from "@/components/Toast";
 import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
@@ -8,7 +10,6 @@ import { CONTROL_ROUTE_PATH } from "@/domains/control/control.routes";
 import type { DeliveryMode, QuestionSetDto } from "@/libs/types";
 import { createPath } from "@/utils/create-path";
 import useManagementDeleteQuestionSet from "../../hooks/useManagementDeleteQuestionSet";
-import ManagementQuestionSetCardAdditionalButton from "./card-additional-button/ManagementQuestionSetCardAdditionalButton";
 
 //
 //
@@ -45,6 +46,12 @@ const ManagementReviewCard = ({
 	// 		},
 	// 	},
 	// );
+
+	const { copyModal, handleCopyButtonClick } = useQuestionSetCopyModal({
+		questionSetId: questionSet.id ?? 0,
+		questionSetTitle: questionSet.title,
+		solveMode: questionSet.solveMode,
+	});
 
 	const { handleDeleteButtonClick } = useManagementDeleteQuestionSet({
 		questionSetId: questionSet.id ?? 0,
@@ -85,9 +92,10 @@ const ManagementReviewCard = ({
 		<QuestionSetsCard.Root>
 			<QuestionSetsCard.Header>
 				<QuestionSetsCard.Header.Title title={questionSet.title} />
-				<ManagementQuestionSetCardAdditionalButton
+				<QuestionSetCardAdditionalButton
 					status="REVIEW"
 					onControl={handleControlButtonClick}
+					onCopy={handleCopyButtonClick}
 					onDelete={handleDeleteButtonClick}
 				/>
 			</QuestionSetsCard.Header>
@@ -101,6 +109,8 @@ const ManagementReviewCard = ({
 				/>
 				*/}
 			</QuestionSetsCard.Footer>
+
+			{copyModal}
 		</QuestionSetsCard.Root>
 	);
 };

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dropdown } from "@/components/dropdown";
-import AdditionalButtonTrigger from "@/domains/management/components/common/card-additional-button/AdditionalButtonTrigger";
+import { AdditionalButtonTrigger } from "@/components/question-sets/card-additional-button";
 
 //
 //

@@ -8,8 +8,9 @@ import AdditionalButtonTrigger from "./AdditionalButtonTrigger";
 //
 //
 
-interface ManagementQuestionSetCardAdditionalButtonProps {
-	status: QuestionSetStatus;
+interface QuestionSetCardAdditionalButtonProps {
+	/** Drives the delete confirm copy. Only required when `onDelete` is provided. */
+	status?: QuestionSetStatus;
 	availableMoveModes?: QuestionSetSolveMode[];
 	isMoving?: boolean;
 	onMove?: (mode: QuestionSetSolveMode) => void;
@@ -17,6 +18,7 @@ interface ManagementQuestionSetCardAdditionalButtonProps {
 	onRestart?: () => void;
 	onReviewStatus?: () => void;
 	onControl?: () => void;
+	onCopy?: () => void;
 	onDelete?: () => void;
 }
 
@@ -24,7 +26,7 @@ interface ManagementQuestionSetCardAdditionalButtonProps {
 //
 //
 
-const ManagementQuestionSetCardAdditionalButton = ({
+const QuestionSetCardAdditionalButton = ({
 	status,
 	availableMoveModes = [],
 	isMoving = false,
@@ -33,8 +35,9 @@ const ManagementQuestionSetCardAdditionalButton = ({
 	onRestart,
 	onReviewStatus,
 	onControl,
+	onCopy,
 	onDelete,
-}: ManagementQuestionSetCardAdditionalButtonProps) => {
+}: QuestionSetCardAdditionalButtonProps) => {
 	const [open, setOpen] = useState(false);
 	const { confirm } = useConfirm();
 	const modeLabels: Record<QuestionSetSolveMode, string> = {
@@ -59,7 +62,7 @@ const ManagementQuestionSetCardAdditionalButton = ({
 
 		const confirmed = await confirm({
 			title: "정말 삭제하시겠습니까?",
-			description: confirmDescriptions[status],
+			description: confirmDescriptions[status ?? "MAKING"],
 		});
 
 		if (confirmed) {
@@ -137,6 +140,19 @@ const ManagementQuestionSetCardAdditionalButton = ({
 				풀이 관리
 			</Dropdown.Item>
 		),
+		onCopy && (
+			<Dropdown.Item
+				key="copy"
+				value="copy"
+				onClick={onCopy}
+				classNames={{
+					label: "font-pretendard text-color-alpha-black100",
+					button: "hover:!bg-color-alpha-white100",
+				}}
+			>
+				복제하기
+			</Dropdown.Item>
+		),
 		onDelete && (
 			<Dropdown.Item
 				key="delete"
@@ -171,4 +187,4 @@ const ManagementQuestionSetCardAdditionalButton = ({
 	);
 };
 
-export default ManagementQuestionSetCardAdditionalButton;
+export default QuestionSetCardAdditionalButton;
