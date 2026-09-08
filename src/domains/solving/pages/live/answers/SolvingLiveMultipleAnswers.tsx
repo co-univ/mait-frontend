@@ -1,7 +1,8 @@
 import type { MultipleQuestionApiResponse } from "@/libs/types";
 import SolvingAnswerMultiple from "../../../components/common/answer/SolvingAnswerMultiple";
-import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
 import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
+import useSolvingLiveAnswerStore from "../../../stores/live/useSolvingLiveAnswerStore";
+import { solvingToggleMultipleChoice } from "../../../utils/solvingMultipleChoice";
 
 //
 //
@@ -47,9 +48,11 @@ const SolvingLiveMultipleAnswers = ({
 			return;
 		}
 
-		const newAnswers = userAnswers.includes(choiceNumber)
-			? userAnswers.filter((num) => num !== choiceNumber)
-			: [...userAnswers, choiceNumber];
+		const newAnswers = solvingToggleMultipleChoice(
+			userAnswers,
+			choiceNumber,
+			multipleQuestion?.answerCount,
+		);
 
 		setUserAnswers(newAnswers);
 	};

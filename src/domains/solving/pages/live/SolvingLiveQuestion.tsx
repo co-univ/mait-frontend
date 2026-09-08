@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import QuestionContent from "@/components/QuestionContent";
+import type { MultipleQuestionApiResponse } from "@/libs/types";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import SolvingSubmitResult from "../../components/common/SolvingSubmitResult";
@@ -7,6 +8,7 @@ import useSolvingQuestion from "../../hooks/common/useSolvingQuestion";
 import useSolvingLiveAnswerSubmit from "../../hooks/live/useSolvingLiveAnswerSubmit";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import useSolvingLiveAnswerStore from "../../stores/live/useSolvingLiveAnswerStore";
+import { solvingWithAllSelectNotice } from "../../utils/solvingMultipleChoice";
 import SolvingLiveFillBlankAnswers from "./answers/SolvingLiveFillBlankAnswers";
 import SolvingLiveMultipleAnswers from "./answers/SolvingLiveMultipleAnswers";
 import SolvingLiveOrderingAnswers from "./answers/SolvingLiveOrderingAnswers";
@@ -50,11 +52,14 @@ const SolvingLiveQuestion = ({
 }: SolvingLiveQuestionProps) => {
 	const [showCorrect, setShowCorrect] = useState(false);
 
-	const { content, number, imageUrl, type, isLoading } = useSolvingQuestion({
-		questionSetId,
-		questionId,
-		mode: "LIVE_TIME",
-	});
+	const { question, content, number, imageUrl, type, isLoading } =
+		useSolvingQuestion({
+			questionSetId,
+			questionId,
+			mode: "LIVE_TIME",
+		});
+
+	const multipleQuestion = question as MultipleQuestionApiResponse | undefined;
 
 	const { getType, getIsSubmitted, getIsCorrect, setQuestionType, reset } =
 		useSolvingLiveAnswerStore();
@@ -65,7 +70,11 @@ const SolvingLiveQuestion = ({
 	const { submitAnswer, timeGap, isSubmitting } = useSolvingLiveAnswerSubmit();
 
 	// 제출 비활성화 조건: 탈락했거나 제출 비허용이거나 제출 중인 상태거나 맞은 경우
-	const isSubmitDisabled = isFailed || !isSubmitAllowed || isSubmitting || (isSubmitted && !!isCorrect);
+	const isSubmitDisabled =
+		isFailed ||
+		!isSubmitAllowed ||
+		isSubmitting ||
+		(isSubmitted && !!isCorrect);
 
 	// 답안 입력 비활성화 조건: 탈락한 경우만
 	const isAnswerDisabled = isFailed;
@@ -172,7 +181,12 @@ const SolvingLiveQuestion = ({
 				handleAnswersSubmit={handleAnswersSubmit}
 			/>
 
-			<QuestionContent content={content} />
+			<QuestionContent
+				content={solvingWithAllSelectNotice(
+					content,
+					multipleQuestion?.answerCount,
+				)}
+			/>
 
 			<SolvingQuizImage src={imageUrl} />
 

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import QuestionContent from "@/components/QuestionContent";
 import { apiHooks } from "@/libs/api";
+import type { MultipleQuestionApiResponse } from "@/libs/types";
 import { GTM_EVENT_NAMES, trackEvent } from "@/utils/track-event";
 import SolvingQuizImage from "../../components/common/SolvingQuizImage";
 import SolvingSubmitResult from "../../components/common/SolvingSubmitResult";
@@ -12,6 +13,7 @@ import useSolvingReviewExplanation from "../../hooks/review/useSolvingReviewExpl
 import useSolvingReviewQuestions from "../../hooks/review/useSolvingReviewQuestions";
 import SolvingLayout from "../../layouts/common/SolvingLayout";
 import useSolvingReviewAnswerResultStore from "../../stores/review/useSolvingReviewAnswerResultStore";
+import { solvingWithAllSelectNotice } from "../../utils/solvingMultipleChoice";
 import SolvingReviewFillBlankAnswers from "./answers/SolvingReviewFillBlankAnswers";
 import SolvingReviewMultipleAnswers from "./answers/SolvingReviewMultipleAnswers";
 import SolvingReviewOrderingAnswers from "./answers/SolvingReviewOrderingAnswers";
@@ -55,6 +57,8 @@ const SolvingReview = () => {
 			questionId,
 			mode: "REVIEW",
 		});
+
+	const multipleQuestion = question as MultipleQuestionApiResponse | undefined;
 
 	// Store
 	const { getIsSubmitted, getIsCorrect, setAnswerInitInfo, reset } =
@@ -330,7 +334,12 @@ const SolvingReview = () => {
 				hideExplanation={hideExplanation}
 			/>
 
-			<QuestionContent content={content} />
+			<QuestionContent
+				content={solvingWithAllSelectNotice(
+					content,
+					multipleQuestion?.answerCount,
+				)}
+			/>
 
 			<SolvingQuizImage src={imageUrl} />
 

@@ -1,7 +1,8 @@
-import type { MultipleQuestionApiResponse } from "@/libs/types";
 import SolvingAnswerMultiple from "@/domains/solving/components/common/answer/SolvingAnswerMultiple";
 import useSolvingQuestion from "@/domains/solving/hooks/common/useSolvingQuestion";
 import useSolvingStudyAnswerStore from "@/domains/solving/stores/study/useSolvingStudyAnswerStore";
+import { solvingToggleMultipleChoice } from "@/domains/solving/utils/solvingMultipleChoice";
+import type { MultipleQuestionApiResponse } from "@/libs/types";
 
 //
 //
@@ -44,9 +45,11 @@ const SolvingStudyMultipleAnswers = ({
 			return;
 		}
 
-		const newAnswers = userAnswers.includes(choiceNumber)
-			? userAnswers.filter((num) => num !== choiceNumber)
-			: [...userAnswers, choiceNumber];
+		const newAnswers = solvingToggleMultipleChoice(
+			userAnswers,
+			choiceNumber,
+			multipleQuestion?.answerCount,
+		);
 
 		setUserAnswers(questionId, newAnswers);
 	};

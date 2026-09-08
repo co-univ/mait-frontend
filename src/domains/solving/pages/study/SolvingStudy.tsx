@@ -6,7 +6,7 @@ import { useConfirm } from "@/components/confirm";
 import QuestionContent from "@/components/QuestionContent";
 import { notify } from "@/components/Toast";
 import { apiClient, apiHooks } from "@/libs/api";
-import type { QuestionType } from "@/libs/types";
+import type { MultipleQuestionApiResponse, QuestionType } from "@/libs/types";
 import ErrorDetect from "@/pages/ErrorDetect";
 import Loading from "@/pages/Loading";
 import { createPath } from "@/utils/create-path";
@@ -23,6 +23,7 @@ import {
 	solvingBuildStudyDraftData,
 } from "../../utils/solvingBuildStudyDraftData";
 import { solvingIsStudyQuestionAnswered } from "../../utils/solvingIsStudyQuestionAnswered";
+import { solvingWithAllSelectNotice } from "../../utils/solvingMultipleChoice";
 import { solvingParseStudyDraftData } from "../../utils/solvingParseStudyDraftData";
 import SolvingReviewExplanation from "../review/SolvingReviewExplanation";
 import SolvingStudyFillBlankAnswers from "./answers/SolvingStudyFillBlankAnswers";
@@ -56,6 +57,8 @@ const SolvingStudy = () => {
 			questionId,
 			mode: "STUDY",
 		});
+
+	const multipleQuestion = question as MultipleQuestionApiResponse | undefined;
 	const {
 		isGraded,
 		result,
@@ -374,7 +377,12 @@ const SolvingStudy = () => {
 				onQuestionNavigate={handleQuestionNavigate}
 				onSubmit={handleAnswersSubmit}
 			/>
-			<QuestionContent content={content} />
+			<QuestionContent
+				content={solvingWithAllSelectNotice(
+					content,
+					multipleQuestion?.answerCount,
+				)}
+			/>
 			<SolvingQuizImage src={imageUrl} />
 			{renderQuestionAnswers()}
 			{isGraded && (
