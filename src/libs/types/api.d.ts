@@ -1993,6 +1993,11 @@ export interface components {
         } & (Omit<WithRequired<components["schemas"]["QuestionApiResponse"], "id" | "type">, "type"> & {
             /** @description 객관식 문제의 선택지 목록 */
             choices: components["schemas"]["MultipleChoiceApiResponse"][];
+            /**
+             * Format: int32
+             * @description 객관식 문제의 정답 선택지 개수 (정답 비노출 모드에서도 제공)
+             */
+            answerCount: number;
         });
         /** @description 순서 문제의 보기 목록 */
         OrderingOptionApiResponse: {
