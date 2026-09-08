@@ -1,14 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { useConfirm } from "@/components/confirm/ConfirmContext";
 import { notify } from "@/components/Toast";
 import useTeams from "@/hooks/useTeams";
-import { apiClient, apiHooks } from "@/libs/api";
-import type {
-	QuestionSetApiResponse,
-	QuestionSetDto,
-	QuestionSetSolveMode,
-} from "@/libs/types";
+import { apiHooks } from "@/libs/api";
+import type { QuestionSetDto, QuestionSetSolveMode } from "@/libs/types";
 
 //
 //
@@ -30,7 +25,6 @@ const useManagementMoveQuestionSet = ({
 	const queryClient = useQueryClient();
 	const { activeTeam } = useTeams();
 	const { confirm } = useConfirm();
-	const [isMoving, setIsMoving] = useState(false);
 
 	const canMoveQuestionSet =
 		!!questionSet.id &&
@@ -75,44 +69,33 @@ const useManagementMoveQuestionSet = ({
 		});
 	};
 
-	/**
-	 *
-	 */
-	const getQuestionSet = async (questionSetId: number) => {
-		const res = await apiClient.GET("/api/v1/question-sets/{questionSetId}", {
-			params: { path: { questionSetId } },
-		});
+	const { mutate: changeSolveMode, isPending: isMoving } = apiHooks.useMutation(
+		"patch",
+		"/api/v1/question-sets/{questionSetId}/solve-mode",
+		{
+			onSuccess: (_res, variables) => {
+				const targetMode = variables.body.solveMode;
 
-		if (!res.data?.isSuccess || !res.data.data) {
-			throw new Error("Failed to get question set");
-		}
-
-		return res.data.data;
-	};
-
-	/**
-	 *
-	 */
-	const updateQuestionSetMode = async (
-		questionSetData: QuestionSetApiResponse,
-		solveMode: QuestionSetSolveMode,
-	) => {
-		const res = await apiClient.PUT("/api/v1/question-sets/{questionSetId}", {
-			params: { path: { questionSetId: questionSetData.id } },
-			body: {
-				title: questionSetData.title,
-				difficulty: questionSetData.difficulty,
-				solveMode,
-				categoryIds: questionSetData.categories
-					.map((category) => category.id)
-					.filter((id): id is number => id != null),
+				invalidateQuestionSetsQuery();
+				queryClient.invalidateQueries({
+					queryKey: apiHooks.queryOptions(
+						"get",
+						"/api/v1/question-sets/{questionSetId}",
+						{
+							params: {
+								path: { questionSetId: questionSet.id ?? 0 },
+							},
+						},
+					).queryKey,
+				});
+				notify.success(`문제 셋이 ${modeLabels[targetMode]}로 이동되었습니다.`);
 			},
-		});
-
-		if (!res.data?.isSuccess) {
-			throw new Error("Failed to change question set mode");
-		}
-	};
+			onError: () => {
+				invalidateQuestionSetsQuery();
+				notify.error("문제 셋 이동에 실패했습니다.");
+			},
+		},
+	);
 
 	/**
 	 *
@@ -122,50 +105,23 @@ const useManagementMoveQuestionSet = ({
 			return;
 		}
 
-		setIsMoving(true);
+		const confirmed = await confirm({
+			title: `문제셋을 ${modeLabels[targetMode]}로 이동합니다.`,
+			description: "이동 후에는 해당 모드의 목록에서 확인하실 수 있습니다.",
+		});
 
-		try {
-			const confirmed = await confirm({
-				title: `문제셋을 ${modeLabels[targetMode]}로 이동합니다.`,
-				description: "이동 후에는 해당 모드의 목록에서 확인하실 수 있습니다.",
-			});
-
-			if (!confirmed) {
-				return;
-			}
-
-			const questionSetData = await getQuestionSet(questionSet.id ?? 0);
-
-			if (
-				questionSetData.status !== questionSet.status ||
-				questionSetData.solveMode !== mode ||
-				questionSetData.teamId !== activeTeam?.teamId
-			) {
-				invalidateQuestionSetsQuery();
-				notify.error(
-					"문제 셋 상태가 변경되었습니다. 목록을 다시 확인해 주세요.",
-				);
-				return;
-			}
-
-			await updateQuestionSetMode(questionSetData, targetMode);
-
-			invalidateQuestionSetsQuery();
-			queryClient.invalidateQueries({
-				queryKey: apiHooks.queryOptions(
-					"get",
-					"/api/v1/question-sets/{questionSetId}",
-					{
-						params: { path: { questionSetId: questionSetData.id } },
-					},
-				).queryKey,
-			});
-			notify.success(`문제 셋이 ${modeLabels[targetMode]}로 이동되었습니다.`);
-		} catch {
-			notify.error("문제 셋 이동에 실패했습니다.");
-		} finally {
-			setIsMoving(false);
+		if (!confirmed) {
+			return;
 		}
+
+		changeSolveMode({
+			params: {
+				path: { questionSetId: questionSet.id ?? 0 },
+			},
+			body: {
+				solveMode: targetMode,
+			},
+		});
 	};
 
 	return {
