@@ -5,6 +5,7 @@ import type {
 import SolvingAnswerMultiple from "../../../components/common/answer/SolvingAnswerMultiple";
 import useSolvingQuestion from "../../../hooks/common/useSolvingQuestion";
 import useSolvingReviewAnswerResultStore from "../../../stores/review/useSolvingReviewAnswerResultStore";
+import { solvingToggleMultipleChoice } from "../../../utils/solvingMultipleChoice";
 
 //
 //
@@ -49,9 +50,11 @@ const SolvingReviewMultipleAnswers = ({
 			return;
 		}
 
-		const newAnswers = userAnswers.includes(choiceNumber)
-			? userAnswers.filter((num) => num !== choiceNumber)
-			: [...userAnswers, choiceNumber];
+		const newAnswers = solvingToggleMultipleChoice(
+			userAnswers,
+			choiceNumber,
+			multipleQuestion?.answerCount,
+		);
 
 		setUserAnswers(questionId, newAnswers);
 	};
