@@ -486,7 +486,7 @@ export interface paths {
         put?: never;
         /**
          * 문제 셋 복제 API
-         * @description 원본 문제 셋을 지정한 팀으로 복제한다. 원본 팀의 멤버이면서 대상 팀에 문제 셋 생성 권한이 있어야 한다.
+         * @description 원본 문제 셋을 요청한 제목과 풀이 방식으로 지정한 팀에 복제한다. 원본 팀의 멤버이면서 대상 팀에 문제 셋 생성 권한이 있어야 한다.
          */
         post: operations["copyQuestionSet"];
         delete?: never;
@@ -1993,6 +1993,11 @@ export interface components {
         } & (Omit<WithRequired<components["schemas"]["QuestionApiResponse"], "id" | "type">, "type"> & {
             /** @description 객관식 문제의 선택지 목록 */
             choices: components["schemas"]["MultipleChoiceApiResponse"][];
+            /**
+             * Format: int32
+             * @description 객관식 문제의 정답 선택지 개수 (정답 비노출 모드에서도 제공)
+             */
+            answerCount: number;
         });
         /** @description 순서 문제의 보기 목록 */
         OrderingOptionApiResponse: {
@@ -2545,6 +2550,9 @@ export interface components {
              * @description 복제본을 생성할 팀 ID
              */
             targetTeamId: number;
+            /** @description 복제본 문제 셋 제목 */
+            title: string;
+            solveMode: components["schemas"]["QuestionSetSolveMode"];
         };
         ApiResponseCopyQuestionSetApiResponse: {
             isSuccess?: boolean;
