@@ -1518,7 +1518,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/policies/unchecked/{userId}": {
+    "/api/v1/policies/unchecked": {
         parameters: {
             query?: never;
             header?: never;
@@ -2389,11 +2389,6 @@ export interface components {
             type: "OrderingQuestionSubmitApiRequest";
         } & Omit<WithRequired<components["schemas"]["QuestionAnswerSubmitApiRequest"], "submitAnswers">, "type">;
         QuestionAnswerSubmitApiRequest: {
-            /**
-             * Format: int64
-             * @description 문제 PK, 추후에 삭제 예정, 학습모드의 경우 해당 필드를 입력하지 않아도 무관
-             */
-            userId?: number;
             submitAnswers?: components["schemas"]["FillBlankQuestionSubmitAnswer"] | components["schemas"]["MultipleQuestionSubmitAnswer"] | components["schemas"]["OrderingQuestionSubmitAnswer"] | components["schemas"]["ShortQuestionSubmitAnswer"];
             type: string;
         };
@@ -5952,9 +5947,7 @@ export interface operations {
                 timing: "SIGN_UP";
             };
             header?: never;
-            path: {
-                userId: number;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
